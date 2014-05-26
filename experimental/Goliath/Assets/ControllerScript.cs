@@ -10,16 +10,18 @@ using System.Collections;
 
 public class ControllerScript : MonoBehaviour {
 
-	const float SPRINT_SPEED = 1.2f;
-	const float RUN_SPEED = 0.6f;
-	const float WALK_SPEED = 0.15f;
+	const float SPRINT_SPEED = 12f;
+	const float RUN_SPEED = 6f;
+	const float WALK_SPEED = 1.5f;
 	const float RUN_THRESH = 0.5f;
-	const float JUMP_FORCE = 200;
+	const float JUMP_FORCE = 220;
 
 	string controllerId = "1";
+	bool firstPerson = false;
 	Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 up = new Vector3(0, 1, 0);
 	Vector3 perpFacing = new Vector3(1, 0, 0);
+	Vector3 cameraPos = Vector3.zero;
 
 	public Camera playerCam;
 
@@ -27,6 +29,7 @@ public class ControllerScript : MonoBehaviour {
 	void Start () {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
+		cameraPos = playerCam.transform.localPosition;
 	}
 	
 	// Update is called once per frame
@@ -42,10 +45,23 @@ public class ControllerScript : MonoBehaviour {
 
 		float R_XAxis = Input.GetAxis("R_XAxis_" + controllerId);
 		float R_YAxis = Input.GetAxis("R_YAxis_" + controllerId);
+		bool RS_Press = Input.GetButtonDown("RS_" + controllerId);
 
 		float L_XAxis = Input.GetAxis("L_XAxis_" + controllerId);
 		float L_YAxis = Input.GetAxis("L_YAxis_" + controllerId);
 		bool LS_Held = Input.GetButton("LS_" + controllerId);
+
+		if (RS_Press){
+			if (firstPerson){
+				playerCam.transform.localPosition = cameraPos;
+			}
+			else{
+				cameraPos = playerCam.transform.localPosition;
+				playerCam.transform.localPosition = Vector3.zero;
+			}
+
+			firstPerson = !firstPerson;
+		}
 
 		if (A_Down){
 			newForce.y += JUMP_FORCE * rigidbody.mass;
@@ -90,7 +106,7 @@ public class ControllerScript : MonoBehaviour {
 		}
 
 		// Apply velocity and force
-		rigidbody.velocity = new Vector3(newVel.x * 10, rigidbody.velocity.y, newVel.z * 10);
+		rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
 		rigidbody.AddForce(newForce);
 	}
 

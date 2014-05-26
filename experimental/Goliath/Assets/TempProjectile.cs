@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TempProjectile : MonoBehaviour {
 
-	float speed = 1;
-	Vector3 velocity = new Vector3(0, 0, 0);
+	float speed = 300;
+	//Vector3 velocity = new Vector3(0, 0, 0);
 	float life = 5;
 
 	// Use this for initialization
@@ -14,7 +14,7 @@ public class TempProjectile : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		transform.position += velocity;
+		//transform.position += velocity;
 		life -= Time.deltaTime;
 
 		// Delete after a while
@@ -24,6 +24,6 @@ public class TempProjectile : MonoBehaviour {
 	}
 	
 	public void setDirection(Vector3 direction){
-		velocity = direction.normalized * speed;
+		rigidbody.velocity = direction.normalized * speed;
 	}
 }
