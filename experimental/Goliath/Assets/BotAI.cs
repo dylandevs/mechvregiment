@@ -11,7 +11,7 @@ public class BotAI : MonoBehaviour {
 	const float VIEW_ANGLE = 120 / 2;
 	const float MOVE_SPEED = 7f;
 	const float FIRE_RATE = 1.2f;
-	const float TURN_STEP = 0.05f;
+	const float TURN_STEP = 0.02f;
 	const float FIRE_ANGLE = 60 / 2;
 
 	// Predefined state colours
@@ -23,19 +23,24 @@ public class BotAI : MonoBehaviour {
 	public GameObject ammunition;
 	float reloadProg = FIRE_RATE;
 
+	NavMeshAgent navMeshAgent;
+
 	Vector3 baseFacing = new Vector3(0, 0, 1);
 	Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 up = new Vector3(0, 1, 0);
 
 	// Use this for initialization
 	void Start () {
-
+		navMeshAgent = GetComponent<NavMeshAgent>();
+		navMeshAgent.stoppingDistance = THRESH_CLOSE;
+		navMeshAgent.speed = MOVE_SPEED;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		facing = transform.rotation * baseFacing;
-		Vector3 newVel = Vector3.zero;
+		//Vector3 newVel = Vector3.zero;
+
 
 		// Calculating useful values
 		Vector3 diffVec = opponent.transform.position - transform.position;
@@ -46,12 +51,14 @@ public class BotAI : MonoBehaviour {
 		// Out of view
 		case 0:
 			setSurfaceColour(safeCol);
+			//navMeshAgent.velocity = Vector3.zero;
 			break;
 
 		// In view, out of range
 		case 1:
-			faceTarget(opponent);
-			newVel += MOVE_SPEED * facing;
+			//faceTarget(opponent);
+			//newVel += MOVE_SPEED * facing;
+			navMeshAgent.destination = opponent.transform.position;
 			setSurfaceColour(warnCol);
 			break;
 
@@ -63,6 +70,7 @@ public class BotAI : MonoBehaviour {
 			}
 			faceTarget(opponent);
 			setSurfaceColour(dngrCol);
+			navMeshAgent.velocity = Vector3.zero;
 			break;
 
 		default:
@@ -72,8 +80,8 @@ public class BotAI : MonoBehaviour {
 		// Keep reloading regardless of state
 		reloadProg += Time.deltaTime;
 
-		// Clamp velocity
-		rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
+		// Apply velocity
+		//rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
 	}
 
 	// Determines whether given vector difference is near, mid, or long range
