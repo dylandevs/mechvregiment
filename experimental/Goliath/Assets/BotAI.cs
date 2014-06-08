@@ -3,6 +3,11 @@ using System.Collections;
 
 public class BotAI : MonoBehaviour {
 
+	// State values
+	const byte ALL_CLEAR = 0;
+	const byte SIGHTED = 1;
+	const byte FIRING = 2;
+
 	// Distance thresholds
 	const int THRESH_CLOSE = 12;
 	const int THRESH_MED = 20;
@@ -19,6 +24,7 @@ public class BotAI : MonoBehaviour {
 	Color warnCol = new Color32(255, 255, 0, 1);
 	Color dngrCol = new Color32(255, 0, 0, 1);
 
+	Transform allyGroup = null;
 	public GameObject opponent;
 	public GameObject ammunition;
 	float reloadProg = FIRE_RATE;
@@ -29,11 +35,14 @@ public class BotAI : MonoBehaviour {
 	Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 up = new Vector3(0, 1, 0);
 
+	byte state = 0;
+
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		navMeshAgent.stoppingDistance = THRESH_CLOSE;
 		navMeshAgent.speed = MOVE_SPEED;
+		allyGroup = transform.parent;
 	}
 	
 	// Update is called once per frame
@@ -45,36 +54,38 @@ public class BotAI : MonoBehaviour {
 		// Calculating useful values
 		Vector3 diffVec = opponent.transform.position - transform.position;
 		float angle = Vector3.Angle(facing, diffVec);
+		state = checkInSight(opponent.transform);
 
-		switch (checkInSight(angle, diffVec)){
+		if (allyGroup != null && state == ALL_CLEAR){
+			if (alliesAlarmed()){
+				if (diffVec.magnitude > THRESH_CLOSE){
+					state = SIGHTED;
+				}
+				else {
+					state = FIRING;
+				}
+			}
+		}
 
-		// Out of view
-		case 0:
+		// Act based on state
+		if (state == ALL_CLEAR){
 			setSurfaceColour(safeCol);
 			//navMeshAgent.velocity = Vector3.zero;
-			break;
-
-		// In view, out of range
-		case 1:
+		}
+		else if (state == SIGHTED){
 			//faceTarget(opponent);
 			//newVel += MOVE_SPEED * facing;
 			navMeshAgent.destination = opponent.transform.position;
 			setSurfaceColour(warnCol);
-			break;
-
-		// In range
-		case 2:
+		}
+		else if (state == FIRING){
 			if (reloadProg >= FIRE_RATE && angle < FIRE_ANGLE){
-				fireInDirection(diffVec);
+				fireInDirection(opponent.transform);
 				reloadProg = 0;
 			}
-			faceTarget(opponent);
+			faceTarget(opponent.transform);
 			setSurfaceColour(dngrCol);
 			navMeshAgent.velocity = Vector3.zero;
-			break;
-
-		default:
-			break;
 		}
 
 		// Keep reloading regardless of state
@@ -84,23 +95,40 @@ public class BotAI : MonoBehaviour {
 		//rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
 	}
 
-	// Determines whether given vector difference is near, mid, or long range
-	byte checkInSight(float angle, Vector3 diffVec){
-		float distance = diffVec.magnitude;
+	// Determines whether given vector difference is near, mid, or long range and within FoV
+	byte checkInSight(Transform target){//float angle, Vector3 diffVec){
+		Vector3 diffVec = target.position - transform.position;
+		float angle = Vector3.Angle(facing, diffVec);
 
-		if (distance < THRESH_CLOSE && angle <= VIEW_ANGLE){
-			return 2;
+		// Check if within FoV
+		if (angle <= VIEW_ANGLE){
+
+			// Cast ray to determine obstructions in sight
+			RaycastHit rayHit;
+			if (Physics.Raycast(transform.position, diffVec, out rayHit)){
+
+				// If hit target, no obstruction
+				if (rayHit.collider.transform == target){
+
+					float distance = rayHit.distance;
+
+					if (distance < THRESH_CLOSE){
+						return FIRING;
+					}
+					else if (distance < THRESH_MED){
+						return SIGHTED;
+					}
+				}
+			}
 		}
-		else if (distance < THRESH_MED && angle <= VIEW_ANGLE){
-			return 1;
-		}
-		else{
-			return 0;
-		}
+
+		return ALL_CLEAR;
 	}
 
 	// Fires bullet in direction provided
-	void fireInDirection(Vector3 direction){
+	void fireInDirection(Transform target){
+		Vector3 direction = target.position - transform.position;
+
 		Vector3 bulletGenPos = transform.position + facing;
 		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
 		TempProjectile bulletScript = bullet.GetComponent<TempProjectile>();
@@ -108,11 +136,11 @@ public class BotAI : MonoBehaviour {
 	}
 
 	// Gradually turns to face given target
-	// NOTE: This is time step-based, meaning variable turning speeds. Consider using a fixed turn speed?
-	void faceTarget(GameObject target){
+	// NOTE: This is time step-based, meaning variable turning speeds. Consider using a fixed/max turn speed?
+	void faceTarget(Transform target){
 
 		// Shifting y coordinates into bot transform space
-		Vector3 targetVec = target.transform.position;
+		Vector3 targetVec = target.position;
 		targetVec.y = transform.position.y;
 		Vector3 newDiffVec = targetVec - transform.position;
 
@@ -124,5 +152,31 @@ public class BotAI : MonoBehaviour {
 	// TESTING: sets surface colour of model
 	void setSurfaceColour(Color newCol){
 		renderer.material.color = newCol;
+	}
+
+	public byte getState(){
+		return state;
+	}
+
+	public Transform getTransform(){
+		return transform;
+	}
+
+	// Determines whether any allies in view are in alarmed state
+	bool alliesAlarmed(){
+		BotAI[] allies = allyGroup.GetComponentsInChildren<BotAI>();
+		foreach(BotAI ally in allies){
+			if (ally.getState() > ALL_CLEAR){
+
+				// Check if ally is in sight of current bot
+				byte allyVisible = checkInSight(ally.getTransform());
+
+				if (allyVisible >= SIGHTED){
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
