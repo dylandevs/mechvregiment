@@ -23,10 +23,10 @@ public class BotAI : MonoBehaviour {
 	// Search behaviour attributes
 	float alertTime = 0;
 	float searchDelay = 0;
-	const float SEARCH_DELAY_LOW = 2;
-	const float SEARCH_DELAY_HIGH = 4;
-	const float ALERT_DURATION = 10;
-	const float SEARCH_RAD = 10;
+	const float SEARCH_DELAY_LOW = 4;
+	const float SEARCH_DELAY_HIGH = 7;
+	const float ALERT_DURATION = 20;
+	const float SEARCH_RAD = 15;
 	const float SEARCH_TURN_RATE = 0.5f;
 
 	// Distance thresholds
@@ -78,11 +78,11 @@ public class BotAI : MonoBehaviour {
 		Vector3 diffVec = opponent.transform.position - transform.position;
 		float angle = Vector3.Angle(facing, diffVec);
 
-		state = checkInSight(opponent.transform);
+		//state = checkInSight(opponent.transform);
 
 		state = getCurrentState(angle, diffVec);
 
-		// Check status of nearby allies
+		/*// Check status of nearby allies
 		if (allyGroup != null && state == ALL_CLEAR || state == SEARCHING){
 			if (alliesAlarmed()){
 				if (diffVec.magnitude > THRESH_CLOSE){
@@ -92,7 +92,7 @@ public class BotAI : MonoBehaviour {
 					state = FIRING;
 				}
 			}
-		}
+		}*/
 
 		// Act based on state
 		if (state == ALL_CLEAR){
@@ -101,6 +101,8 @@ public class BotAI : MonoBehaviour {
 			//navMeshAgent.velocity = Vector3.zero;
 		}
 		else if (state == SEARCHING){
+			navMeshAgent.stoppingDistance = 0;
+			navMeshAgent.speed = MOVE_SPEED;
 			setSurfaceColour(srchCol);
 			search();
 		}
@@ -230,14 +232,16 @@ public class BotAI : MonoBehaviour {
 
 	// Determines whether any allies in view are in alarmed state
 	bool alliesAlarmed(){
+		// TODO: Add StatePos object
+
 		BotAI[] allies = allyGroup.GetComponentsInChildren<BotAI>();
 		foreach(BotAI ally in allies){
-			if (ally.getState() >= SIGHTED){
+			if (ally.getState() >= SEARCHING){
 
 				// Check if ally is in sight of current bot
 				byte allyVisible = checkInSight(ally.getTransform());
 
-				if (allyVisible >= SIGHTED){
+				if (allyVisible >= SEARCHING){
 					lastSighted = ally.lastSighted;
 					return true;
 				}
@@ -298,6 +302,7 @@ public class BotAI : MonoBehaviour {
 
 		// Decrement alert progress
 		alertTime -= Time.deltaTime;
+		searchDelay -= Time.deltaTime;
 
 		// Move to new position
 		if (searchDelay <= 0){
@@ -305,8 +310,6 @@ public class BotAI : MonoBehaviour {
 			navMeshAgent.destination = getRandPos(SEARCH_RAD, lastSighted);
 		}
 		else if (hasAgentArrivedAtDest()){
-			searchDelay -= Time.deltaTime;
-
 			// Rotate side to side
 			transform.rotation *= Quaternion.Euler(new Vector3(0, SEARCH_TURN_RATE, 0) * Mathf.Sin(alertTime));
 		}
