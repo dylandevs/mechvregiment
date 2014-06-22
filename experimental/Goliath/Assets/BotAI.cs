@@ -198,9 +198,14 @@ public class BotAI : MonoBehaviour {
 		Vector3 direction = target.position - transform.position;
 
 		Vector3 bulletGenPos = transform.position + facing;
-		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
+		/*GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
 		TempProjectile bulletScript = bullet.GetComponent<TempProjectile>();
-		bulletScript.setDirection(direction);
+		bulletScript.setDirection(direction);*/
+
+		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
+		Bullet bulletScript = bullet.GetComponent<Bullet>();
+		bulletScript.setProperties(1, "BotEnemy", direction, 40);
+
 	}
 
 	// Gradually turns to face given target

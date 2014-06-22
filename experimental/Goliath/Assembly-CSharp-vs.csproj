@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\BotAI.cs" />
+     <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\ControllerScript.cs" />
+     <Compile Include="Assets\Crosshair.cs" />
      <Compile Include="Assets\TempProjectile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
