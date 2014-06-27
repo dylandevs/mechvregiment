@@ -15,6 +15,7 @@ public class ControllerScript : MonoBehaviour {
 	const float WALK_SPEED = 1.5f;
 	const float RUN_THRESH = 0.5f;
 	const float JUMP_FORCE = 220;
+	const float FIRE_RATE = 0.2f;
 
 	string controllerId = "1";
 	bool firstPerson = false;
@@ -23,7 +24,11 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 perpFacing = new Vector3(1, 0, 0);
 	Vector3 cameraPos = Vector3.zero;
 
+	float fireProg = 0;
+
+	// Inputs
 	public Camera playerCam;
+	public GameObject ammunition;
 
 	// Use this for initialization
 	void Start () {
@@ -50,6 +55,9 @@ public class ControllerScript : MonoBehaviour {
 		float L_XAxis = Input.GetAxis("L_XAxis_" + controllerId);
 		float L_YAxis = Input.GetAxis("L_YAxis_" + controllerId);
 		bool LS_Held = Input.GetButton("LS_" + controllerId);
+
+		float TriggersR = Input.GetAxis("TriggersR_" + controllerId);
+		float TriggersL = Input.GetAxis("TriggersL_" + controllerId);
 
 		if (RS_Press){
 			if (firstPerson){
@@ -105,9 +113,31 @@ public class ControllerScript : MonoBehaviour {
 			playerCam.transform.Rotate(new Vector3(R_YAxis * 3, 0, 0));
 		}
 
+		// Firing script
+		if (TriggersR != 0){
+			tryFire();
+		}
+
 		// Apply velocity and force
 		rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
 		rigidbody.AddForce(newForce);
+
+		// Substract from fire progress to reset weapon wait
+		if (fireProg > 0){
+			fireProg -= Time.deltaTime;
+		}
+	}
+
+	// Attempts to fire bullet
+	void tryFire(){
+		if (fireProg <= 0){
+			Vector3 bulletGenPos = transform.position + facing;
+			GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
+			Bullet bulletScript = bullet.GetComponent<Bullet>();
+			bulletScript.setProperties(1, "Player", facing, 40);
+
+			fireProg = FIRE_RATE;
+		}
 	}
 
 	// Sets controller that this player will be associated with
