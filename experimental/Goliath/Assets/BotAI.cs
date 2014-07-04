@@ -3,11 +3,20 @@ using System.Collections;
 
 public class BotAI : MonoBehaviour {
 
+	// Faction to determine friendly fire and other mechanics
+	public string faction = "BotEnemy";
+
 	// State values
 	const byte ALL_CLEAR = 0;
 	const byte SEARCHING = 1;
 	const byte SIGHTED = 2;
 	const byte FIRING = 3;
+
+	// Predefined state colours
+	Color safeCol = new Color32(0, 255, 0, 1);
+	Color warnCol = new Color32(255, 255, 0, 1);
+	Color dngrCol = new Color32(255, 0, 0, 1);
+	Color srchCol = new Color32(255, 0, 255, 1);
 
 	// Idle behaviour attributes
 	float actionTime = 0;
@@ -41,26 +50,24 @@ public class BotAI : MonoBehaviour {
 	const float FIRE_RATE = 1.2f;
 	const float TURN_STEP = 0.02f;
 	const float FIRE_ANGLE = 60 / 2;
+	const float MAX_HEALTH = 100;
 
-	// Predefined state colours
-	Color safeCol = new Color32(0, 255, 0, 1);
-	Color warnCol = new Color32(255, 255, 0, 1);
-	Color dngrCol = new Color32(255, 0, 0, 1);
-	Color srchCol = new Color32(255, 0, 255, 1);
-
+	// Storage variables
 	Transform allyGroup = null;
 	public GameObject opponent;
 	public GameObject ammunition;
-	float reloadProg = FIRE_RATE;
-
 	NavMeshAgent navMeshAgent;
+	
+	// Bot stats
+	byte state = 0;
+	float health = MAX_HEALTH;
+	float reloadProg = FIRE_RATE;
+	bool isDead = false;
+	
 	public Vector3 lastSighted;
-
 	Vector3 baseFacing = new Vector3(0, 0, 1);
 	Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 up = new Vector3(0, 1, 0);
-
-	byte state = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -73,68 +80,71 @@ public class BotAI : MonoBehaviour {
 		facing = transform.rotation * baseFacing;
 		//Vector3 newVel = Vector3.zero;
 
+		// Living behaviour
+		if (!isDead){
+			// Calculating useful values
+			Vector3 diffVec = opponent.transform.position - transform.position;
+			float angle = Vector3.Angle(facing, diffVec);
 
-		// Calculating useful values
-		Vector3 diffVec = opponent.transform.position - transform.position;
-		float angle = Vector3.Angle(facing, diffVec);
+			//state = checkInSight(opponent.transform);
 
-		//state = checkInSight(opponent.transform);
+			state = getCurrentState(angle, diffVec);
 
-		state = getCurrentState(angle, diffVec);
-
-		/*// Check status of nearby allies
-		if (allyGroup != null && state == ALL_CLEAR || state == SEARCHING){
-			if (alliesAlarmed()){
-				if (diffVec.magnitude > THRESH_CLOSE){
-					state = SIGHTED;
+			/*// Check status of nearby allies
+			if (allyGroup != null && state == ALL_CLEAR || state == SEARCHING){
+				if (alliesAlarmed()){
+					if (diffVec.magnitude > THRESH_CLOSE){
+						state = SIGHTED;
+					}
+					else {
+						state = FIRING;
+					}
 				}
-				else {
-					state = FIRING;
+			}*/
+
+			// Act based on state
+			if (state == ALL_CLEAR){
+				setSurfaceColour(safeCol);
+				idle();
+				//navMeshAgent.velocity = Vector3.zero;
+			}
+			else if (state == SEARCHING){
+				navMeshAgent.stoppingDistance = 0;
+				navMeshAgent.speed = MOVE_SPEED;
+				setSurfaceColour(srchCol);
+				search();
+			}
+			else if (state == SIGHTED){
+				//faceTarget(opponent);
+				//newVel += MOVE_SPEED * facing;
+				navMeshAgent.stoppingDistance = THRESH_CLOSE;
+				navMeshAgent.speed = MOVE_SPEED;
+				navMeshAgent.destination = lastSighted;
+				setSurfaceColour(warnCol);
+
+				alertTime = ALERT_DURATION;
+				lastSighted = opponent.transform.position;
+			}
+			else if (state == FIRING){
+				if (reloadProg >= FIRE_RATE && angle < FIRE_ANGLE){
+					fireInDirection(opponent.transform);
+					reloadProg = 0;
 				}
+				faceTarget(opponent.transform);
+				setSurfaceColour(dngrCol);
+				navMeshAgent.velocity = Vector3.zero;
+
+				alertTime = ALERT_DURATION;
+				lastSighted = opponent.transform.position;
 			}
-		}*/
 
-		// Act based on state
-		if (state == ALL_CLEAR){
-			setSurfaceColour(safeCol);
-			idle();
-			//navMeshAgent.velocity = Vector3.zero;
+			// Keep reloading regardless of state
+			reloadProg += Time.deltaTime;
+
 		}
-		else if (state == SEARCHING){
-			navMeshAgent.stoppingDistance = 0;
-			navMeshAgent.speed = MOVE_SPEED;
-			setSurfaceColour(srchCol);
-			search();
+		else{
+			Destroy(gameObject);
 		}
-		else if (state == SIGHTED){
-			//faceTarget(opponent);
-			//newVel += MOVE_SPEED * facing;
-			navMeshAgent.stoppingDistance = THRESH_CLOSE;
-			navMeshAgent.speed = MOVE_SPEED;
-			navMeshAgent.destination = lastSighted;
-			setSurfaceColour(warnCol);
-
-			alertTime = ALERT_DURATION;
-			lastSighted = opponent.transform.position;
-		}
-		else if (state == FIRING){
-			if (reloadProg >= FIRE_RATE && angle < FIRE_ANGLE){
-				fireInDirection(opponent.transform);
-				reloadProg = 0;
-			}
-			faceTarget(opponent.transform);
-			setSurfaceColour(dngrCol);
-			navMeshAgent.velocity = Vector3.zero;
-
-			alertTime = ALERT_DURATION;
-			lastSighted = opponent.transform.position;
-		}
-
-		// Keep reloading regardless of state
-		reloadProg += Time.deltaTime;
-
-		// Apply velocity
-		//rigidbody.velocity = new Vector3(newVel.x, rigidbody.velocity.y, newVel.z);
 	}
 
 	byte getCurrentState(float angle, Vector3 diffVec){
@@ -196,15 +206,11 @@ public class BotAI : MonoBehaviour {
 	// Fires bullet in direction provided
 	void fireInDirection(Transform target){
 		Vector3 direction = target.position - transform.position;
-
 		Vector3 bulletGenPos = transform.position + facing;
-		/*GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
-		TempProjectile bulletScript = bullet.GetComponent<TempProjectile>();
-		bulletScript.setDirection(direction);*/
 
 		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(1, "BotEnemy", direction, 40);
+		bulletScript.setProperties(5.5f, faction, direction, 40);
 
 	}
 
@@ -332,5 +338,16 @@ public class BotAI : MonoBehaviour {
 		NavMeshHit hit;
 		NavMesh.SamplePosition(chosenDir, out hit, radius, 1);
 		return hit.position;
+	}
+
+	// Deals damage to bot
+	public void Damage(float damage){
+		health -= damage;
+
+		// Schedule bot for death
+		if (health <= 0){
+			//Destroy (gameObject);
+			isDead = true;
+		}
 	}
 }
