@@ -1,10 +1,17 @@
-﻿using UnityEngine;
+﻿/**
+ * 
+ * Tracks player attributes and handles behaviours
+ * 
+ **/
+
+using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour {
 
 	// Faction to determine friendly fire and other mechanics
 	public string faction = "Player";
+	int id = 0;
 
 	const float HEAL_WAIT = 5.0f;
 	const float MAX_HEALTH = 100;
@@ -14,6 +21,8 @@ public class Player : MonoBehaviour {
 	public Camera playerCam;
 	public Crosshair crossScript;
 	public GameObject ammunition;
+	public PlayerViewport playerRenderer;
+	public ControllerScript playerController;
 
 	float health = MAX_HEALTH;
 	float crossJitter = 0;
@@ -22,7 +31,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		Initialize("Player", 1);
 	}
 	
 	// Update is called once per frame
@@ -30,12 +39,19 @@ public class Player : MonoBehaviour {
 		tryRegen();
 	}
 
+	public void Initialize(string newFaction, int playerId){
+		id = playerId;
+		faction = newFaction;
+		playerController.setController(playerId);
+		playerRenderer.setWindow(0, 0.5f, 0.5f, 1);
+	}
+
 	// Regenerates if healing timer is depleted and health is below maximum
 	void tryRegen(){
 		if (health < MAX_HEALTH){
 			if (healTimer <= 0){
 				health = Mathf.Min(MAX_HEALTH, health + REGEN_INC * Time.deltaTime);
-				print ("regen");
+				print (health);
 			}
 			else{
 				healTimer -= Time.deltaTime;

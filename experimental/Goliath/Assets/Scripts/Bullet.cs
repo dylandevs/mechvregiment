@@ -36,6 +36,10 @@ public class Bullet : MonoBehaviour {
 		lastPos = transform.position;
 		transform.position += velocity * Time.deltaTime;
 
+		if (collisionFound){
+			Destroy(gameObject);
+		}
+
 	}
 
 	// Checks for collision since last update cycle

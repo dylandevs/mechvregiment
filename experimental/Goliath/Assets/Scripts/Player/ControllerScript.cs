@@ -16,7 +16,7 @@ public class ControllerScript : MonoBehaviour {
 	const float RUN_THRESH = 0.5f;
 	const float JUMP_FORCE = 220;
 
-	string controllerId = "1";
+	int controllerId = 1;
 	bool firstPerson = false;
 	Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 up = new Vector3(0, 1, 0);
@@ -122,9 +122,9 @@ public class ControllerScript : MonoBehaviour {
 
 
 	// Sets controller that this player will be associated with
-	void setController(int newId){
+	public void setController(int newId){
 		if (newId > 0 && newId < 5){
-			controllerId = newId.ToString();
+			controllerId = newId;
 		}
 	}
 
