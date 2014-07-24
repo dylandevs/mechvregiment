@@ -23,6 +23,8 @@ public class Player : MonoBehaviour {
 	public GameObject ammunition;
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
+	public GameObject firstPersonModel;
+	public GameObject thirdPersonModel;
 
 	float health = MAX_HEALTH;
 	float crossJitter = 0;
@@ -31,7 +33,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Initialize("Player", 1);
+		//Initialize("Player", 1, new float[]{0, 1, 0, 0.5f});
 	}
 	
 	// Update is called once per frame
@@ -39,11 +41,19 @@ public class Player : MonoBehaviour {
 		tryRegen();
 	}
 
-	public void Initialize(string newFaction, int playerId){
+	public void Initialize(string newFaction, int playerId, float[] window){
 		id = playerId;
 		faction = newFaction;
+
+		// Setting controller and render area
 		playerController.setController(playerId);
-		playerRenderer.setWindow(0, 0.5f, 0.5f, 1);
+		playerRenderer.setWindow(window[0], window[1], window[2], window[3]);
+
+		// Settings layers for models and hiding/showing to camera
+		firstPersonModel.layer = LayerMask.NameToLayer("PlayerView1_" + id);
+		thirdPersonModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
+		playerCam.cullingMask = ~(1 << thirdPersonModel.layer);
+		playerCam.cullingMask |= (1 << firstPersonModel.layer);
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
