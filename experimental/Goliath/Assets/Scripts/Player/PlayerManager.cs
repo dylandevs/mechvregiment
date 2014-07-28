@@ -25,7 +25,7 @@ public class PlayerManager : MonoBehaviour {
 			if (Input.GetButtonDown("A_" + (i + 1)) && players[i] == null){
 				players[i] = Instantiate(basePlayer, Vector3.zero, Quaternion.identity) as GameObject;
 				playerScripts[i] = players[i].GetComponent<Player>();
-				playerScripts[i].Initialize("Player", i, getWindowCoords(i, NUM_CONTROLLERS));
+				playerScripts[i].Initialize("Player", i + 1, getWindowCoords(i + 1, NUM_CONTROLLERS));
 			}
 		}
 	}

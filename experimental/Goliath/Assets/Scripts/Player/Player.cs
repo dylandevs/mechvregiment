@@ -50,6 +50,7 @@ public class Player : MonoBehaviour {
 		playerRenderer.setWindow(window[0], window[1], window[2], window[3]);
 
 		// Settings layers for models and hiding/showing to camera
+		print(id);
 		firstPersonModel.layer = LayerMask.NameToLayer("PlayerView1_" + id);
 		thirdPersonModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 		playerCam.cullingMask = ~(1 << thirdPersonModel.layer);
