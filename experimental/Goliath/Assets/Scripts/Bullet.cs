@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour {
 
 	float damage = 0;
 	string originator = "Default";
-	Vector3 velocity = Vector3.zero;
+	public Vector3 velocity = Vector3.zero;
 	Vector3 lastPos = Vector3.zero;
 	float life = 3.0f;
 

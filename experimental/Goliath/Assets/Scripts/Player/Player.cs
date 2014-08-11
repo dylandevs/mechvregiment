@@ -33,7 +33,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//Initialize("Player", 1, new float[]{0, 1, 0, 0.5f});
+		Initialize("Player", 1, new float[]{0, 1, 0, 0.5f});
 	}
 	
 	// Update is called once per frame

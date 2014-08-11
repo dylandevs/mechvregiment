@@ -126,7 +126,7 @@ public class BotAI : MonoBehaviour {
 				lastSighted = opponent.transform.position;
 			}
 			else if (state == FIRING){
-				if (reloadProg >= FIRE_RATE && angle < FIRE_ANGLE){
+				if (reloadProg >= FIRE_RATE && angle < VIEW_ANGLE){
 					fireInDirection(opponent.transform);
 					reloadProg = 0;
 				}
@@ -210,7 +210,7 @@ public class BotAI : MonoBehaviour {
 
 		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(5.5f, faction, direction, 40);
+		bulletScript.setProperties(5.5f, faction, direction, 4);
 
 	}
 
