@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Player\PlayerViewport.cs" />
      <Compile Include="Assets\Scripts\TempProjectile.cs" />
      <Compile Include="Assets\Scripts\Weapon.cs" />
+     <None Include="Assets\Shaders\InvisibleShadowCaster.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

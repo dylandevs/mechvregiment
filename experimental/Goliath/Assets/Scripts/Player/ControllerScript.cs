@@ -15,6 +15,7 @@ public class ControllerScript : MonoBehaviour {
 	const float WALK_SPEED = 1.5f;
 	const float RUN_THRESH = 0.5f;
 	const float JUMP_SPEED = 8f;
+	const float MAX_LOOK_ANGLE = 88;
 
 	int controllerId = 1;
 	Vector3 facing = new Vector3(0, 0, 1);
@@ -108,8 +109,18 @@ public class ControllerScript : MonoBehaviour {
 
 		// Vertical tilt of camera
 		if (R_YAxis != 0){
-			facing = Quaternion.AngleAxis(R_YAxis * 5, perpFacing) * facing;
-			playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+			Vector3 newFacing = Quaternion.AngleAxis(R_YAxis * 5, perpFacing) * facing;
+			float vertAngle = Vector3.Angle(newFacing, Vector3.up);
+			//Debug.Log (Vector3.Angle(newFacing, Vector3.up));
+
+			// Limit angle so straight up/down are not possible
+			if (vertAngle >= 10 && vertAngle <= 170){
+				facing = newFacing;
+				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+			}
+			else{
+
+			}
 		}
 
 		// Firing script
