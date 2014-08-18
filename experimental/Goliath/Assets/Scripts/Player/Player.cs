@@ -25,6 +25,8 @@ public class Player : MonoBehaviour {
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
 
+	public Animator anim;
+
 	// Character models
 	public GameObject firstPersonWrapper;
 	public GameObject thirdPersonWrapper;
@@ -40,14 +42,20 @@ public class Player : MonoBehaviour {
 	float healTimer = 0;
 	float fireTimer = 0;
 
+	// Animation hash id
+	int speedHash = Animator.StringToHash("Speed");
+
 	// Use this for initialization
 	void Start () {
 		Initialize("Player", 1, new float[]{0, 1, 0, 0.5f});
+		anim.Play("PlayerIdle");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		tryRegen();
+		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
+		//Debug.Log(anim.GetFloat(speedHash));
 	}
 
 	public void Initialize(string newFaction, int playerId, float[] window){

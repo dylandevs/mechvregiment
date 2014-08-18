@@ -2,10 +2,7 @@
   <MonoDevelop.Ide.Workspace />
   <MonoDevelop.Ide.Workbench ActiveDocument="..\Goliath\Assets\Scripts\Player\Player.cs">
     <Files>
-      <File FileName="..\Goliath\Assets\Scripts\Player\ControllerScript.cs" Line="45" Column="19" />
-      <File FileName="..\Goliath\Assets\Scripts\Player\Player.cs" Line="34" Column="32" />
-      <File FileName="..\Goliath\Assets\Scripts\BotAI.cs" Line="80" Column="43" />
-      <File FileName="..\Goliath\Assets\Scripts\Bullet.cs" Line="26" Column="19" />
+      <File FileName="..\Goliath\Assets\Scripts\Player\Player.cs" Line="49" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
