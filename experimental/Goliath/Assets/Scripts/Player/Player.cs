@@ -25,8 +25,6 @@ public class Player : MonoBehaviour {
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
 
-	public Animator anim;
-
 	// Character models
 	public GameObject firstPersonWrapper;
 	public GameObject thirdPersonWrapper;
@@ -41,9 +39,7 @@ public class Player : MonoBehaviour {
 	float crossJitter = 0;
 	float healTimer = 0;
 	float fireTimer = 0;
-
-	// Animation hash id
-	int speedHash = Animator.StringToHash("Speed");
+	bool isAimingDownSights = false;
 
 	// Use this for initialization
 	void Start () {
@@ -54,7 +50,6 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		tryRegen();
-		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 		//Debug.Log(anim.GetFloat(speedHash));
 	}
 
@@ -91,7 +86,7 @@ public class Player : MonoBehaviour {
 		if (health < MAX_HEALTH){
 			if (healTimer <= 0){
 				health = Mathf.Min(MAX_HEALTH, health + REGEN_INC * Time.deltaTime);
-				print (health);
+				//print (health);
 			}
 			else{
 				healTimer -= Time.deltaTime;
@@ -99,12 +94,18 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public bool toggleADS(){
+		isAimingDownSights = !isAimingDownSights;
+
+		return isAimingDownSights;
+	}
+
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage){
-		print (damage);
+		//print (damage);
 		health -= damage;
 		healTimer = HEAL_WAIT;
-		print (health);
+		//print (health);
 	}
 
 	// Attempts to fire bullet

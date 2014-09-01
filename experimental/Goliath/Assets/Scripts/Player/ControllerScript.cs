@@ -22,24 +22,28 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 facing2D = new Vector3(0, 0, 1);
 	Vector3 perpFacing = new Vector3(1, 0, 0);
 	Vector3 cameraOffset = Vector3.zero;
-	float groundCheckDist = 0;
+	Vector3 groundCheckVector = new Vector3(0, 0.05f, 0);
 
 	// Inputs
 	public Camera playerCam;
 	public Player player;
+	public Animator anim;
+
+	// Animation hash id
+	int speedHash = Animator.StringToHash("Speed");
+	int fireHash = Animator.StringToHash("Firing");
 
 	// Use this for initialization
 	void Start () {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
-
-		// Set distance to check downwards for grounding
-		groundCheckDist = collider.bounds.extents.y + 0.05f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 
 		Vector3 newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
@@ -73,6 +77,17 @@ public class ControllerScript : MonoBehaviour {
 
 		}
 
+		// Toggle ADS
+		if (RS_Press) {
+			if (player.toggleADS()){
+				anim.SetInteger(fireHash, 2);
+			}
+			else{
+				anim.SetInteger(fireHash, 0);
+			}
+		}
+
+
 		// Lateral movement (strafing)
 		if (L_XAxis != 0){
 			if (Mathf.Abs(L_XAxis) > RUN_THRESH){
@@ -95,13 +110,13 @@ public class ControllerScript : MonoBehaviour {
 			}
 			// Walk
 			else{
-				newVel += WALK_SPEED * facing2D * -signOf(L_YAxis);
+				newVel += Mathf.Lerp(0, RUN_SPEED, Mathf.Abs(L_YAxis)/RUN_THRESH) * facing2D * -signOf(L_YAxis);
 			}
 		}
 
 		// Rotation about Y axis
 		if (R_XAxis != 0){
-			facing = Quaternion.AngleAxis(R_XAxis * 5, Vector3.up) * facing;
+			facing = Quaternion.AngleAxis(R_XAxis * R_XAxis * signOf(R_XAxis) * 5, Vector3.up) * facing;
 			facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 			transform.LookAt(transform.position + facing2D);
 			playerCam.transform.LookAt(transform.position + facing + cameraOffset);
@@ -109,7 +124,7 @@ public class ControllerScript : MonoBehaviour {
 
 		// Vertical tilt of camera
 		if (R_YAxis != 0){
-			Vector3 newFacing = Quaternion.AngleAxis(R_YAxis * 5, perpFacing) * facing;
+			Vector3 newFacing = Quaternion.AngleAxis(R_YAxis * R_YAxis * signOf(R_YAxis) * 5, perpFacing) * facing;
 			float vertAngle = Vector3.Angle(newFacing, Vector3.up);
 			//Debug.Log (Vector3.Angle(newFacing, Vector3.up));
 
@@ -119,13 +134,21 @@ public class ControllerScript : MonoBehaviour {
 				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 			}
 			else{
-
+				// Do nothing
 			}
 		}
 
 		// Firing script
 		if (TriggersR != 0){
 			player.tryFire(facing, transform.position + facing + cameraOffset);
+			if (anim.GetInteger(fireHash) != 2){
+				anim.SetInteger (fireHash, 1);
+			}
+		}
+		else{
+			if (anim.GetInteger(fireHash) != 2){
+				anim.SetInteger (fireHash, 0);
+			}
 		}
 
 		// Apply velocity and force
@@ -133,7 +156,7 @@ public class ControllerScript : MonoBehaviour {
 	}
 
 	bool IsGrounded(){
-		return Physics.Raycast(transform.position, -Vector3.up, groundCheckDist);
+		return Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y * 2);
 	}
 
 	// Sets controller that this player will be associated with
