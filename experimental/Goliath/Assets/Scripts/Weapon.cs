@@ -9,7 +9,8 @@ public class Weapon : MonoBehaviour {
 	public float FIRE_RATE = 0.5f;
 	public int BURST_LENGTH = 1;
 	public bool AUTOMATIC = false;
-	public Matrix4x4 RECOIL_PATTERN = new Matrix4x4();
+	public Vector2 RECOIL_PATTERN;
+	public bool ALTERNATING_RECOIL = false;
 
 	public int MAG_SIZE = 30;
 	public int RESERVE_SIZE = 150;
@@ -32,10 +33,12 @@ public class Weapon : MonoBehaviour {
 	private float spread = 0;
 
 	// Recoil tracker
+	private float recoil = 0;
 	
 	// Use this for initialization
 	void Start () {
-	
+		totalAmmo = MAG_SIZE * 5;
+		magAmmo = MAG_SIZE;
 	}
 	
 	// Update is called once per frame
@@ -69,5 +72,13 @@ public class Weapon : MonoBehaviour {
 		toReturn [1] = totalAmmo;
 
 		return toReturn;
+	}
+
+	public float getSpread(){
+		return spread;
+	}
+
+	public float getRecoil(){
+		return recoil;
 	}
 }
