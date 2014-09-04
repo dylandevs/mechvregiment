@@ -29,6 +29,7 @@ public class Player : MonoBehaviour {
 	public GameObject firstPersonWrapper;
 	public GameObject thirdPersonWrapper;
 	public GameObject shadowCasterWrapper;
+	public GameObject weaponModel;
 	private List<GameObject> firstPersonModel = new List<GameObject>();
 	private List<GameObject> thirdPersonModel  = new List<GameObject>();
 	private List<GameObject> shadowCasterModel  = new List<GameObject>();
@@ -43,7 +44,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Initialize("Player", 1, new float[]{0, 1, 0, 0.5f});
+		Initialize("Player", 1, new float[]{0, 1, 0, 1});
 		//anim.Play("PlayerIdle");
 	}
 	
@@ -73,6 +74,9 @@ public class Player : MonoBehaviour {
 		//print(id);
 		setModelLayer(firstPersonModel, "PlayerView1_" + id);
 		setModelLayer(thirdPersonModel, "PlayerView3_" + id);
+
+		// NOTE: TEMPORARY
+		weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 		//firstPersonModel.layer = LayerMask.NameToLayer("PlayerView1_" + id);
 		//thirdPersonModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 		playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
@@ -94,8 +98,13 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public bool toggleADS(){
-		isAimingDownSights = !isAimingDownSights;
+	public bool toggleADS(bool? setADS = null){
+		if (setADS != null) {
+			isAimingDownSights = (bool)setADS;
+		}
+		else{
+			isAimingDownSights = !isAimingDownSights;
+		}
 
 		return isAimingDownSights;
 	}
