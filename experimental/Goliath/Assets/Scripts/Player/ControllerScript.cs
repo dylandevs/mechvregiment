@@ -88,17 +88,17 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Toggle ADS
-			if (RS_Press) {
-				if (player.toggleADS()){
-					anim.SetInteger(fireHash, 2);
-					weaponAnim.SetBool(adsHash, true);
-					aimingDownSight = true;
-				}
-				else{
-					anim.SetInteger(fireHash, 0);
-					weaponAnim.SetBool(adsHash, false);
-					aimingDownSight = false;
-				}
+			if (TriggersL != 0) {
+				player.toggleADS(true);
+				anim.SetInteger(fireHash, 2);
+				weaponAnim.SetBool(adsHash, true);
+				aimingDownSight = true;
+			}
+			else{
+				player.toggleADS(false);
+				anim.SetInteger(fireHash, 0);
+				weaponAnim.SetBool(adsHash, false);
+				aimingDownSight = false;
 			}
 
 
