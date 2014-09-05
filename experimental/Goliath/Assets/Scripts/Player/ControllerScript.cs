@@ -283,17 +283,24 @@ public class ControllerScript : MonoBehaviour {
 					deltaMousePos.y *= 0.5f;
 				}
 
+				float newVertAngle = Vector3.Angle(facing, Vector3.up) - deltaMousePos.y;
 				Vector3 newFacing = Quaternion.AngleAxis(-deltaMousePos.y, perpFacing) * facing;
-				float vertAngle = Vector3.Angle(newFacing, Vector3.up);
+				//float vertAngle = Vector3.Angle(newFacing, Vector3.up);
 				//Debug.Log (Vector3.Angle(newFacing, Vector3.up));
-				
+
+				print(newVertAngle);
 				// Limit angle so straight up/down are not possible
-				if (vertAngle >= 10 && vertAngle <= 170){
-					facing = newFacing;
+				if (newVertAngle > 170){
+					facing = Quaternion.AngleAxis(170, perpFacing) * Vector3.up;
+					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+				}
+				else if (newVertAngle < 10){
+					facing = Quaternion.AngleAxis(10, perpFacing) * Vector3.up;
 					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 				}
 				else{
-					// Do nothing
+					facing = newFacing;
+					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 				}
 			}
 			
