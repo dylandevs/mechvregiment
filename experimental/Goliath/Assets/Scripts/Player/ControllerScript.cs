@@ -17,11 +17,11 @@ public class ControllerScript : MonoBehaviour {
 	const float JUMP_SPEED = 8f;
 	const float MAX_LOOK_ANGLE = 88;
 
-	int controllerId = 1;
-	Vector3 facing = new Vector3(0, 0, 1);
+	public int controllerId = 1;
+	public Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 facing2D = new Vector3(0, 0, 1);
 	Vector3 perpFacing = new Vector3(1, 0, 0);
-	Vector3 cameraOffset = Vector3.zero;
+	public Vector3 cameraOffset = Vector3.zero;
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
@@ -178,7 +178,7 @@ public class ControllerScript : MonoBehaviour {
 
 			// Firing script
 			if (TriggersR != 0){
-				player.tryFire(facing, transform.position + facing + cameraOffset);
+				player.tryFire();
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}
@@ -310,7 +310,7 @@ public class ControllerScript : MonoBehaviour {
 			
 			// Firing script
 			if (Mouse_Left){
-				player.tryFire(facing, transform.position + facing + cameraOffset);
+				player.tryFire();
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}

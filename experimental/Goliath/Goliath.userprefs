@@ -1,14 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Bullet.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Weapon.cs">
     <Files>
-      <File FileName="Goliath.sln" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="316" Column="6" />
-      <File FileName="Assets\Scripts\Player\Player.cs" Line="144" Column="39" />
-      <File FileName="Assets\Scripts\Weapon.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="314" Column="28" />
+      <File FileName="Assets\Scripts\Player\Player.cs" Line="20" Column="31" />
+      <File FileName="Assets\Scripts\Weapon.cs" Line="10" Column="29" />
       <File FileName="Assets\Scripts\Bullet.cs" Line="64" Column="1" />
-      <File FileName="Assets\Scripts\BotAI.cs" Line="133" Column="4" />
-      <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\BotAI.cs" Line="4" Column="37" />
+      <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="29" Column="116" />
+      <File FileName="Assets\Scripts\Player\Crosshair.cs" Line="40" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

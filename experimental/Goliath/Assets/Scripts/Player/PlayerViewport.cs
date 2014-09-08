@@ -26,7 +26,7 @@ public class PlayerViewport : MonoBehaviour {
 	}
 
 	// Sets viewport dimensions
-	public void setWindow(float xLow, float xHigh, float yLow, float yHigh){
+	public void InitializePlayerInterface(float xLow, float xHigh, float yLow, float yHigh, float baseWeaponSpread = 0){
 		renderWindow[0] = xLow;
 		renderWindow[1] = xHigh;
 		renderWindow[2] = yLow;
@@ -36,6 +36,9 @@ public class PlayerViewport : MonoBehaviour {
 		scale = xHigh - xLow;
 		
 		crossScript.setScaleCentre(scale, viewportCentre[0], viewportCentre[1]);
+		crossScript.calculateDrawPositions(baseWeaponSpread);
 		playerCam.camera.rect = new Rect(renderWindow[0], renderWindow[2], renderWindow[1] - renderWindow[0], renderWindow[3] - renderWindow[2]);
 	}
+
+
 }

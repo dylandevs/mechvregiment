@@ -3,9 +3,6 @@ using System.Collections;
 
 public class BotAI : MonoBehaviour {
 
-	// Faction to determine friendly fire and other mechanics
-	public string faction = "BotEnemy";
-
 	// State values
 	const byte ALL_CLEAR = 0;
 	const byte SEARCHING = 1;
@@ -205,12 +202,12 @@ public class BotAI : MonoBehaviour {
 
 	// Fires bullet in direction provided
 	void fireInDirection(Transform target){
-		Vector3 direction = target.position - transform.position;
+		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - transform.position;
 		Vector3 bulletGenPos = transform.position + facing;
 
 		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(5.5f, faction, direction, 4);
+		bulletScript.setProperties(5.5f, gameObject.tag, direction, 4);
 
 	}
 
