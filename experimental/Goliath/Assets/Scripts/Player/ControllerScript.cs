@@ -22,7 +22,9 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 facing2D = new Vector3(0, 0, 1);
 	Vector3 perpFacing = new Vector3(1, 0, 0);
 	Vector3 cameraOffset = Vector3.zero;
-	Vector3 groundCheckVector = new Vector3(0, 0.05f, 0);
+	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
+	Vector3 halfColliderX;
+	Vector3 halfColliderZ;
 
 	// Inputs
 	public Camera playerCam;
@@ -45,6 +47,9 @@ public class ControllerScript : MonoBehaviour {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
+		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
+		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
+		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
 	}
 	
 	// Update is called once per frame
@@ -55,6 +60,8 @@ public class ControllerScript : MonoBehaviour {
 		Vector3 newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
+
+		bool currentlyGrounded = IsGrounded();
 
 		// Controller connected
 		if (Input.GetJoystickNames ().Length > 0){
@@ -77,7 +84,7 @@ public class ControllerScript : MonoBehaviour {
 
 			}
 
-			if (IsGrounded()){
+			if (currentlyGrounded){
 
 				// Jumping
 				if (A_Down){
@@ -88,7 +95,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Toggle ADS
-			if (TriggersL != 0) {
+			if (TriggersL != 0 && currentlyGrounded) {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
@@ -198,7 +205,7 @@ public class ControllerScript : MonoBehaviour {
 			deltaMousePos.x = Input.GetAxis("Mouse X");
 			deltaMousePos.y = Input.GetAxis("Mouse Y");
 
-			if (IsGrounded()){
+			if (currentlyGrounded){
 				
 				// Jumping
 				if (Space_Down){
@@ -209,7 +216,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 			
 			// Toggle ADS
-			if (Mouse_Right) {
+			if (Mouse_Right && currentlyGrounded) {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
@@ -263,19 +270,6 @@ public class ControllerScript : MonoBehaviour {
 				}
 			}
 			
-			// Rotation about Y axis
-			if (deltaMousePos.x != 0){
-				// Slow movement for ADS
-				if (aimingDownSight){
-					deltaMousePos.x *= 0.5f;
-				}
-
-				facing = Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing;
-				facing2D = new Vector3(facing.x, 0, facing.z).normalized;
-				transform.LookAt(transform.position + facing2D);
-				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
-			}
-			
 			// Vertical tilt of camera
 			if (deltaMousePos.y != 0){
 				// Slow movement for ADS
@@ -285,10 +279,7 @@ public class ControllerScript : MonoBehaviour {
 
 				float newVertAngle = Vector3.Angle(facing, Vector3.up) - deltaMousePos.y;
 				Vector3 newFacing = Quaternion.AngleAxis(-deltaMousePos.y, perpFacing) * facing;
-				//float vertAngle = Vector3.Angle(newFacing, Vector3.up);
-				//Debug.Log (Vector3.Angle(newFacing, Vector3.up));
 
-				print(newVertAngle);
 				// Limit angle so straight up/down are not possible
 				if (newVertAngle > 170){
 					facing = Quaternion.AngleAxis(170, perpFacing) * Vector3.up;
@@ -302,6 +293,19 @@ public class ControllerScript : MonoBehaviour {
 					facing = newFacing;
 					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 				}
+			}
+
+			// Rotation about Y axis
+			if (deltaMousePos.x != 0){
+				// Slow movement for ADS
+				if (aimingDownSight){
+					deltaMousePos.x *= 0.5f;
+				}
+				
+				facing = Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing;
+				facing2D = new Vector3(facing.x, 0, facing.z).normalized;
+				transform.LookAt(transform.position + facing2D);
+				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 			}
 			
 			// Firing script
@@ -322,8 +326,30 @@ public class ControllerScript : MonoBehaviour {
 		rigidbody.velocity = newVel;
 	}
 
+	// Testing for ground directly beneath and at edges of collider
 	bool IsGrounded(){
-		return Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y * 2);
+		bool groundState = false;//Physics.Raycast (transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y);
+
+		if (!groundState) {
+			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, groundCheckVector.y);
+		}
+		if (!groundState){
+			groundState = Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, groundCheckVector.y);
+		}
+		if (!groundState){
+			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, groundCheckVector.y);
+		}
+		if (!groundState){
+			groundState = Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, groundCheckVector.y);
+		}
+
+		Debug.DrawLine (transform.position + groundCheckVector, transform.position);
+		Debug.DrawLine (transform.position + groundCheckVector - halfColliderX, transform.position - halfColliderX);
+		Debug.DrawLine (transform.position + groundCheckVector + halfColliderX, transform.position + halfColliderX);
+		Debug.DrawLine (transform.position + groundCheckVector - halfColliderZ, transform.position - halfColliderZ);
+		Debug.DrawLine (transform.position + groundCheckVector + halfColliderZ, transform.position + halfColliderZ);
+		
+		return groundState;
 	}
 
 	// Sets controller that this player will be associated with

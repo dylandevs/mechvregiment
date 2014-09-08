@@ -42,8 +42,22 @@ public class Player : MonoBehaviour {
 	float fireTimer = 0;
 	bool isAimingDownSights = false;
 
+	public GameObject[] weaponModels = new GameObject[]{};
+	private Weapon[] weapons;
+	int currentWeaponIndex = 0;
+
 	// Use this for initialization
 	void Start () {
+		weapons = new Weapon[weaponModels.Length];
+
+		// Getting models from parents
+		foreach (Transform child in firstPersonWrapper.transform){
+			firstPersonModel.Add(child.gameObject);
+		}
+		foreach (Transform child in thirdPersonWrapper.transform){
+			thirdPersonModel.Add(child.gameObject);
+		}
+
 		Initialize("Player", 1, new float[]{0, 1, 0, 1});
 		//anim.Play("PlayerIdle");
 	}
@@ -51,6 +65,9 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		tryRegen();
+		if (fireTimer > 0){
+			fireTimer -= Time.deltaTime;
+		}
 		//Debug.Log(anim.GetFloat(speedHash));
 	}
 
@@ -62,21 +79,19 @@ public class Player : MonoBehaviour {
 		playerController.setController(playerId);
 		playerRenderer.setWindow(window[0], window[1], window[2], window[3]);
 
-		// Getting models from parents
-		foreach (Transform child in firstPersonWrapper.transform){
-			firstPersonModel.Add(child.gameObject);
-		}
-		foreach (Transform child in thirdPersonWrapper.transform){
-			thirdPersonModel.Add(child.gameObject);
-		}
-
 		// Settings layers for models and hiding/showing to camera
 		//print(id);
 		setModelLayer(firstPersonModel, "PlayerView1_" + id);
 		setModelLayer(thirdPersonModel, "PlayerView3_" + id);
 
 		// NOTE: TEMPORARY
+		for (int i = 0; i < weaponModels.Length; i++) {
+			weaponModels[i].layer = LayerMask.NameToLayer("PlayerView1_" + id);
+			weapons[i] = weaponModels[i].GetComponent<Weapon>();
+		}
+
 		weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
+
 		//firstPersonModel.layer = LayerMask.NameToLayer("PlayerView1_" + id);
 		//thirdPersonModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 		playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
@@ -122,12 +137,10 @@ public class Player : MonoBehaviour {
 		if (fireTimer <= 0){
 			GameObject bullet = Instantiate(ammunition, bulletPos, Quaternion.identity) as GameObject;
 			Bullet bulletScript = bullet.GetComponent<Bullet>();
-			bulletScript.setProperties(15, faction, fireDir, 40);
+			bulletScript.setProperties(15, gameObject.tag, fireDir, 40);
 			
 			fireTimer = FIRE_RATE;
-		}
-		else{
-			fireTimer -= Time.deltaTime;
+			weapons[currentWeaponIndex].Fire();
 		}
 	}
 

@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour {
 		damage = baseDamage;
 		originator = firer;
 		velocity = direction.normalized * speed;
+		rigidbody.velocity = direction.normalized * speed;
 	}
 	
 	// Update is called once per frame
@@ -34,35 +35,57 @@ public class Bullet : MonoBehaviour {
 
 		// Move forward (remember position)
 		lastPos = transform.position;
-		transform.position += velocity * Time.deltaTime;
+		//transform.position += velocity * Time.deltaTime;
 
-		if (collisionFound){
+		if (collisionFound) {
 			Destroy(gameObject);
 		}
-
 	}
+
+	/*void OnCollisionEnter(Collision hit){
+		if (hit.gameObject.GetType() != typeof(TerrainCollider)){
+			print("hit");
+			Player playerHit;
+			BotAI botHit;
+			if (playerHit = hit.gameObject.GetComponent<Player>()){
+				if (originator != playerHit.faction){
+					playerHit.Damage(damage);
+				}
+			}
+			else if (botHit = hit.gameObject.GetComponent<BotAI>()){
+				if (originator != botHit.faction){
+					botHit.Damage(damage);
+				}
+			}
+		}
+
+		Destroy(gameObject);
+	}*/
 
 	// Checks for collision since last update cycle
 	bool checkForwardCollision(){
 		RaycastHit rayHit;
-		if (Physics.Raycast(lastPos, velocity, out rayHit, velocity.magnitude * Time.deltaTime)){
+		float travelDist = Vector3.Distance (lastPos, transform.position);
+		if (travelDist > 0){
+			if (Physics.Raycast(lastPos, velocity, out rayHit, travelDist)){
+				print (rayHit.collider.gameObject.tag);
 
-			if (rayHit.collider.GetType() != typeof(TerrainCollider)){
-				//print("hit");
-				Player playerHit;
-				BotAI botHit;
-				if (playerHit = rayHit.collider.GetComponent<Player>()){
-					if (originator != playerHit.faction){
-						playerHit.Damage(damage);
-					}
+				if (rayHit.collider.gameObject.tag == "Terrain"){
+					// Hit the ground, do nothing
 				}
-				else if (botHit = rayHit.collider.GetComponent<BotAI>()){
-					if (originator != botHit.faction){
-						botHit.Damage(damage);
-					}
+				else if (rayHit.collider.gameObject.tag == "Player"){
+					Player playerHit = rayHit.collider.GetComponent<Player>();
+					playerHit.Damage(damage);
+					print("hit player");
 				}
+				else if (rayHit.collider.gameObject.tag == "Enemy"){
+					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
+					botHit.Damage(damage);
+					print("hit enemy");
+				}
+				return true;
 			}
-			return true;
+			return false;
 		}
 		return false;
 	}

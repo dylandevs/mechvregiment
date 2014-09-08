@@ -9,7 +9,8 @@ public class Weapon : MonoBehaviour {
 	public float FIRE_RATE = 0.5f;
 	public int BURST_LENGTH = 1;
 	public bool AUTOMATIC = false;
-	public Vector2 RECOIL_PATTERN;
+	public Vector2 RECOIL_PATTERN = Vector2.zero;
+	public float BASE_SPREAD = 0;
 	public bool ALTERNATING_RECOIL = false;
 
 	public int MAG_SIZE = 30;
@@ -34,6 +35,10 @@ public class Weapon : MonoBehaviour {
 
 	// Recoil tracker
 	private float recoil = 0;
+
+	// State trackers
+	bool isReloading = false;
+	bool isBursting = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -49,8 +54,12 @@ public class Weapon : MonoBehaviour {
 	// Generates projectile at specified generation position
 	public void Fire(){
 		if (magAmmo > 0) {
-			Instantiate (projectileObject, generatorPos.transform.position, transform.rotation);
+			//Instantiate (projectileObject, generatorPos.transform.position, transform.rotation);
 			magAmmo--;
+			print (magAmmo);
+		}
+		else{
+			print ("empty");
 		}
 	}
 
