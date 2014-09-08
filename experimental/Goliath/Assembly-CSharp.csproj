@@ -53,7 +53,6 @@
      <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerViewport.cs" />
-     <Compile Include="Assets\Scripts\TempProjectile.cs" />
      <Compile Include="Assets\Scripts\Weapon.cs" />
      <None Include="Assets\Shaders\InvisibleShadowCaster.shader" />
   </ItemGroup>
