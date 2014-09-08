@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		lastPos = transform.position;
 	}
 
 	public void setProperties(float baseDamage, string firer, Vector3 direction, float speed){
@@ -42,26 +42,6 @@ public class Bullet : MonoBehaviour {
 		}
 	}
 
-	/*void OnCollisionEnter(Collision hit){
-		if (hit.gameObject.GetType() != typeof(TerrainCollider)){
-			print("hit");
-			Player playerHit;
-			BotAI botHit;
-			if (playerHit = hit.gameObject.GetComponent<Player>()){
-				if (originator != playerHit.faction){
-					playerHit.Damage(damage);
-				}
-			}
-			else if (botHit = hit.gameObject.GetComponent<BotAI>()){
-				if (originator != botHit.faction){
-					botHit.Damage(damage);
-				}
-			}
-		}
-
-		Destroy(gameObject);
-	}*/
-
 	// Checks for collision since last update cycle
 	bool checkForwardCollision(){
 		RaycastHit rayHit;
@@ -69,6 +49,7 @@ public class Bullet : MonoBehaviour {
 		if (travelDist > 0){
 			if (Physics.Raycast(lastPos, velocity, out rayHit, travelDist)){
 				print (rayHit.collider.gameObject.tag);
+				//print (travelDist);
 
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the ground, do nothing
@@ -76,12 +57,12 @@ public class Bullet : MonoBehaviour {
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					Player playerHit = rayHit.collider.GetComponent<Player>();
 					playerHit.Damage(damage);
-					print("hit player");
+					//print("hit player");
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 					botHit.Damage(damage);
-					print("hit enemy");
+					//print("hit enemy");
 				}
 				return true;
 			}

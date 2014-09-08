@@ -135,6 +135,7 @@ public class Player : MonoBehaviour {
 	// Attempts to fire bullet
 	public void tryFire(Vector3 fireDir, Vector3 bulletPos){
 		if (fireTimer <= 0){
+
 			GameObject bullet = Instantiate(ammunition, bulletPos, Quaternion.identity) as GameObject;
 			Bullet bulletScript = bullet.GetComponent<Bullet>();
 			bulletScript.setProperties(15, gameObject.tag, fireDir, 40);
