@@ -10,12 +10,12 @@ using System.Collections;
 
 public class ControllerScript : MonoBehaviour {
 
-	const float SPRINT_SPEED = 12f;
-	const float RUN_SPEED = 6f;
-	const float WALK_SPEED = 1.5f;
-	const float RUN_THRESH = 0.5f;
-	const float JUMP_SPEED = 8f;
-	const float MAX_LOOK_ANGLE = 88;
+	const float SprintSpeed = 12f;
+	const float RunSpeed = 6f;
+	const float WalkSpeed = 1.5f;
+	const float RunThresh = 0.5f;
+	const float JumpSpeed = 8f;
+	const float MaxLookAngle = 88;
 
 	public int controllerId = 1;
 	public Vector3 facing = new Vector3(0, 0, 1);
@@ -62,6 +62,9 @@ public class ControllerScript : MonoBehaviour {
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
 		bool currentlyGrounded = IsGrounded();
+		float spread = 0;
+
+		Weapon currentWeapon = player.getCurrentWeapon ();
 
 		// Controller connected
 		if (Input.GetJoystickNames ().Length > 0){
@@ -88,10 +91,13 @@ public class ControllerScript : MonoBehaviour {
 
 				// Jumping
 				if (A_Down){
-					newVel.y += JUMP_SPEED;
+					newVel.y += JumpSpeed;
 					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
 				}
 
+			}
+			else{
+				spread += currentWeapon.JumpSpreadAdjust;
 			}
 
 			// Toggle ADS
@@ -100,6 +106,7 @@ public class ControllerScript : MonoBehaviour {
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
+				spread += currentWeapon.AdsSpreadAdjust;
 			}
 			else{
 				player.toggleADS(false);
@@ -111,30 +118,33 @@ public class ControllerScript : MonoBehaviour {
 
 			// Lateral movement (strafing)
 			if (L_XAxis != 0){
-				if (Mathf.Abs(L_XAxis) > RUN_THRESH){
-					newVel += RUN_SPEED * perpFacing * signOf(L_XAxis);
+				if (Mathf.Abs(L_XAxis) > RunThresh){
+					newVel += RunSpeed * perpFacing * signOf(L_XAxis);
 				}
 				else{
-					newVel += WALK_SPEED * perpFacing * signOf(L_XAxis);
+					newVel += WalkSpeed * perpFacing * signOf(L_XAxis);
 				}
 			}
 
 			// Longitudinal movement
 			if (L_YAxis != 0){
 				// Sprint
-				if (LS_Held && L_YAxis < RUN_THRESH){
-					newVel += SPRINT_SPEED * facing2D;
+				if (LS_Held && L_YAxis < RunThresh){
+					newVel += SprintSpeed * facing2D;
 					anim.SetBool(sprintHash, true);
+					spread += currentWeapon.SprintSpreadAdjust;
 				}
 				// Run
-				else if (Mathf.Abs(L_YAxis) > RUN_THRESH){
-					newVel += RUN_SPEED * facing2D * -signOf(L_YAxis);
+				else if (Mathf.Abs(L_YAxis) > RunThresh){
+					newVel += RunSpeed * facing2D * -signOf(L_YAxis);
 					anim.SetBool(sprintHash, false);
+					spread += currentWeapon.RunSpreadAdjust;
 				}
 				// Walk
 				else{
-					newVel += Mathf.Lerp(0, RUN_SPEED, Mathf.Abs(L_YAxis)/RUN_THRESH) * facing2D * -signOf(L_YAxis);
+					newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
 					anim.SetBool(sprintHash, false);
+					spread += currentWeapon.CrouchSpreadAdjust;
 				}
 			}
 
@@ -209,7 +219,7 @@ public class ControllerScript : MonoBehaviour {
 				
 				// Jumping
 				if (Space_Down){
-					newVel.y += JUMP_SPEED;
+					newVel.y += JumpSpeed;
 					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
 				}
 				
@@ -233,40 +243,40 @@ public class ControllerScript : MonoBehaviour {
 			// Lateral movement (strafing)
 			if (Key_A){
 				if (Ctrl){
-					newVel += WALK_SPEED * -perpFacing;
+					newVel += WalkSpeed * -perpFacing;
 				}
 				else{
-					newVel += RUN_SPEED * -perpFacing;
+					newVel += RunSpeed * -perpFacing;
 				}
 			}
 			else if (Key_D){
 				if (Ctrl){
-					newVel += WALK_SPEED * perpFacing;
+					newVel += WalkSpeed * perpFacing;
 				}
 				else{
-					newVel += RUN_SPEED * perpFacing;
+					newVel += RunSpeed * perpFacing;
 				}
 			}
 			
 			// Longitudinal movement
 			if (Key_W){
 				if (Shift){
-					newVel += SPRINT_SPEED * facing2D;
+					newVel += SprintSpeed * facing2D;
 				}
 				else if (Ctrl){
-					newVel += WALK_SPEED * facing2D;
+					newVel += WalkSpeed * facing2D;
 				}
 				else{
-					newVel += RUN_SPEED * facing2D;
+					newVel += RunSpeed * facing2D;
 				}
 				anim.SetBool(sprintHash, Shift);
 			}
 			else if(Key_S){
 				if (Ctrl){
-					newVel += WALK_SPEED * facing2D * -1;
+					newVel += WalkSpeed * facing2D * -1;
 				}
 				else{
-					newVel += RUN_SPEED * facing2D * -1;
+					newVel += RunSpeed * facing2D * -1;
 				}
 			}
 			

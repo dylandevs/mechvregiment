@@ -4,21 +4,28 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
 	// Weapon attributes
-	public float RELOAD_TIME = 2;
-	public float BURST_TIME = 0.1f;
-	public float FIRE_RATE = 0.3f;
-	public int BURST_LENGTH = 3;
-	public bool AUTOMATIC = true;
-	public bool ALTERNATING_RECOIL = false;
-	public Vector2 RECOIL_PATTERN = Vector2.zero;
+	public float ReloadTime = 2;
+	public float BurstTime = 0.1f;
+	public float FireRate = 0.3f;
+	public int BurstLength = 3;
+	public bool Automatic = true;
+	public bool AlternatingRecoil = false;
+	public Vector2 RecoilPattern = Vector2.zero;
 
-	public float BASE_SPREAD = 10;
-	public float SPREAD_RATE = 1;
+	// Spread variables and adjustments in different states
+	public float BaseSpread = 10;
+	public float SpreadRate = 1;
+	public float SpreadAdjustmentRate = 0.5f;
+	public float AdsSpreadAdjust = -4;
+	public float CrouchSpreadAdjust = -5;
+	public float RunSpreadAdjust = 10;
+	public float JumpSpreadAdjust = 10;
+	public float SprintSpreadAdjust = 20;
 
-	public int BULLET_SPEED = 50;
-	public int MAG_SIZE = 30;
-	public int RESERVE_SIZE = 120;
-	public float DAMAGE = 15;
+	public int BulletSpeed = 50;
+	public int MagSize = 30;
+	public int ReserveSize = 120;
+	public float Damage = 15;
 
 	// Inputs
 	public GameObject generatorPos;
@@ -35,6 +42,7 @@ public class Weapon : MonoBehaviour {
 
 	// Spread tracker
 	private float spread = 0;
+	private float targetSpread = 0;
 
 	// Recoil tracker
 	private float recoil = 0;
@@ -52,12 +60,24 @@ public class Weapon : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		totalAmmo = MAG_SIZE * 5;
-		magAmmo = MAG_SIZE;
+		totalAmmo = MagSize * 5;
+		magAmmo = MagSize;
 	}
 
 	// Update is called once per frame
 	void Update () {
+
+		// Adjust spread if not at target
+		if (spread != targetSpread) {
+			float spreadDiff = targetSpread - spread;
+			// Either set spread to target, or approach
+			if (Mathf.Abs(spreadDiff) < 0.05f ){
+				spread = targetSpread;
+			}
+			else{
+				spread += spreadDiff * SpreadAdjustmentRate;
+			}
+		}
 
 		// Progress through fire interval (shortest time between shots)
 		if (isOnFireInterval) {
@@ -88,13 +108,13 @@ public class Weapon : MonoBehaviour {
 			if (burstProgress <= 0){
 
 				// Check if burst has finished
-				if (bulletsOfBurstFired++ >= BURST_LENGTH){
+				if (bulletsOfBurstFired++ >= BurstLength){
 					StopBursting();
 					StartFireInterval();
 				}
 				else{
 					Fire ();
-					burstProgress = BURST_TIME;
+					burstProgress = BurstTime;
 				}
 			}
 		}
@@ -120,8 +140,8 @@ public class Weapon : MonoBehaviour {
 	public void FireBurst(){
 		if (!isBursting && !isOnFireInterval && !isReloading && !isAllAmmoDepleted){
 			// Begins burst
-			print (BURST_LENGTH);
-			if (BURST_LENGTH > 1) {
+			print (BurstLength);
+			if (BurstLength > 1) {
 				StartBursting();
 				Fire ();
 				bulletsOfBurstFired++;
@@ -142,14 +162,17 @@ public class Weapon : MonoBehaviour {
 
 		// Setting bullet properties
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(DAMAGE, player.tag, controller.facing, BULLET_SPEED);
+		bulletScript.setProperties(Damage, player.tag, controller.facing, BulletSpeed);
+
+		// Update spread
+		spread += SpreadRate;
 
 		magAmmo--;
 	}
 
 	public void StartFireInterval(){
 		isOnFireInterval = true;
-		fireProgress = FIRE_RATE;
+		fireProgress = FireRate;
 	}
 
 	public void StopFireInterval(){
@@ -159,7 +182,7 @@ public class Weapon : MonoBehaviour {
 
 	public void StartBursting(){
 		isBursting = true;
-		burstProgress = BURST_TIME;
+		burstProgress = BurstTime;
 	}
 
 	public void StopBursting(){
@@ -171,7 +194,7 @@ public class Weapon : MonoBehaviour {
 	public void StartReloading(){
 		// Only reload if some reserve left
 		if (totalAmmo > 0){
-			reloadProgress = RELOAD_TIME;
+			reloadProgress = ReloadTime;
 			isReloading = true;
 			print ("Reloading...");
 		}
@@ -188,9 +211,9 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Reload(){
-		int requiredAmmo = MAG_SIZE - magAmmo;
+		int requiredAmmo = MagSize - magAmmo;
 		if (totalAmmo >= requiredAmmo) {
-			magAmmo = MAG_SIZE;
+			magAmmo = MagSize;
 			totalAmmo -= requiredAmmo;
 		} else {
 			magAmmo += totalAmmo;
@@ -208,7 +231,11 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float getSpread(){
-		return spread + BASE_SPREAD;
+		return spread + BaseSpread;
+	}
+
+	public void setTargetSpread(float newSpread){
+		targetSpread = newSpread;
 	}
 
 	public float getRecoil(){

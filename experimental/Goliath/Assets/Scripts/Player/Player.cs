@@ -12,9 +12,9 @@ public class Player : MonoBehaviour {
 
 	int id = 0;
 
-	const float HEAL_WAIT = 5.0f;
-	const float MAX_HEALTH = 100;
-	const float REGEN_INC = 0.7f;
+	const float HealWait = 5.0f;
+	const float MaxHealth = 100;
+	const float RegenInc = 0.7f;
 
 	public Camera playerCam;
 	public Crosshair crossScript;
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour {
 
 	public Shader invisShadowCastShader;
 
-	float health = MAX_HEALTH;
+	float health = MaxHealth;
 	float crossJitter = 0;
 	float healTimer = 0;
 	bool isAimingDownSights = false;
@@ -64,9 +64,6 @@ public class Player : MonoBehaviour {
 	public void Initialize(int playerId, float[] window){
 		id = playerId;
 
-		// Setting controller
-		playerController.setController(playerId);
-
 		// Settings layers for models and hiding/showing to camera
 		setModelLayer(firstPersonModel, "PlayerView1_" + id);
 		setModelLayer(thirdPersonModel, "PlayerView3_" + id);
@@ -89,14 +86,17 @@ public class Player : MonoBehaviour {
 		playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
 		playerCam.cullingMask |= (1 << firstPersonModel[0].layer);
 
+		// Setting controller
+		playerController.setController(playerId);
+
 		createShadowCasterModel();
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
 	void tryRegen(){
-		if (health < MAX_HEALTH){
+		if (health < MaxHealth){
 			if (healTimer <= 0){
-				health = Mathf.Min(MAX_HEALTH, health + REGEN_INC * Time.deltaTime);
+				health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
 				//print (health);
 			}
 			else{
@@ -120,8 +120,12 @@ public class Player : MonoBehaviour {
 	public void Damage(float damage){
 		//print (damage);
 		health -= damage;
-		healTimer = HEAL_WAIT;
+		healTimer = HealWait;
 		//print (health);
+	}
+
+	public Weapon getCurrentWeapon(){
+		return weapons [currentWeaponIndex];
 	}
 
 	// Attempts to fire bullet
