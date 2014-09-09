@@ -6,8 +6,8 @@ public class Weapon : MonoBehaviour {
 	// Weapon attributes
 	public float RELOAD_TIME = 2;
 	public float BURST_TIME = 0.1f;
-	public float FIRE_RATE = 0.5f;
-	public int BURST_LENGTH = 1;
+	public float FIRE_RATE = 0.3f;
+	public int BURST_LENGTH = 3;
 	public bool AUTOMATIC = true;
 	public bool ALTERNATING_RECOIL = false;
 	public Vector2 RECOIL_PATTERN = Vector2.zero;
@@ -17,7 +17,7 @@ public class Weapon : MonoBehaviour {
 
 	public int BULLET_SPEED = 50;
 	public int MAG_SIZE = 30;
-	public int RESERVE_SIZE = 150;
+	public int RESERVE_SIZE = 120;
 	public float DAMAGE = 15;
 
 	// Inputs
@@ -43,6 +43,7 @@ public class Weapon : MonoBehaviour {
 	bool isReloading = false;
 	bool isBursting = false;
 	bool isOnFireInterval = false;
+	bool isAllAmmoDepleted = false;
 	int bulletsOfBurstFired = 0;
 
 	// External references
@@ -51,7 +52,6 @@ public class Weapon : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		spread = BASE_SPREAD;
 		totalAmmo = MAG_SIZE * 5;
 		magAmmo = MAG_SIZE;
 	}
@@ -86,14 +86,25 @@ public class Weapon : MonoBehaviour {
 
 			// Check if time to fire bullet automatically
 			if (burstProgress <= 0){
-				Fire ();
-				burstProgress = BURST_TIME;
 
 				// Check if burst has finished
 				if (bulletsOfBurstFired++ >= BURST_LENGTH){
 					StopBursting();
 					StartFireInterval();
 				}
+				else{
+					Fire ();
+					burstProgress = BURST_TIME;
+				}
+			}
+		}
+
+		// Attempt to reload if possible
+		if (!isReloading){
+			if (magAmmo == 0){
+				StopBursting();
+				StopFireInterval();
+				StartReloading();
 			}
 		}
 	}
@@ -107,37 +118,33 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void FireBurst(){
-		if (!isBursting && !isOnFireInterval){
+		if (!isBursting && !isOnFireInterval && !isReloading && !isAllAmmoDepleted){
 			// Begins burst
+			print (BURST_LENGTH);
 			if (BURST_LENGTH > 1) {
-				Fire ();
 				StartBursting();
+				Fire ();
 				bulletsOfBurstFired++;
 			}
 			// Single shot, no burst firing
 			else{
-				Fire ();
 				StartFireInterval();
+				Fire ();
 			}
 		}
 	}
 
 	// Generates projectile at specified generation position
 	private void Fire(){
-		if (magAmmo > 0) {
-			// Creates bullet at given position
-			Vector3 bulletOrigin = controller.transform.position + controller.facing + controller.cameraOffset;
-			GameObject bullet = Instantiate(projectileObject, bulletOrigin, Quaternion.identity) as GameObject;
+		// Creates bullet at given position
+		Vector3 bulletOrigin = controller.transform.position + controller.facing + controller.cameraOffset;
+		GameObject bullet = Instantiate(projectileObject, bulletOrigin, Quaternion.identity) as GameObject;
 
-			// Setting bullet properties
-			Bullet bulletScript = bullet.GetComponent<Bullet>();
-			bulletScript.setProperties(DAMAGE, player.tag, controller.facing, BULLET_SPEED);
+		// Setting bullet properties
+		Bullet bulletScript = bullet.GetComponent<Bullet>();
+		bulletScript.setProperties(DAMAGE, player.tag, controller.facing, BULLET_SPEED);
 
-			print (magAmmo--);
-		}
-		else{
-			print ("empty");
-		}
+		magAmmo--;
 	}
 
 	public void StartFireInterval(){
@@ -162,13 +169,22 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void StartReloading(){
-		reloadProgress = RELOAD_TIME;
-		isReloading = true;
+		// Only reload if some reserve left
+		if (totalAmmo > 0){
+			reloadProgress = RELOAD_TIME;
+			isReloading = true;
+			print ("Reloading...");
+		}
+		else{
+			print ("All empty!");
+			isAllAmmoDepleted = true;
+		}
 	}
 
 	public void StopReloading(){
 		reloadProgress = 0;
 		isReloading = false;
+		print ("Reloaded");
 	}
 
 	public void Reload(){
@@ -192,7 +208,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float getSpread(){
-		return spread;
+		return spread + BASE_SPREAD;
 	}
 
 	public float getRecoil(){
