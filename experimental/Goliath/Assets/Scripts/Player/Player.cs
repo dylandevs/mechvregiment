@@ -59,6 +59,7 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		tryRegen();
+		crossScript.updateSpread (weapons [currentWeaponIndex].getSpread ());
 	}
 
 	public void Initialize(int playerId, float[] window){

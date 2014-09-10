@@ -227,7 +227,7 @@ public class BotAI : MonoBehaviour {
 
 	// TESTING: sets surface colour of model
 	void setSurfaceColour(Color newCol){
-		//renderer.material.color = newCol;
+		renderer.material.color = newCol;
 	}
 
 	public byte getState(){

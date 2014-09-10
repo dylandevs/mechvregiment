@@ -13,13 +13,15 @@ public class Weapon : MonoBehaviour {
 	public Vector2 RecoilPattern = Vector2.zero;
 
 	// Spread variables and adjustments in different states
-	public float BaseSpread = 10;
-	public float SpreadRate = 1;
-	public float SpreadAdjustmentRate = 0.5f;
-	public float AdsSpreadAdjust = -4;
+	public float BaseSpread = 15;
+	public float FireSpreadRate = 6;
+	public float FireSpreadRecoveryRate = 0.8f;
+	public float SpreadAdjustmentRate = 0.4f;
+	public float AdsSpreadAdjust = -8;
 	public float CrouchSpreadAdjust = -5;
+	public float WalkSpreadAdjust = 5;
 	public float RunSpreadAdjust = 10;
-	public float JumpSpreadAdjust = 10;
+	public float JumpSpreadAdjust = 20;
 	public float SprintSpreadAdjust = 20;
 
 	public int BulletSpeed = 50;
@@ -43,6 +45,7 @@ public class Weapon : MonoBehaviour {
 	// Spread tracker
 	private float spread = 0;
 	private float targetSpread = 0;
+	private float fireSpread = 0;
 
 	// Recoil tracker
 	private float recoil = 0;
@@ -67,12 +70,22 @@ public class Weapon : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		// Decrease fire-related spread quickly over time
+		if (fireSpread > 0) {
+			fireSpread -= FireSpreadRecoveryRate;
+
+			if (fireSpread < 0){
+				fireSpread = 0;
+			}
+			print (fireSpread);
+		}
+
 		// Adjust spread if not at target
-		if (spread != targetSpread) {
-			float spreadDiff = targetSpread - spread;
+		if (spread != targetSpread + fireSpread) {
+			float spreadDiff = targetSpread + fireSpread - spread;
 			// Either set spread to target, or approach
 			if (Mathf.Abs(spreadDiff) < 0.05f ){
-				spread = targetSpread;
+				spread = targetSpread + fireSpread;
 			}
 			else{
 				spread += spreadDiff * SpreadAdjustmentRate;
@@ -160,12 +173,21 @@ public class Weapon : MonoBehaviour {
 		Vector3 bulletOrigin = controller.transform.position + controller.facing + controller.cameraOffset;
 		GameObject bullet = Instantiate(projectileObject, bulletOrigin, Quaternion.identity) as GameObject;
 
+		// Potentially randomize direction slightly
+		Vector3 bulletDirection = controller.facing;
+		if (spread > 0) {
+			Quaternion vectorRotation = Quaternion.FromToRotation(Vector3.forward, bulletDirection);
+			Vector2 newTarget = Random.insideUnitCircle * Mathf.Sqrt(spread) * 0.01f;
+			Vector3 unrotatedFacing = new Vector3(newTarget.x, newTarget.y, 1);
+			bulletDirection = (vectorRotation * unrotatedFacing).normalized;
+		}
+
 		// Setting bullet properties
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(Damage, player.tag, controller.facing, BulletSpeed);
+		bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed);
 
-		// Update spread
-		spread += SpreadRate;
+		// Update fire-related spread
+		fireSpread += FireSpreadRate;
 
 		magAmmo--;
 	}

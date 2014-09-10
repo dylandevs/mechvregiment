@@ -120,9 +120,11 @@ public class ControllerScript : MonoBehaviour {
 			if (L_XAxis != 0){
 				if (Mathf.Abs(L_XAxis) > RunThresh){
 					newVel += RunSpeed * perpFacing * signOf(L_XAxis);
+					spread += currentWeapon.RunSpreadAdjust;
 				}
 				else{
 					newVel += WalkSpeed * perpFacing * signOf(L_XAxis);
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 			}
 
@@ -144,7 +146,7 @@ public class ControllerScript : MonoBehaviour {
 				else{
 					newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
 					anim.SetBool(sprintHash, false);
-					spread += currentWeapon.CrouchSpreadAdjust;
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 			}
 
@@ -224,6 +226,9 @@ public class ControllerScript : MonoBehaviour {
 				}
 				
 			}
+			else{
+				spread += currentWeapon.JumpSpreadAdjust;
+			}
 			
 			// Toggle ADS
 			if (Mouse_Right && currentlyGrounded) {
@@ -231,6 +236,7 @@ public class ControllerScript : MonoBehaviour {
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
+				spread += currentWeapon.AdsSpreadAdjust;
 			}
 			else{
 				player.toggleADS(false);
@@ -244,17 +250,21 @@ public class ControllerScript : MonoBehaviour {
 			if (Key_A){
 				if (Ctrl){
 					newVel += WalkSpeed * -perpFacing;
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 				else{
 					newVel += RunSpeed * -perpFacing;
+					spread += currentWeapon.RunSpreadAdjust;
 				}
 			}
 			else if (Key_D){
 				if (Ctrl){
 					newVel += WalkSpeed * perpFacing;
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 				else{
 					newVel += RunSpeed * perpFacing;
+					spread += currentWeapon.RunSpreadAdjust;
 				}
 			}
 			
@@ -262,23 +272,28 @@ public class ControllerScript : MonoBehaviour {
 			if (Key_W){
 				if (Shift){
 					newVel += SprintSpeed * facing2D;
+					spread += currentWeapon.SprintSpreadAdjust;
 				}
 				else if (Ctrl){
 					newVel += WalkSpeed * facing2D;
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 				else{
 					newVel += RunSpeed * facing2D;
+					spread += currentWeapon.RunSpreadAdjust;
 				}
-				anim.SetBool(sprintHash, Shift);
 			}
 			else if(Key_S){
 				if (Ctrl){
 					newVel += WalkSpeed * facing2D * -1;
+					spread += currentWeapon.WalkSpreadAdjust;
 				}
 				else{
 					newVel += RunSpeed * facing2D * -1;
+					spread += currentWeapon.RunSpreadAdjust;
 				}
 			}
+			anim.SetBool(sprintHash, Shift);
 			
 			// Vertical tilt of camera
 			if (deltaMousePos.y != 0){
@@ -334,6 +349,9 @@ public class ControllerScript : MonoBehaviour {
 
 		// Apply velocity and force
 		rigidbody.velocity = newVel;
+
+		// Apply spread to weapon based on actions
+		currentWeapon.setTargetSpread (spread);
 	}
 
 	// Testing for ground directly beneath and at edges of collider
