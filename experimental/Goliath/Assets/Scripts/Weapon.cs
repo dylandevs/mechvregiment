@@ -9,8 +9,14 @@ public class Weapon : MonoBehaviour {
 	public float FireRate = 0.3f;
 	public int BurstLength = 3;
 	public bool Automatic = true;
-	public bool AlternatingRecoil = false;
+
+	// Recoil variables
+	//public bool AlternatingRecoil = false;
 	public Vector2 RecoilPattern = Vector2.zero;
+	public float FirstShotRecoil = 0.1f;
+	public float SubShotRecoil = 0.07f;
+	public float RecoilRecoveryWait = 0.5f;
+	public float RecoilRecoveryRate = 0.2f;
 
 	// Spread variables and adjustments in different states
 	public float BaseSpread = 15;
@@ -41,6 +47,7 @@ public class Weapon : MonoBehaviour {
 	private float reloadProgress = 0;
 	private float burstProgress = 0;
 	private float fireProgress = 0;
+	private float recoilRecoveryProgress = 0;
 
 	// Spread tracker
 	private float spread = 0;
@@ -55,6 +62,7 @@ public class Weapon : MonoBehaviour {
 	bool isBursting = false;
 	bool isOnFireInterval = false;
 	bool isAllAmmoDepleted = false;
+	bool isFiring = false;
 	int bulletsOfBurstFired = 0;
 
 	// External references
@@ -192,28 +200,38 @@ public class Weapon : MonoBehaviour {
 		magAmmo--;
 	}
 
-	public void StartFireInterval(){
+	/*public void ApplyRecoil(){
+		Vector3 currentFacing = controller.transform.position + controller.facing + controller.cameraOffset;
+		currentFacing = Quaternion.AngleAxis(SubShotRecoil, 
+
+		Quaternion vectorRotation = Quaternion.FromToRotation(Vector3.forward, currentFacing);
+		Vector2 newTarget = Random.insideUnitCircle * Mathf.Sqrt(SubShotRecoil) * 0.01f;
+		Vector3 unrotatedFacing = new Vector3(newTarget.x, newTarget.y, 1);
+		currentFacing = (vectorRotation * unrotatedFacing).normalized;
+	}*/
+
+	private void StartFireInterval(){
 		isOnFireInterval = true;
 		fireProgress = FireRate;
 	}
 
-	public void StopFireInterval(){
+	private void StopFireInterval(){
 		isOnFireInterval = false;
 		fireProgress = 0;
 	}
 
-	public void StartBursting(){
+	private void StartBursting(){
 		isBursting = true;
 		burstProgress = BurstTime;
 	}
 
-	public void StopBursting(){
+	private void StopBursting(){
 		isBursting = false;
 		burstProgress = 0;
 		bulletsOfBurstFired = 0;
 	}
 
-	public void StartReloading(){
+	private void StartReloading(){
 		// Only reload if some reserve left
 		if (totalAmmo > 0){
 			reloadProgress = ReloadTime;
@@ -226,13 +244,13 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
-	public void StopReloading(){
+	private void StopReloading(){
 		reloadProgress = 0;
 		isReloading = false;
 		print ("Reloaded");
 	}
 
-	public void Reload(){
+	private void Reload(){
 		int requiredAmmo = MagSize - magAmmo;
 		if (totalAmmo >= requiredAmmo) {
 			magAmmo = MagSize;

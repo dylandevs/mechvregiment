@@ -159,10 +159,12 @@ public class ControllerScript : MonoBehaviour {
 					adjustment *= 0.5f;
 				}
 
-				facing = Quaternion.AngleAxis(adjustment, Vector3.up) * facing;
+				/*facing = Quaternion.AngleAxis(adjustment, Vector3.up) * facing;
 				facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 				transform.LookAt(transform.position + facing2D);
-				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+				playerCam.transform.LookAt(transform.position + facing + cameraOffset);*/
+
+				setFacing(Quaternion.AngleAxis(adjustment, Vector3.up) * facing);
 			}
 
 			// Vertical tilt of camera
@@ -307,16 +309,13 @@ public class ControllerScript : MonoBehaviour {
 
 				// Limit angle so straight up/down are not possible
 				if (newVertAngle > 170){
-					facing = Quaternion.AngleAxis(170, perpFacing) * Vector3.up;
-					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+					setFacing(Quaternion.AngleAxis(170, perpFacing) * Vector3.up);
 				}
 				else if (newVertAngle < 10){
-					facing = Quaternion.AngleAxis(10, perpFacing) * Vector3.up;
-					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+					setFacing(Quaternion.AngleAxis(10, perpFacing) * Vector3.up);
 				}
 				else{
-					facing = newFacing;
-					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+					setFacing(newFacing);
 				}
 			}
 
@@ -327,10 +326,7 @@ public class ControllerScript : MonoBehaviour {
 					deltaMousePos.x *= 0.5f;
 				}
 				
-				facing = Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing;
-				facing2D = new Vector3(facing.x, 0, facing.z).normalized;
-				transform.LookAt(transform.position + facing2D);
-				playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+				setFacing(Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing);
 			}
 			
 			// Firing script
@@ -352,6 +348,14 @@ public class ControllerScript : MonoBehaviour {
 
 		// Apply spread to weapon based on actions
 		currentWeapon.setTargetSpread (spread);
+	}
+
+	// Sets facing according to input
+	public void setFacing(Vector3 newFacing){
+		facing = newFacing;
+		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
+		transform.LookAt(transform.position + facing2D);
+		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 	}
 
 	// Testing for ground directly beneath and at edges of collider
