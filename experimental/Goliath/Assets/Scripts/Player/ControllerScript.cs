@@ -20,7 +20,7 @@ public class ControllerScript : MonoBehaviour {
 	public int controllerId = 1;
 	public Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 facing2D = new Vector3(0, 0, 1);
-	Vector3 perpFacing = new Vector3(1, 0, 0);
+	public Vector3 perpFacing = new Vector3(1, 0, 0);
 	public Vector3 cameraOffset = Vector3.zero;
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
@@ -182,8 +182,8 @@ public class ControllerScript : MonoBehaviour {
 
 				// Limit angle so straight up/down are not possible
 				if (vertAngle >= 10 && vertAngle <= 170){
-					facing = newFacing;
-					playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+					setFacing(newFacing);
+					//playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 				}
 				else{
 					// Do nothing
@@ -192,12 +192,14 @@ public class ControllerScript : MonoBehaviour {
 
 			// Firing script
 			if (TriggersR != 0){
-				player.tryFire();
+				//player.tryFire();
+				player.setFiringState(true);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}
 			}
 			else{
+				player.setFiringState(false);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 0);
 				}
@@ -331,12 +333,14 @@ public class ControllerScript : MonoBehaviour {
 			
 			// Firing script
 			if (Mouse_Left){
-				player.tryFire();
+				//player.tryFire();
+				player.setFiringState(true);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}
 			}
 			else{
+				player.setFiringState(false);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 0);
 				}

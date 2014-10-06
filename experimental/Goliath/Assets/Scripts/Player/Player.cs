@@ -130,8 +130,9 @@ public class Player : MonoBehaviour {
 	}
 
 	// Attempts to fire bullet
-	public void tryFire(){
-		weapons[currentWeaponIndex].FireBurst();
+	public void setFiringState(bool isFiring){
+		weapons [currentWeaponIndex].setFiringState (isFiring);
+		//weapons[currentWeaponIndex].FireBurst();
 	}
 
 	private void setModelLayer(List<GameObject> model, string newLayer){

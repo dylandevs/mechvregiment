@@ -17,6 +17,7 @@ public class Weapon : MonoBehaviour {
 	public float SubShotRecoil = 0.07f;
 	public float RecoilRecoveryWait = 0.5f;
 	public float RecoilRecoveryRate = 0.2f;
+	public float RecoilMoveTime = 0.2f;
 
 	// Spread variables and adjustments in different states
 	public float BaseSpread = 15;
@@ -47,7 +48,7 @@ public class Weapon : MonoBehaviour {
 	private float reloadProgress = 0;
 	private float burstProgress = 0;
 	private float fireProgress = 0;
-	private float recoilRecoveryProgress = 0;
+	private float recoilMoveProgress = 0;
 
 	// Spread tracker
 	private float spread = 0;
@@ -56,6 +57,7 @@ public class Weapon : MonoBehaviour {
 
 	// Recoil tracker
 	private float recoil = 0;
+	private Vector2 recoilTarget;
 
 	// State trackers
 	bool isReloading = false;
@@ -77,6 +79,16 @@ public class Weapon : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		// If currently in firing state, attempt to fire burst
+		if (isFiring) {
+			FireBurst();
+		}
+
+		// Adjust recoil
+		if (recoilMoveProgress > 0) {
+			ApplyRecoil();
+		}
 
 		// Decrease fire-related spread quickly over time
 		if (fireSpread > 0) {
@@ -197,18 +209,58 @@ public class Weapon : MonoBehaviour {
 		// Update fire-related spread
 		fireSpread += FireSpreadRate;
 
+		SetRecoilTarget ();
+
 		magAmmo--;
 	}
 
-	/*public void ApplyRecoil(){
-		Vector3 currentFacing = controller.transform.position + controller.facing + controller.cameraOffset;
-		currentFacing = Quaternion.AngleAxis(SubShotRecoil, 
+	private void SetRecoilTarget(){
+		recoilMoveProgress = RecoilMoveTime;
+		recoilTarget = RecoilPattern;
+		print ("set");
+	}
 
-		Quaternion vectorRotation = Quaternion.FromToRotation(Vector3.forward, currentFacing);
-		Vector2 newTarget = Random.insideUnitCircle * Mathf.Sqrt(SubShotRecoil) * 0.01f;
-		Vector3 unrotatedFacing = new Vector3(newTarget.x, newTarget.y, 1);
-		currentFacing = (vectorRotation * unrotatedFacing).normalized;
-	}*/
+	private void ApplyRecoil(){
+		recoilMoveProgress -= Time.deltaTime;
+
+		Vector3 newFacing = controller.facing;
+
+		print (recoilMoveProgress);
+
+		float recoilProg = (RecoilMoveTime - recoilMoveProgress) / RecoilMoveTime;
+		recoilProg = Mathf.Sqrt(recoilProg);
+
+
+		float yAdjust = Mathf.Lerp (0, recoilTarget.y, recoilProg);
+		float xAdjust = Mathf.Lerp (0, recoilTarget.x, recoilProg);
+
+		Quaternion verticalAdjust = Quaternion.identity;
+		float newVertAngle = Vector3.Angle(newFacing, Vector3.up) - yAdjust;
+		if (newVertAngle > 170){
+			// Do nothing
+		}
+		else if (newVertAngle < 10){
+			// Do nothing
+		}
+		else{
+			verticalAdjust = Quaternion.AngleAxis (-yAdjust, controller.perpFacing);
+		}
+
+		Quaternion horizontalAdjust = Quaternion.AngleAxis (xAdjust, Vector3.up);
+
+		newFacing = verticalAdjust * horizontalAdjust * newFacing;
+		controller.setFacing (newFacing);
+
+		// Finished applying recoil
+		if (recoilMoveProgress <= 0) {
+			recoilMoveProgress = 0;
+		}
+	}
+
+	public void setFiringState(bool firingState){
+		//player.setFiringState(true);
+		isFiring = firingState;
+	}
 
 	private void StartFireInterval(){
 		isOnFireInterval = true;
