@@ -1,11 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Bullet.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Weapon.cs">
     <Files>
-      <File FileName="Assets\Scripts\Weapon.cs" Line="27" Column="18" />
-      <File FileName="Assets\Scripts\Player\Player.cs" Line="84" Column="1" />
+      <File FileName="Assets\Scripts\Weapon.cs" Line="17" Column="39" />
+      <File FileName="Assets\Scripts\Player\Player.cs" Line="51" Column="4" />
       <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="248" Column="1" />
-      <File FileName="Assets\Scripts\Bullet.cs" Line="28" Column="1" />
+      <File FileName="Assets\Scripts\Bullet.cs" Line="58" Column="6" />
+      <File FileName="Assets\Scripts\BulletHoleBehaviour.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\BotAI.cs" Line="127" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

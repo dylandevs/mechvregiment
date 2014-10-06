@@ -13,11 +13,14 @@ public class Weapon : MonoBehaviour {
 	// Recoil variables
 	//public bool AlternatingRecoil = false;
 	public Vector2 RecoilPattern = Vector2.zero;
-	public float FirstShotRecoil = 0.1f;
-	public float SubShotRecoil = 0.07f;
+	public Vector2 RecoilVariance = Vector2.zero;
+	public float FirstShotRecoilMulti = 2f;
+	//public float SubShotRecoil = 0.07f;
 	public float RecoilRecoveryWait = 0.5f;
 	public float RecoilRecoveryRate = 0.2f;
 	public float RecoilMoveTime = 0.2f;
+	public float RecoilRecoverTime = 0.2f;
+	public float RecoilRecoverRate = 0.1f;
 
 	// Spread variables and adjustments in different states
 	public float BaseSpread = 15;
@@ -49,6 +52,7 @@ public class Weapon : MonoBehaviour {
 	private float burstProgress = 0;
 	private float fireProgress = 0;
 	private float recoilMoveProgress = 0;
+	private float recoilRecoveryProgress = 0;
 
 	// Spread tracker
 	private float spread = 0;
@@ -58,6 +62,7 @@ public class Weapon : MonoBehaviour {
 	// Recoil tracker
 	private float recoil = 0;
 	private Vector2 recoilTarget;
+	private Vector3 originalFacing;
 
 	// State trackers
 	bool isReloading = false;
@@ -66,6 +71,7 @@ public class Weapon : MonoBehaviour {
 	bool isAllAmmoDepleted = false;
 	bool isFiring = false;
 	int bulletsOfBurstFired = 0;
+	bool isFirstShot = true;
 
 	// External references
 	Player player;
@@ -88,6 +94,11 @@ public class Weapon : MonoBehaviour {
 		// Adjust recoil
 		if (recoilMoveProgress > 0) {
 			ApplyRecoil();
+		}
+
+		// Recover from recoil
+		if (recoilRecoveryProgress > 0) {
+			AttemptRecoilRecovery();
 		}
 
 		// Decrease fire-related spread quickly over time
@@ -173,7 +184,7 @@ public class Weapon : MonoBehaviour {
 	public void FireBurst(){
 		if (!isBursting && !isOnFireInterval && !isReloading && !isAllAmmoDepleted){
 			// Begins burst
-			print (BurstLength);
+			isFirstShot = true;
 			if (BurstLength > 1) {
 				StartBursting();
 				Fire ();
@@ -214,25 +225,29 @@ public class Weapon : MonoBehaviour {
 		magAmmo--;
 	}
 
+	// Sets tracking variables for recoil
 	private void SetRecoilTarget(){
 		recoilMoveProgress = RecoilMoveTime;
 		recoilTarget = RecoilPattern;
-		print ("set");
+		originalFacing = controller.facing;
+		if (isFirstShot) {
+			recoilTarget *= FirstShotRecoilMulti;
+			isFirstShot = false;
+		}
 	}
 
 	private void ApplyRecoil(){
 		recoilMoveProgress -= Time.deltaTime;
-
 		Vector3 newFacing = controller.facing;
-
-		print (recoilMoveProgress);
 
 		float recoilProg = (RecoilMoveTime - recoilMoveProgress) / RecoilMoveTime;
 		recoilProg = Mathf.Sqrt(recoilProg);
 
+		float yRaw = recoilTarget.y + Random.Range(-RecoilVariance.y, RecoilVariance.y);
+		float xRaw = recoilTarget.x + Random.Range(-RecoilVariance.x, RecoilVariance.x);
 
-		float yAdjust = Mathf.Lerp (0, recoilTarget.y, recoilProg);
-		float xAdjust = Mathf.Lerp (0, recoilTarget.x, recoilProg);
+		float yAdjust = Mathf.Lerp (0, yRaw, recoilProg);
+		float xAdjust = Mathf.Lerp (0, xRaw, recoilProg);
 
 		Quaternion verticalAdjust = Quaternion.identity;
 		float newVertAngle = Vector3.Angle(newFacing, Vector3.up) - yAdjust;
@@ -251,9 +266,34 @@ public class Weapon : MonoBehaviour {
 		newFacing = verticalAdjust * horizontalAdjust * newFacing;
 		controller.setFacing (newFacing);
 
-		// Finished applying recoil
+		// Finished applying recoil, begin recoil recovery
 		if (recoilMoveProgress <= 0) {
 			recoilMoveProgress = 0;
+			recoilRecoveryProgress = RecoilRecoverTime;
+		}
+	}
+
+	private void AttemptRecoilRecovery(){
+		recoilRecoveryProgress -= Time.deltaTime;
+		Vector3 newFacing = controller.facing;
+
+		float recoveryProg = (RecoilRecoverTime - recoilRecoveryProgress) / RecoilRecoverTime;
+		recoveryProg = Mathf.Sqrt(recoveryProg);
+
+		newFacing = (newFacing + originalFacing) * RecoilRecoverRate;
+
+		/*Quaternion totalRecoverRot = Quaternion.FromToRotation (newFacing, originalFacing);
+		totalRecoverRot = Mathf.Pow (totalRecoverRot, 0.5f);*/
+
+		//newFacing = totalRecoverRot * newFacing;
+		controller.setFacing (newFacing);
+
+		Vector3 diff = newFacing - originalFacing;
+
+		// Finished recovering recoil
+		if (recoilRecoveryProgress <= 0 || diff.x * diff.y * diff.z < 0.0001f) {
+			recoilRecoveryProgress = 0;
+			controller.setFacing (originalFacing);
 		}
 	}
 
