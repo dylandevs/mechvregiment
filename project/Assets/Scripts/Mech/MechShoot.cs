@@ -2,17 +2,25 @@
 using System.Collections;
 
 public class MechShoot : MonoBehaviour {
-	//variables for machine gun
-	public float range = 100.0f;
-	public float coolDown = 0.2f;
-	float cooldownRemaining = 0;
-	public float damage = 50f;
+	//GameObjects needed
 	public GameObject sparkPrefab;
-
+	public GameObject[] rockets;
+	//minigun things
+	public float range = 100.0f;
+	public float coolDown = 0.005f;
+	public float damage = 50f;
+	float cooldownRemaining = 0;
+	
 	//variables for rocketFire
 	public float coolDownRocket = 2f;
+	public GameObject rocketStart;
+	public bool firingRockets = false;
 	float cooldownRemainingRocket = 0;	
-	public GameObject rocketPrefab;
+	float rockTimer = 0.1f;
+	int rockCounter = 0;
+
+	//public GameObject rocketPrefab;
+
 
 	//regular gun ammo vars
 	public float gunClipAmmo = 20f;
@@ -36,7 +44,7 @@ public class MechShoot : MonoBehaviour {
 			if(currentClipAmmo > 0){
 				cooldownRemaining = coolDown;
 
-				Ray ray = new Ray(Camera.main.transform.position,Camera.main.transform.forward);
+				Ray ray = new Ray(gameObject.transform.position,gameObject.transform.forward);
 				RaycastHit hitInfo;
 
 				currentClipAmmo -=1;
@@ -51,13 +59,14 @@ public class MechShoot : MonoBehaviour {
 					}*/
 
 					// applies bullet spark to location fo impact
-					if(sparkPrefab !=null){
-						Instantiate (sparkPrefab,hitPoint,Quaternion.identity);
+						if(sparkPrefab !=null){
+							Instantiate (sparkPrefab,hitPoint,Quaternion.identity);
 					
 					}
 				}
 			}
 		}
+
 		//reload funtion trigger
 		if (Input.GetKeyDown ("r")) {
 			gunReload();
@@ -67,10 +76,28 @@ public class MechShoot : MonoBehaviour {
 		if(Input.GetMouseButton(1) && cooldownRemainingRocket <=0)
 		{
 			cooldownRemainingRocket = coolDownRocket;
-			Instantiate(rocketPrefab,Camera.main.transform.position,Camera.main.transform.rotation);
+			firingRockets = true;
+			//Instantiate(rocketPrefab,Camera.main.transform.position,Camera.main.transform.rotation);
 			
 		}
 
+		if (firingRockets == true) {
+			//spawn each rocket close to the rocket starting point at an intervaled time
+			rockTimer -= Time.deltaTime;
+
+			if(rockTimer <=0){
+				GameObject currentRocket = rockets[rockCounter];
+				Vector3 rocketLaunch = rocketStart.transform.position += new Vector3(Random.Range(-0.25F, 0.25F), Random.Range(-0.25F, 0.25F), Random.Range(-0.25F, 0.25F));
+				currentRocket.transform.position = rocketLaunch;
+				currentRocket.SetActive(true);
+				rockTimer = 0.1f;
+				rockCounter += 1;
+				if(rockCounter >=4){
+					firingRockets = false;
+					rockCounter = 0;
+				}
+			}
+		}
 
 	}
 
