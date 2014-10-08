@@ -11,16 +11,11 @@ public class Weapon : MonoBehaviour {
 	public bool Automatic = true;
 
 	// Recoil variables
-	//public bool AlternatingRecoil = false;
 	public Vector2 RecoilPattern = Vector2.zero;
 	public Vector2 RecoilVariance = Vector2.zero;
 	public float FirstShotRecoilMulti = 2f;
-	//public float SubShotRecoil = 0.07f;
-	public float RecoilRecoveryWait = 0.5f;
-	public float RecoilRecoveryRate = 0.2f;
 	public float RecoilMoveTime = 0.2f;
 	public float RecoilRecoverTime = 0.2f;
-	public float RecoilRecoverRate = 0.1f;
 
 	// Spread variables and adjustments in different states
 	public float BaseSpread = 15;
@@ -60,22 +55,22 @@ public class Weapon : MonoBehaviour {
 	private float fireSpread = 0;
 
 	// Recoil tracker
-	private float recoil = 0;
 	private Vector2 recoilTarget;
 	private Vector3 originalFacing;
+	private Quaternion totalRecoverRot;
 
 	// State trackers
-	bool isReloading = false;
-	bool isBursting = false;
-	bool isOnFireInterval = false;
-	bool isAllAmmoDepleted = false;
-	bool isFiring = false;
-	int bulletsOfBurstFired = 0;
-	bool isFirstShot = true;
+	private bool isReloading = false;
+	private bool isBursting = false;
+	private bool isOnFireInterval = false;
+	private bool isAllAmmoDepleted = false;
+	private bool isFiring = false;
+	private int bulletsOfBurstFired = 0;
+	private bool isFirstShot = true;
 
 	// External references
-	Player player;
-	ControllerScript controller;
+	private Player player;
+	private ControllerScript controller;
 	
 	// Use this for initialization
 	void Start () {
@@ -108,7 +103,6 @@ public class Weapon : MonoBehaviour {
 			if (fireSpread < 0){
 				fireSpread = 0;
 			}
-			print (fireSpread);
 		}
 
 		// Adjust spread if not at target
@@ -128,7 +122,7 @@ public class Weapon : MonoBehaviour {
 			fireProgress -= Time.deltaTime;
 
 			// Can fire again after
-			if (fireProgress <= 0){
+			if (fireProgress <= 0 && (Automatic || (!Automatic && !isFiring))){
 				StopFireInterval();
 			}
 		}
@@ -184,6 +178,7 @@ public class Weapon : MonoBehaviour {
 	public void FireBurst(){
 		if (!isBursting && !isOnFireInterval && !isReloading && !isAllAmmoDepleted){
 			// Begins burst
+			originalFacing = controller.facing;
 			isFirstShot = true;
 			if (BurstLength > 1) {
 				StartBursting();
@@ -229,7 +224,6 @@ public class Weapon : MonoBehaviour {
 	private void SetRecoilTarget(){
 		recoilMoveProgress = RecoilMoveTime;
 		recoilTarget = RecoilPattern;
-		originalFacing = controller.facing;
 		if (isFirstShot) {
 			recoilTarget *= FirstShotRecoilMulti;
 			isFirstShot = false;
@@ -280,18 +274,18 @@ public class Weapon : MonoBehaviour {
 		float recoveryProg = (RecoilRecoverTime - recoilRecoveryProgress) / RecoilRecoverTime;
 		recoveryProg = Mathf.Sqrt(recoveryProg);
 
-		newFacing = (newFacing + originalFacing) * RecoilRecoverRate;
+		//newFacing = (newFacing + originalFacing) * RecoilRecoverRate;
 
-		/*Quaternion totalRecoverRot = Quaternion.FromToRotation (newFacing, originalFacing);
-		totalRecoverRot = Mathf.Pow (totalRecoverRot, 0.5f);*/
+		totalRecoverRot = Quaternion.FromToRotation (newFacing, originalFacing);
+		Quaternion currentRecoverRot = Quaternion.Lerp(Quaternion.identity, totalRecoverRot, recoveryProg);
 
-		//newFacing = totalRecoverRot * newFacing;
+		newFacing = currentRecoverRot * newFacing;
 		controller.setFacing (newFacing);
 
-		Vector3 diff = newFacing - originalFacing;
+		//Vector3 diff = newFacing - originalFacing;
 
 		// Finished recovering recoil
-		if (recoilRecoveryProgress <= 0 || diff.x * diff.y * diff.z < 0.0001f) {
+		if (recoilRecoveryProgress <= 0) {
 			recoilRecoveryProgress = 0;
 			controller.setFacing (originalFacing);
 		}
@@ -370,7 +364,4 @@ public class Weapon : MonoBehaviour {
 		targetSpread = newSpread;
 	}
 
-	public float getRecoil(){
-		return recoil;
-	}
 }
