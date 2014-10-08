@@ -66,12 +66,12 @@ public class Player : MonoBehaviour {
 		id = playerId;
 
 		// Settings layers for models and hiding/showing to camera
-		setModelLayer(firstPersonModel, "PlayerView1_" + id);
-		setModelLayer(thirdPersonModel, "PlayerView3_" + id);
+		//setModelLayer(firstPersonModel, "PlayerView1_" + id);
+		//setModelLayer(thirdPersonModel, "PlayerView3_" + id);
 
 		// Setting weapon layers and storing references to component scripts
 		for (int i = 0; i < weaponModels.Length; i++) {
-			weaponModels[i].layer = LayerMask.NameToLayer("PlayerView1_" + id);
+			//weaponModels[i].layer = LayerMask.NameToLayer("PlayerView1_" + id);
 			weapons[i] = weaponModels[i].GetComponent<Weapon>();
 			weapons[i].setPlayerReference(this);
 			weapons[i].setControllerReference(this.playerController);
@@ -84,8 +84,8 @@ public class Player : MonoBehaviour {
 		weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 
 		// Hiding/showing layers on player camera
-		playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
-		playerCam.cullingMask |= (1 << firstPersonModel[0].layer);
+		//playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
+		//playerCam.cullingMask |= (1 << firstPersonModel[0].layer);
 
 		// Setting controller
 		playerController.setController(playerId);
@@ -109,9 +109,11 @@ public class Player : MonoBehaviour {
 	public bool toggleADS(bool? setADS = null){
 		if (setADS != null) {
 			isAimingDownSights = (bool)setADS;
+			weapons[currentWeaponIndex].setAds(isAimingDownSights);
 		}
 		else{
 			isAimingDownSights = !isAimingDownSights;
+			weapons[currentWeaponIndex].setAds(isAimingDownSights);
 		}
 
 		return isAimingDownSights;

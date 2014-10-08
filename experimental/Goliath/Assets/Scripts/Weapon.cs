@@ -4,11 +4,12 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
 	// Weapon attributes
+	public bool Automatic = true;
+	public bool PhysicalAmmo = false;
 	public float ReloadTime = 2;
 	public float BurstTime = 0.1f;
 	public float FireRate = 0.3f;
 	public int BurstLength = 3;
-	public bool Automatic = true;
 
 	// Recoil variables
 	public Vector2 RecoilPattern = Vector2.zero;
@@ -16,12 +17,14 @@ public class Weapon : MonoBehaviour {
 	public float FirstShotRecoilMulti = 2f;
 	public float RecoilMoveTime = 0.2f;
 	public float RecoilRecoverTime = 0.2f;
+	public float AdsRecoilMoveFactor = 0.7f;
 
 	// Spread variables and adjustments in different states
 	public float BaseSpread = 15;
 	public float FireSpreadRate = 6;
 	public float FireSpreadRecoveryRate = 0.8f;
 	public float SpreadAdjustmentRate = 0.4f;
+	public float AdsSpreadAdjustmentFactor = 0.5f;
 	public float AdsSpreadAdjust = -8;
 	public float CrouchSpreadAdjust = -5;
 	public float WalkSpreadAdjust = 5;
@@ -37,6 +40,7 @@ public class Weapon : MonoBehaviour {
 	// Inputs
 	public GameObject generatorPos;
 	public GameObject projectileObject;
+	public GameObject impactObject;
 
 	// Ammo trackers
 	private int totalAmmo;
@@ -67,6 +71,7 @@ public class Weapon : MonoBehaviour {
 	private bool isFiring = false;
 	private int bulletsOfBurstFired = 0;
 	private bool isFirstShot = true;
+	private bool isAds = false;
 
 	// External references
 	private Player player;
@@ -178,7 +183,6 @@ public class Weapon : MonoBehaviour {
 	public void FireBurst(){
 		if (!isBursting && !isOnFireInterval && !isReloading && !isAllAmmoDepleted){
 			// Begins burst
-			originalFacing = controller.facing;
 			isFirstShot = true;
 			if (BurstLength > 1) {
 				StartBursting();
@@ -196,11 +200,12 @@ public class Weapon : MonoBehaviour {
 	// Generates projectile at specified generation position
 	private void Fire(){
 		// Creates bullet at given position
-		Vector3 bulletOrigin = controller.transform.position + controller.facing + controller.cameraOffset;
-		GameObject bullet = Instantiate(projectileObject, bulletOrigin, Quaternion.identity) as GameObject;
+		Vector3 bulletOrigin = player.playerCam.transform.position;
 
 		// Potentially randomize direction slightly
 		Vector3 bulletDirection = controller.facing;
+
+		// Apply spread variation
 		if (spread > 0) {
 			Quaternion vectorRotation = Quaternion.FromToRotation(Vector3.forward, bulletDirection);
 			Vector2 newTarget = Random.insideUnitCircle * Mathf.Sqrt(spread) * 0.01f;
@@ -208,12 +213,45 @@ public class Weapon : MonoBehaviour {
 			bulletDirection = (vectorRotation * unrotatedFacing).normalized;
 		}
 
-		// Setting bullet properties
-		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed);
+		// Either generate physical bullet or just have raycast
+		if (PhysicalAmmo){
+			GameObject bullet = Instantiate(projectileObject, bulletOrigin, Quaternion.identity) as GameObject;
+
+			// Setting bullet properties
+			Bullet bulletScript = bullet.GetComponent<Bullet>();
+			bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed);
+		}
+		else{
+			RaycastHit rayHit;
+			if (Physics.Raycast(bulletOrigin, bulletDirection, out rayHit, 1000)){
+				//print (travelDist);
+				
+				if (rayHit.collider.gameObject.tag == "Terrain"){
+					// Hit the terrain, make mark
+					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					Instantiate(impactObject, rayHit.point + rayHit.normal * 0.01f, hitRotation);
+				}
+				else if (rayHit.collider.gameObject.tag == "Player"){
+					Player playerHit = rayHit.collider.GetComponent<Player>();
+					playerHit.Damage(Damage);
+					//print("hit player");
+				}
+				else if (rayHit.collider.gameObject.tag == "Enemy"){
+					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
+					botHit.Damage(Damage);
+					//print("hit enemy");
+				}
+			}
+		}
 
 		// Update fire-related spread
-		fireSpread += FireSpreadRate;
+		if (isAds) {
+			fireSpread += FireSpreadRate * AdsSpreadAdjustmentFactor;
+		}
+		else{
+			fireSpread += FireSpreadRate;
+		}
+
 
 		SetRecoilTarget ();
 
@@ -224,6 +262,10 @@ public class Weapon : MonoBehaviour {
 	private void SetRecoilTarget(){
 		recoilMoveProgress = RecoilMoveTime;
 		recoilTarget = RecoilPattern;
+		originalFacing = controller.facing;
+		if (isAds) {
+			recoilTarget *= AdsRecoilMoveFactor;
+		}
 		if (isFirstShot) {
 			recoilTarget *= FirstShotRecoilMulti;
 			isFirstShot = false;
@@ -362,6 +404,10 @@ public class Weapon : MonoBehaviour {
 
 	public void setTargetSpread(float newSpread){
 		targetSpread = newSpread;
+	}
+
+	public void setAds(bool adsSetting){
+		isAds = adsSetting;
 	}
 
 }
