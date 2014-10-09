@@ -410,4 +410,7 @@ public class Weapon : MonoBehaviour {
 		isAds = adsSetting;
 	}
 
+	public bool getReloading(){
+		return isReloading;
+	}
 }
