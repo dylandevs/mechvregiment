@@ -5,6 +5,7 @@ public class MechShoot : MonoBehaviour {
 	//GameObjects needed
 	public GameObject sparkPrefab;
 	public GameObject[] rockets;
+
 	//minigun things
 	public float range = 100.0f;
 	public float coolDown = 0.005f;
@@ -19,8 +20,10 @@ public class MechShoot : MonoBehaviour {
 	float rockTimer = 0.1f;
 	int rockCounter = 0;
 
-	//public GameObject rocketPrefab;
-
+	//aiming stuff
+	public  int weaponselected;
+	public GameObject miniGunArm;
+	public GameObject missleTargets;
 
 	//regular gun ammo vars
 	public float gunClipAmmo = 20f;
@@ -34,7 +37,11 @@ public class MechShoot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// INPUTS FOR AIMING***********************
 
+
+
+		//INPUTS FOR FIRING ************************
 		//cooldowns
 		cooldownRemaining -= Time.deltaTime;
 		cooldownRemainingRocket -= Time.deltaTime;

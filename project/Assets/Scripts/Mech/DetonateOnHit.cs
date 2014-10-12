@@ -7,7 +7,10 @@ public class DetonateOnHit : MonoBehaviour {
 	public float damage = 200f;  //damage at center
 	public float explosionRadius = 3f;
 
-
+	private Vector3 startRot;
+	void Start(){
+		startRot = new Vector3(270,0,0);
+	}
 	// on update fire a ray of length that rocket moves per unit to use the detonate
 	void FixedUpdate()
 	{
@@ -25,11 +28,6 @@ public class DetonateOnHit : MonoBehaviour {
 		{
 			Instantiate(explosionPrefab, transform.position,Quaternion.identity);
 		}
-		//turns it off nd rests rotation
-		transform.LookAt(new Vector3 (270, 0, 0));
-		print (transform.eulerAngles);
-		gameObject.SetActive(false);
-	
 
 		//hurts whats near the boom
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
@@ -44,6 +42,13 @@ public class DetonateOnHit : MonoBehaviour {
 				float damageRatio = 1f - (dist / explosionRadius);
 				hp.ReciveDamage(damage * damageRatio);
 			}*/
+
+			
+			//turns it off nd rests rotation
+			transform.rotation = Quaternion.LookRotation(startRot);
+
+			gameObject.SetActive(false);
+
 		}
 	}
 }
