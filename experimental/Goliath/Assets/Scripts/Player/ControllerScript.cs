@@ -101,7 +101,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Toggle ADS
-			if (TriggersL != 0 && currentlyGrounded) {
+			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.getReloading()) {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
@@ -235,7 +235,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 			
 			// Toggle ADS
-			if (Mouse_Right && currentlyGrounded) {
+			if (Mouse_Right && currentlyGrounded && !currentWeapon.getReloading()) {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
