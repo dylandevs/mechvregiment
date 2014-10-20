@@ -27,10 +27,12 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 halfColliderZ;
 
 	// Inputs
-	public Camera playerCam;
+	public GameObject playerCam;
 	public Player player;
 	public Animator anim;
 	public Animator weaponAnim;
+	public Animator cameraAnim;
+	public Animator gunCamAnim;
 
 	// Animation hash id
 	int speedHash = Animator.StringToHash("Speed");
@@ -105,6 +107,8 @@ public class ControllerScript : MonoBehaviour {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
+				cameraAnim.SetBool(adsHash, true);
+				gunCamAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
 			}
@@ -112,8 +116,12 @@ public class ControllerScript : MonoBehaviour {
 				player.toggleADS(false);
 				anim.SetInteger(fireHash, 0);
 				weaponAnim.SetBool(adsHash, false);
+				cameraAnim.SetBool(adsHash, false);
+				gunCamAnim.SetBool(adsHash, false);
 				aimingDownSight = false;
 			}
+
+			print (cameraAnim.GetBool(adsHash));
 
 
 			// Lateral movement (strafing)
@@ -239,6 +247,8 @@ public class ControllerScript : MonoBehaviour {
 				player.toggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
+				cameraAnim.SetBool(adsHash, true);
+				gunCamAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
 			}
@@ -246,6 +256,8 @@ public class ControllerScript : MonoBehaviour {
 				player.toggleADS(false);
 				anim.SetInteger(fireHash, 0);
 				weaponAnim.SetBool(adsHash, false);
+				cameraAnim.SetBool(adsHash, false);
+				gunCamAnim.SetBool(adsHash, false);
 				aimingDownSight = false;
 			}
 			

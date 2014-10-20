@@ -4,10 +4,10 @@ using System.Collections;
 public class BotAI : MonoBehaviour {
 
 	// State values
-	const byte ALL_CLEAR = 0;
-	const byte SEARCHING = 1;
-	const byte SIGHTED = 2;
-	const byte FIRING = 3;
+	const byte AllClear = 0;
+	const byte Searching = 1;
+	const byte Sighted = 2;
+	const byte Firing = 3;
 
 	// Predefined state colours
 	Color safeCol = new Color32(0, 255, 0, 1);
@@ -19,35 +19,35 @@ public class BotAI : MonoBehaviour {
 	float actionTime = 0;
 	int idleState = 0;
 	float idleDelay = 4.5f;
-	const float IDLE_DELAY_LOW = 3;
-	const float IDLE_DELAY_HIGH = 6;
-	const byte IDLE_TURNING = 0;
-	const byte IDLE_MOVING = 1;
-	const float IDLE_WALK_RAD = 5;
-	const float IDLE_TURN_RATE = 0.5f;
+	const float IdleDelayLow = 3;
+	const float IdleDelayHigh = 6;
+	const byte IdleTurning = 0;
+	const byte IdleMoving = 1;
+	const float IdleWalkRad = 5;
+	const float IdleTurnRate = 0.5f;
 
 	// Search behaviour attributes
 	float alertTime = 0;
 	float searchDelay = 0;
-	const float SEARCH_DELAY_LOW = 4;
-	const float SEARCH_DELAY_HIGH = 7;
-	const float ALERT_DURATION = 20;
-	const float SEARCH_RAD = 15;
-	const float SEARCH_TURN_RATE = 0.5f;
+	const float SearchDelayLow = 4;
+	const float SearchDelayHigh = 7;
+	const float AlertDuration = 20;
+	const float SearchRad = 15;
+	const float SearchTurnRate = 0.5f;
 
 	// Distance thresholds
-	const int THRESH_CLOSE = 12;
-	const int THRESH_MED = 20;
-	const int THRESH_TOLERANCE = 2;
+	const int ThreshClose = 12;
+	const int ThreshMed = 20;
+	const int ThreshTolerance = 2;
 
 	// Bot attributes
-	const float VIEW_ANGLE = 120 / 2;
-	const float WALK_SPEED = 1.5f;
-	const float MOVE_SPEED = 7f;
-	const float FIRE_RATE = 1.2f;
-	const float TURN_STEP = 0.02f;
-	const float FIRE_ANGLE = 60 / 2;
-	const float MAX_HEALTH = 100;
+	const float ViewAngle = 120 / 2;
+	const float WalkSpeed = 1.5f;
+	const float MoveSpeed = 7f;
+	const float FireRate = 1.2f;
+	const float TurnStep = 0.02f;
+	const float FireAngle = 60 / 2;
+	const float MaxHealth = 100;
 
 	// Storage variables
 	Transform allyGroup = null;
@@ -57,8 +57,8 @@ public class BotAI : MonoBehaviour {
 	
 	// Bot stats
 	byte state = 0;
-	float health = MAX_HEALTH;
-	float reloadProg = FIRE_RATE;
+	float health = MaxHealth;
+	float reloadProg = FireRate;
 	bool isDead = false;
 	
 	public Vector3 lastSighted;
@@ -88,42 +88,42 @@ public class BotAI : MonoBehaviour {
 			state = getCurrentState(angle, diffVec);
 
 			/*// Check status of nearby allies
-			if (allyGroup != null && state == ALL_CLEAR || state == SEARCHING){
+			if (allyGroup != null && state == AllClear || state == Searching){
 				if (alliesAlarmed()){
-					if (diffVec.magnitude > THRESH_CLOSE){
-						state = SIGHTED;
+					if (diffVec.magnitude > ThreshClose){
+						state = Sighted;
 					}
 					else {
-						state = FIRING;
+						state = Firing;
 					}
 				}
 			}*/
 
 			// Act based on state
-			if (state == ALL_CLEAR){
+			if (state == AllClear){
 				setSurfaceColour(safeCol);
 				idle();
 				//navMeshAgent.velocity = Vector3.zero;
 			}
-			else if (state == SEARCHING){
+			else if (state == Searching){
 				navMeshAgent.stoppingDistance = 0;
-				navMeshAgent.speed = MOVE_SPEED;
+				navMeshAgent.speed = MoveSpeed;
 				setSurfaceColour(srchCol);
 				search();
 			}
-			else if (state == SIGHTED){
+			else if (state == Sighted){
 				//faceTarget(opponent);
-				//newVel += MOVE_SPEED * facing;
-				navMeshAgent.stoppingDistance = THRESH_CLOSE;
-				navMeshAgent.speed = MOVE_SPEED;
+				//newVel += MoveSpeed * facing;
+				navMeshAgent.stoppingDistance = ThreshClose;
+				navMeshAgent.speed = MoveSpeed;
 				navMeshAgent.destination = lastSighted;
 				setSurfaceColour(warnCol);
 
-				alertTime = ALERT_DURATION;
+				alertTime = AlertDuration;
 				lastSighted = opponent.transform.position;
 			}
-			else if (state == FIRING){
-				if (reloadProg >= FIRE_RATE && angle < VIEW_ANGLE){
+			else if (state == Firing){
+				if (reloadProg >= FireRate && angle < ViewAngle){
 					fireInDirection(opponent.transform);
 					reloadProg = 0;
 				}
@@ -131,7 +131,7 @@ public class BotAI : MonoBehaviour {
 				setSurfaceColour(dngrCol);
 				navMeshAgent.velocity = Vector3.zero;
 
-				alertTime = ALERT_DURATION;
+				alertTime = AlertDuration;
 				lastSighted = opponent.transform.position;
 			}
 
@@ -151,18 +151,18 @@ public class BotAI : MonoBehaviour {
 		newState = checkInSight(opponent.transform);
 
 		// Determine if still searching
-		if (alertTime > 0 && newState < SIGHTED){
-			newState = SEARCHING;
+		if (alertTime > 0 && newState < Sighted){
+			newState = Searching;
 		}
 
 		// Check status of nearby allies
-		if (allyGroup != null && state < SIGHTED){
+		if (allyGroup != null && state < Sighted){
 			if (alliesAlarmed()){
-				if (diffVec.magnitude > THRESH_CLOSE){
-					newState = SIGHTED;
+				if (diffVec.magnitude > ThreshClose){
+					newState = Sighted;
 				}
 				else {
-					newState = FIRING;
+					newState = Firing;
 				}
 			}
 		}
@@ -176,7 +176,7 @@ public class BotAI : MonoBehaviour {
 		float angle = Vector3.Angle(facing, diffVec);
 
 		// Check if within FoV
-		if (angle <= VIEW_ANGLE){
+		if (angle <= ViewAngle){
 
 			// Cast ray to determine obstructions in sight
 			RaycastHit rayHit;
@@ -187,17 +187,17 @@ public class BotAI : MonoBehaviour {
 
 					float distance = rayHit.distance;
 
-					if (distance < THRESH_CLOSE){
-						return FIRING;
+					if (distance < ThreshClose){
+						return Firing;
 					}
-					else if (distance < THRESH_MED){
-						return SIGHTED;
+					else if (distance < ThreshMed){
+						return Sighted;
 					}
 				}
 			}
 		}
 
-		return ALL_CLEAR;
+		return AllClear;
 	}
 
 	// Fires bullet in direction provided
@@ -222,7 +222,7 @@ public class BotAI : MonoBehaviour {
 
 		// Calculating and applying rotation
 		Quaternion targRot = Quaternion.LookRotation(newDiffVec);
-		transform.rotation = Quaternion.Lerp(transform.rotation, targRot, Time.time * TURN_STEP);
+		transform.rotation = Quaternion.Lerp(transform.rotation, targRot, Time.time * TurnStep);
 	}
 
 	// TESTING: sets surface colour of model
@@ -244,12 +244,12 @@ public class BotAI : MonoBehaviour {
 
 		BotAI[] allies = allyGroup.GetComponentsInChildren<BotAI>();
 		foreach(BotAI ally in allies){
-			if (ally.getState() >= SEARCHING){
+			if (ally.getState() >= Searching){
 
 				// Check if ally is in sight of current bot
 				byte allyVisible = checkInSight(ally.getTransform());
 
-				if (allyVisible >= SEARCHING){
+				if (allyVisible >= Searching){
 					lastSighted = ally.lastSighted;
 					return true;
 				}
@@ -265,7 +265,7 @@ public class BotAI : MonoBehaviour {
 		idleDelay = 4.5f;
 		idleState = 0;
 		navMeshAgent.stoppingDistance = 0;
-		navMeshAgent.speed = WALK_SPEED;
+		navMeshAgent.speed = WalkSpeed;
 	}
 
 	// Idle behaviour management
@@ -274,28 +274,28 @@ public class BotAI : MonoBehaviour {
 		// Increment time progress, set state if necessary
 		actionTime += Time.deltaTime;
 
-		if (actionTime > idleDelay && idleState != IDLE_MOVING){
+		if (actionTime > idleDelay && idleState != IdleMoving){
 			navMeshAgent.stoppingDistance = 0;
-			navMeshAgent.speed = WALK_SPEED;
-			idleState = IDLE_MOVING;
+			navMeshAgent.speed = WalkSpeed;
+			idleState = IdleMoving;
 			actionTime = 0;
-			navMeshAgent.destination = getRandPos(IDLE_WALK_RAD, transform.position);
-			idleDelay = Random.Range(IDLE_DELAY_LOW, IDLE_DELAY_HIGH);
+			navMeshAgent.destination = getRandPos(IdleWalkRad, transform.position);
+			idleDelay = Random.Range(IdleDelayLow, IdleDelayHigh);
 		}
 
 
 		// Perform idle behaviours
-		if (idleState == IDLE_TURNING){
+		if (idleState == IdleTurning){
 			// Rotate side to side
-			transform.rotation *= Quaternion.Euler(new Vector3(0, IDLE_TURN_RATE, 0) * Mathf.Sin(actionTime));
+			transform.rotation *= Quaternion.Euler(new Vector3(0, IdleTurnRate, 0) * Mathf.Sin(actionTime));
 		}
-		else if (idleState == IDLE_MOVING){
+		else if (idleState == IdleMoving){
 			// Stop moving if arrived or if time exceeded
 			if (hasAgentArrivedAtDest() || actionTime > idleDelay) {
 				navMeshAgent.Stop();
-				idleState = IDLE_TURNING;
+				idleState = IdleTurning;
 				actionTime = 0;
-				idleDelay = Random.Range(IDLE_DELAY_LOW, IDLE_DELAY_HIGH);
+				idleDelay = Random.Range(IdleDelayLow, IdleDelayHigh);
 			}
 		}
 	}
@@ -314,12 +314,12 @@ public class BotAI : MonoBehaviour {
 
 		// Move to new position
 		if (searchDelay <= 0){
-			searchDelay = Random.Range(SEARCH_DELAY_LOW, SEARCH_DELAY_HIGH);
-			navMeshAgent.destination = getRandPos(SEARCH_RAD, lastSighted);
+			searchDelay = Random.Range(SearchDelayLow, SearchDelayHigh);
+			navMeshAgent.destination = getRandPos(SearchRad, lastSighted);
 		}
 		else if (hasAgentArrivedAtDest()){
 			// Rotate side to side
-			transform.rotation *= Quaternion.Euler(new Vector3(0, SEARCH_TURN_RATE, 0) * Mathf.Sin(alertTime));
+			transform.rotation *= Quaternion.Euler(new Vector3(0, SearchTurnRate, 0) * Mathf.Sin(alertTime));
 		}
 	}
 	

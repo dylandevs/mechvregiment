@@ -321,16 +321,21 @@ public class Weapon : MonoBehaviour {
 		totalRecoverRot = Quaternion.FromToRotation (newFacing, originalFacing);
 		Quaternion currentRecoverRot = Quaternion.Lerp(Quaternion.identity, totalRecoverRot, recoveryProg);
 
-		newFacing = currentRecoverRot * newFacing;
-		controller.setFacing (newFacing);
-
-		//Vector3 diff = newFacing - originalFacing;
-
-		// Finished recovering recoil
-		if (recoilRecoveryProgress <= 0) {
+		// If recovery is too large, stop
+		if (currentRecoverRot.eulerAngles.y > 10) {
 			recoilRecoveryProgress = 0;
-			controller.setFacing (originalFacing);
 		}
+		else{
+			newFacing = currentRecoverRot * newFacing;
+			controller.setFacing (newFacing);
+
+			// Finished recovering recoil
+			if (recoilRecoveryProgress <= 0) {
+				recoilRecoveryProgress = 0;
+				controller.setFacing (originalFacing);
+			}
+		}
+		//Vector3 diff = newFacing - originalFacing;
 	}
 
 	public void setFiringState(bool firingState){
