@@ -1,12 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mech\DetonateOnHit.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\GameWinConditions.cs">
     <Files>
-      <File FileName="Assets\Scripts\Mech\MechShoot.cs" Line="99" Column="35" />
-      <File FileName="Assets\Scripts\Mech\RocketScript.cs" Line="12" Column="31" />
-      <File FileName="Assets\Scripts\Mech\DetonateOnHit.cs" Line="50" Column="4" />
-      <File FileName="Assets\Scripts\Mech\mechMovement.cs" Line="48" Column="27" />
-      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="153" Column="12" />
+      <File FileName="Assets\Scripts\Game\GameWinConditions.cs" Line="23" Column="3" />
+      <File FileName="Assets\Scripts\Mech\mechMovement.cs" Line="84" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

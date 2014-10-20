@@ -73,9 +73,6 @@ public class mechMovement : MonoBehaviour {
 			float bottomDirY = bottomDir.y;
 			float q = topDirY - bottomDirY;
 			bottomHalf.transform.Rotate(0,q,0);
-
-			//transform.rotation = Quaternion.RotateTowards(transform.rotation, q, rotSpeed * Time.deltaTime);
-
 		}
 		
 

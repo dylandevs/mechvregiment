@@ -2,119 +2,178 @@
 using System.Collections;
 
 public class MechShoot : MonoBehaviour {
-	//GameObjects needed
-	public GameObject sparkPrefab;
-	public GameObject[] rockets;
-
+	
 	//minigun things
 	public float range = 100.0f;
-	public float coolDown = 0.005f;
 	public float damage = 50f;
-	float cooldownRemaining = 0;
-	
+	float rotSpeed;
+
 	//variables for rocketFire
 	public float coolDownRocket = 2f;
-	public GameObject rocketStart;
-	public bool firingRockets = false;
 	float cooldownRemainingRocket = 0;	
-	float rockTimer = 0.1f;
-	int rockCounter = 0;
+
+	//modes
+	public bool rocketMode;
+	public bool minionMode;
+	public bool miniGunMode;
 
 	//aiming stuff
-	public  int weaponselected;
 	public GameObject miniGunArm;
-	public GameObject missleTargets;
+	public GameObject missleReticle;
+	public GameObject missleTargetArea;
+	public float rocketAimSpeed;
+	public GameObject miniGunReticle;
+	public GameObject cameraPlace;
 
-	//regular gun ammo vars
-	public float gunClipAmmo = 20f;
-	public float currentClipAmmo = 20f;
-	public float shotsTaken= 0;
+	//firing objcts
+	public MinigunFirer miniGunFirer;
+	public GameObject rocketFirer;
+	private RocketFirer rocketScript;
 
 	// Use this for initialization
 	void Start () {
-
+		rocketAimSpeed = 15 * Time.deltaTime;
+		miniGunMode = true;
+		rotSpeed = Time.deltaTime * 50;
+		rocketScript = rocketFirer.GetComponent<RocketFirer>();
+		miniGunFirer = miniGunFirer.GetComponent<MinigunFirer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		// INPUTS FOR AIMING***********************
+		//MODE HANDLING************************
+		if (Input.GetKeyDown ("1")) {
+			resetModes();
+			rocketMode = true;
+		}
+		if (Input.GetKeyDown ("2")) {
+			resetModes();
+			minionMode = true;
+		}
+		if (Input.GetKeyUp ("1")) {
+			resetModes();
+			miniGunMode = true;
+		}
+		if (Input.GetKeyUp ("2")) {
+			resetModes();
+			miniGunMode = true;
+		}
 
-
-
-		//INPUTS FOR FIRING ************************
 		//cooldowns
-		cooldownRemaining -= Time.deltaTime;
 		cooldownRemainingRocket -= Time.deltaTime;
 
-		//Machine gun fire absed on cool down
-		if(Input.GetMouseButton(0) && cooldownRemaining <=0){
-			if(currentClipAmmo > 0){
-				cooldownRemaining = coolDown;
-
-				Ray ray = new Ray(gameObject.transform.position,gameObject.transform.forward);
-				RaycastHit hitInfo;
-
-				currentClipAmmo -=1;
-				if(Physics.Raycast (ray, out hitInfo,range)){
-					Vector3 hitPoint = hitInfo.point;
-					GameObject go = hitInfo.collider.gameObject;
-					/*objectHealth h = go.GetComponent<objectHealth>();
-
-					if(h != null)
-					{
-						h.ReciveDamage(damage);
-					}*/
-
-					// applies bullet spark to location fo impact
-						if(sparkPrefab !=null){
-							Instantiate (sparkPrefab,hitPoint,Quaternion.identity);
-					
-					}
-				}
-			}
-		}
-
-		//reload funtion trigger
-		if (Input.GetKeyDown ("r")) {
-			gunReload();
-		}
-
-		//rocket fire based on coolDown
-		if(Input.GetMouseButton(1) && cooldownRemainingRocket <=0)
-		{
-			cooldownRemainingRocket = coolDownRocket;
-			firingRockets = true;
-			//Instantiate(rocketPrefab,Camera.main.transform.position,Camera.main.transform.rotation);
+		//the minigun mode
+		if (miniGunMode == true) {
 			
-		}
+			//aiming the minigun and placing the reticle in the right place
+			miniGunReticle.SetActive(true);
 
-		if (firingRockets == true) {
-			//spawn each rocket close to the rocket starting point at an intervaled time
-			rockTimer -= Time.deltaTime;
+			//aim the position of where the minigun is going to fire from
+			if (Input.GetKey ("u")) {
+				miniGunArm.transform.Rotate(miniGunArm.transform.right * rotSpeed, Space.World);
+			}
+			if (Input.GetKey ("j")) {
+				miniGunArm.transform.Rotate(-miniGunArm.transform.right * rotSpeed, Space.World);
+			}
+			if (Input.GetKey ("k")) {
+				miniGunArm.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+			}
+			if (Input.GetKey ("h")) {
+				miniGunArm.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+			}
+			//set the reticle based on a raycast
+			Ray ray = new Ray(miniGunArm.transform.position,miniGunArm.transform.forward);
+			RaycastHit hitInfoAimer;
 
-			if(rockTimer <=0){
-				GameObject currentRocket = rockets[rockCounter];
-				Vector3 rocketLaunch = rocketStart.transform.position += new Vector3(Random.Range(-0.25F, 0.25F), Random.Range(-0.25F, 0.25F), Random.Range(-0.25F, 0.25F));
-				currentRocket.transform.position = rocketLaunch;
-				currentRocket.SetActive(true);
-				rockTimer = 0.1f;
-				rockCounter += 1;
-				if(rockCounter >=4){
-					firingRockets = false;
-					rockCounter = 0;
+			if(Physics.Raycast (ray, out hitInfoAimer,range)){
+				Vector3 hitPoint = hitInfoAimer.point;
+		
+				Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position);
+
+
+				Vector3 whereToDraw = cameraPlace.transform.position - hitPoint;
+				Vector3 timesOne = whereToDraw;
+				whereToDraw /= 2;
+				whereToDraw += hitPoint;
+
+				//***********must fix reticle not showing up ************
+				miniGunReticle.transform.position = whereToDraw;
+				miniGunReticle.transform.rotation = Quaternion.LookRotation(timesOne);
+
+				//Instantiate (sparkPrefab,whereToDraw,Quaternion.LookRotation(timesOne));
+
+				if(Input.GetKeyDown("space")){
+					miniGunFirer.fire = true;
 				}
+
+				if(Input.GetKeyUp("space")){
+					miniGunFirer.fire = false;
+				}
+			}
+		}//*******end of minigun aiming and fire***************
+
+		//the rocket mode is on
+		if (rocketMode == true) {
+			//turn on the aiming device
+			missleReticle.SetActive(true);
+
+			//aim the rockets position on the map
+			if (Input.GetKey ("u")) {
+				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed);
+			}
+			if (Input.GetKey ("j")) {
+				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed * -1);
+			}
+			if (Input.GetKey ("k")) {
+				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed);
+			}
+			if (Input.GetKey ("h")) {
+				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed * -1);
+			}
+
+			//fire the rocket function in rocket arm script
+			if (Input.GetKeyDown ("space") && cooldownRemainingRocket <= 0) {
+					cooldownRemainingRocket = coolDownRocket;
+					rocketScript.firing = true;
 			}
 		}
 
-	}
+		//minion mode has been entered now time to aim
+		if (minionMode == true) {
 
-	void gunReload()
-	{
-		currentClipAmmo = 20f;
-	}
+			//turn on the aiming device
+			missleReticle.SetActive(true);
+			
+			//aim the rockets position on the map
+			if (Input.GetKey ("u")) {
+				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed);
+			}
+			if (Input.GetKey ("j")) {
+				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed * -1);
+			}
+			if (Input.GetKey ("k")) {
+				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed);
+			}
+			if (Input.GetKey ("h")) {
+				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed * -1);
+			}
+			
+			//fire the rocket function in rocket arm script
+			if (Input.GetKeyDown ("space")) {
+				//do something with minions
+			}
+		}
 
-	void OnGUI() {
-		GUI.Label (new Rect (10, 10, 100, 20), currentClipAmmo.ToString());
+	}//this is end of update
+	
+	//function to reset the modes
+	void resetModes(){
+		miniGunMode = false;
+		rocketMode = false;
+		minionMode = false;
+		//turn off the aimers when not in the mode
+		missleReticle.SetActive(false);
+		miniGunReticle.SetActive (false);
 	}
 
 }
