@@ -26,6 +26,7 @@ public class MinigunFirer : MonoBehaviour {
 		if (Input.GetKeyDown ("r")) {
 			gunReload ();
 		}
+
 		if (currentClipAmmo >= 1 && fire == true && cooldownRemaining <= 0) {
 
 			//add some form of recoil or bullet spread when firing ****************************

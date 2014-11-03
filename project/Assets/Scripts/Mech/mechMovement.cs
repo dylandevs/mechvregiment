@@ -3,16 +3,25 @@ using System.Collections;
 
 public class mechMovement : MonoBehaviour {
 
+	//game objects and positions
 	public GameObject bottomHalf;
 	public GameObject topHalf;
 	public Vector3 topDir;
 	public Vector3 bottomDir;
-	
+
+	//mech health stuff
+	public float currMechHealth;
+	private float mechHealth;
+	private float restartTimer;
+
+	//move speed stuff
 	private float moveSpeed;
 	private float rotSpeed;
 
 	// Use this for initialization
 	void Start () {
+		mechHealth = 100;
+		currMechHealth = 100;
 		moveSpeed = 5 * Time.deltaTime;
 		rotSpeed = Time.deltaTime * 50;
 	}
@@ -21,28 +30,37 @@ public class mechMovement : MonoBehaviour {
 	void Update () {
 
 		bool isMoving = false;
-		
-		//if a key is pushed move the location of the mech
-		if (Input.GetKey (KeyCode.W)){
-			bottomHalf.transform.Translate(transform.forward * moveSpeed);
-			isMoving = true;
-		}
-		
-		if (Input.GetKey (KeyCode.S)) {
-			bottomHalf.transform.Translate(transform.forward * moveSpeed * -1);
-			isMoving = true;
-		}
-		
-		if (Input.GetKey (KeyCode.D)) {
-			bottomHalf.transform.Translate(transform.right * moveSpeed);
-			isMoving = true;
-		}
-		
-		if (Input.GetKey (KeyCode.A)) {
-			bottomHalf.transform.Translate(transform.right * moveSpeed * -1);
-			isMoving = true;
+		if(mechHealth >=1){
+			//if a key is pushed move the location of the mech
+			if (Input.GetKey (KeyCode.W)){
+				bottomHalf.transform.Translate(transform.forward * moveSpeed);
+				isMoving = true;
+			}
+			
+			if (Input.GetKey (KeyCode.S)) {
+				bottomHalf.transform.Translate(transform.forward * moveSpeed * -1);
+				isMoving = true;
+			}
+			
+			if (Input.GetKey (KeyCode.D)) {
+				bottomHalf.transform.Translate(transform.right * moveSpeed);
+				isMoving = true;
+			}
+			
+			if (Input.GetKey (KeyCode.A)) {
+				bottomHalf.transform.Translate(transform.right * moveSpeed * -1);
+				isMoving = true;
+			}
 		}
 
+		// when mech is disabled start timer to restart
+		if(currMechHealth <=0){
+			restartTimer += Time.deltaTime;
+		}
+
+		if(restartTimer >= 5){
+			currMechHealth = mechHealth;
+		}
 		//do rotations
 		//limit rotations so that mech stops looking down at a certain point
 		if (transform.rotation.x <= 25) {
