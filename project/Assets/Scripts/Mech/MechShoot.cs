@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class MechShoot : MonoBehaviour {
-	
 	//minigun things
 	public float range = 100.0f;
 	public float damage = 50f;
@@ -24,6 +23,7 @@ public class MechShoot : MonoBehaviour {
 	public float rocketAimSpeed;
 	public GameObject miniGunReticle;
 	public GameObject cameraPlace;
+	public GameObject retWall;
 
 	//firing objcts
 	public MinigunFirer miniGunFirer;
@@ -37,6 +37,7 @@ public class MechShoot : MonoBehaviour {
 		rotSpeed = Time.deltaTime * 50;
 		rocketScript = rocketFirer.GetComponent<RocketFirer>();
 		miniGunFirer = miniGunFirer.GetComponent<MinigunFirer>();
+
 	}
 	
 	// Update is called once per frame
@@ -87,20 +88,27 @@ public class MechShoot : MonoBehaviour {
 
 			if(Physics.Raycast (ray, out hitInfoAimer,range)){
 				Vector3 hitPoint = hitInfoAimer.point;
-		
-				Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position);
-
-
-				Vector3 whereToDraw = cameraPlace.transform.position - hitPoint;
-				Vector3 timesOne = whereToDraw;
-				whereToDraw /= 2;
-				whereToDraw += hitPoint;
+				//create a hit variable for the second raycast
+				RaycastHit ray2Hit;
+				//fire second raycast
+				Ray ray2 = new Ray(hitPoint,retWall.transform.position);
+				if(Physics.Raycast (ray2,out ray2Hit,range)){
+					//if it hits the aimerwall mvoe the reticle there
+					if(ray2Hit.collider.tag == "aimerWall"){
+						Vector3 placeHit = ray2Hit.point;
+						miniGunReticle.transform.position = placeHit;
+					}
+				}
+				//Vector3 whereToDraw = cameraPlace.transform.position - hitPoint;
+				//Vector3 timesOne = whereToDraw;
+				//whereToDraw /= 2;
+				//whereToDraw += hitPoint;
 
 				//***********must fix reticle not showing up ************
-				miniGunReticle.transform.position = whereToDraw;
-				miniGunReticle.transform.rotation = Quaternion.LookRotation(timesOne);
+					//miniGunReticle.transform.position = whereToDraw;
+					//miniGunReticle.transform.rotation = Quaternion.LookRotation(timesOne);
 
-				//Instantiate (sparkPrefab,whereToDraw,Quaternion.LookRotation(timesOne));
+
 
 				if(Input.GetKeyDown("space")){
 					miniGunFirer.fire = true;
@@ -119,16 +127,16 @@ public class MechShoot : MonoBehaviour {
 
 			//aim the rockets position on the map
 			if (Input.GetKey ("u")) {
-				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed);
+				missleTargetArea.transform.Translate(missleTargetArea.transform.forward * rocketAimSpeed);
 			}
 			if (Input.GetKey ("j")) {
-				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed * -1);
+				missleTargetArea.transform.Translate(missleTargetArea.transform.forward * rocketAimSpeed * -1);
 			}
 			if (Input.GetKey ("k")) {
-				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed);
+				missleTargetArea.transform.Translate(missleTargetArea.transform.right * rocketAimSpeed);
 			}
 			if (Input.GetKey ("h")) {
-				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed * -1);
+				missleTargetArea.transform.Translate(missleTargetArea.transform.right * rocketAimSpeed * -1);
 			}
 
 			//fire the rocket function in rocket arm script
