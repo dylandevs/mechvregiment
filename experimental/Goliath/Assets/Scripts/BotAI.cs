@@ -173,7 +173,10 @@ public class BotAI : MonoBehaviour {
 	// Determines whether given vector difference is near, mid, or long range and within FoV
 	byte checkInSight(Transform target){//float angle, Vector3 diffVec){
 		Vector3 diffVec = target.position - transform.position;
+		Vector3 headVec = diffVec + new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
+		Vector3 feetVec = diffVec - new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
 		float angle = Vector3.Angle(facing, diffVec);
+		byte returnState = AllClear;
 
 		// Check if within FoV
 		if (angle <= ViewAngle){
@@ -188,16 +191,57 @@ public class BotAI : MonoBehaviour {
 					float distance = rayHit.distance;
 
 					if (distance < ThreshClose){
-						return Firing;
+						returnState = Firing;
 					}
 					else if (distance < ThreshMed){
-						return Sighted;
+						returnState = Sighted;
+					}
+					print ("torso");
+				}
+			}
+
+			// Check head
+			if (returnState == AllClear){
+				if (Physics.Raycast(transform.position, headVec, out rayHit)){
+					
+					// If hit target, no obstruction
+					if (rayHit.collider.transform == target){
+						
+						float distance = rayHit.distance;
+						
+						if (distance < ThreshClose){
+							returnState = Firing;
+						}
+						else if (distance < ThreshMed){
+							returnState = Sighted;
+						}
+						print ("head");
+					}
+				}
+			}
+
+			// Check feet
+			if (returnState == AllClear){
+				if (Physics.Raycast(transform.position, feetVec, out rayHit)){
+					
+					// If hit target, no obstruction
+					if (rayHit.collider.transform == target){
+						
+						float distance = rayHit.distance;
+						
+						if (distance < ThreshClose){
+							returnState = Firing;
+						}
+						else if (distance < ThreshMed){
+							returnState = Sighted;
+						}
+						print ("feet");
 					}
 				}
 			}
 		}
 
-		return AllClear;
+		return returnState;
 	}
 
 	// Fires bullet in direction provided
