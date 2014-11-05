@@ -1,0 +1,21 @@
+Initialize engine version: 4.3.2f1 (0517a5ae8669)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvumdshim.dll 9.18.13.2702]
+    Renderer: Intel(R) HD Graphics 4600
+    Vendor:   Intel
+    VRAM:     1792 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=1 INTZ=1 RAWZ=0 NULL=1 RESZ=1 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Dylan\Documents\mechvregiment\networking\theruns_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Dylan\Documents\mechvregiment\networking\theruns_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Dylan\Documents\mechvregiment\networking\theruns_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Dylan\Documents\mechvregiment\networking\theruns_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+- Completed reload, in  0.038 seconds
+desktop: 1920x1080 59Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+The server has disconnected from the client. Most likely the server has shut down.
+ 
+(Filename:  Line: 740)
+
