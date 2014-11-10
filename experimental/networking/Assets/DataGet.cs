@@ -13,7 +13,11 @@ public class DataGet : MonoBehaviour {
 	
 	public void Awake(){
 		if (Network.peerType == NetworkPeerType.Disconnected){
-            Network.InitializeServer(10, port, false);
+            bool useNat = !Network.HavePublicAddress();
+            if(useNat){
+                AddMessage("Network has no private address; NAT punching.");
+            }
+            Network.InitializeServer(10, port, useNat);
         }
 	}
 

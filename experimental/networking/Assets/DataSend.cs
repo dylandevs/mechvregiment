@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DataSend : MonoBehaviour {
  
-    public string serverIP = "127.0.0.1";
+    public string serverIP = "134.117.249.68";
     public int port = 25000;
     private string _messageLog = "";
     string someInfo = "";
