@@ -24,6 +24,9 @@ public class MechShoot : MonoBehaviour {
 	public GameObject miniGunReticle;
 	public GameObject cameraPlace;
 	public GameObject retWall;
+	public GameObject lightBeam;
+	public GameObject notLightBeam;
+	int layerMask = 1 << 16; //for avoiding the ret wall
 
 	//firing objcts
 	public MinigunFirer miniGunFirer;
@@ -37,7 +40,7 @@ public class MechShoot : MonoBehaviour {
 		rotSpeed = Time.deltaTime * 50;
 		rocketScript = rocketFirer.GetComponent<RocketFirer>();
 		miniGunFirer = miniGunFirer.GetComponent<MinigunFirer>();
-
+		layerMask = ~layerMask;
 	}
 	
 	// Update is called once per frame
@@ -71,10 +74,10 @@ public class MechShoot : MonoBehaviour {
 
 			//aim the position of where the minigun is going to fire from
 			if (Input.GetKey ("u")) {
-				miniGunArm.transform.Rotate(miniGunArm.transform.right * rotSpeed, Space.World);
+				miniGunArm.transform.Rotate(-miniGunArm.transform.right * rotSpeed, Space.World);
 			}
 			if (Input.GetKey ("j")) {
-				miniGunArm.transform.Rotate(-miniGunArm.transform.right * rotSpeed, Space.World);
+				miniGunArm.transform.Rotate(miniGunArm.transform.right * rotSpeed, Space.World);
 			}
 			if (Input.GetKey ("k")) {
 				miniGunArm.transform.Rotate(Vector3.up*rotSpeed,Space.World);
@@ -86,58 +89,66 @@ public class MechShoot : MonoBehaviour {
 			Ray ray = new Ray(miniGunArm.transform.position,miniGunArm.transform.forward);
 			RaycastHit hitInfoAimer;
 
-			if(Physics.Raycast (ray, out hitInfoAimer,range)){
-				Vector3 hitPoint = hitInfoAimer.point;
-				//create a hit variable for the second raycast
-				RaycastHit ray2Hit;
-				//fire second raycast
-				Ray ray2 = new Ray(hitPoint,retWall.transform.position);
-				if(Physics.Raycast (ray2,out ray2Hit,range)){
+			if(Physics.Raycast (ray, out hitInfoAimer,range,layerMask)){
+					Vector3 hitPoint = hitInfoAimer.point;
+					//create a hit variable for the second raycast
+					Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
+					RaycastHit ray2Hit;
+
+					if(Physics.Raycast (ray2,out ray2Hit,range)){
+						//if it hits the aimerwall mvoe the reticle there
+						if(ray2Hit.collider.tag == "aimerWall"){
+							Vector3 placeHit = ray2Hit.point;
+							miniGunReticle.transform.position = placeHit;
+						}
+					}
+			}
+			else{
+				Vector3 vecEnd = miniGunArm.transform.forward * 100;
+				Vector3 miniArmPos = miniGunArm.transform.position; 
+				Vector3 sendBack =  miniArmPos += vecEnd;
+				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
+				RaycastHit ray2HitNo;
+				if(Physics.Raycast (ray2No,out ray2HitNo,range)){
 					//if it hits the aimerwall mvoe the reticle there
-					if(ray2Hit.collider.tag == "aimerWall"){
-						Vector3 placeHit = ray2Hit.point;
-						miniGunReticle.transform.position = placeHit;
+					if(ray2HitNo.collider.tag == "aimerWall"){
+						Vector3 placeHit2 = ray2HitNo.point;
+						miniGunReticle.transform.position = placeHit2;
 					}
 				}
-				//Vector3 whereToDraw = cameraPlace.transform.position - hitPoint;
-				//Vector3 timesOne = whereToDraw;
-				//whereToDraw /= 2;
-				//whereToDraw += hitPoint;
-
-				//***********must fix reticle not showing up ************
-					//miniGunReticle.transform.position = whereToDraw;
-					//miniGunReticle.transform.rotation = Quaternion.LookRotation(timesOne);
-
-
+			}
 
 				if(Input.GetKeyDown("space")){
 					miniGunFirer.fire = true;
 				}
-
+				
 				if(Input.GetKeyUp("space")){
 					miniGunFirer.fire = false;
 				}
-			}
-		}//*******end of minigun aiming and fire***************
+			}//*******end of minigun aiming and fire***************
 
 		//the rocket mode is on
 		if (rocketMode == true) {
+
+			//makes the ray
+			Ray rayRockMode = new Ray(cameraPlace.transform.position,cameraPlace.transform.forward);
+			RaycastHit rockModeRayHit;
+			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
+			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
+				if(rockModeRayHit.collider.tag == "Terrain"){
+					Vector3 placeHitRock = rockModeRayHit.point;
+					missleTargetArea.transform.position = placeHitRock;
+					missleTargetArea.transform.rotation = Quaternion.Euler(rockModeRayHit.normal);
+				}
+				else{
+					Vector3 placeHitRock = rockModeRayHit.point;
+					missleTargetArea.transform.position = placeHitRock;
+					missleTargetArea.transform.rotation = Quaternion.Euler(rockModeRayHit.normal);
+				}
+			}
+
 			//turn on the aiming device
 			missleReticle.SetActive(true);
-
-			//aim the rockets position on the map
-			if (Input.GetKey ("u")) {
-				missleTargetArea.transform.Translate(missleTargetArea.transform.forward * rocketAimSpeed);
-			}
-			if (Input.GetKey ("j")) {
-				missleTargetArea.transform.Translate(missleTargetArea.transform.forward * rocketAimSpeed * -1);
-			}
-			if (Input.GetKey ("k")) {
-				missleTargetArea.transform.Translate(missleTargetArea.transform.right * rocketAimSpeed);
-			}
-			if (Input.GetKey ("h")) {
-				missleTargetArea.transform.Translate(missleTargetArea.transform.right * rocketAimSpeed * -1);
-			}
 
 			//fire the rocket function in rocket arm script
 			if (Input.GetKeyDown ("space") && cooldownRemainingRocket <= 0) {
@@ -148,32 +159,34 @@ public class MechShoot : MonoBehaviour {
 
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
+			//makes the ray
+			Ray rayRockMode = new Ray(cameraPlace.transform.position,cameraPlace.transform.forward);
+			RaycastHit rockModeRayHit;
+			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
+			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
+				if(rockModeRayHit.collider.tag == "Terrain"){
+					lightBeam.SetActive(true);
+					notLightBeam.SetActive(false);
+					Vector3 placeHitRock = rockModeRayHit.point;
+					lightBeam.transform.position = placeHitRock;
 
-			//turn on the aiming device
-			missleReticle.SetActive(true);
-			
-			//aim the rockets position on the map
-			if (Input.GetKey ("u")) {
-				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed);
+					//fire the rocket function in rocket arm script
+					if (Input.GetKeyDown ("space")) {
+						//do something with minions
+					}
+				}
 			}
-			if (Input.GetKey ("j")) {
-				missleTargetArea.transform.Translate(transform.forward * rocketAimSpeed * -1);
-			}
-			if (Input.GetKey ("k")) {
-				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed);
-			}
-			if (Input.GetKey ("h")) {
-				missleTargetArea.transform.Translate(transform.right * rocketAimSpeed * -1);
-			}
-			
-			//fire the rocket function in rocket arm script
-			if (Input.GetKeyDown ("space")) {
-				//do something with minions
-			}
-		}
 
+			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
+				if(rockModeRayHit.collider.tag != "Terrain"){
+						lightBeam.SetActive(false);
+						notLightBeam.SetActive(true);
+					Vector3 placeHitRock = rockModeRayHit.point;
+					notLightBeam.transform.position = placeHitRock;
+				}
+			}
 	}//this is end of update
-	
+}
 	//function to reset the modes
 	void resetModes(){
 		miniGunMode = false;
@@ -182,6 +195,8 @@ public class MechShoot : MonoBehaviour {
 		//turn off the aimers when not in the mode
 		missleReticle.SetActive(false);
 		miniGunReticle.SetActive (false);
+		lightBeam.SetActive(false);
+		notLightBeam.SetActive (false);
 	}
 
 }

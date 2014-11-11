@@ -45,7 +45,7 @@ public class RocketScript : MonoBehaviour {
 
 		//fire a raycast ahead to ensure you wont miss and go through a collider
 		Ray ray = new Ray(transform.position,transform.forward);
-		if (Physics.Raycast (ray, 70 * Time.deltaTime)) 
+		if (Physics.Raycast (ray, 50 * Time.deltaTime)) 
 		{
 			Detonate();
 		}
