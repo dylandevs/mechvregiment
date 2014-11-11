@@ -48,6 +48,7 @@ public class BotAI : MonoBehaviour {
 	const float TurnStep = 0.02f;
 	const float FireAngle = 60 / 2;
 	const float MaxHealth = 100;
+	const float ResightRate = 0.25f;
 
 	// Storage variables
 	Transform allyGroup = null;
@@ -60,6 +61,8 @@ public class BotAI : MonoBehaviour {
 	float health = MaxHealth;
 	float reloadProg = FireRate;
 	bool isDead = false;
+	float resightEnemyProg = ResightRate;
+	float resightAllyProg = ResightRate;
 	
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
@@ -146,9 +149,14 @@ public class BotAI : MonoBehaviour {
 
 	byte getCurrentState(float angle, Vector3 diffVec){
 		byte newState = state;
+		resightAllyProg -= Time.deltaTime;
+		resightEnemyProg -= Time.deltaTime;
 
 		// Get state based on cone of vision
-		newState = checkInSight(opponent.transform);
+		if (resightEnemyProg <= 0) {
+			newState = checkInSight (opponent.transform);
+			resightEnemyProg = ResightRate;
+		}
 
 		// Determine if still searching
 		if (alertTime > 0 && newState < Sighted){
@@ -156,7 +164,7 @@ public class BotAI : MonoBehaviour {
 		}
 
 		// Check status of nearby allies
-		if (allyGroup != null && state < Sighted){
+		if (allyGroup != null && state < Sighted && resightAllyProg <= 0){
 			if (alliesAlarmed()){
 				if (diffVec.magnitude > ThreshClose){
 					newState = Sighted;
@@ -165,6 +173,7 @@ public class BotAI : MonoBehaviour {
 					newState = Firing;
 				}
 			}
+			resightAllyProg = ResightRate;
 		}
 
 		return newState;
