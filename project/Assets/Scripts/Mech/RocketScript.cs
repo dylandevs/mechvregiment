@@ -45,22 +45,22 @@ public class RocketScript : MonoBehaviour {
 
 		//fire a raycast ahead to ensure you wont miss and go through a collider
 		Ray ray = new Ray(transform.position,transform.forward);
-		if (Physics.Raycast (ray, 50 * Time.deltaTime)) 
+		if (Physics.Raycast (ray, 30 * Time.deltaTime)) 
 		{
 			Detonate();
 		}
 		
-	}
+	}// end of fixed update
 
 	void Detonate()
 	{
-		//makes the boom effects
+		//makes the boom effects if there is one loaded
 		if (explosionPrefab != null) 
 		{
 			Instantiate(explosionPrefab, transform.position,Quaternion.identity);
 		}
 		
-		//hurts whats near the boom
+		//hurts whats near the boom depending on a overlap sphere function
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 		foreach (Collider c in colliders) 
 		{

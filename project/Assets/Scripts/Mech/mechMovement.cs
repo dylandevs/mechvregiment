@@ -63,15 +63,16 @@ public class mechMovement : MonoBehaviour {
 		}
 		//do rotations
 		//limit rotations so that mech stops looking down at a certain point
-		if (transform.rotation.x <= 25) {
-			if (Input.GetKey (KeyCode.DownArrow)) {
-					topHalf.transform.Rotate (topHalf.transform.right * rotSpeed, Space.World);
 
+		if (topHalf.transform.eulerAngles.x <= 25||topHalf.transform.eulerAngles.x >= 180) {
+			if (Input.GetKey (KeyCode.DownArrow)) {
+				topHalf.transform.Rotate (topHalf.transform.right * rotSpeed, Space.World);
 			}
 		}
-		if (transform.rotation.x >= -25) {
+
+		if (topHalf.transform.eulerAngles.x < 180||topHalf.transform.eulerAngles.x >= 330) {
 			if (Input.GetKey (KeyCode.UpArrow)) {
-					topHalf.transform.Rotate (-topHalf.transform.right * rotSpeed, Space.World);
+				topHalf.transform.Rotate (topHalf.transform.right * -rotSpeed, Space.World);
 			}
 		}
 		if (Input.GetKey (KeyCode.RightArrow)) {

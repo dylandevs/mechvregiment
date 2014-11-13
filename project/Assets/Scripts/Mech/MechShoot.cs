@@ -8,7 +8,7 @@ public class MechShoot : MonoBehaviour {
 	float rotSpeed;
 
 	//variables for rocketFire
-	public float coolDownRocket = 2f;
+	public float coolDownRocket = 4f;
 	float cooldownRemainingRocket = 0;	
 
 	//modes
@@ -119,11 +119,18 @@ public class MechShoot : MonoBehaviour {
 			}
 
 				if(Input.GetKeyDown("space")){
-					miniGunFirer.fire = true;
+				miniGunFirer.fire = true;
 				}
 				
+				if(Input.GetKeyDown(KeyCode.LeftControl)){
+					miniGunFirer.cannonShoot = true;
+				}
+				if(Input.GetKeyUp(KeyCode.LeftControl)){
+					miniGunFirer.cannonShoot = false;
+				}
 				if(Input.GetKeyUp("space")){
 					miniGunFirer.fire = false;
+					miniGunFirer.cannonShoot = false;
 				}
 			}//*******end of minigun aiming and fire***************
 
