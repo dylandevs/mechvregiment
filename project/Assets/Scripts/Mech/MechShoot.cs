@@ -17,7 +17,7 @@ public class MechShoot : MonoBehaviour {
 	public bool miniGunMode;
 
 	//aiming stuff
-	public GameObject miniGunArm;
+	public GameObject miniGunAimer;
 	public GameObject missleReticle;
 	public GameObject missleTargetArea;
 	public float rocketAimSpeed;
@@ -26,6 +26,8 @@ public class MechShoot : MonoBehaviour {
 	public GameObject retWall;
 	public GameObject lightBeam;
 	public GameObject notLightBeam;
+	public GameObject miniGunArm;
+	
 	int layerMask = 1 << 16; //for avoiding the ret wall
 
 	//firing objcts
@@ -74,39 +76,52 @@ public class MechShoot : MonoBehaviour {
 
 			//aim the position of where the minigun is going to fire from
 			if (Input.GetKey ("u")) {
-				miniGunArm.transform.Rotate(-miniGunArm.transform.right * rotSpeed, Space.World);
+				miniGunAimer.transform.Rotate(-miniGunAimer.transform.right * rotSpeed, Space.World);
 			}
 			if (Input.GetKey ("j")) {
-				miniGunArm.transform.Rotate(miniGunArm.transform.right * rotSpeed, Space.World);
+				miniGunAimer.transform.Rotate(miniGunAimer.transform.right * rotSpeed, Space.World);
 			}
 			if (Input.GetKey ("k")) {
-				miniGunArm.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+				miniGunAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
 			}
 			if (Input.GetKey ("h")) {
-				miniGunArm.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+				miniGunAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
 			}
-			//set the reticle based on a raycast
-			Ray ray = new Ray(miniGunArm.transform.position,miniGunArm.transform.forward);
-			RaycastHit hitInfoAimer;
 
+			//set the reticle based on a raycast
+			Ray ray = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
+			RaycastHit hitInfoAimer;
+			//check if it hit something then send a ray back to display the reticle
 			if(Physics.Raycast (ray, out hitInfoAimer,range,layerMask)){
 					Vector3 hitPoint = hitInfoAimer.point;
 					//create a hit variable for the second raycast
 					Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
 					RaycastHit ray2Hit;
 
+					//make it look like the minigun arm is facing where its shooting
+					Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+					Vector3 miniArmPos = miniGunAimer.transform.position; 
+					Vector3 sendBack =  miniArmPos += vecEnd;
+					miniGunArm.transform.forward = vecEnd;
+						
 					if(Physics.Raycast (ray2,out ray2Hit,range)){
 						//if it hits the aimerwall mvoe the reticle there
 						if(ray2Hit.collider.tag == "aimerWall"){
 							Vector3 placeHit = ray2Hit.point;
 							miniGunReticle.transform.position = placeHit;
+							miniGunReticle.transform.forward = cameraPlace.transform.forward;
 						}
 					}
 			}
+			//this is for when it doesnt hit an object it still displays
 			else{
-				Vector3 vecEnd = miniGunArm.transform.forward * 100;
-				Vector3 miniArmPos = miniGunArm.transform.position; 
+				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
+
+				//make it look like the minigun arm is facing where its shooting
+				miniGunArm.transform.forward = vecEnd;
+
 				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
 				RaycastHit ray2HitNo;
 				if(Physics.Raycast (ray2No,out ray2HitNo,range)){
@@ -114,6 +129,7 @@ public class MechShoot : MonoBehaviour {
 					if(ray2HitNo.collider.tag == "aimerWall"){
 						Vector3 placeHit2 = ray2HitNo.point;
 						miniGunReticle.transform.position = placeHit2;
+						miniGunReticle.transform.forward = cameraPlace.transform.forward;
 					}
 				}
 			}

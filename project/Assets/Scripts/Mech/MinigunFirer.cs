@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class MinigunFirer : MonoBehaviour {
-	public GameObject miniGunArm;
+	public GameObject miniGunAimer;
+	public GameObject miniGunArm; // for making bullets shoot in the right direction
 	public GameObject [] cannonShot;
 	public GameObject sparkPrefab;
 	public GameObject cannonShotStart;
@@ -11,11 +12,11 @@ public class MinigunFirer : MonoBehaviour {
 	public bool fire;
 
 	public float range = 100.0f;
-	public float coolDown = 0.05f;
 	//ammo variables for minigun
 	public float gunClipAmmo = 40f;
 	public float currentClipAmmo = 40f;
 
+	float coolDown;
 	int cannonCounter;
 	float cannonCD = 8f;
 	float cooldownRemaining = 0;
@@ -28,6 +29,7 @@ public class MinigunFirer : MonoBehaviour {
 		fire = false;
 		layerMask = ~layerMask;
 		cannonCounter = 1;
+		coolDown = 0.25f;
 	}
 	
 	// Update is called once per frame
@@ -48,8 +50,12 @@ public class MinigunFirer : MonoBehaviour {
 			Vector3 startShot =  tempStart += new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
 			Ray ray = new Ray (gameObject.transform.position, startShot);
 			RaycastHit hitInfo;
+
 			//fires the adjusted ray
 			if (Physics.Raycast (ray, out hitInfo, range,layerMask)) {
+
+					//make the actual arm look at hitPoint
+
 					Vector3 hitPoint = hitInfo.point;
 					GameObject go = hitInfo.collider.gameObject;
 					//if graphic is there apply a bullet decal
