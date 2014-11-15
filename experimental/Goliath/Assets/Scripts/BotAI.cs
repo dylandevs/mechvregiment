@@ -4,10 +4,13 @@ using System.Collections;
 public class BotAI : MonoBehaviour {
 
 	// State values
-	const byte AllClear = 0;
+	/*const byte AllClear = 0;
 	const byte Searching = 1;
 	const byte Sighted = 2;
-	const byte Firing = 3;
+	const byte Firing = 3;*/
+
+	public enum State{AllClear, Searching, Sighted, Firing};
+	enum TargetComponent{Head, Torso, Feet, None};
 
 	// Predefined state colours
 	Color safeCol = new Color32(0, 255, 0, 1);
@@ -48,6 +51,7 @@ public class BotAI : MonoBehaviour {
 	const float TurnStep = 0.02f;
 	const float FireAngle = 60 / 2;
 	const float MaxHealth = 100;
+	const float ResightRate = 0.25f;
 
 	// Storage variables
 	Transform allyGroup = null;
@@ -56,10 +60,15 @@ public class BotAI : MonoBehaviour {
 	NavMeshAgent navMeshAgent;
 	
 	// Bot stats
-	byte state = 0;
+
+	State state = State.AllClear;
+	TargetComponent targetVisible = TargetComponent.None;
+	//byte state = 0;
 	float health = MaxHealth;
 	float reloadProg = FireRate;
 	bool isDead = false;
+	float resightEnemyProg = ResightRate;
+	float resightAllyProg = ResightRate;
 	
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
@@ -100,18 +109,18 @@ public class BotAI : MonoBehaviour {
 			}*/
 
 			// Act based on state
-			if (state == AllClear){
+			if (state == State.AllClear){
 				setSurfaceColour(safeCol);
 				idle();
 				//navMeshAgent.velocity = Vector3.zero;
 			}
-			else if (state == Searching){
+			else if (state == State.Searching){
 				navMeshAgent.stoppingDistance = 0;
 				navMeshAgent.speed = MoveSpeed;
 				setSurfaceColour(srchCol);
 				search();
 			}
-			else if (state == Sighted){
+			else if (state == State.Sighted){
 				//faceTarget(opponent);
 				//newVel += MoveSpeed * facing;
 				navMeshAgent.stoppingDistance = ThreshClose;
@@ -122,7 +131,7 @@ public class BotAI : MonoBehaviour {
 				alertTime = AlertDuration;
 				lastSighted = opponent.transform.position;
 			}
-			else if (state == Firing){
+			else if (state == State.Firing){
 				if (reloadProg >= FireRate && angle < ViewAngle){
 					fireInDirection(opponent.transform);
 					reloadProg = 0;
@@ -144,84 +153,99 @@ public class BotAI : MonoBehaviour {
 		}
 	}
 
-	byte getCurrentState(float angle, Vector3 diffVec){
-		byte newState = state;
+	State getCurrentState(float angle, Vector3 diffVec){
+		State newState = state;
+		resightAllyProg -= Time.deltaTime;
+		resightEnemyProg -= Time.deltaTime;
 
 		// Get state based on cone of vision
-		newState = checkInSight(opponent.transform);
+		if (resightEnemyProg <= 0) {
+			newState = checkInSight (opponent.transform);
+			resightEnemyProg = ResightRate;
+		}
 
 		// Determine if still searching
-		if (alertTime > 0 && newState < Sighted){
-			newState = Searching;
+		if (alertTime > 0 && newState < State.Sighted){
+			newState = State.Searching;
 		}
 
 		// Check status of nearby allies
-		if (allyGroup != null && state < Sighted){
+		if (allyGroup != null && state < State.Sighted && resightAllyProg <= 0){
 			if (alliesAlarmed()){
 				if (diffVec.magnitude > ThreshClose){
-					newState = Sighted;
+					newState = State.Sighted;
 				}
 				else {
-					newState = Firing;
+					newState = State.Firing;
 				}
 			}
+			resightAllyProg = ResightRate;
 		}
 
 		return newState;
 	}
 
 	// Determines whether given vector difference is near, mid, or long range and within FoV
-	byte checkInSight(Transform target){//float angle, Vector3 diffVec){
+	State checkInSight(Transform target, bool isAlly = false){//float angle, Vector3 diffVec){
 		Vector3 diffVec = target.position - transform.position;
 		Vector3 headVec = diffVec + new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
 		Vector3 feetVec = diffVec - new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
 		float angle = Vector3.Angle(facing, diffVec);
-		byte returnState = AllClear;
+		State returnState = State.AllClear;
 
 		// Check if within FoV
 		if (angle <= ViewAngle){
 
 			// Cast ray to determine obstructions in sight
 			RaycastHit rayHit;
-			if (Physics.Raycast(transform.position, diffVec, out rayHit)){
 
+
+			// Check head
+
+			if (Physics.Raycast(transform.position, headVec, out rayHit)){
+				
 				// If hit target, no obstruction
 				if (rayHit.collider.transform == target){
-
+					
 					float distance = rayHit.distance;
-
 					if (distance < ThreshClose){
-						returnState = Firing;
+						returnState = State.Firing;
 					}
 					else if (distance < ThreshMed){
-						returnState = Sighted;
+						returnState = State.Sighted;
 					}
-					print ("torso");
+					print ("head");
+
+					if (!isAlly){
+						targetVisible = TargetComponent.Head;
+					}
 				}
 			}
 
-			// Check head
-			if (returnState == AllClear){
-				if (Physics.Raycast(transform.position, headVec, out rayHit)){
+			if (returnState == State.AllClear){
+				if (Physics.Raycast(transform.position, diffVec, out rayHit)){
 					
 					// If hit target, no obstruction
 					if (rayHit.collider.transform == target){
 						
 						float distance = rayHit.distance;
-						
 						if (distance < ThreshClose){
-							returnState = Firing;
+							returnState = State.Firing;
 						}
 						else if (distance < ThreshMed){
-							returnState = Sighted;
+							returnState = State.Sighted;
 						}
-						print ("head");
+						print ("torso");
+						
+						if (!isAlly){
+							targetVisible = TargetComponent.Torso;
+						}
 					}
 				}
 			}
 
 			// Check feet
-			if (returnState == AllClear){
+			if (returnState == State.AllClear){
 				if (Physics.Raycast(transform.position, feetVec, out rayHit)){
 					
 					// If hit target, no obstruction
@@ -230,18 +254,42 @@ public class BotAI : MonoBehaviour {
 						float distance = rayHit.distance;
 						
 						if (distance < ThreshClose){
-							returnState = Firing;
+							returnState = State.Firing;
 						}
 						else if (distance < ThreshMed){
-							returnState = Sighted;
+							returnState = State.Sighted;
 						}
 						print ("feet");
+
+						if (!isAlly){
+							targetVisible = TargetComponent.Feet;
+						}
 					}
 				}
 			}
 		}
 
+		if (returnState == State.AllClear){
+			targetVisible = TargetComponent.None;
+		}
+
 		return returnState;
+	}
+
+	// Calculates direction to fire in based on last-seen target component
+	Vector3 chooseFireTarget(){
+		Vector3 fireDir = transform.forward;
+		if (targetVisible == TargetComponent.Head){
+
+		}
+		else if (targetVisible == TargetComponent.Head){
+			
+		}
+		else if (targetVisible == TargetComponent.Head){
+			
+		}
+
+		return fireDir;
 	}
 
 	// Fires bullet in direction provided
@@ -274,7 +322,7 @@ public class BotAI : MonoBehaviour {
 		renderer.material.color = newCol;
 	}
 
-	public byte getState(){
+	public State getState(){
 		return state;
 	}
 
@@ -288,12 +336,12 @@ public class BotAI : MonoBehaviour {
 
 		BotAI[] allies = allyGroup.GetComponentsInChildren<BotAI>();
 		foreach(BotAI ally in allies){
-			if (ally.getState() >= Searching){
+			if (ally.getState() >= State.Searching){
 
 				// Check if ally is in sight of current bot
-				byte allyVisible = checkInSight(ally.getTransform());
+				State allyVisible = checkInSight(ally.getTransform(), true);
 
-				if (allyVisible >= Searching){
+				if (allyVisible >= State.Searching){
 					lastSighted = ally.lastSighted;
 					return true;
 				}
