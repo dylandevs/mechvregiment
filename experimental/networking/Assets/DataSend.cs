@@ -3,11 +3,12 @@ using System.Collections;
 
 public class DataSend : MonoBehaviour {
  
-    public string serverIP = "134.117.249.68";
-    public int port = 25000;
+    private string serverIP = "134.117.249.68";
+    private int port = 25000;
     private string _messageLog = "";
     string someInfo = "";
     private NetworkPlayer _myNetworkPlayer;
+    private string gameName = "GoliathConnection_083";
 
     void Start(){
     	AddMessage("Starting client to connect to " + serverIP + ":" + port + ".");
@@ -18,6 +19,14 @@ public class DataSend : MonoBehaviour {
         if (Network.peerType == NetworkPeerType.Disconnected) {
             if (GUI.Button(new Rect(100, 125, 150, 25), "connect")) {
                 AddMessage("Connecting...");
+                MasterServer.RequestHostList(gameName);
+                for(int i = 0; i < MasterServer.PollHostList().Length; i++){
+                    AddMessage(MasterServer.PollHostList()[i].gameName);
+                    if(MasterServer.PollHostList()[i].gameName == gameName){
+                        serverIP = MasterServer.PollHostList()[i].ip[0];
+                        port = MasterServer.PollHostList()[i].port;
+                    }
+                }
                 Network.Connect(serverIP, port);
             }
         } else {
@@ -50,14 +59,14 @@ public class DataSend : MonoBehaviour {
     void SendInfoToServer(){
         AddMessage("Sending stuff to server!");
         someInfo = "Client " + _myNetworkPlayer.guid + ": hello server";
-        networkView.RPC("ReceiveInfoFromClient", RPCMode.Server, someInfo);
+        networkView.RPC("ReceiveInfoFromClient", RPCMode.All, someInfo);
         AddMessage ("SENT: "+someInfo);
     }
     [RPC]
     void SetPlayerInfo(NetworkPlayer player) {
         _myNetworkPlayer = player;
         someInfo = "Player setted";
-        networkView.RPC("ReceiveInfoFromClient", RPCMode.Server, someInfo);
+        networkView.RPC("ReceiveInfoFromClient", RPCMode.All, someInfo);
         AddMessage ("SENT: "+someInfo);
     }
     [RPC]

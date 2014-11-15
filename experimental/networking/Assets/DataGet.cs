@@ -5,6 +5,7 @@ public class DataGet : MonoBehaviour {
 
 	private int port = 25000;
     private string _messageLog = "Bootering server...";
+    private string gameName = "GoliathConnection_083";
 
 	// Use this for initialization
 	void Start () {
@@ -18,9 +19,17 @@ public class DataGet : MonoBehaviour {
                 AddMessage("Network has no private address; NAT punching.");
             }
             Network.InitializeServer(10, port, useNat);
+            MasterServer.RegisterHost(gameName, "Mech v Regiment name", "This is the mech v regiment connection");
         }
 	}
-
+    void OnServerInitialized(){
+        AddMessage("Server initialized.");
+    }
+    void OnMasterServerEvent(MasterServerEvent mse){
+        if (mse == MasterServerEvent.RegistrationSucceeded){
+            AddMessage("Registration succeeded.");
+        }
+    }
 	// Update is called once per frame
 	void Update () {
 	
@@ -69,7 +78,7 @@ public class DataGet : MonoBehaviour {
     string someInfo = "Server: hello client";
     [RPC]
     void SendInfoToClient() {
-        networkView.RPC("ReceiveInfoFromServer", RPCMode.Others, someInfo);
+        networkView.RPC("ReceiveInfoFromServer", RPCMode.All, someInfo);
     }
  
     // fix RPC errors
