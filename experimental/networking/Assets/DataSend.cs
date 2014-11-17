@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DataSend : MonoBehaviour {
  
-    private string serverIP = "134.117.249.68";
+    private string serverIP = "172.17.59.155";
     private int port = 25000;
     private string _messageLog = "";
     string someInfo = "";
@@ -11,7 +11,6 @@ public class DataSend : MonoBehaviour {
     private string gameName = "GoliathConnection_083";
 
     void Start(){
-    	AddMessage("Starting client to connect to " + serverIP + ":" + port + ".");
     }
  
     void OnGUI() {
@@ -19,14 +18,17 @@ public class DataSend : MonoBehaviour {
         if (Network.peerType == NetworkPeerType.Disconnected) {
             if (GUI.Button(new Rect(100, 125, 150, 25), "connect")) {
                 AddMessage("Connecting...");
-                MasterServer.RequestHostList(gameName);
-                for(int i = 0; i < MasterServer.PollHostList().Length; i++){
-                    AddMessage(MasterServer.PollHostList()[i].gameName);
-                    if(MasterServer.PollHostList()[i].gameName == gameName){
-                        serverIP = MasterServer.PollHostList()[i].ip[0];
-                        port = MasterServer.PollHostList()[i].port;
+                MasterServer.RequestHostList("MechvRegimentMatch");
+                HostData[] hostList = MasterServer.PollHostList();
+                AddMessage("Host list is thiiiiis long-> " + hostList.Length);
+                for(int i = 0; i < hostList.Length; i++){
+                    AddMessage(hostList[i].gameName);
+                    if(hostList[i].gameName == gameName){
+                        serverIP = hostList[i].ip[0];
+                        port = hostList[i].port;
                     }
                 }
+                AddMessage("Starting client to connect to " + serverIP + ":" + port + ".");
                 Network.Connect(serverIP, port);
             }
         } else {

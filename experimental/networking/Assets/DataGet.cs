@@ -17,9 +17,12 @@ public class DataGet : MonoBehaviour {
             bool useNat = !Network.HavePublicAddress();
             if(useNat){
                 AddMessage("Network has no private address; NAT punching.");
-            }
+            }/*
+            MasterServer.ipAddress = "83.221.146.11";
+            MasterServer.port = 23457;
+            port = 23457;*/
             Network.InitializeServer(10, port, useNat);
-            MasterServer.RegisterHost(gameName, "Mech v Regiment name", "This is the mech v regiment connection");
+            MasterServer.RegisterHost("MechvRegimentMatch", gameName, "This is the mech v regiment connection");
         }
 	}
     void OnServerInitialized(){
@@ -28,6 +31,13 @@ public class DataGet : MonoBehaviour {
     void OnMasterServerEvent(MasterServerEvent mse){
         if (mse == MasterServerEvent.RegistrationSucceeded){
             AddMessage("Registration succeeded.");
+            MasterServer.RequestHostList("MechvRegimentMatch");
+            HostData[] hostList = MasterServer.PollHostList();
+            AddMessage("Host list is thiiiiis long-> " + hostList.Length);
+            for(int i = 0; i < hostList.Length; i++){
+                AddMessage(hostList[i].gameName);
+                AddMessage("IP: " + hostList[i].ip[0] + " Port: "+ hostList[i].port);
+            }
         }
     }
 	// Update is called once per frame
@@ -47,6 +57,15 @@ public class DataGet : MonoBehaviour {
             }
             if (GUI.Button(new Rect(100, 175, 150, 25), "Send hi to client"))
                 SendInfoToClient();
+            if (GUI.Button(new Rect(100, 200, 150, 25), "Get host list")){
+                MasterServer.RequestHostList("MechvRegimentMatch");
+                HostData[] hostList = MasterServer.PollHostList();
+                AddMessage("Host list is thiiiiis long-> " + hostList.Length);
+                for(int i = 0; i < hostList.Length; i++){
+                    AddMessage(hostList[i].gameName);
+                    AddMessage("IP: " + hostList[i].ip[0] + " Port: "+ hostList[i].port);
+                }
+            }
         }
         GUI.TextArea(new Rect(275, 100, 300, 300), _messageLog);
 
