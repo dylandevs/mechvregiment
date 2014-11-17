@@ -1,0 +1,17 @@
+Initialize engine version: 4.5.5f1 (7684ad0c5a44)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [aticfx32.dll 8.17.10.1280]
+    Renderer: AMD Radeon HD 7800 Series
+    Vendor:   ATI
+    VRAM:     998 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=1 INTZ=1 RAWZ=0 NULL=1 RESZ=1 SlowINTZ=1
+Begin MonoManager ReloadAssembly
+Platform assembly: E:\Carleton University\University 2014-2015\Senior Project\mechvregiment\experimental\networking\server_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading E:\Carleton University\University 2014-2015\Senior Project\mechvregiment\experimental\networking\server_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: E:\Carleton University\University 2014-2015\Senior Project\mechvregiment\experimental\networking\server_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading E:\Carleton University\University 2014-2015\Senior Project\mechvregiment\experimental\networking\server_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+- Completed reload, in  0.040 seconds
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.

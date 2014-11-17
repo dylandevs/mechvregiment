@@ -214,7 +214,7 @@ public class BotAI : MonoBehaviour {
 					else if (distance < ThreshMed){
 						returnState = State.Sighted;
 					}
-					print ("head");
+					//print ("head");
 
 					if (!isAlly){
 						targetVisible = TargetComponent.Head;
@@ -235,7 +235,7 @@ public class BotAI : MonoBehaviour {
 						else if (distance < ThreshMed){
 							returnState = State.Sighted;
 						}
-						print ("torso");
+						//print ("torso");
 						
 						if (!isAlly){
 							targetVisible = TargetComponent.Torso;
@@ -259,7 +259,7 @@ public class BotAI : MonoBehaviour {
 						else if (distance < ThreshMed){
 							returnState = State.Sighted;
 						}
-						print ("feet");
+						//print ("feet");
 
 						if (!isAlly){
 							targetVisible = TargetComponent.Feet;
