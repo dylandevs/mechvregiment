@@ -159,14 +159,19 @@ public class MechShoot : MonoBehaviour {
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
 				if(rockModeRayHit.collider.tag == "Terrain"){
+
+					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rockModeRayHit.normal);
+
 					Vector3 placeHitRock = rockModeRayHit.point;
 					missleTargetArea.transform.position = placeHitRock;
-					missleTargetArea.transform.rotation = Quaternion.Euler(rockModeRayHit.normal);
+					missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
 				}
 				else{
+					print ("is sideways");
 					Vector3 placeHitRock = rockModeRayHit.point;
 					missleTargetArea.transform.position = placeHitRock;
-					missleTargetArea.transform.rotation = Quaternion.Euler(rockModeRayHit.normal);
+					missleTargetArea.transform.LookAt(-rockModeRayHit.normal + -placeHitRock);
+
 				}
 			}
 

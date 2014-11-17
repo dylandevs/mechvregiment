@@ -1,11 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mech\mechMovement.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\Carleton\ds-4_5\Assets\zombieMove.js">
     <Files>
-      <File FileName="Assets\Scripts\Mech\MechShoot.cs" Line="110" Column="30" />
-      <File FileName="Assets\Scripts\Mech\MinigunFirer.cs" Line="32" Column="18" />
-      <File FileName="Assets\Scripts\Mech\RocketScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Mech\mechMovement.cs" Line="15" Column="29" />
+      <File FileName="..\..\..\Carleton\ds-4_5\Assets\zombieMove.js" Line="15" Column="43" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

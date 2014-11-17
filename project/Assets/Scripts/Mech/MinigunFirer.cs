@@ -57,11 +57,10 @@ public class MinigunFirer : MonoBehaviour {
 					//make the actual arm look at hitPoint
 
 					Vector3 hitPoint = hitInfo.point;
-					GameObject go = hitInfo.collider.gameObject;
 					//if graphic is there apply a bullet decal
 					if (sparkPrefab != null) {
-						Instantiate (sparkPrefab, hitPoint, Quaternion.identity);
-						
+						Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+						Instantiate(sparkPrefab, hitInfo.point + hitInfo.normal * 0.01f, hitRotation);
 					}
 					//lower bullets whenever a shot is taken
 					currentClipAmmo -=1;
