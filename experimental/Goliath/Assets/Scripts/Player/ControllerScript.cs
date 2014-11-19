@@ -121,7 +121,7 @@ public class ControllerScript : MonoBehaviour {
 				aimingDownSight = false;
 			}
 
-			print (cameraAnim.GetBool(adsHash));
+			//print (cameraAnim.GetBool(adsHash));
 
 
 			// Lateral movement (strafing)
