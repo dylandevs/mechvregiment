@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\Mech\SelfDestruct.cs" />
      <Compile Include="Assets\Scripts\Mech\cannonShot.cs" />
      <Compile Include="Assets\Scripts\Mech\mechMovement.cs" />
+     <Compile Include="Assets\Scripts\Mech\networkScript.cs" />
      <Compile Include="Assets\Scripts\Player\ControllerScript.cs" />
      <Compile Include="Assets\Scripts\Player\Crosshair.cs" />
      <Compile Include="Assets\Scripts\Player\Player.cs" />

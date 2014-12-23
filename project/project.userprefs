@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\Carleton\ds-4_5\Assets\zombieMove.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\Carleton\ds-4_5\Assets\Player.cs">
     <Files>
-      <File FileName="..\..\..\Carleton\ds-4_5\Assets\zombieMove.js" Line="15" Column="43" />
+      <File FileName="..\..\..\Carleton\ds-4_5\Assets\Player.cs" Line="25" Column="14" />
+      <File FileName="..\..\..\Carleton\ds-4_5\Assets\zombieMove.cs" Line="10" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
