@@ -26,7 +26,7 @@ public class networkScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//send goliath transfrom to master server
-		NetworkView.RPC("GoliathTransform",RPCMode.All,topHalf.transform.position,topHalf.transform.rotation,bottomHalf.transform.position,bottomHalf.transform.rotation);
+		//NetworkView.RPC("GoliathTransform",RPCMode.All,topHalf.transform.position,topHalf.transform.rotation,bottomHalf.transform.position,bottomHalf.transform.rotation);
 		//GoliathTransform(topHalf.transform.position,topHalf.transform.rotation,bottomHalf.transform.position,bottomHalf.transform.rotation);
 
 		if (Network.peerType == NetworkPeerType.Disconnected) {

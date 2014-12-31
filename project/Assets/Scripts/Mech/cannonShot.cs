@@ -30,6 +30,9 @@ public class cannonShot : MonoBehaviour {
 			doDamageCannon();
 		}
 	}
+
+	//*** add a self destruct to this and then make the ammo show up and dissapear accordingly*********
+
 	void doDamageCannon(){
 		//do damgy thingys
 	}

@@ -17,31 +17,53 @@ public class MinigunFirer : MonoBehaviour {
 	public float currentClipAmmo = 40f;
 
 	float coolDown;
+	float coolDownWarmUp;
+	float warmUpTimer;
 	int cannonCounter;
 	float cannonCD = 8f;
 	float cooldownRemaining = 0;
 	float cannonCDR = 0;
 	int layerMask = 1 << 16;
-
+	bool warmedUp;
 	// Use this for initialization
 	void Start () {
+		warmedUp = false;
+		//timer until minigun is warmed up
+		warmUpTimer = 2f;
 		cannonShoot = false;
 		fire = false;
 		layerMask = ~layerMask;
 		cannonCounter = 1;
-		coolDown = 0.25f;
+		//during warm up
+		coolDownWarmUp = 1f;
+		//after warmed up
+		coolDown = 0.5f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//**cooldown stuff**
+		//counting down until next shot is fired
 		cooldownRemaining -= Time.deltaTime * 5;
 		cannonCDR -= Time.deltaTime *5;
 
-		//reload funtion trigger
-		if (Input.GetKeyDown ("r")) {
-			gunReload ();
+		//when not firing reset the warm up timer
+		if(fire == false){
+			warmUpTimer = 1.5f;
 		}
 
+		//counts down untill switches cooldown rates
+		warmUpTimer -= Time.deltaTime * 0.5f;
+		
+		//turning the warmUpTimer Update warmUpTimer ona nd off
+		if(warmUpTimer <= 0){
+			warmedUp = true;
+		}
+		
+		if(warmUpTimer >= 0){
+			warmedUp = false;
+		}
+		//fires the minigun based on 
 		if (currentClipAmmo >= 1 && fire == true && cooldownRemaining <= 0) {
 
 			//gets the starting aimer angle
@@ -54,8 +76,8 @@ public class MinigunFirer : MonoBehaviour {
 			//fires the adjusted ray
 			if (Physics.Raycast (ray, out hitInfo, range,layerMask)) {
 
-					//make the actual arm look at hitPoint
-
+					//make the actual arm look at hitPoint*********************
+					// if it hits a person do soe damage  *********************
 					Vector3 hitPoint = hitInfo.point;
 					//if graphic is there apply a bullet decal
 					if (sparkPrefab != null) {
@@ -64,9 +86,21 @@ public class MinigunFirer : MonoBehaviour {
 					}
 					//lower bullets whenever a shot is taken
 					currentClipAmmo -=1;
-					cooldownRemaining = coolDown;
+				//still needs to be warmed up
+					if(warmedUp == true){
+					print("warmed up");
+						cooldownRemaining = coolDown;
+					}
+				//been warmed up
+					
+				if(warmedUp == false){
+						print("needs warming up");
+					cooldownRemaining = coolDownWarmUp;
+					}
 			}
 		}
+
+		//fires the cannon shot based on the cool down
 		if(cannonShoot == true){
 			if(cannonCDR <=0){
 				GameObject currentCannonShot = cannonShot [cannonCounter];
@@ -81,6 +115,11 @@ public class MinigunFirer : MonoBehaviour {
 				cannonCDR = cannonCD;
 			}
 		}
+		
+	//reload funtion trigger
+	if (Input.GetKeyDown ("r")) {
+		gunReload ();
+	}
 
 	}// end of update//
 

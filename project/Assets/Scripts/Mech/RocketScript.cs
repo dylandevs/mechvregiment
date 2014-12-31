@@ -29,15 +29,15 @@ public class RocketScript : MonoBehaviour {
 	}
 	void FixedUpdate () {
 
+		mustHit = target.transform.position += new Vector3 (Random.Range (-1F, 1F), 0, Random.Range (-1F, 1F));
+
 		if(timer <= 7){
-			mustHit = target.transform.position;
 			transform.Translate (Vector3.forward * speed * Time.deltaTime);
 			var q = Quaternion.LookRotation(mustHit - transform.position);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, q, trnSpeed * Time.deltaTime);
 		}
 
 		if(timer >= 7.1){
-			mustHit = target.transform.position;
 			transform.Translate (Vector3.forward * speedTwo * Time.deltaTime);
 			var q = Quaternion.LookRotation(mustHit - transform.position);
 			transform.rotation = Quaternion.RotateTowards(transform.rotation, q, trnSpeedTwo * Time.deltaTime);

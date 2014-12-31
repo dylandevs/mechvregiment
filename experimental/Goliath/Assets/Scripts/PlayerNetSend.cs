@@ -12,14 +12,17 @@ public class PlayerNetSend : MonoBehaviour {
 	bool stop = false;
 	bool startCount = false;
 
+	public GameObject goliathTop;
+	public GameObject goliathBot;
+
 	// Use this for initialization
 	void Start () {
 		if (Network.peerType == NetworkPeerType.Disconnected){
-			bool useNat = !Network.HavePublicAddress();
+			/*bool useNat = !Network.HavePublicAddress();
 			if(useNat){
 				print("Network has no private address; NAT punching.");
-			}
-			Network.InitializeServer(10, port, useNat);
+			}*/
+			Network.InitializeServer(10, port, !Network.HavePublicAddress());
 			MasterServer.RegisterHost(gameType, gameName, "This is the mech v regiment connection");
 		}
 	}
@@ -56,6 +59,14 @@ public class PlayerNetSend : MonoBehaviour {
 	[RPC]
 	void UpdateNathanPos(Vector3 pos){
 		print ("BNOAEBJIRTF");
+	}
+
+	[RPC]
+	void GoliathTransform(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
+		goliathTop.transform.position = topPos;
+		goliathTop.transform.rotation = topRot;
+		goliathBot.transform.position = botPos;
+		goliathBot.transform.rotation = botRot;
 	}
 
 }
