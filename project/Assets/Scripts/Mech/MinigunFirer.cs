@@ -59,11 +59,11 @@ public class MinigunFirer : MonoBehaviour {
 		if(warmUpTimer <= 0){
 			warmedUp = true;
 		}
-		
 		if(warmUpTimer >= 0){
 			warmedUp = false;
 		}
-		//fires the minigun based on 
+
+		//fires the minigun based on  if there's ammo firing allowed and no cooldown left
 		if (currentClipAmmo >= 1 && fire == true && cooldownRemaining <= 0) {
 
 			//gets the starting aimer angle
@@ -75,9 +75,8 @@ public class MinigunFirer : MonoBehaviour {
 
 			//fires the adjusted ray
 			if (Physics.Raycast (ray, out hitInfo, range,layerMask)) {
-
 					//make the actual arm look at hitPoint*********************
-					// if it hits a person do soe damage  *********************
+					// if it hits a person do some damage  *********************
 					Vector3 hitPoint = hitInfo.point;
 					//if graphic is there apply a bullet decal
 					if (sparkPrefab != null) {
@@ -86,17 +85,15 @@ public class MinigunFirer : MonoBehaviour {
 					}
 					//lower bullets whenever a shot is taken
 					currentClipAmmo -=1;
+
 				//still needs to be warmed up
-					if(warmedUp == true){
-					print("warmed up");
-						cooldownRemaining = coolDown;
-					}
+				if(warmedUp == true){
+					cooldownRemaining = coolDown;
+				}
 				//been warmed up
-					
 				if(warmedUp == false){
-						print("needs warming up");
 					cooldownRemaining = coolDownWarmUp;
-					}
+				}
 			}
 		}
 
@@ -105,8 +102,7 @@ public class MinigunFirer : MonoBehaviour {
 			if(cannonCDR <=0){
 				GameObject currentCannonShot = cannonShot [cannonCounter];
 				currentCannonShot.transform.position = cannonShotStart.transform.position;
-				currentCannonShot.transform.forward = cannonShotStart.transform.forward;
-
+				currentCannonShot.transform.forward = miniGunAimer.transform.forward;
 				currentCannonShot.SetActive(true);
 				cannonCounter += 1;
 				if(cannonCounter >= 4){

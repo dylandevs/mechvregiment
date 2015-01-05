@@ -20,6 +20,7 @@ public class MechShoot : MonoBehaviour {
 	public GameObject miniGunAimer;
 	public GameObject missleReticle;
 	public GameObject missleTargetArea;
+	public GameObject rocketAimer;
 	public float rocketAimSpeed;
 	public GameObject miniGunReticle;
 	public GameObject cameraPlace;
@@ -74,18 +75,30 @@ public class MechShoot : MonoBehaviour {
 			//aiming the minigun and placing the reticle in the right place
 			miniGunReticle.SetActive(true);
 
+			//********needs adjusting after model import*****************************************************
+
 			//aim the position of where the minigun is going to fire from
-			if (Input.GetKey ("u")) {
-				miniGunAimer.transform.Rotate(-miniGunAimer.transform.right * rotSpeed, Space.World);
+			if (miniGunAimer.transform.eulerAngles.x <= 30||miniGunAimer.transform.eulerAngles.x >= 335) {
+				if (Input.GetKey ("u")) {
+					miniGunAimer.transform.Rotate(-miniGunAimer.transform.right * rotSpeed, Space.World);
+				}
 			}
-			if (Input.GetKey ("j")) {
-				miniGunAimer.transform.Rotate(miniGunAimer.transform.right * rotSpeed, Space.World);
+			if (miniGunAimer.transform.eulerAngles.x >= 330||miniGunAimer.transform.eulerAngles.x <= 21) {
+				if (Input.GetKey ("j")) {
+					miniGunAimer.transform.Rotate(miniGunAimer.transform.right * rotSpeed, Space.World);
+				}
 			}
-			if (Input.GetKey ("k")) {
-				miniGunAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+			if (miniGunAimer.transform.eulerAngles.y >= 280||miniGunAimer.transform.eulerAngles.y <= 50) {
+				print(miniGunAimer.transform.eulerAngles.y);
+				if (Input.GetKey ("k")) {
+					miniGunAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+				}
 			}
-			if (Input.GetKey ("h")) {
-				miniGunAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+			if (miniGunAimer.transform.eulerAngles.y >= 300||miniGunAimer.transform.eulerAngles.y <= 60) {
+				if (Input.GetKey ("h")) {
+
+					miniGunAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+				}
 			}
 
 			//set the reticle based on a raycast
@@ -153,8 +166,33 @@ public class MechShoot : MonoBehaviour {
 		//the rocket mode is on
 		if (rocketMode == true) {
 
+			//********needs adjusting after model import*****************************************************
+
+			if (rocketAimer.transform.eulerAngles.x <= 30||rocketAimer.transform.eulerAngles.x >= 335) {
+				if (Input.GetKey ("u")) {
+					rocketAimer.transform.Rotate(-rocketAimer.transform.right * rotSpeed, Space.World);
+				}
+			}
+			if (rocketAimer.transform.eulerAngles.x >= 330||rocketAimer.transform.eulerAngles.x <= 21) {
+				if (Input.GetKey ("j")) {
+					rocketAimer.transform.Rotate(rocketAimer.transform.right * rotSpeed, Space.World);
+				}
+			}
+			if (rocketAimer.transform.eulerAngles.y >= 280||rocketAimer.transform.eulerAngles.y <= 50) {
+				print(rocketAimer.transform.eulerAngles.y);
+				if (Input.GetKey ("k")) {
+					rocketAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+				}
+			}
+			if (rocketAimer.transform.eulerAngles.y >= 300||rocketAimer.transform.eulerAngles.y <= 60) {
+				if (Input.GetKey ("h")) {
+					
+					rocketAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+				}
+			}
+
 			//makes the ray
-			Ray rayRockMode = new Ray(cameraPlace.transform.position,cameraPlace.transform.forward);
+			Ray rayRockMode = new Ray(rocketAimer.transform.position,rocketAimer.transform.forward);
 			RaycastHit rockModeRayHit;
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
@@ -171,7 +209,6 @@ public class MechShoot : MonoBehaviour {
 					Vector3 placeHitRock = rockModeRayHit.point;
 					missleTargetArea.transform.position = placeHitRock;
 					missleTargetArea.transform.LookAt(-rockModeRayHit.normal + -placeHitRock);
-
 				}
 			}
 
