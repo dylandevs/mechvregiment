@@ -15,6 +15,7 @@ public class MechShoot : MonoBehaviour {
 	public bool rocketMode;
 	public bool minionMode;
 	public bool miniGunMode;
+	public bool keyboard;
 
 	//aiming stuff
 	public GameObject miniGunAimer;
@@ -34,38 +35,85 @@ public class MechShoot : MonoBehaviour {
 	//firing objcts
 	public MinigunFirer miniGunFirer;
 	public GameObject rocketFirer;
-	private RocketFirer rocketScript;
+	public RocketFirer rocketScript;
+
+	//hydra variables coming in from hand script
+	public bool R1;
+	public bool R2;
+	public bool RTrig;
+	public bool LTrig;
 
 	// Use this for initialization
 	void Start () {
 		rocketAimSpeed = 15 * Time.deltaTime;
 		miniGunMode = true;
 		rotSpeed = Time.deltaTime * 50;
-		rocketScript = rocketFirer.GetComponent<RocketFirer>();
-		miniGunFirer = miniGunFirer.GetComponent<MinigunFirer>();
 		layerMask = ~layerMask;
+		keyboard = false;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//MODE HANDLING************************
-		if (Input.GetKeyDown ("1")) {
-			resetModes();
-			rocketMode = true;
-		}
-		if (Input.GetKeyDown ("2")) {
-			resetModes();
-			minionMode = true;
-		}
-		if (Input.GetKeyUp ("1")) {
-			resetModes();
-			miniGunMode = true;
-		}
-		if (Input.GetKeyUp ("2")) {
-			resetModes();
-			miniGunMode = true;
+
+		//MODE HANDLING for keyboard************************
+	
+		if(keyboard == true){
+			if (Input.GetKeyDown ("1")) {
+				resetModes();
+				rocketMode = true;
+			}
+			if (Input.GetKeyDown ("2")) {
+				resetModes();
+				minionMode = true;
+			}
+			if (Input.GetKeyUp ("1")) {
+				resetModes();
+				miniGunMode = true;
+			}
+			if (Input.GetKeyUp ("2")) {
+				resetModes();
+				miniGunMode = true;
+			}
 		}
 
+		//MODE HANDLING for hydra************************
+		//END OF KEYBOARD CONTROLS
+		if(keyboard == false){
+			/*
+			if(R1 ==true){
+				print("shoot side");
+				resetModes();
+				rocketMode = true;
+			}
+
+
+			if(m_hand == SixenseHands.RIGHT && m_controller.GetButtonUp(SixenseButtons.ONE)){
+				resetModes();
+				minionMode = true;
+			}
+			
+			if(m_hand == SixenseHands.RIGHT && m_controller.GetButtonDown(SixenseButtons.TWO)){
+				resetModes();
+				miniGunMode = true;
+			}
+			
+			if(m_hand == SixenseHands.RIGHT && m_controller.GetButtonUp(SixenseButtons.TWO)){
+				resetModes();
+				miniGunMode = true;
+			}
+
+
+			if(m_hand == SixenseHands.LEFT && m_controller.GetButtonDown(SixenseButtons.ONE)){
+				print ("LEFT yall");
+				resetModes();
+				rocketMode = true;
+			}
+
+*/
+			
+		}
+		//END OF HYDRA CONTROLS
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
 
@@ -78,26 +126,28 @@ public class MechShoot : MonoBehaviour {
 			//********needs adjusting after model import*****************************************************
 
 			//aim the position of where the minigun is going to fire from
-			if (miniGunAimer.transform.eulerAngles.x <= 30||miniGunAimer.transform.eulerAngles.x >= 335) {
-				if (Input.GetKey ("u")) {
-					miniGunAimer.transform.Rotate(-miniGunAimer.transform.right * rotSpeed, Space.World);
+			if(keyboard ==true){
+				//is disabled on start due to use of the hydra due to hydra input overding the aiming....
+				if (miniGunAimer.transform.localEulerAngles.x <= 30||miniGunAimer.transform.localEulerAngles.x >= 335) {
+					if (Input.GetKey ("u")) {
+						miniGunAimer.transform.Rotate(-miniGunAimer.transform.right * rotSpeed, Space.World);
+					}
 				}
-			}
-			if (miniGunAimer.transform.eulerAngles.x >= 330||miniGunAimer.transform.eulerAngles.x <= 21) {
-				if (Input.GetKey ("j")) {
-					miniGunAimer.transform.Rotate(miniGunAimer.transform.right * rotSpeed, Space.World);
+				if (miniGunAimer.transform.localEulerAngles.x >= 330||miniGunAimer.transform.localEulerAngles.x <= 21) {
+					if (Input.GetKey ("j")) {
+						miniGunAimer.transform.Rotate(miniGunAimer.transform.right * rotSpeed, Space.World);
+					}
 				}
-			}
-			if (miniGunAimer.transform.eulerAngles.y >= 280||miniGunAimer.transform.eulerAngles.y <= 50) {
-				print(miniGunAimer.transform.eulerAngles.y);
-				if (Input.GetKey ("k")) {
-					miniGunAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+				if (miniGunAimer.transform.localEulerAngles.y >= 280||miniGunAimer.transform.localEulerAngles.y <= 50) {
+					if (Input.GetKey ("k")) {
+						miniGunAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+					}
 				}
-			}
-			if (miniGunAimer.transform.eulerAngles.y >= 300||miniGunAimer.transform.eulerAngles.y <= 60) {
-				if (Input.GetKey ("h")) {
+				if (miniGunAimer.transform.localEulerAngles.y >= 300||miniGunAimer.transform.localEulerAngles.y <= 60) {
+					if (Input.GetKey ("h")) {
 
-					miniGunAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+						miniGunAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+					}
 				}
 			}
 
@@ -115,7 +165,7 @@ public class MechShoot : MonoBehaviour {
 					Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 					Vector3 miniArmPos = miniGunAimer.transform.position; 
 					Vector3 sendBack =  miniArmPos += vecEnd;
-					miniGunArm.transform.forward = vecEnd;
+					miniGunArm.transform.right = -vecEnd;
 						
 					if(Physics.Raycast (ray2,out ray2Hit,range)){
 						//if it hits the aimerwall mvoe the reticle there
@@ -133,7 +183,7 @@ public class MechShoot : MonoBehaviour {
 				Vector3 sendBack =  miniArmPos += vecEnd;
 
 				//make it look like the minigun arm is facing where its shooting
-				miniGunArm.transform.forward = vecEnd;
+				miniGunArm.transform.right = -vecEnd;
 
 				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
 				RaycastHit ray2HitNo;
@@ -167,27 +217,28 @@ public class MechShoot : MonoBehaviour {
 		if (rocketMode == true) {
 
 			//********needs adjusting after model import*****************************************************
-
-			if (rocketAimer.transform.eulerAngles.x <= 30||rocketAimer.transform.eulerAngles.x >= 335) {
-				if (Input.GetKey ("u")) {
-					rocketAimer.transform.Rotate(-rocketAimer.transform.right * rotSpeed, Space.World);
+			if(keyboard == true){
+				if (rocketAimer.transform.eulerAngles.x <= 30||rocketAimer.transform.eulerAngles.x >= 335) {
+					if (Input.GetKey ("u")) {
+						rocketAimer.transform.Rotate(-rocketAimer.transform.right * rotSpeed, Space.World);
+					}
 				}
-			}
-			if (rocketAimer.transform.eulerAngles.x >= 330||rocketAimer.transform.eulerAngles.x <= 21) {
-				if (Input.GetKey ("j")) {
-					rocketAimer.transform.Rotate(rocketAimer.transform.right * rotSpeed, Space.World);
+				if (rocketAimer.transform.eulerAngles.x >= 330||rocketAimer.transform.eulerAngles.x <= 21) {
+					if (Input.GetKey ("j")) {
+						rocketAimer.transform.Rotate(rocketAimer.transform.right * rotSpeed, Space.World);
+					}
 				}
-			}
-			if (rocketAimer.transform.eulerAngles.y >= 280||rocketAimer.transform.eulerAngles.y <= 50) {
-				print(rocketAimer.transform.eulerAngles.y);
-				if (Input.GetKey ("k")) {
-					rocketAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+				if (rocketAimer.transform.eulerAngles.y >= 280||rocketAimer.transform.eulerAngles.y <= 50) {
+					print(rocketAimer.transform.eulerAngles.y);
+					if (Input.GetKey ("k")) {
+						rocketAimer.transform.Rotate(Vector3.up*rotSpeed,Space.World);
+					}
 				}
-			}
-			if (rocketAimer.transform.eulerAngles.y >= 300||rocketAimer.transform.eulerAngles.y <= 60) {
-				if (Input.GetKey ("h")) {
-					
-					rocketAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+				if (rocketAimer.transform.eulerAngles.y >= 300||rocketAimer.transform.eulerAngles.y <= 60) {
+					if (Input.GetKey ("h")) {
+						
+						rocketAimer.transform.Rotate(-Vector3.up*rotSpeed,Space.World);	
+					}
 				}
 			}
 
@@ -216,7 +267,7 @@ public class MechShoot : MonoBehaviour {
 			missleReticle.SetActive(true);
 
 			//fire the rocket function in rocket arm script
-			if (Input.GetKeyDown ("space") && cooldownRemainingRocket <= 0) {
+			if (Input.GetKeyDown("space") && cooldownRemainingRocket <= 0) {
 					cooldownRemainingRocket = coolDownRocket;
 					rocketScript.firing = true;
 			}
@@ -263,5 +314,4 @@ public class MechShoot : MonoBehaviour {
 		lightBeam.SetActive(false);
 		notLightBeam.SetActive (false);
 	}
-
 }

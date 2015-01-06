@@ -25,6 +25,12 @@ public class MinigunFirer : MonoBehaviour {
 	float cannonCDR = 0;
 	int layerMask = 1 << 16;
 	bool warmedUp;
+
+	//hydra variables
+	float 		m_fLastTriggerVal;
+	Vector3		m_initialPosition;
+	Quaternion 	m_initialRotation;
+
 	// Use this for initialization
 	void Start () {
 		warmedUp = false;

@@ -79,6 +79,12 @@
      <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerViewport.cs" />
      <Compile Include="Assets\Scripts\Weapon.cs" />
+     <Compile Include="Assets\SixenseInput\DemoScenes\Scripts\SixenseHand.cs" />
+     <Compile Include="Assets\SixenseInput\DemoScenes\Scripts\SixenseHandsController.cs" />
+     <Compile Include="Assets\SixenseInput\DemoScenes\Scripts\SixenseInputTest.cs" />
+     <Compile Include="Assets\SixenseInput\DemoScenes\Scripts\SixenseObjectController.cs" />
+     <Compile Include="Assets\SixenseInput\Scripts\SixenseInput.cs" />
+     <Compile Include="Assets\SixenseInput\Scripts\SixensePlugin.cs" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\OVR\Shaders\TextShader3D.shader" />
      <None Include="Assets\Shaders\InvisibleShadowCaster.shader" />
