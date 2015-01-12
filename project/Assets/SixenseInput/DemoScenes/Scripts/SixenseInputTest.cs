@@ -101,11 +101,13 @@ public class SixenseInputTest : MonoBehaviour
 				}
 				
 				guiText = GameObject.Find( "gui_text_controller_" + controllerNumber + "_trigger" );
+				print(controllerNumber);
 				if ( guiText )
 				{
 					guiText.guiText.text = "Trigger = ";
 					if ( SixenseInput.Controllers[i].Enabled )
 					{
+					
 						guiText.guiText.text += SixenseInput.Controllers[i].Trigger;
 					}
 				}

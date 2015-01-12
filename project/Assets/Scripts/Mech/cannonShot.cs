@@ -6,17 +6,26 @@ public class cannonShot : MonoBehaviour {
 	public float cannonSpeed;
 	int layerMask = 1 << 16;
 	float rotSpeed;
+	float timer;
 
 	// Use this for initialization
 	void Start () {
 		cannonSpeed = 20.0f * Time.deltaTime; 
 		layerMask = ~layerMask;
-		rotSpeed = 5 * Time.deltaTime; 
+		rotSpeed = 1 * Time.deltaTime; 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		// make it degrade over time********8
+		// turn off object after a certain amount of time
+		timer += Time.deltaTime;
+		
+		if (timer > 8f) {
+			gameObject.SetActive(false);
+			timer = 0;
+		}
+
+		// make it degrade over time********
 		gameObject.transform.Translate(transform.forward * cannonSpeed,Space.World);
 		gameObject.transform.Rotate(gameObject.transform.right* rotSpeed, Space.World);
 	}

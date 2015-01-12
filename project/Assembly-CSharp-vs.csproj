@@ -63,8 +63,6 @@
      <Compile Include="Assets\Scripts\BotAI.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
      <Compile Include="Assets\Scripts\BulletHoleBehaviour.cs" />
-     <Compile Include="Assets\Scripts\Game\FlagFollow.cs" />
-     <Compile Include="Assets\Scripts\Game\GameWinConditions.cs" />
      <Compile Include="Assets\Scripts\Mech\MechShoot.cs" />
      <Compile Include="Assets\Scripts\Mech\MinigunFirer.cs" />
      <Compile Include="Assets\Scripts\Mech\RocketFirer.cs" />
