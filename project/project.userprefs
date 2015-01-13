@@ -1,11 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mech\mechMovement.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mech\netWorkManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Mech\MechShoot.cs" Line="44" Column="2" />
-      <File FileName="Assets\Scripts\Mech\mechMovement.cs" Line="163" Column="4" />
-      <File FileName="Assets\SixenseInput\DemoScenes\Scripts\SixenseInputTest.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Mech\RocketFirer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Mech\netWorkManager.cs" Line="28" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
