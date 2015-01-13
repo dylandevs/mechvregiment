@@ -11,10 +11,18 @@ public class mechMovement : MonoBehaviour {
 
 	//mech health stuff
 	public float currMechHealth;
+	private float damagedTime;
 	private float mechHealth;
 	private float restartTimer;
 
-	//public GameObject mechHolagram;
+	public GameObject mechHolagramB;
+	public GameObject mechHolagramG;
+	public GameObject mechHolagramY;
+	public GameObject mechHolagramR;
+	public GameObject mechHologramDisabled;
+	//shield things
+	public float mechShield;
+	public bool shieldActive;
 
 	//move speed stuff
 	private float moveSpeedY;
@@ -33,19 +41,48 @@ public class mechMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		mechHealth = 100;
-		currMechHealth = 100;
-
+		mechHealth = 1000;
+		currMechHealth = 1000;
+		mechShield = 200;
+		shieldActive = true;
 		moveSpeedY = 5 * Time.deltaTime;
 		rotSpeedY = Time.deltaTime * 50;
 
 		moveSpeedX = 5 * Time.deltaTime;
 		rotSpeedX = Time.deltaTime * 50;
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//update the mech health hologram
+		if(mechShield <=0){
+			shieldActive = false;
+			mechHolagramB.SetActive(false);
+		}
+
+		if(shieldActive == true){
+			mechHolagramB.SetActive(true);
+		}
+		else if(currMechHealth >=501){
+			mechHologramDisabled.SetActive(false);
+			mechHolagramG.SetActive(true);
+		}
+		else if(currMechHealth <= 500 && currMechHealth >=251){
+			mechHolagramG.SetActive(false);
+			mechHolagramY.SetActive(true);
+		}
+		else if(currMechHealth <=250 && currMechHealth >=1){
+			mechHolagramY.SetActive(false);
+			mechHolagramR.SetActive(true);
+		}
+		else if(currMechHealth <= 0){
+			mechHolagramR.SetActive(false);
+			mechHolagramG.SetActive(false);
+			mechHolagramY.SetActive(false);
+			mechHologramDisabled.SetActive(true);
+			//turn on whatever other graphics are going to show when disabled
+		}
+
 
 		//Updating the joystick input
 		lStickX = SixenseInput.Controllers[left].JoystickX;
@@ -125,9 +162,17 @@ public class mechMovement : MonoBehaviour {
 			restartTimer += Time.deltaTime;
 		}
 		
-		if(restartTimer >= 5){
+		if(restartTimer >= 8){
 			currMechHealth = mechHealth;
+			restartTimer = 0;
 		}
+
+		damagedTime += Time.deltaTime;
+
+		if(currMechHealth > 0 && currMechHealth < 1000 && shieldActive == false && damagedTime > 15){
+			currMechHealth += Time.deltaTime;
+		}
+
 		//match the top half to the bottom half when not moving
 		topDir = topHalf.transform.eulerAngles;
 		bottomDir = bottomHalf.transform.eulerAngles;
@@ -141,6 +186,18 @@ public class mechMovement : MonoBehaviour {
 		
 
 	}// End oaf update
+
+	void damage(float amount){
+
+		damagedTime = 0;
+
+		if(shieldActive == false){
+			currMechHealth -= amount;
+		}
+		else{
+			mechShield -= amount;
+		}
+	}
 
 	void FixedUpdate(){
 		Vector3 newPos = bottomHalf.transform.position;
