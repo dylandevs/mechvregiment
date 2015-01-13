@@ -152,10 +152,8 @@ public class MechShoot : MonoBehaviour {
 					Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 					Vector3 miniArmPos = miniGunAimer.transform.position; 
 			// limit the angles properly
-					print(miniGunArm.transform.localEulerAngles.x);
-					if(miniGunArm.transform.localEulerAngles.x <= 60 || miniGunArm.transform.localEulerAngles.x >= 320){
 						miniGunArm.transform.right = -vecEnd;
-					}
+
 					if(Physics.Raycast (ray2,out ray2Hit,range)){
 						//if it hits the aimerwall mvoe the reticle there
 						if(ray2Hit.collider.tag == "aimerWall"){
@@ -171,10 +169,8 @@ public class MechShoot : MonoBehaviour {
 				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
 			// limit these angles properly
-				print(miniGunArm.transform.localEulerAngles.x);
-				if(miniGunArm.transform.localEulerAngles.x <= 60 || miniGunArm.transform.localEulerAngles.x >= 320){
 					miniGunArm.transform.right = -vecEnd;
-				}
+		
 
 				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
 				RaycastHit ray2HitNo;
@@ -201,10 +197,8 @@ public class MechShoot : MonoBehaviour {
 				Vector3 vecEnd = cannonAimer.transform.forward * 100;
 				Vector3 cannonArmPos = cannonAimer.transform.position;
 				// get th eproper angles and limit the rotation of the cannon arm
-				print(cannonArm.transform.localEulerAngles.x);
-				if(cannonArm.transform.localEulerAngles.x <= 60 || cannonArm.transform.localEulerAngles.x >= 320){
 					cannonArm.transform.right = -vecEnd;
-				}
+		
 
 				if(Physics.Raycast (ray2C,out ray2HitC,range)){
 					//if it hits the aimerwall mvoe the reticle there
@@ -222,9 +216,8 @@ public class MechShoot : MonoBehaviour {
 				Vector3 sendBack2 =  cannonArmPos += vecEnd2;
 				
 				//make it look like the cannon arm is facing where its shooting
-				if(cannonArm.transform.localEulerAngles.x <= 60 || cannonArm.transform.localEulerAngles.x >= 320){
 					cannonArm.transform.right = -vecEnd2;
-				}
+				
 
 				Ray ray2NoC = new Ray(sendBack2,cameraPlace.transform.position-sendBack2);
 				RaycastHit ray2HitNoC;
