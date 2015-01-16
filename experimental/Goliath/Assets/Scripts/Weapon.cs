@@ -16,7 +16,7 @@ public class Weapon : MonoBehaviour {
 	public Vector2 RecoilVariance = Vector2.zero;
 	public float FirstShotRecoilMulti = 2f;
 	public float RecoilMoveTime = 0.2f;
-	public float RecoilRecoverTime = 0.2f;
+	public float RecenteringTime = 0.2f;
 	public float AdsRecoilMoveFactor = 0.7f;
 
 	// Spread variables and adjustments in different states
@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour {
 	private float burstProgress = 0;
 	private float fireProgress = 0;
 	private float recoilMoveProgress = 0;
-	private float recoilRecoveryProgress = 0;
+	private float recentringProgress = 0;
 
 	// Spread tracker
 	private float spread = 0;
@@ -59,13 +59,18 @@ public class Weapon : MonoBehaviour {
 	private float fireSpread = 0;
 
 	// Recoil tracker
+	private bool recenterTargetSet = false;
 	private Vector2 recoilTarget;
 	private Vector3 originalFacing;
-	private Quaternion totalRecoverRot;
+	private Vector3 originalOffset;
+	private float totalRecenterRotation = 0;
+	private float initialFiringElevation = 0;
+	private float currentRecenterRotation = 0;
 
 	// State trackers
 	private bool isReloading = false;
 	private bool isBursting = false;
+	private bool isRecoiling = false;
 	private bool isOnFireInterval = false;
 	private bool isAllAmmoDepleted = false;
 	private bool isFiring = false;
@@ -89,6 +94,14 @@ public class Weapon : MonoBehaviour {
 		// If currently in firing state, attempt to fire burst
 		if (isFiring) {
 			FireBurst();
+			if (!recenterTargetSet){
+				SetRecenteringTarget();
+			}
+		}
+		else{
+			if (recenterTargetSet){
+				CalculateRecenteringSteps();
+			}
 		}
 
 		// Adjust recoil
@@ -97,8 +110,8 @@ public class Weapon : MonoBehaviour {
 		}
 
 		// Recover from recoil
-		if (recoilRecoveryProgress > 0) {
-			AttemptRecoilRecovery();
+		if (recentringProgress > 0 && !isFiring && !isRecoiling) {
+			AttemptRecentering();
 		}
 
 		// Decrease fire-related spread quickly over time
@@ -260,9 +273,9 @@ public class Weapon : MonoBehaviour {
 
 	// Sets tracking variables for recoil
 	private void SetRecoilTarget(){
+		isRecoiling = true;
 		recoilMoveProgress = RecoilMoveTime;
 		recoilTarget = RecoilPattern;
-		originalFacing = controller.facing;
 		if (isAds) {
 			recoilTarget *= AdsRecoilMoveFactor;
 		}
@@ -302,45 +315,92 @@ public class Weapon : MonoBehaviour {
 		newFacing = verticalAdjust * horizontalAdjust * newFacing;
 		controller.setFacing (newFacing);
 
-		// Finished applying recoil, begin recoil recovery
+		// Finished applying recoil
 		if (recoilMoveProgress <= 0) {
 			recoilMoveProgress = 0;
-			recoilRecoveryProgress = RecoilRecoverTime;
+			isRecoiling = false;
 		}
 	}
 
-	private void AttemptRecoilRecovery(){
-		recoilRecoveryProgress -= Time.deltaTime;
-		Vector3 newFacing = controller.facing;
+	private void SetRecenteringTarget(){
+		EndRecentering();
+		Quaternion offsetRotation = Quaternion.FromToRotation(player.transform.forward, controller.facing);
+		initialFiringElevation = offsetRotation.eulerAngles.x;
 
-		float recoveryProg = (RecoilRecoverTime - recoilRecoveryProgress) / RecoilRecoverTime;
-		recoveryProg = Mathf.Sqrt(recoveryProg);
-
-		//newFacing = (newFacing + originalFacing) * RecoilRecoverRate;
-
-		totalRecoverRot = Quaternion.FromToRotation (newFacing, originalFacing);
-		Quaternion currentRecoverRot = Quaternion.Lerp(Quaternion.identity, totalRecoverRot, recoveryProg);
-
-		// If recovery is too large, stop
-		if (currentRecoverRot.eulerAngles.y > 10) {
-			recoilRecoveryProgress = 0;
+		// Converting to account for quaternion values
+		if (initialFiringElevation > 180){
+			initialFiringElevation = 360 - initialFiringElevation;
 		}
 		else{
-			newFacing = currentRecoverRot * newFacing;
-			controller.setFacing (newFacing);
-
-			// Finished recovering recoil
-			if (recoilRecoveryProgress <= 0) {
-				recoilRecoveryProgress = 0;
-				controller.setFacing (originalFacing);
-			}
+			initialFiringElevation *= -1;
 		}
-		//Vector3 diff = newFacing - originalFacing;
+
+		recenterTargetSet = true;
+		recentringProgress = RecenteringTime;
+
+		//print (initialFiringElevation);
+	}
+
+	private void CalculateRecenteringSteps(){
+		Quaternion offsetRotation = Quaternion.FromToRotation(player.transform.forward, controller.facing);
+		totalRecenterRotation = offsetRotation.eulerAngles.x;
+		currentRecenterRotation = 0;
+
+		// Converting to account for quaternion values
+		if (totalRecenterRotation > 180){
+			totalRecenterRotation -= 360;
+		}
+		else{
+			totalRecenterRotation *= -1;
+		}
+
+		// Calculate final rotation to perform for recentering
+		totalRecenterRotation = initialFiringElevation - totalRecenterRotation;
+		//totalRecenterRotation *= 0.5f;
+		recenterTargetSet = false;
+
+		print (totalRecenterRotation);
+	}
+
+	private void AttemptRecentering(){
+		recentringProgress -= Time.deltaTime;
+		Vector3 newFacing = controller.facing;
+		float recenteringProg = (RecenteringTime - recentringProgress) / RecenteringTime;
+		recenteringProg = Mathf.Min(1, Mathf.Sqrt(recenteringProg));
+
+		//print (totalRecenterRotation);
+
+		float recenteringStep = Mathf.Lerp(0, totalRecenterRotation, recenteringProg);
+		recenteringStep -= currentRecenterRotation;
+		currentRecenterRotation += recenteringStep;
+
+		//print (recenteringStep);
+
+		// Apply rotation step
+		newFacing = Quaternion.Euler(recenteringStep, 0, 0) * newFacing;
+		controller.setFacing (newFacing);
+
+		// Finished recentering
+		if (recentringProgress <= 0) {
+			//controller.setFacing (originalFacing);
+			EndRecentering();
+		}
+	}
+
+	private void EndRecentering(){
+		recentringProgress = 0;
+		totalRecenterRotation = 0;
+		recenterTargetSet = false;
 	}
 
 	public void setFiringState(bool firingState){
 		//player.setFiringState(true);
-		isFiring = firingState;
+		if (!isReloading){
+			isFiring = firingState;
+		}
+		else if (isAllAmmoDepleted){
+			// Empty weapon sound
+		}
 	}
 
 	private void StartFireInterval(){
@@ -375,6 +435,7 @@ public class Weapon : MonoBehaviour {
 			print ("All empty!");
 			isAllAmmoDepleted = true;
 		}
+		isFiring = false;
 	}
 
 	private void StopReloading(){
