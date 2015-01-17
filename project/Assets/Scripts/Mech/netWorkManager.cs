@@ -21,9 +21,13 @@ public class netWorkManager : Photon.MonoBehaviour {
 		else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
 			PhotonView photonView = PhotonView.Get(this);
 			photonView.RPC("sendHigh", PhotonTargets.All, "Me High");
+			photonView.RPC("getPosP1", PhotonTargets.All);
 		}
 	}
 
 	[RPC]
 	void sendHigh (string hi){}
+
+	[RPC]
+	void getPosP1 (Transform positionP1, Quaternion rotationP1){}
 }
