@@ -59,16 +59,12 @@ public class ControllerScript : MonoBehaviour {
 
 		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 
-		Vector3 newVel = rigidbody.velocity;
+		Vector3 newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
 		bool currentlyGrounded = IsGrounded();
 		float spread = 0;
-
-		if (currentlyGrounded){
-			newVel = new Vector3(0, rigidbody.velocity.y, 0);
-		}
 
 		Weapon currentWeapon = player.getCurrentWeapon ();
 
@@ -101,40 +97,6 @@ public class ControllerScript : MonoBehaviour {
 					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
 				}
 
-				// Lateral movement (strafing)
-				if (L_XAxis != 0){
-					if (Mathf.Abs(L_XAxis) > RunThresh){
-						newVel += RunSpeed * perpFacing * signOf(L_XAxis);
-						spread += currentWeapon.RunSpreadAdjust;
-					}
-					else{
-						newVel += WalkSpeed * perpFacing * signOf(L_XAxis);
-						spread += currentWeapon.WalkSpreadAdjust;
-					}
-				}
-				
-				// Longitudinal movement
-				if (L_YAxis != 0){
-					// Sprint
-					if (LS_Held && L_YAxis < RunThresh){
-						newVel += SprintSpeed * facing2D;
-						anim.SetBool(sprintHash, true);
-						spread += currentWeapon.SprintSpreadAdjust;
-					}
-					// Run
-					else if (Mathf.Abs(L_YAxis) > RunThresh){
-						newVel += RunSpeed * facing2D * -signOf(L_YAxis);
-						anim.SetBool(sprintHash, false);
-						spread += currentWeapon.RunSpreadAdjust;
-					}
-					// Walk
-					else{
-						newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
-						anim.SetBool(sprintHash, false);
-						spread += currentWeapon.WalkSpreadAdjust;
-					}
-				}
-
 			}
 			else{
 				spread += currentWeapon.JumpSpreadAdjust;
@@ -160,6 +122,41 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			//print (cameraAnim.GetBool(adsHash));
+
+
+			// Lateral movement (strafing)
+			if (L_XAxis != 0){
+				if (Mathf.Abs(L_XAxis) > RunThresh){
+					newVel += RunSpeed * perpFacing * signOf(L_XAxis);
+					spread += currentWeapon.RunSpreadAdjust;
+				}
+				else{
+					newVel += WalkSpeed * perpFacing * signOf(L_XAxis);
+					spread += currentWeapon.WalkSpreadAdjust;
+				}
+			}
+
+			// Longitudinal movement
+			if (L_YAxis != 0){
+				// Sprint
+				if (LS_Held && L_YAxis < RunThresh){
+					newVel += SprintSpeed * facing2D;
+					anim.SetBool(sprintHash, true);
+					spread += currentWeapon.SprintSpreadAdjust;
+				}
+				// Run
+				else if (Mathf.Abs(L_YAxis) > RunThresh){
+					newVel += RunSpeed * facing2D * -signOf(L_YAxis);
+					anim.SetBool(sprintHash, false);
+					spread += currentWeapon.RunSpreadAdjust;
+				}
+				// Walk
+				else{
+					newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
+					anim.SetBool(sprintHash, false);
+					spread += currentWeapon.WalkSpreadAdjust;
+				}
+			}
 
 			// Rotation about Y axis
 			if (R_XAxis != 0){
@@ -345,7 +342,7 @@ public class ControllerScript : MonoBehaviour {
 				
 				setFacing(Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing);
 			}
-
+			
 			// Firing script
 			if (Mouse_Left){
 				//player.tryFire();
