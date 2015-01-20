@@ -17,7 +17,7 @@ public class ControllerScript : MonoBehaviour {
 	const float JumpSpeed = 8f;
 	const float MaxLookAngle = 88;
 	
-	public int controllerId = 1;
+	public int controllerId = -1;
 	public Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 facing2D = new Vector3(0, 0, 1);
 	public Vector3 perpFacing = new Vector3(1, 0, 0);
@@ -56,7 +56,12 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+		// Ignore input if unassigned
+		if (controllerId == -1) {
+			return;
+		}
+
 		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 		
 		Vector3 newVel = rigidbody.velocity;

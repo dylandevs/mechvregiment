@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	int id = 0;
+	public int id = -1;
 
 	const float HealWait = 5.0f;
 	const float MaxHealth = 100;
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour {
 		//playerCam.cullingMask |= (1 << firstPersonModel[0].layer);
 
 		// Setting controller
-		playerController.setController(playerId);
+		playerController.setController(id);
 
 		createShadowCasterModel();
 	}

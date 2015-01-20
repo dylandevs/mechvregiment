@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		//Player[0].Initialize(1,
 	}
 	
 	// Update is called once per frame

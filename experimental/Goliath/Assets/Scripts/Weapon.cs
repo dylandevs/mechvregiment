@@ -66,9 +66,6 @@ public class Weapon : MonoBehaviour {
 	private float totalRecenterRotation = 0;
 	private float initialFiringElevation = 0;
 	private float currentRecenterRotation = 0;
-	/*private Quaternion totalRecenterRotation = Quaternion.identity;
-	private Quaternion initialFiringElevation = Quaternion.identity;
-	private Quaternion currentRecenterRotation = Quaternion.identity;*/
 	
 	// State trackers
 	private bool isReloading = false;
@@ -87,26 +84,26 @@ public class Weapon : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		totalAmmo = MagSize * 5;
+		totalAmmo = ReserveSize;
 		magAmmo = MagSize;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		Debug.DrawRay(player.transform.position, player.transform.forward);
-		Debug.DrawRay(player.transform.position, controller.facing);
-		
 		// If currently in firing state, attempt to fire burst
 		if (isFiring) {
-			if (!recenterTargetSet){
+			if (!isAllAmmoDepleted && !recenterTargetSet){
 				SetRecenteringTarget();
 			}
 			FireBurst();
 		}
-		else{
-			if (recenterTargetSet){
+		else if (recenterTargetSet && !isRecoiling){
+			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && !isReloading){
 				CalculateRecenteringSteps();
+			}
+			else{
+				recenterTargetSet = false;
 			}
 		}
 		
@@ -186,7 +183,9 @@ public class Weapon : MonoBehaviour {
 			if (magAmmo == 0){
 				StopBursting();
 				StopFireInterval();
-				StartReloading();
+				if (!isAllAmmoDepleted){
+					StartReloading();
+				}
 			}
 		}
 	}
@@ -329,13 +328,6 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	private void SetRecenteringTarget(){
-		/*initialFiringElevation = Quaternion.FromToRotation(player.transform.forward, controller.facing);
-		
-		recenterTargetSet = true;
-		recentringProgress = RecenteringTime;
-		
-		print (player.transform.forward + " " + controller.facing);*/
-		//print (initialFiringElevation);
 		EndRecentering();
 		
 		Quaternion resetRotation = Quaternion.FromToRotation(player.transform.forward, Vector3.forward);
@@ -353,22 +345,9 @@ public class Weapon : MonoBehaviour {
 		
 		recenterTargetSet = true;
 		recentringProgress = RecenteringTime;
-		
-		print (player.transform.forward + " " + controller.facing);
-		//print (initialFiringElevation);
 	}
 	
 	private void CalculateRecenteringSteps(){
-		/*totalRecenterRotation = Quaternion.FromToRotation(player.transform.forward, controller.facing);
-		currentRecenterRotation = Quaternion.identity;
-		
-		// Calculate final rotation to perform for recentering
-		totalRecenterRotation = totalRecenterRotation / initialFiringElevation;
-		//totalRecenterRotation *= 0.5f;
-		recenterTargetSet = false;
-		print (player.transform.forward + " " + controller.facing);
-		
-		print (totalRecenterRotation);*/
 		Quaternion resetRotation = Quaternion.FromToRotation(player.transform.forward, Vector3.forward);
 		
 		Quaternion offsetRotation = Quaternion.FromToRotation(Vector3.forward, resetRotation * controller.facing);
@@ -387,34 +366,11 @@ public class Weapon : MonoBehaviour {
 		totalRecenterRotation = totalRecenterRotation - initialFiringElevation;
 		//totalRecenterRotation *= 0.5f;
 		recenterTargetSet = false;
-		print (player.transform.forward + " " + controller.facing);
-		
+
 		print (totalRecenterRotation);
 	}
 	
 	private void AttemptRecentering(){
-		/*recentringProgress -= Time.deltaTime;
-		Vector3 newFacing = controller.facing;
-		float recenteringProg = (RecenteringTime - recentringProgress) / RecenteringTime;
-		recenteringProg = Mathf.Min(1, Mathf.Sqrt(recenteringProg));
-		
-		//print (totalRecenterRotation);
-		
-		Quaternion recenteringStep = Quaternion.Lerp(Quaternion.identity, totalRecenterRotation, recenteringProg);
-		recenteringStep /= currentRecenterRotation;
-		currentRecenterRotation *= recenteringStep;
-		
-		//print (recenteringStep);
-		
-		// Apply rotation step
-		newFacing = recenteringStep * newFacing;
-		controller.setFacing (newFacing);
-		
-		// Finished recentering
-		if (recentringProgress <= 0) {
-			//controller.setFacing (originalFacing);
-			EndRecentering();
-		}*/
 		Quaternion resetRotation = Quaternion.FromToRotation(player.transform.forward, Vector3.forward);
 		Quaternion resetRotationInv = Quaternion.Inverse(resetRotation);
 		
@@ -446,13 +402,9 @@ public class Weapon : MonoBehaviour {
 		recentringProgress = 0;
 		totalRecenterRotation = 0;
 		recenterTargetSet = false;
-		/*recentringProgress = 0;
-		totalRecenterRotation = Quaternion.identity;
-		recenterTargetSet = false;*/
 	}
 	
 	public void setFiringState(bool firingState){
-		//player.setFiringState(true);
 		if (!isReloading){
 			isFiring = firingState;
 		}
@@ -489,7 +441,7 @@ public class Weapon : MonoBehaviour {
 			isReloading = true;
 			print ("Reloading...");
 		}
-		else{
+		else {
 			print ("All empty!");
 			isAllAmmoDepleted = true;
 		}
