@@ -11,6 +11,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
 	public int id = -1;
+	public float[] drawRegion;
 
 	const float HealWait = 5.0f;
 	const float MaxHealth = 100;
@@ -53,7 +54,7 @@ public class Player : MonoBehaviour {
 			thirdPersonModel.Add(child.gameObject);
 		}
 
-		Initialize(1, new float[]{0, 1, 0, 1});
+		Initialize(drawRegion);
 	}
 	
 	// Update is called once per frame
@@ -62,8 +63,8 @@ public class Player : MonoBehaviour {
 		crossScript.updateSpread (weapons [currentWeaponIndex].getSpread ());
 	}
 
-	public void Initialize(int playerId, float[] window){
-		id = playerId;
+	public void Initialize(float[] window){
+		//id = playerId;
 
 		// Settings layers for models and hiding/showing to camera
 		//setModelLayer(firstPersonModel, "PlayerView1_" + id);
