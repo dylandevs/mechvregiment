@@ -93,6 +93,7 @@ public class ControllerScript : MonoBehaviour {
 			
 			float TriggersR = Input.GetAxis("TriggersR_" + controllerId);
 			float TriggersL = Input.GetAxis("TriggersL_" + controllerId);
+			print (TriggersL + " " + controllerId);
 			
 			if (RS_Press){
 				

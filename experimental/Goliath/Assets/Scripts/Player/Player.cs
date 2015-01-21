@@ -33,10 +33,11 @@ public class Player : MonoBehaviour {
 
 	public Shader invisShadowCastShader;
 
-	float health = MaxHealth;
-	float crossJitter = 0;
-	float healTimer = 0;
-	bool isAimingDownSights = false;
+	// Status variables
+	private float health = MaxHealth;
+	private float crossJitter = 0;
+	private float healTimer = 0;
+	private bool isAimingDownSights = false;
 
 	public GameObject[] weaponModels = new GameObject[]{};
 	private Weapon[] weapons;
@@ -55,6 +56,8 @@ public class Player : MonoBehaviour {
 		}
 
 		Initialize(drawRegion);
+
+		print (id);
 	}
 	
 	// Update is called once per frame
