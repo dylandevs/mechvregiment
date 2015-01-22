@@ -7,6 +7,7 @@
 
 using UnityEngine;
 using System.Collections;
+using XInputDotNetPure;
 
 public class ControllerScript : MonoBehaviour {
 	
@@ -25,7 +26,11 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
-	
+
+	//XInput variables
+	private GamePadState state;
+	private GamePadState prevState;
+
 	// Inputs
 	public GameObject playerCam;
 	public Player player;
@@ -61,6 +66,15 @@ public class ControllerScript : MonoBehaviour {
 		if (controllerId == -1) {
 			return;
 		}
+		else{
+			state = GamePad.GetState((PlayerIndex)controllerId);
+
+			if (!state.IsConnected){
+				return;
+			}
+
+			//print (state);
+		}
 
 		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 		
@@ -81,7 +95,7 @@ public class ControllerScript : MonoBehaviour {
 		if (Input.GetJoystickNames ().Length > 0){
 			
 			// Getting controller values
-			bool A_Down = Input.GetButtonDown("A_" + controllerId);
+			/*bool A_Press = Input.GetButtonDown("A_" + controllerId);
 			
 			float R_XAxis = Input.GetAxis("R_XAxis_" + controllerId);
 			float R_YAxis = Input.GetAxis("R_YAxis_" + controllerId);
@@ -92,8 +106,21 @@ public class ControllerScript : MonoBehaviour {
 			bool LS_Held = Input.GetButton("LS_" + controllerId);
 			
 			float TriggersR = Input.GetAxis("TriggersR_" + controllerId);
-			float TriggersL = Input.GetAxis("TriggersL_" + controllerId);
-			print (TriggersL + " " + controllerId);
+			float TriggersL = Input.GetAxis("TriggersL_" + controllerId);*/
+			//print (TriggersL + " " + controllerId);
+
+			bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
+			
+			float R_XAxis = state.ThumbSticks.Right.X;
+			float R_YAxis = -state.ThumbSticks.Right.Y;
+			bool RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
+			
+			float L_XAxis = state.ThumbSticks.Left.X;
+			float L_YAxis = -state.ThumbSticks.Left.Y;
+			bool LS_Held = (state.Buttons.LeftStick == ButtonState.Pressed);
+			
+			float TriggersR = state.Triggers.Right;
+			float TriggersL = state.Triggers.Left;
 			
 			if (RS_Press){
 				
@@ -102,7 +129,7 @@ public class ControllerScript : MonoBehaviour {
 			if (currentlyGrounded){
 				
 				// Jumping
-				if (A_Down){
+				if (A_Press){
 					newVel.y += JumpSpeed;
 					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
 				}
@@ -372,6 +399,9 @@ public class ControllerScript : MonoBehaviour {
 		
 		// Apply spread to weapon based on actions
 		currentWeapon.setTargetSpread (spread);
+
+		// Update previous state
+		prevState = state;
 	}
 	
 	// Sets facing according to input

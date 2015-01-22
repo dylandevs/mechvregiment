@@ -55,9 +55,9 @@ public class Player : MonoBehaviour {
 			thirdPersonModel.Add(child.gameObject);
 		}
 
-		Initialize(drawRegion);
+		Initialize(id, drawRegion);
 
-		print (id);
+		//print (id);
 	}
 	
 	// Update is called once per frame
@@ -66,8 +66,8 @@ public class Player : MonoBehaviour {
 		crossScript.updateSpread (weapons [currentWeaponIndex].getSpread ());
 	}
 
-	public void Initialize(float[] window){
-		//id = playerId;
+	public void Initialize(int playerId, float[] window){
+		id = playerId;
 
 		// Settings layers for models and hiding/showing to camera
 		//setModelLayer(firstPersonModel, "PlayerView1_" + id);

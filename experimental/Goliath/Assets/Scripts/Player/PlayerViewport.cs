@@ -10,6 +10,7 @@ using System.Collections;
 public class PlayerViewport : MonoBehaviour {
 
 	public GameObject playerCam;
+	public GameObject playerGunCam;
 	public Crosshair crossScript;
 	float[] renderWindow = new float[]{0, 0, 1, 1};
 	float[] viewportCentre = new float[]{0.5f, 0.5f};
@@ -38,6 +39,7 @@ public class PlayerViewport : MonoBehaviour {
 		crossScript.setScaleCentre(scale, viewportCentre[0], viewportCentre[1]);
 		crossScript.calculateDrawPositions(baseWeaponSpread);
 		playerCam.camera.rect = new Rect(renderWindow[0], renderWindow[2], renderWindow[1] - renderWindow[0], renderWindow[3] - renderWindow[2]);
+		playerGunCam.camera.rect = new Rect(renderWindow[0], renderWindow[2], renderWindow[1] - renderWindow[0], renderWindow[3] - renderWindow[2]);
 	}
 
 

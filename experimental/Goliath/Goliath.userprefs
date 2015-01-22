@@ -1,9 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Player\ControllerScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Player\PlayerManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player\Player.cs" Line="71" Column="39" />
-      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="96" Column="6" />
+      <File FileName="Assets\Scripts\Player\Player.cs" Line="54" Column="43" />
+      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="437" Column="31" />
+      <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="42" Column="12" />
+      <File FileName="Assets\XInputDotNet\Examples\XInputTestCS.cs" Line="41" Column="98" />
+      <File FileName="Assets\Scripts\Player\PlayerManager.cs" Line="17" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

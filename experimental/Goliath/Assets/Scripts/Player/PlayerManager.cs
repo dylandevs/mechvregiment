@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using XInputDotNetPure;
 
 public class PlayerManager : MonoBehaviour {
 
-	const int NUM_CONTROLLERS = 4;
+	const int NumControllers = 4;
 
 	public GameObject basePlayer;
 
-	GameObject[] players = new GameObject[NUM_CONTROLLERS];
-	Player[] playerScripts = new Player[NUM_CONTROLLERS];
+	GameObject[] players = new GameObject[NumControllers];
+	public Player[] playerScripts = new Player[NumControllers];
+	private bool[] controllersUsed = {false, false, false, false};
 
 	// Use this for initialization
 	void Start () {
+		//assignControllers();
 		//Player[0].Initialize(1,
 	}
 	
@@ -20,12 +23,31 @@ public class PlayerManager : MonoBehaviour {
 		//listenForControllers();
 	}
 
+	void assignControllers(){
+		for (int i = 0; i < NumControllers; i++){
+			if (playerScripts[i]){
+				//if (!playerScripts[i].gameObject.GetActive()){
+					//playerScripts[i].gameObject.SetActive(true);
+
+				for (int j = 0; j < NumControllers; j++){
+					if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
+						print ("Assigned " + j);
+						controllersUsed[j] = true;
+						playerScripts[i].gameObject.SetActive(true);
+						playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, 4));
+					}
+				}
+				//}
+			}
+		}
+	}
+
 	void listenForControllers(){
-		for (int i = 0; i < NUM_CONTROLLERS; i++){
+		for (int i = 0; i < NumControllers; i++){
 			if (Input.GetButtonDown("A_" + (i + 1)) && players[i] == null){
 				players[i] = Instantiate(basePlayer, Vector3.zero, Quaternion.identity) as GameObject;
 				playerScripts[i] = players[i].GetComponent<Player>();
-				//playerScripts[i].Initialize(i + 1, getWindowCoords(i + 1, NUM_CONTROLLERS));
+				//playerScripts[i].Initialize(i + 1, getWindowCoords(i + 1, NumControllers));
 			}
 		}
 	}
