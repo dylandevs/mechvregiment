@@ -1,60 +1,41 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class PlayerNetSend : MonoBehaviour {
+public class PlayerNetSend : Photon.MonoBehaviour {
 
-	private string serverIP = "192.168.56.1";
-	private int port = 25000;
-	private string gameName = "GoliathConnection_083";
-	private string gameType = "MechvRegimentMatch";
+    private string roomName = "GoliathConnection_083";
 
-	float countdownTimer = 5;
-	bool stop = false;
-	bool startCount = false;
+	PhotonView photonView = PhotonView.Get(this);
+            
 
 	public GameObject goliathTop;
 	public GameObject goliathBot;
 
 	// Use this for initialization
 	void Start () {
-		if (Network.peerType == NetworkPeerType.Disconnected){
-			/*bool useNat = !Network.HavePublicAddress();
-			if(useNat){
-				print("Network has no private address; NAT punching.");
-			}*/
-			Network.InitializeServer(10, port, !Network.HavePublicAddress());
-			MasterServer.RegisterHost(gameType, gameName, "This is the mech v regiment connection");
-		}
+		PhotonNetwork.ConnectUsingSettings("v4.2");
 	}
+	void MakeRoom(){
+        RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 2 };
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		if (startCount){
-			countdownTimer -= Time.deltaTime;
-		}
-		if (countdownTimer <= 0){
-			countdownTimer = 5;
-			print ("called");
-			stop = true;
-			MasterServer.RequestHostList(gameType);
-			HostData[] hostList = MasterServer.PollHostList();
-			print (hostList.Length);
-			for(int i = 0; i < hostList.Length; i++){
-				print (hostList[i].gameName);
-				print("IP: " + hostList[i].ip[0] + " Port: "+ hostList[i].port);
-			}
-		}
+		Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
+        if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
+            MakeRoom();
+        }
+        else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
+        	//Code here happens when lobby is all set up
+        	//Photon RPC example
+        	//photonView.RPC("SendInfoToServer", PhotonTargets.All, "hhhhe he he hi");
+        }
 	}
+	private void OnPhotonJoinRoomFailed (){
+        Debug.Log("Photon failed to join room.");
+    }
 
-	void OnServerInitialized(){
-		
-	}
-	void OnMasterServerEvent(MasterServerEvent mse){
-		if (mse == MasterServerEvent.RegistrationSucceeded){
-			print ("regSucceed");
-			startCount = true;
-		}
-	}
 
 	[RPC]
 	void UpdateNathanPos(Vector3 pos){
@@ -62,11 +43,16 @@ public class PlayerNetSend : MonoBehaviour {
 	}
 
 	[RPC]
-	void GoliathTransform(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
-		goliathTop.transform.position = topPos;
-		goliathTop.transform.rotation = topRot;
-		goliathBot.transform.position = botPos;
-		goliathBot.transform.rotation = botRot;
+	void GoliathTransform(Transform incomingTop, Transform incomingBot){
+		goliathTop.transform.position = incomingTop.position;
+		goliathTop.transform.rotation = incomingTop.rotation;
+		goliathBot.transform.position = incomingBot.position;
+		goliathBot.transform.rotation = incomingBot.rotation;
+	}
+
+	[RPC]
+	void GoliathMissileFire(Vector3 targetPosition){
+
 	}
 
 }
