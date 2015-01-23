@@ -1,11 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Player\PlayerManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerNetSend.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player\Player.cs" Line="54" Column="43" />
-      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="437" Column="31" />
-      <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="42" Column="12" />
-      <File FileName="Assets\XInputDotNet\Examples\XInputTestCS.cs" Line="41" Column="98" />
+      <File FileName="Assets\Scripts\PlayerNetSend.cs" Line="8" Column="1" />
+      <File FileName="Assets\Scripts\Player\Player.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="1" Column="1" />
+      <File FileName="Assets\XInputDotNet\Examples\XInputTestCS.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Player\PlayerManager.cs" Line="17" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>

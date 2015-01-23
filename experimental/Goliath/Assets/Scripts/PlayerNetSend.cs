@@ -14,7 +14,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
-		photonView = PhotonView.Get(this)
+		photonView = PhotonView.Get (this);
 	}
 	void MakeRoom(){
         RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 2 };
