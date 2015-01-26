@@ -45,17 +45,8 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		weapons = new Weapon[weaponModels.Length];
 
-		// Getting models from parents
-		foreach (Transform child in firstPersonWrapper.transform){
-			firstPersonModel.Add(child.gameObject);
-		}
-		foreach (Transform child in thirdPersonWrapper.transform){
-			thirdPersonModel.Add(child.gameObject);
-		}
-
-		Initialize(id, drawRegion);
+		//Initialize(id, drawRegion);
 
 		//print (id);
 	}
@@ -72,6 +63,16 @@ public class Player : MonoBehaviour {
 		// Settings layers for models and hiding/showing to camera
 		//setModelLayer(firstPersonModel, "PlayerView1_" + id);
 		//setModelLayer(thirdPersonModel, "PlayerView3_" + id);
+
+		weapons = new Weapon[weaponModels.Length];
+		
+		// Getting models from parents
+		foreach (Transform child in firstPersonWrapper.transform){
+			firstPersonModel.Add(child.gameObject);
+		}
+		foreach (Transform child in thirdPersonWrapper.transform){
+			thirdPersonModel.Add(child.gameObject);
+		}
 
 		// Setting weapon layers and storing references to component scripts
 		for (int i = 0; i < weaponModels.Length; i++) {

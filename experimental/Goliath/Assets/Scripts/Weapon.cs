@@ -99,7 +99,7 @@ public class Weapon : MonoBehaviour {
 			FireBurst();
 		}
 		else if (recenterTargetSet && !isRecoiling){
-			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && !isReloading){
+			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && isReloading){
 				CalculateRecenteringSteps();
 			}
 			else{

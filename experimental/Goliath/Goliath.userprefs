@@ -1,13 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerNetSend.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Weapon.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerNetSend.cs" Line="8" Column="1" />
-      <File FileName="Assets\Scripts\Player\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="70" Column="1" />
+      <File FileName="Assets\Scripts\PlayerNetSend.cs" Line="60" Column="1" />
+      <File FileName="Assets\Scripts\Player\Player.cs" Line="75" Column="4" />
       <File FileName="Assets\Scripts\Player\PlayerViewport.cs" Line="1" Column="1" />
-      <File FileName="Assets\XInputDotNet\Examples\XInputTestCS.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\PlayerManager.cs" Line="17" Column="5" />
+      <File FileName="Assets\Scripts\Player\PlayerManager.cs" Line="38" Column="7" />
+      <File FileName="Assets\Scripts\Weapon.cs" Line="493" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

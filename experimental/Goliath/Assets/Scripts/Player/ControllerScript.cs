@@ -435,7 +435,7 @@ public class ControllerScript : MonoBehaviour {
 	// Sets controller that this player will be associated with
 	public void setController(int newId){
 		if (newId > 0 && newId < 5){
-			controllerId = newId;
+			controllerId = newId - 1;
 		}
 	}
 	

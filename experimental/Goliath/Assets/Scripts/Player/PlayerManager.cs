@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//assignControllers();
+		assignControllers();
 		//Player[0].Initialize(1,
 	}
 	
@@ -33,8 +33,9 @@ public class PlayerManager : MonoBehaviour {
 					if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
 						print ("Assigned " + j);
 						controllersUsed[j] = true;
-						playerScripts[i].gameObject.SetActive(true);
 						playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, 4));
+						playerScripts[i].gameObject.SetActive(true);
+						break;
 					}
 				}
 				//}
