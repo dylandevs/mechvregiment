@@ -13,11 +13,13 @@ public class ControllerScript : MonoBehaviour {
 	
 	const float SprintSpeed = 12f;
 	const float RunSpeed = 6f;
-	const float WalkSpeed = 1.5f;
+	const float CrouchSpeed = 1.5f;
 	const float RunThresh = 0.5f;
 	const float JumpSpeed = 8f;
-	const float MaxLookAngle = 88;
-	
+	const float ADSSpeedFactor = 0.7f;
+	const float CrouchSpeedFactor = 0.5f;
+
+	public bool isKeyboard = false;
 	public int controllerId = -1;
 	public Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 facing2D = new Vector3(0, 0, 1);
@@ -26,8 +28,9 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
+	float speedFactor = 1;
 
-	//XInput variables
+	// XInput variables
 	private GamePadState state;
 	private GamePadState prevState;
 
@@ -48,6 +51,9 @@ public class ControllerScript : MonoBehaviour {
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
 	bool aimingDownSight = false;
+
+	// State trackers
+	bool isCrouching = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -62,20 +68,7 @@ public class ControllerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		// Ignore input if unassigned
-		if (controllerId == -1) {
-			return;
-		}
-		else{
-			state = GamePad.GetState((PlayerIndex)controllerId);
-
-			if (!state.IsConnected){
-				return;
-			}
-
-			//print (state);
-		}
-
+		// Updating attributes
 		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 		
 		Vector3 newVel = rigidbody.velocity;
@@ -84,32 +77,32 @@ public class ControllerScript : MonoBehaviour {
 		
 		bool currentlyGrounded = IsGrounded();
 		float spread = 0;
+		speedFactor = 1;
 		
 		if (currentlyGrounded){
 			newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		}
 		
 		Weapon currentWeapon = player.getCurrentWeapon ();
-		
-		// Controller connected
-		if (Input.GetJoystickNames ().Length > 0){
+
+		if (!isKeyboard){
+
+			// Ignore input if unassigned
+			if (controllerId == -1) {
+				return;
+			}
+			else{
+				state = GamePad.GetState((PlayerIndex)controllerId);
+
+				// If controller becomes disconnected, stop
+				if (!state.IsConnected){
+					return;
+				}
+			}
 			
 			// Getting controller values
-			/*bool A_Press = Input.GetButtonDown("A_" + controllerId);
-			
-			float R_XAxis = Input.GetAxis("R_XAxis_" + controllerId);
-			float R_YAxis = Input.GetAxis("R_YAxis_" + controllerId);
-			bool RS_Press = Input.GetButtonDown("RS_" + controllerId);
-			
-			float L_XAxis = Input.GetAxis("L_XAxis_" + controllerId);
-			float L_YAxis = Input.GetAxis("L_YAxis_" + controllerId);
-			bool LS_Held = Input.GetButton("LS_" + controllerId);
-			
-			float TriggersR = Input.GetAxis("TriggersR_" + controllerId);
-			float TriggersL = Input.GetAxis("TriggersL_" + controllerId);*/
-			//print (TriggersL + " " + controllerId);
-
 			bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
+			bool B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
 			
 			float R_XAxis = state.ThumbSticks.Right.X;
 			float R_YAxis = -state.ThumbSticks.Right.Y;
@@ -125,13 +118,20 @@ public class ControllerScript : MonoBehaviour {
 			if (RS_Press){
 				
 			}
-			
+
+			// Toggle crouching
+			if (B_Press && currentlyGrounded){
+				setCrouching(!isCrouching);
+			}
+
 			if (currentlyGrounded){
 				
 				// Jumping
 				if (A_Press){
 					newVel.y += JumpSpeed;
-					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
+
+					// Cancel crouch
+					setCrouching(false);
 				}
 				
 				// Lateral movement (strafing)
@@ -141,7 +141,7 @@ public class ControllerScript : MonoBehaviour {
 						spread += currentWeapon.RunSpreadAdjust;
 					}
 					else{
-						newVel += WalkSpeed * perpFacing * signOf(L_XAxis);
+						newVel += CrouchSpeed * perpFacing * signOf(L_XAxis);
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 				}
@@ -153,21 +153,29 @@ public class ControllerScript : MonoBehaviour {
 						newVel += SprintSpeed * facing2D;
 						anim.SetBool(sprintHash, true);
 						spread += currentWeapon.SprintSpreadAdjust;
+
+						// Cancel crouch
+						setCrouching(false);
 					}
 					// Run
 					else if (Mathf.Abs(L_YAxis) > RunThresh){
+						if (isCrouching){
+							spread += currentWeapon.CrouchSpreadAdjust;
+						}
 						newVel += RunSpeed * facing2D * -signOf(L_YAxis);
 						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.RunSpreadAdjust;
 					}
 					// Walk
 					else{
+						if (isCrouching){
+							spread += currentWeapon.CrouchSpreadAdjust;
+						}
 						newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
 						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
-				}
-				
+				}			
 			}
 			else{
 				spread += currentWeapon.JumpSpreadAdjust;
@@ -182,6 +190,7 @@ public class ControllerScript : MonoBehaviour {
 				gunCamAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
+				speedFactor *= ADSSpeedFactor;
 			}
 			else{
 				player.toggleADS(false);
@@ -191,9 +200,12 @@ public class ControllerScript : MonoBehaviour {
 				gunCamAnim.SetBool(adsHash, false);
 				aimingDownSight = false;
 			}
-			
-			//print (cameraAnim.GetBool(adsHash));
-			
+
+			// Apply speed factor for crouching
+			if (isCrouching){
+				speedFactor *= CrouchSpeedFactor;
+			}
+
 			// Rotation about Y axis
 			if (R_XAxis != 0){
 				float adjustment = R_XAxis * R_XAxis * signOf(R_XAxis) * 5;
@@ -202,11 +214,6 @@ public class ControllerScript : MonoBehaviour {
 				if (aimingDownSight){
 					adjustment *= 0.5f;
 				}
-				
-				/*facing = Quaternion.AngleAxis(adjustment, Vector3.up) * facing;
-				facing2D = new Vector3(facing.x, 0, facing.z).normalized;
-				transform.LookAt(transform.position + facing2D);
-				playerCam.transform.LookAt(transform.position + facing + cameraOffset);*/
 				
 				setFacing(Quaternion.AngleAxis(adjustment, Vector3.up) * facing);
 			}
@@ -222,12 +229,10 @@ public class ControllerScript : MonoBehaviour {
 				
 				Vector3 newFacing = Quaternion.AngleAxis(adjustment, perpFacing) * facing;
 				float vertAngle = Vector3.Angle(newFacing, Vector3.up);
-				//Debug.Log (Vector3.Angle(newFacing, Vector3.up));
-				
+
 				// Limit angle so straight up/down are not possible
 				if (vertAngle >= 10 && vertAngle <= 170){
 					setFacing(newFacing);
-					//playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 				}
 				else{
 					// Do nothing
@@ -236,7 +241,6 @@ public class ControllerScript : MonoBehaviour {
 			
 			// Firing script
 			if (TriggersR != 0){
-				//player.tryFire();
 				player.setFiringState(true);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
@@ -249,10 +253,12 @@ public class ControllerScript : MonoBehaviour {
 				}
 			}
 		}
+
 		// Limited keyboard fallback
 		else{
 			Screen.showCursor = false;
-			
+
+			// Getting key states
 			bool Space_Down = Input.GetKeyDown(KeyCode.Space);
 			bool Key_W = Input.GetKey(KeyCode.W);
 			bool Key_A = Input.GetKey(KeyCode.A);
@@ -270,13 +276,12 @@ public class ControllerScript : MonoBehaviour {
 				// Jumping
 				if (Space_Down){
 					newVel.y += JumpSpeed;
-					//playerCam.transform.localPosition = new Vector3 (0, 0, 0);
 				}
 				
 				// Lateral movement (strafing)
 				if (Key_A){
 					if (Ctrl){
-						newVel += WalkSpeed * -perpFacing;
+						newVel += CrouchSpeed * -perpFacing;
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 					else{
@@ -286,7 +291,7 @@ public class ControllerScript : MonoBehaviour {
 				}
 				else if (Key_D){
 					if (Ctrl){
-						newVel += WalkSpeed * perpFacing;
+						newVel += CrouchSpeed * perpFacing;
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 					else{
@@ -302,7 +307,7 @@ public class ControllerScript : MonoBehaviour {
 						spread += currentWeapon.SprintSpreadAdjust;
 					}
 					else if (Ctrl){
-						newVel += WalkSpeed * facing2D;
+						newVel += CrouchSpeed * facing2D;
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 					else{
@@ -312,7 +317,7 @@ public class ControllerScript : MonoBehaviour {
 				}
 				else if(Key_S){
 					if (Ctrl){
-						newVel += WalkSpeed * facing2D * -1;
+						newVel += CrouchSpeed * facing2D * -1;
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 					else{
@@ -334,6 +339,7 @@ public class ControllerScript : MonoBehaviour {
 				gunCamAnim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
+				speedFactor *= ADSSpeedFactor;
 			}
 			else{
 				player.toggleADS(false);
@@ -393,17 +399,27 @@ public class ControllerScript : MonoBehaviour {
 				}
 			}
 		}
-		
+
+		newVel.x *= speedFactor;
+		newVel.z *= speedFactor;
+
 		// Apply velocity and force
 		rigidbody.velocity = newVel;
 		
 		// Apply spread to weapon based on actions
 		currentWeapon.setTargetSpread (spread);
 
-		// Update previous state
+		// Update previous controller state
 		prevState = state;
 	}
-	
+
+	void setCrouching(bool crouchState){
+		isCrouching = crouchState;
+		player.setCrouching(isCrouching);
+
+		// Trigger crouch animation
+	}
+
 	// Sets facing according to input
 	public void setFacing(Vector3 newFacing){
 		facing = newFacing;
@@ -414,7 +430,7 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Testing for ground directly beneath and at edges of collider
 	bool IsGrounded(){
-		bool groundState = false;//Physics.Raycast (transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y);
+		bool groundState = false;
 		
 		if (!groundState) {
 			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, groundCheckVector.y);

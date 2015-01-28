@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		assignControllers();
+		assignControllers(countConnectedControllers());
 		//Player[0].Initialize(1,
 	}
 	
@@ -23,23 +23,37 @@ public class PlayerManager : MonoBehaviour {
 		//listenForControllers();
 	}
 
-	void assignControllers(){
-		for (int i = 0; i < NumControllers; i++){
-			if (playerScripts[i]){
-				//if (!playerScripts[i].gameObject.GetActive()){
-					//playerScripts[i].gameObject.SetActive(true);
+	int countConnectedControllers(){
+		int controllers = 0;
+		for (int i = 0; i < NumControllers; i++) {
+			if (GamePad.GetState((PlayerIndex)i).IsConnected){
+				controllers++;
+			}
+		}
 
-				for (int j = 0; j < NumControllers; j++){
-					if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
-						print ("Assigned " + j);
-						controllersUsed[j] = true;
-						playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, 4));
-						playerScripts[i].gameObject.SetActive(true);
-						break;
+		return controllers;
+	}
+
+	void assignControllers(int connectedControllers){
+		if (connectedControllers > 0){
+			for (int i = 0; i < connectedControllers; i++){
+				if (playerScripts[i]){
+					for (int j = 0; j < NumControllers; j++){
+						if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
+							print ("Assigned " + j);
+							controllersUsed[j] = true;
+							playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, connectedControllers));
+							playerScripts[i].gameObject.SetActive(true);
+							break;
+						}
 					}
 				}
-				//}
 			}
+		}
+		else{
+			playerScripts[0].Initialize(1, getWindowCoords(1, 1));
+			playerScripts[0].SetToKeyboard();
+			playerScripts[0].gameObject.SetActive(true);
 		}
 	}
 
@@ -55,8 +69,8 @@ public class PlayerManager : MonoBehaviour {
 
 
 	// Returns appropriate window coordinates
-	float[] getWindowCoords(int playerIndex, int maxPlayers){
-		if (maxPlayers == 2){
+	float[] getWindowCoords(int playerIndex, int totalControllers){
+		if (totalControllers == 2){
 			switch(playerIndex){
 			case 1:
 				return new float[]{0, 1, 0.5f, 1};
@@ -64,7 +78,7 @@ public class PlayerManager : MonoBehaviour {
 				return new float[]{0, 1, 0, 0.5f};
 			}
 		}
-		else if (maxPlayers == 4){
+		else if (totalControllers > 2){
 			switch(playerIndex){
 			case 1:
 				return new float[]{0, 0.5f, 0.5f, 1};

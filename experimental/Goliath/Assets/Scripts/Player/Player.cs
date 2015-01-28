@@ -11,7 +11,6 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
 	public int id = -1;
-	public float[] drawRegion;
 
 	const float HealWait = 5.0f;
 	const float MaxHealth = 100;
@@ -38,6 +37,7 @@ public class Player : MonoBehaviour {
 	private float crossJitter = 0;
 	private float healTimer = 0;
 	private bool isAimingDownSights = false;
+	private bool isCrouching = false;
 
 	public GameObject[] weaponModels = new GameObject[]{};
 	private Weapon[] weapons;
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour {
 		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].getSpread());
 
 		// TEMP
-		weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
+		//weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
 
 		// Hiding/showing layers on player camera
 		//playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
@@ -96,6 +96,10 @@ public class Player : MonoBehaviour {
 		playerController.setController(id);
 
 		createShadowCasterModel();
+	}
+
+	public void SetToKeyboard(){
+		playerController.isKeyboard = true;
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -122,6 +126,10 @@ public class Player : MonoBehaviour {
 		}
 
 		return isAimingDownSights;
+	}
+
+	public void setCrouching(bool crouchState){
+		isCrouching = crouchState;
 	}
 
 	// Deals damage to player and resets healing timer
