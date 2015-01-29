@@ -41,6 +41,7 @@ public class Weapon : MonoBehaviour {
 	public GameObject generatorPos;
 	public GameObject projectileObject;
 	public GameObject impactObject;
+	public Animator animator;
 	
 	// Ammo trackers
 	private int totalAmmo;
@@ -90,7 +91,7 @@ public class Weapon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 		// If currently in firing state, attempt to fire burst
 		if (isFiring) {
 			if (!isAllAmmoDepleted && !recenterTargetSet){
