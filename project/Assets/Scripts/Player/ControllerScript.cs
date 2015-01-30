@@ -103,6 +103,11 @@ public class ControllerScript : MonoBehaviour {
 			// Getting controller values
 			bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
 			bool B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
+			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+			bool Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
+
+			bool DPad_Next = (state.DPad.Right == ButtonState.Pressed && prevState.DPad.Right == ButtonState.Released);
+			bool DPad_Prev = (state.DPad.Left == ButtonState.Pressed && prevState.DPad.Left == ButtonState.Released);
 			
 			float R_XAxis = state.ThumbSticks.Right.X;
 			float R_YAxis = -state.ThumbSticks.Right.Y;
@@ -122,6 +127,20 @@ public class ControllerScript : MonoBehaviour {
 			// Toggle crouching
 			if (B_Press && currentlyGrounded){
 				setCrouching(!isCrouching);
+			}
+
+			// Trigger change weapon
+			/*if (X_Press){
+				player.cycleWeapons();
+				weaponAnim = player.getCurrentWeapon().animator;
+			}*/
+			if (DPad_Next){
+				player.cycleWeapons(1);
+				weaponAnim = player.getCurrentWeapon().animator;
+			}
+			else if (DPad_Prev){
+				player.cycleWeapons(-1);
+				weaponAnim = player.getCurrentWeapon().animator;
 			}
 
 			if (currentlyGrounded){

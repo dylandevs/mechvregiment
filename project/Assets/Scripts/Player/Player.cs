@@ -22,11 +22,9 @@ public class Player : MonoBehaviour {
 	public ControllerScript playerController;
 
 	// Character models
-	public GameObject firstPersonWrapper;
 	public GameObject thirdPersonWrapper;
 	public GameObject shadowCasterWrapper;
 	public GameObject weaponModel;
-	private List<GameObject> firstPersonModel = new List<GameObject>();
 	private List<GameObject> thirdPersonModel = new List<GameObject>();
 	private List<GameObject> shadowCasterModel = new List<GameObject>();
 
@@ -40,15 +38,13 @@ public class Player : MonoBehaviour {
 	private bool isCrouching = false;
 
 	public GameObject[] weaponModels = new GameObject[]{};
+	public GameObject[] weaponModels3 = new GameObject[]{};
 	private Weapon[] weapons;
 	int currentWeaponIndex = 0;
 
 	// Use this for initialization
 	void Start () {
 
-		//Initialize(id, drawRegion);
-
-		//print (id);
 	}
 	
 	// Update is called once per frame
@@ -60,37 +56,24 @@ public class Player : MonoBehaviour {
 	public void Initialize(int playerId, float[] window){
 		id = playerId;
 
-		// Settings layers for models and hiding/showing to camera
-		//setModelLayer(firstPersonModel, "PlayerView1_" + id);
-		//setModelLayer(thirdPersonModel, "PlayerView3_" + id);
-
 		weapons = new Weapon[weaponModels.Length];
 		
 		// Getting models from parents
-		foreach (Transform child in firstPersonWrapper.transform){
-			firstPersonModel.Add(child.gameObject);
-		}
 		foreach (Transform child in thirdPersonWrapper.transform){
 			thirdPersonModel.Add(child.gameObject);
 		}
 
-		// Setting weapon layers and storing references to component scripts
+		// Storing weapon references to component scripts
 		for (int i = 0; i < weaponModels.Length; i++) {
-			//weaponModels[i].layer = LayerMask.NameToLayer("PlayerView1_" + id);
 			weapons[i] = weaponModels[i].GetComponent<Weapon>();
 			weapons[i].setPlayerReference(this);
 			weapons[i].setControllerReference(this.playerController);
 		}
 
+		weapons [currentWeaponIndex].gameObject.SetActive (true);
+
 		// Setting player UI
 		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].getSpread());
-
-		// TEMP
-		//weaponModel.layer = LayerMask.NameToLayer("PlayerView3_" + id);
-
-		// Hiding/showing layers on player camera
-		//playerCam.cullingMask = ~(1 << thirdPersonModel[0].layer);
-		//playerCam.cullingMask |= (1 << firstPersonModel[0].layer);
 
 		// Setting controller
 		playerController.setController(id);
@@ -107,7 +90,6 @@ public class Player : MonoBehaviour {
 		if (health < MaxHealth){
 			if (healTimer <= 0){
 				health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
-				//print (health);
 			}
 			else{
 				healTimer -= Time.deltaTime;
@@ -132,12 +114,30 @@ public class Player : MonoBehaviour {
 		isCrouching = crouchState;
 	}
 
+	// Changes currently selected weapon
+	public void cycleWeapons(int adjustment){
+		int prevWeaponIndex = currentWeaponIndex;
+		currentWeaponIndex += adjustment;
+		if (currentWeaponIndex >= weapons.Length){
+			currentWeaponIndex = 0;
+		}
+		else if (currentWeaponIndex < 0){
+			currentWeaponIndex = weapons.Length - 1;
+		}
+
+		// Play weapon change animation
+
+		// Activate new weapon
+		if (prevWeaponIndex != currentWeaponIndex){
+			weapons [prevWeaponIndex].gameObject.SetActive (false);
+			weapons [currentWeaponIndex].gameObject.SetActive (true);
+		}
+	}
+
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage){
-		//print (damage);
 		health -= damage;
 		healTimer = HealWait;
-		//print (health);
 	}
 
 	public Weapon getCurrentWeapon(){
@@ -147,7 +147,6 @@ public class Player : MonoBehaviour {
 	// Attempts to fire bullet
 	public void setFiringState(bool isFiring){
 		weapons [currentWeaponIndex].setFiringState (isFiring);
-		//weapons[currentWeaponIndex].FireBurst();
 	}
 
 	private void setModelLayer(List<GameObject> model, string newLayer){
