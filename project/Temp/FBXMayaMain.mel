@@ -1,0 +1,46 @@
+//
+// NOBODY TESTED OLD VERSIONS OF MAYA ON WINDOWS
+//
+
+// Unload any plugins before exporting so we don't end up with the wrong version of fbx.
+// unloadPlugin `pluginInfo -query -listPlugins`;
+
+// We need to do the plugin loading in another script because
+// the plugin needs to be loaded before we execute the script! (Names arent't found otherwise)
+if (getApplicationVersionAsFloat() >= 2015.0)
+{
+	loadPlugin "D:/PROGRA~1/Autodesk/Maya2015/bin/../plug-ins/fbx/plug-ins/fbxmaya.mll";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport.mel\"");
+}
+else if (getApplicationVersionAsFloat() >= 8.0)
+{
+	loadPlugin "D:/PROGRA~1/Autodesk/Maya2015/bin/plug-ins/fbxmaya.mll";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport.mel\"");
+}
+else if (getApplicationVersionAsFloat() >= 7.0)
+{
+	loadPlugin "D:/PROGRA~1/Autodesk/Maya2015/bin/plug-ins/fbxmaya.lib";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport.mel\"");
+}
+// We need to do the plugin loading in another script because
+// the plugin needs to be loaded before we execute the script! (Names arent't found otherwise)
+else if (getApplicationVersionAsFloat() >= 6.5)
+{
+	loadPlugin "D:/PROGRA~2/Unity/Editor/Unity.exe/Tools/fbxmaya65.lib";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport.mel\"");
+}
+else if (getApplicationVersionAsFloat() >= 6.0) 
+{
+	loadPlugin "D:/PROGRA~2/Unity/Editor/Unity.exe/Tools/fbxmaya60.lib";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport.mel\"");
+}
+else if (getApplicationVersionAsFloat() >= 5.0)
+{
+	loadPlugin "D:/PROGRA~2/Unity/Editor/Unity.exe/Tools/fbxmaya50.lib";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport5.mel\"");
+}
+else if (getApplicationVersionAsFloat() >= 4.5) 
+{
+	loadPlugin "D:/PROGRA~2/Unity/Editor/Unity.exe/Tools/fbxmaya45.lib";
+	eval ("source \"E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/FBXMayaExport5.mel\"");
+}

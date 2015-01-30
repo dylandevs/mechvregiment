@@ -1,0 +1,22 @@
+print "Starting maya loading and fbx conversion \n";
+			
+if (`file -q -exists "E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Assets/Models/Goliath/TEMP_C~1.MA"`)
+{
+	file -o "E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Assets/Models/Goliath/TEMP_C~1.MA";
+	FBXExportEmbeddedTextures -v false;
+	// FBXExportHardEdges -v true;
+	FBXExportApplyConstantKeyReducer -v false;
+	FBXExportShowUI -v false;
+
+	print "Before fbx export\n";
+	FBXExport -f "E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/ExportedFBXFile.fbx";
+	print "after fbx export\n";
+}
+else
+	print "Could not open Maya file.";
+
+system ("del \"E:\\Nathan\\DOCUME~1\\CARLET~1\\UNIVER~1\\SENIOR~1\\MECHVR~1\\project\\Temp\\CommandPipe\"");
+
+$donepipeKill = `fopen "E:/Nathan/DOCUME~1/CARLET~1/UNIVER~1/SENIOR~1/MECHVR~1/project/Temp/SyncPipeKill" "w"`;
+fwrite $donepipeKill "Done";
+fclose $donepipeKill;
