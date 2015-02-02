@@ -68,9 +68,6 @@
  <Reference Include="Photon3Unity3D">
  <HintPath>Assets\Plugins\Photon3Unity3D.dll</HintPath>
  </Reference>
- <Reference Include="XInputDotNetPure">
- <HintPath>Assets\Plugins\x86\XInputDotNetPure.dll</HintPath>
- </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

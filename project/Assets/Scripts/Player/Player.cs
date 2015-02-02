@@ -20,16 +20,7 @@ public class Player : MonoBehaviour {
 	public Crosshair crossScript;
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
-
-	// Character models
-	public GameObject thirdPersonWrapper;
-	public GameObject shadowCasterWrapper;
-	public GameObject weaponModel;
-	private List<GameObject> thirdPersonModel = new List<GameObject>();
-	private List<GameObject> shadowCasterModel = new List<GameObject>();
-
-	public Shader invisShadowCastShader;
-
+	
 	// Status variables
 	private float health = MaxHealth;
 	private float crossJitter = 0;
@@ -57,11 +48,6 @@ public class Player : MonoBehaviour {
 		id = playerId;
 
 		weapons = new Weapon[weaponModels.Length];
-		
-		// Getting models from parents
-		foreach (Transform child in thirdPersonWrapper.transform){
-			thirdPersonModel.Add(child.gameObject);
-		}
 
 		// Storing weapon references to component scripts
 		for (int i = 0; i < weaponModels.Length; i++) {
@@ -77,8 +63,6 @@ public class Player : MonoBehaviour {
 
 		// Setting controller
 		playerController.setController(id);
-
-		createShadowCasterModel();
 	}
 
 	public void SetToKeyboard(){
@@ -147,31 +131,5 @@ public class Player : MonoBehaviour {
 	// Attempts to fire bullet
 	public void setFiringState(bool isFiring){
 		weapons [currentWeaponIndex].setFiringState (isFiring);
-	}
-
-	private void setModelLayer(List<GameObject> model, string newLayer){
-		foreach(GameObject obj in model){
-			obj.layer = LayerMask.NameToLayer(newLayer);
-		}
-	}
-
-	private void setModelShader(List<GameObject> model, Shader newShader){
-		foreach(GameObject obj in model){
-			obj.renderer.material.shader = newShader;
-		}
-	}
-
-	private void createShadowCasterModel(){
-		// Duplicating third-person model
-		// shadowCasterWrapper = Instantiate(thirdPersonWrapper) as GameObject;
-
-		// Getting model from parent
-		foreach (Transform child in shadowCasterWrapper.transform){
-			shadowCasterModel.Add(child.gameObject);
-		}
-
-		//shadowCasterWrapper.transform.parent = transform;
-		setModelLayer(shadowCasterModel, "PlayerView1_" + id);
-		setModelShader(shadowCasterModel, invisShadowCastShader);
 	}
 }

@@ -177,9 +177,6 @@
  <Reference Include="Photon3Unity3D">
  <HintPath>Assets\Plugins\Photon3Unity3D.dll</HintPath>
  </Reference>
- <Reference Include="XInputDotNetPure">
- <HintPath>Assets\Plugins\x86\XInputDotNetPure.dll</HintPath>
- </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">

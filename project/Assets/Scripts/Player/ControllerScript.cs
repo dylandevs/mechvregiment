@@ -41,6 +41,7 @@ public class ControllerScript : MonoBehaviour {
 	public Animator weaponAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
+	public Collider movementCollider;
 	
 	// Animation hash id
 	int speedHash = Animator.StringToHash("Speed");
@@ -60,9 +61,9 @@ public class ControllerScript : MonoBehaviour {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
-		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
-		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
-		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
+		groundCheckVector.y += movementCollider.bounds.extents.y * 0.5f;
+		halfColliderX = new Vector3 (movementCollider.bounds.extents.x * 0.5f, 0, 0);
+		halfColliderZ = new Vector3 (0, 0, movementCollider.bounds.extents.z * 0.5f);
 	}
 	
 	// Update is called once per frame
@@ -443,6 +444,7 @@ public class ControllerScript : MonoBehaviour {
 	public void setFacing(Vector3 newFacing){
 		facing = newFacing;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
+		Debug.DrawLine(transform.position, facing2D * 100);
 		transform.LookAt(transform.position + facing2D);
 		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 	}

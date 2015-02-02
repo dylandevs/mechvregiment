@@ -5,9 +5,7 @@ using XInputDotNetPure;
 public class PlayerManager : MonoBehaviour {
 
 	const int NumControllers = 4;
-
-	public GameObject basePlayer;
-
+	
 	GameObject[] players = new GameObject[NumControllers];
 	public Player[] playerScripts = new Player[NumControllers];
 	private bool[] controllersUsed = {false, false, false, false};
@@ -15,12 +13,10 @@ public class PlayerManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		assignControllers(countConnectedControllers());
-		//Player[0].Initialize(1,
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//listenForControllers();
 	}
 
 	int countConnectedControllers(){
@@ -56,17 +52,6 @@ public class PlayerManager : MonoBehaviour {
 			playerScripts[0].gameObject.SetActive(true);
 		}
 	}
-
-	void listenForControllers(){
-		for (int i = 0; i < NumControllers; i++){
-			if (Input.GetButtonDown("A_" + (i + 1)) && players[i] == null){
-				players[i] = Instantiate(basePlayer, Vector3.zero, Quaternion.identity) as GameObject;
-				playerScripts[i] = players[i].GetComponent<Player>();
-				//playerScripts[i].Initialize(i + 1, getWindowCoords(i + 1, NumControllers));
-			}
-		}
-	}
-
 
 	// Returns appropriate window coordinates
 	float[] getWindowCoords(int playerIndex, int totalControllers){
