@@ -15,7 +15,7 @@ public class ControllerScript : MonoBehaviour {
 	const float RunSpeed = 6f;
 	const float CrouchSpeed = 1.5f;
 	const float RunThresh = 0.5f;
-	const float JumpSpeed = 8f;
+	const float JumpSpeed = 6f;
 	const float ADSSpeedFactor = 0.7f;
 	const float CrouchSpeedFactor = 0.5f;
 
@@ -41,13 +41,15 @@ public class ControllerScript : MonoBehaviour {
 	public Animator weaponAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
-	public Collider movementCollider;
 	
 	// Animation hash id
+	int fwdSpeedHash = Animator.StringToHash("FwdSpeed");
+	int rgtSpeedHash = Animator.StringToHash("RgtSpeed");
 	int speedHash = Animator.StringToHash("Speed");
 	int fireHash = Animator.StringToHash("Firing");
 	int sprintHash = Animator.StringToHash("Sprinting");
 	int adsHash = Animator.StringToHash("Aiming");
+	int jumpHash = Animator.StringToHash("Jump");
 	
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -61,21 +63,19 @@ public class ControllerScript : MonoBehaviour {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
-		groundCheckVector.y += movementCollider.bounds.extents.y * 0.5f;
-		halfColliderX = new Vector3 (movementCollider.bounds.extents.x * 0.5f, 0, 0);
-		halfColliderZ = new Vector3 (0, 0, movementCollider.bounds.extents.z * 0.5f);
+		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
+		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
+		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		// Updating attributes
-		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
-		
 		Vector3 newVel = rigidbody.velocity;
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
-		
+
 		bool currentlyGrounded = IsGrounded();
 		float spread = 0;
 		speedFactor = 1;
@@ -149,6 +149,8 @@ public class ControllerScript : MonoBehaviour {
 				// Jumping
 				if (A_Press){
 					newVel.y += JumpSpeed;
+
+					anim.SetTrigger(jumpHash);
 
 					// Cancel crouch
 					setCrouching(false);
@@ -431,6 +433,18 @@ public class ControllerScript : MonoBehaviour {
 
 		// Update previous controller state
 		prevState = state;
+
+		// Apply calculated speed animation
+		//anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
+		Quaternion revFacingRot = Quaternion.FromToRotation(facing2D, Vector3.forward);
+		Vector3 rotatedVelocity = revFacingRot * rigidbody.velocity;
+
+		print (revFacingRot * facing2D);
+		print (rigidbody.velocity + " " + rotatedVelocity);
+
+		anim.SetFloat(fwdSpeedHash, rotatedVelocity.z);
+		anim.SetFloat(rgtSpeedHash, rotatedVelocity.x);
+		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 	}
 
 	void setCrouching(bool crouchState){
@@ -444,7 +458,6 @@ public class ControllerScript : MonoBehaviour {
 	public void setFacing(Vector3 newFacing){
 		facing = newFacing;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
-		Debug.DrawLine(transform.position, facing2D * 100);
 		transform.LookAt(transform.position + facing2D);
 		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 	}
