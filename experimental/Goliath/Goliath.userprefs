@@ -1,12 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\project\Assets\Scripts\BotAI.cs">
-    <Files>
-      <File FileName="..\..\project\Assets\Scripts\Player\ControllerScript.cs" Line="60" Column="27" />
-      <File FileName="..\..\project\Assets\Scripts\Player\Player.cs" Line="1" Column="1" />
-      <File FileName="..\..\project\Assets\Scripts\BotAI.cs" Line="92" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

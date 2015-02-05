@@ -464,7 +464,10 @@ public class ControllerScript : MonoBehaviour {
 	// Testing for ground directly beneath and at edges of collider
 	bool IsGrounded(){
 		bool groundState = false;
-		
+
+		if (!groundState){
+			groundState = Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y);
+		}
 		if (!groundState) {
 			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, groundCheckVector.y);
 		}
