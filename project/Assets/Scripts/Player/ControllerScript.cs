@@ -50,6 +50,7 @@ public class ControllerScript : MonoBehaviour {
 	int sprintHash = Animator.StringToHash("Sprinting");
 	int adsHash = Animator.StringToHash("Aiming");
 	int jumpHash = Animator.StringToHash("Jump");
+	int crouchHash = Animator.StringToHash ("Crouching");
 	
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -439,12 +440,10 @@ public class ControllerScript : MonoBehaviour {
 		Quaternion revFacingRot = Quaternion.FromToRotation(facing2D, Vector3.forward);
 		Vector3 rotatedVelocity = revFacingRot * rigidbody.velocity;
 
-		print (revFacingRot * facing2D);
-		print (rigidbody.velocity + " " + rotatedVelocity);
-
 		anim.SetFloat(fwdSpeedHash, rotatedVelocity.z);
 		anim.SetFloat(rgtSpeedHash, rotatedVelocity.x);
 		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
+		anim.SetBool (crouchHash, isCrouching);
 	}
 
 	void setCrouching(bool crouchState){

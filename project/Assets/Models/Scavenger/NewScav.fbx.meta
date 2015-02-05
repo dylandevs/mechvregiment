@@ -2199,8 +2199,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Crouch_Idle
       takeName: Take 001
-      firstFrame: 120
-      lastFrame: 130
+      firstFrame: 124
+      lastFrame: 126
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
