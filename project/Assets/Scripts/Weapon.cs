@@ -372,9 +372,6 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	private void AttemptRecentering(){
-		Quaternion resetRotation = Quaternion.FromToRotation(player.transform.forward, Vector3.forward);
-		Quaternion resetRotationInv = Quaternion.Inverse(resetRotation);
-		
 		recentringProgress -= Time.deltaTime;
 		Vector3 newFacing = controller.facing;
 		float recenteringProg = (RecenteringTime - recentringProgress) / RecenteringTime;

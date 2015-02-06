@@ -6,7 +6,6 @@ public class PlayerManager : MonoBehaviour {
 
 	const int NumControllers = 4;
 	
-	GameObject[] players = new GameObject[NumControllers];
 	public Player[] playerScripts = new Player[NumControllers];
 	private bool[] controllersUsed = {false, false, false, false};
 

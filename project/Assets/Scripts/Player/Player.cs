@@ -23,7 +23,6 @@ public class Player : MonoBehaviour {
 	
 	// Status variables
 	private float health = MaxHealth;
-	private float crossJitter = 0;
 	private float healTimer = 0;
 	private bool isAimingDownSights = false;
 	private bool isCrouching = false;

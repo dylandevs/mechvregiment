@@ -17,7 +17,6 @@ public class Crosshair : MonoBehaviour {
 	public Texture2D botLine;
 	public Texture2D lftLine;
 	
-	float crossSpread = 0;
 	float[] centre = new float[]{0.5f, 0.5f};
 	float scale = 1;
 	float baseOffset = 0;
@@ -57,23 +56,6 @@ public class Crosshair : MonoBehaviour {
 		// Centering scene accordingly
 		offSetX = (centre[0] - 0.5f) * Screen.width;
 		offSetY = (0.5f - centre[1]) * Screen.height;
-
-		/*positions[0] = new Rect((Screen.width - lines[0].width*scale)/2 + offSetX,
-		                        Screen.height/2 - lines[0].height*scale - baseOffset + offSetY,
-		                        lines[0].width*scale,
-		                        lines[0].height*scale);
-		positions[1] = new Rect(Screen.width/2 + baseOffset + offSetX,
-		                        (Screen.height - lines[1].height*scale)/2 + offSetY,
-		                        lines[1].width*scale,
-		                        lines[1].height*scale);
-		positions[2] = new Rect((Screen.width - lines[2].width*scale)/2 + offSetX,
-		                        Screen.height/2 + baseOffset + offSetY,
-		                        lines[2].width*scale,
-		                        lines[2].height*scale);
-		positions[3] = new Rect(Screen.width/2 - lines[3].width*scale - baseOffset + offSetX,
-		                        (Screen.height - lines[3].height*scale)/2 + offSetY,
-		                        lines[3].width*scale,
-		                        lines[3].height*scale);*/
 
 		// Initialize spread at given base
 		updateSpread(baseSpread);

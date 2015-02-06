@@ -73,7 +73,6 @@ public class BotAI : MonoBehaviour {
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
 	Vector3 facing = new Vector3(0, 0, 1);
-	Vector3 up = new Vector3(0, 1, 0);
 
 	// Use this for initialization
 	void Start () {

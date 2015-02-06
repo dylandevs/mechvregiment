@@ -66,6 +66,8 @@
      <Compile Include="Assets\Scripts\Goliath\cannonShot.cs" />
      <Compile Include="Assets\Scripts\Goliath\mechMovement.cs" />
      <Compile Include="Assets\Scripts\Goliath\netWorkManager.cs" />
+     <Compile Include="Assets\Scripts\MapNote.cs" />
+     <Compile Include="Assets\Scripts\MapNoteManager.cs" />
      <Compile Include="Assets\Scripts\Minimap.cs" />
      <Compile Include="Assets\Scripts\Player\ControllerScript.cs" />
      <Compile Include="Assets\Scripts\Player\Crosshair.cs" />

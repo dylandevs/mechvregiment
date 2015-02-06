@@ -1,11 +1,17 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mech\GoliathNetworking.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MapNoteManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Mech\GoliathNetworking.cs" Line="37" Column="21" />
+      <File FileName="Assets\Scripts\MapNoteManager.cs" Line="14" Column="18" />
       <File FileName="Assets\Scripts\Player\ControllerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Minimap.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Player\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BotAI.cs" Line="92" Column="1" />
+      <File FileName="Assets\Scripts\BotAI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Bullet.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Weapon.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\Crosshair.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Player\PlayerManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MapNote.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
