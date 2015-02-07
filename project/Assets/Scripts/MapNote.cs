@@ -4,9 +4,11 @@ using System.Collections;
 public class MapNote {
 
 	Vector2 position;
+	float timespan;
 
-	public MapNote(){
-
+	public MapNote(Vector2 newpos, float life){
+		position = newpos;
+		timespan = life;
 	}
 
 	// Use this for initialization
