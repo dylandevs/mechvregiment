@@ -460,6 +460,10 @@ public class ControllerScript : MonoBehaviour {
 		transform.LookAt(transform.position + facing2D);
 		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 	}
+
+	public Vector2 getFacing2D(){
+		return facing2D;
+	}
 	
 	// Testing for ground directly beneath and at edges of collider
 	bool IsGrounded(){
