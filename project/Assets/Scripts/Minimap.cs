@@ -10,11 +10,15 @@ public class Minimap : MonoBehaviour {
 	public Player player;
 	public MapNoteManager notes;
 
-	Vector2 minimapSize = Vector2.zero;
+	Vector2 minimapSize;
+	Vector2 mainMapSize;
+	Vector2 mapRatio;
 
 	// Use this for initialization
 	void Start () {
 		minimapSize = minimapImg.sizeDelta;
+		mainMapSize.x = minimapImg.transform.collider.bounds.extents.x;
+		mainMapSize.y = minimapImg.transform.collider.bounds.extents.y;
 	}
 	
 	// Update is called once per frame
