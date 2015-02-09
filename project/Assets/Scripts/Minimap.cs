@@ -11,14 +11,19 @@ public class Minimap : MonoBehaviour {
 	public MapNoteManager notes;
 
 	Vector2 minimapSize;
-	Vector2 mainMapSize;
+	Vector2 terrainSize;
 	Vector2 mapRatio;
+	Vector3 terrainOffset;
 
 	// Use this for initialization
 	void Start () {
 		minimapSize = minimapImg.sizeDelta;
-		mainMapSize.x = minimapImg.transform.collider.bounds.extents.x;
-		mainMapSize.y = minimapImg.transform.collider.bounds.extents.y;
+		terrainSize.x = mapObj.transform.collider.bounds.extents.x * 2;
+		terrainSize.y = mapObj.transform.collider.bounds.extents.z * 2;
+		terrainOffset = mapObj.transform.position;
+		mapRatio.x = minimapSize.x / terrainSize.x;
+		mapRatio.y = minimapSize.y / terrainSize.y;
+		print (terrainSize);
 	}
 	
 	// Update is called once per frame
@@ -28,14 +33,18 @@ public class Minimap : MonoBehaviour {
 
 	void UpdateMapTransforms(){
 		minimapMask.localRotation = CalculateMapRotation();
-
+		minimapImg.localPosition = CalculateMapTranslation();
 	}
 
 	Vector3 CalculateMapTranslation(){
 		Vector3 mapTrans = Vector3.zero;
 
+		Vector3 relPlayerPos = player.transform.position - terrainOffset;
+		mapTrans.x = -relPlayerPos.x * mapRatio.x;
+		mapTrans.y = -relPlayerPos.z * mapRatio.y;
 
 
+		print (mapTrans);
 		return mapTrans;
 	}
 
