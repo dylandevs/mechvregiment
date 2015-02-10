@@ -6,7 +6,7 @@ public class RocketFirer : MonoBehaviour {
 	public GameObject[] rockets;
 	public bool firing;
 
-	float rockTimer = 0.2f;
+	float rockTimer = 0.3f;
 	int rockCounter = 0;
 
 	// Use this for initialization

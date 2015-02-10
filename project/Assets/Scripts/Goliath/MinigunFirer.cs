@@ -14,15 +14,15 @@ public class MinigunFirer : MonoBehaviour {
 
 	public float range = 100.0f;
 
-	float overHeat;
-	float coolDown;
+	public float overHeat;
+	 float coolDown;
 	float coolDownWarmUp;
 	float warmUpTimer;
 	int cannonCounter;
 	float cannonCD = 8f;
 	float cooldownRemaining = 0;
 	float cannonCDR = 0;
-	int layerMask = 1 << 16;
+	int layerMask = 1 << 22;
 	bool warmedUp;
 	bool overHeated;
 
@@ -97,10 +97,16 @@ public class MinigunFirer : MonoBehaviour {
 				// if it hits a person do some damage  *********************
 				Vector3 hitPoint = hitInfo.point;
 				//if graphic is there apply a bullet decal
-				if (sparkPrefab != null) {
-					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-					Instantiate(sparkPrefab, hitPoint + hitInfo.normal * 0.01f, hitRotation);
+				if(hitInfo.collider.tag != "Player"){
+					if (sparkPrefab != null) {
+						Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+						Instantiate(sparkPrefab, hitPoint + hitInfo.normal * 0.01f, hitRotation);
+					}
 				}
+				else{
+					doDamageMini();
+				}
+
 			}
 				//lower bullets whenever a shot is taken
 				//still needs to be warmed up

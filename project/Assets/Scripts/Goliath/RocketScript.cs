@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class RocketScript : MonoBehaviour {
@@ -28,8 +28,8 @@ public class RocketScript : MonoBehaviour {
 		timer += Time.deltaTime * 5;
 	}
 	void FixedUpdate () {
-
-		mustHit = target.transform.position += new Vector3 (Random.Range (-1F, 1F), 0, Random.Range (-1F, 1F));
+		//must only do once seems to add consistantly
+		mustHit = target.transform.position += new Vector3 (Random.Range (-0.5F, 0.5F), 0, Random.Range (-0.5F, 0.5F));
 
 		if(timer <= 7){
 			transform.Translate (Vector3.forward * speed * Time.deltaTime);
@@ -45,7 +45,7 @@ public class RocketScript : MonoBehaviour {
 
 		//fire a raycast ahead to ensure you wont miss and go through a collider
 		Ray ray = new Ray(transform.position,transform.forward);
-		if (Physics.Raycast (ray, 30 * Time.deltaTime)) 
+		if (Physics.Raycast (ray, 1)) 
 		{
 			Detonate();
 		}

@@ -15,11 +15,6 @@ public class mechMovement : MonoBehaviour {
 	private float mechHealth;
 	private float restartTimer;
 
-	public GameObject mechHolagramB;
-	public GameObject mechHolagramG;
-	public GameObject mechHolagramY;
-	public GameObject mechHolagramR;
-	public GameObject mechHologramDisabled;
 	//shield things
 	public float mechShield;
 	public bool shieldActive;
@@ -54,35 +49,6 @@ public class mechMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//update the mech health hologram
-		if(mechShield <=0){
-			shieldActive = false;
-			mechHolagramB.SetActive(false);
-		}
-
-		if(shieldActive == true){
-			mechHolagramB.SetActive(true);
-		}
-		else if(currMechHealth >=501){
-			mechHologramDisabled.SetActive(false);
-			mechHolagramG.SetActive(true);
-		}
-		else if(currMechHealth <= 500 && currMechHealth >=251){
-			mechHolagramG.SetActive(false);
-			mechHolagramY.SetActive(true);
-		}
-		else if(currMechHealth <=250 && currMechHealth >=1){
-			mechHolagramY.SetActive(false);
-			mechHolagramR.SetActive(true);
-		}
-		else if(currMechHealth <= 0){
-			mechHolagramR.SetActive(false);
-			mechHolagramG.SetActive(false);
-			mechHolagramY.SetActive(false);
-			mechHologramDisabled.SetActive(true);
-			//turn on whatever other graphics are going to show when disabled
-		}
-
 
 		//Updating the joystick input
 		lStickX = SixenseInput.Controllers[left].JoystickX;
@@ -100,13 +66,22 @@ public class mechMovement : MonoBehaviour {
 			bottomHalf.transform.Translate(transform.forward * moveSpeedY * rStickY);
 			bottomHalf.transform.Translate(transform.right * moveSpeedX * rStickX);
 
+			if(rStickX >= 0.01){
+				isMoving = true;
+			}
+			if(rStickY >= 0.01){
+				isMoving = true;
+			}
+
 			//Hydra Rotaiton
 			if (topHalf.transform.eulerAngles.x <= 25||topHalf.transform.eulerAngles.x >= 180) {
-				topHalf.transform.Rotate(Vector3.right * rotSpeedY * -lStickY, Space.World);
+				topHalf.transform.Rotate(topHalf.transform.right * rotSpeedY * -lStickY, Space.World);
+				//print ("I am turning around by " + -1*lStickY);
 			}
 
 			// figure out what the frack is going on here
-			topHalf.transform.Rotate (topHalf.transform.right * rotSpeedX * -lStickX, Space.World);
+			topHalf.transform.Rotate (topHalf.transform.up * rotSpeedX * lStickX, Space.World);
+			//print ("I am looking updown by " + -1*lStickX);
 
 
 		}
