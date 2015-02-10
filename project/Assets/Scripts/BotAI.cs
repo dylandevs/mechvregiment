@@ -56,11 +56,9 @@ public class BotAI : MonoBehaviour {
 	// Storage variables
 	Transform allyGroup = null;
 	public GameObject opponent;
-	public GameObject ammunition;
 	NavMeshAgent navMeshAgent;
 	
 	// Bot stats
-
 	State state = State.AllClear;
 	TargetComponent targetVisible = TargetComponent.None;
 	//byte state = 0;
@@ -73,6 +71,10 @@ public class BotAI : MonoBehaviour {
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
 	Vector3 facing = new Vector3(0, 0, 1);
+
+	// Inputs
+	public PoolManager projectilePool;
+	public PoolManager impactPool;
 
 	// Use this for initialization
 	void Start () {
@@ -296,9 +298,11 @@ public class BotAI : MonoBehaviour {
 		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - transform.position;
 		Vector3 bulletGenPos = transform.position + facing;
 
-		GameObject bullet = Instantiate(ammunition, bulletGenPos, Quaternion.identity) as GameObject;
+		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
 		bulletScript.setProperties(5.5f, gameObject.tag, direction, 4);
+		bulletScript.SetPool(projectilePool);
+		bulletScript.SetMarkPool(impactPool);
 
 	}
 

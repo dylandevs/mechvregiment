@@ -23,7 +23,6 @@ public class Minimap : MonoBehaviour {
 		terrainOffset = mapObj.transform.position;
 		mapRatio.x = minimapSize.x / terrainSize.x;
 		mapRatio.y = minimapSize.y / terrainSize.y;
-		print (terrainSize);
 	}
 	
 	// Update is called once per frame
@@ -43,8 +42,6 @@ public class Minimap : MonoBehaviour {
 		mapTrans.x = -relPlayerPos.x * mapRatio.x;
 		mapTrans.y = -relPlayerPos.z * mapRatio.y;
 
-
-		print (mapTrans);
 		return mapTrans;
 	}
 
