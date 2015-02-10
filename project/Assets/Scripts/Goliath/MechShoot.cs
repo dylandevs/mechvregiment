@@ -31,7 +31,7 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonAimer;
 	public GameObject cannonArm;
 	public GameObject cannonRet;
-	int layerMask = 1 << 16; //for avoiding the ret wall
+	int layerMask = 1 << 22; //for avoiding the ret wall
 
 	//firing objcts
 	public MinigunFirer miniGunFirer;
@@ -55,7 +55,6 @@ public class MechShoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//All hydra butons and uses
-		uint i = 0;
 		float lTrig = SixenseInput.Controllers[left].Trigger;
 		float rTrig = SixenseInput.Controllers[right].Trigger;
 
@@ -143,34 +142,41 @@ public class MechShoot : MonoBehaviour {
 			RaycastHit hitInfoAimer;
 			//check if it hit something then send a ray back to display the reticle
 			if(Physics.Raycast (ray, out hitInfoAimer,range,layerMask)){
-					Vector3 hitPoint = hitInfoAimer.point;
-					//create a hit variable for the second raycast
-					Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
-					RaycastHit ray2Hit;
 
-					//make it look like the minigun arm is facing where its shooting
-					Vector3 vecEnd = miniGunAimer.transform.forward * 100;
-					Vector3 miniArmPos = miniGunAimer.transform.position; 
-			// limit the angles properly
-						miniGunArm.transform.right = -vecEnd;
-
-					if(Physics.Raycast (ray2,out ray2Hit,range)){
-						//if it hits the aimerwall mvoe the reticle there
-						if(ray2Hit.collider.tag == "aimerWall"){
-							Vector3 placeHit = ray2Hit.point;
-							miniGunReticle.transform.position = placeHit;
-							miniGunReticle.transform.forward = cameraPlace.transform.forward;
-						}
+				Vector3 hitPoint = hitInfoAimer.point;
+				//create a hit variable for the second raycast
+				Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
+				RaycastHit ray2Hit;
+				//make it look like the minigun arm is facing where its shooting
+				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+				// limit the angles properly
+				miniGunArm.transform.right = -vecEnd;
+				if(Physics.Raycast (ray2,out ray2Hit,range)){
+					//if it hits the aimerwall mvoe the reticle there
+					if(ray2Hit.collider.tag == "aimerWall"){
+						Vector3 placeHit = ray2Hit.point;
+						miniGunReticle.transform.position = placeHit;
+						miniGunReticle.transform.forward = cameraPlace.transform.forward;
 					}
+				}
 			}
+
+			if(Physics.Raycast (ray, out hitInfoAimer ,20,layerMask)){
+				if(hitInfoAimer.collider.tag != "Terrain"){
+					Vector3 placeHitRock = hitInfoAimer.point;
+					Vector3 retPos = placeHitRock.normalized * -3;
+					miniGunReticle.transform.position = placeHitRock + retPos;
+					miniGunReticle.transform.forward = hitInfoAimer.normal;
+				}
+			}
+
 			//this is for when it doesnt hit an object it still displays
 			else{
 				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
 			// limit these angles properly
-					miniGunArm.transform.right = -vecEnd;
-		
+				miniGunArm.transform.right = -vecEnd;
 
 				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
 				RaycastHit ray2HitNo;
@@ -184,48 +190,57 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-			//CANNON AIMING
-			Ray rayC= new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
-			RaycastHit hitInfoAimerC;
-			//check if it hit something then send a ray back to display the reticle
-			if(Physics.Raycast (rayC, out hitInfoAimerC,range,layerMask)){
-				Vector3 hitPointC = hitInfoAimerC.point;
-				//create a hit variable for the second raycast
-				Ray ray2C = new Ray(hitPointC,cameraPlace.transform.position-hitPointC);
-				RaycastHit ray2HitC;
-				//make it look like the cannon arm is facing where its shooting
-				Vector3 vecEnd = cannonAimer.transform.forward * 100;
-				Vector3 cannonArmPos = cannonAimer.transform.position;
-				// get th eproper angles and limit the rotation of the cannon arm
-					cannonArm.transform.right = -vecEnd;
-		
 
-				if(Physics.Raycast (ray2C,out ray2HitC,range)){
+
+			//CANNON AIMING
+			Ray rayCannon = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
+			RaycastHit hitInfoAimerCannon;
+			//check if it hit something then send a ray back to display the reticle
+			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon,range,layerMask)){
+				
+				Vector3 hitPointCannon = hitInfoAimerCannon.point;
+				//create a hit variable for the second raycast
+				Ray ray2Cannon = new Ray(hitPointCannon,cameraPlace.transform.position-hitPointCannon);
+				RaycastHit ray2HitCannon;
+				//make it look like the minigun arm is facing where its shooting
+				Vector3 vecEndCannon = cannonAimer.transform.forward * 100;
+				cannonArm.transform.right = -vecEndCannon;
+				if(Physics.Raycast (ray2Cannon,out ray2HitCannon,range)){
 					//if it hits the aimerwall mvoe the reticle there
-					if(ray2HitC.collider.tag == "aimerWall"){
-						Vector3 placeHit = ray2HitC.point;
-						cannonRet.transform.position = placeHit;
+					if(ray2HitCannon.collider.tag == "aimerWall"){
+						Vector3 placeHitCannon = ray2HitCannon.point;
+						cannonRet.transform.position = placeHitCannon;
 						cannonRet.transform.forward = cameraPlace.transform.forward;
 					}
 				}
 			}
+
+			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon ,20,layerMask)){
+				if(hitInfoAimerCannon.collider.tag != "Terrain"){
+					Vector3 placeHitRockC = hitInfoAimerCannon.point;
+					Vector3 retPosC = placeHitRockC.normalized * -3;
+					cannonRet.transform.position = placeHitRockC + retPosC;
+					cannonRet.transform.forward = hitInfoAimerCannon.normal;
+				}
+			}
+				
 			//this is for when it doesnt hit an object it still displays
 			else{
-				Vector3 vecEnd2 = cannonAimer.transform.forward * 100;
-				Vector3 cannonArmPos = cannonArm.transform.position; 
-				Vector3 sendBack2 =  cannonArmPos += vecEnd2;
+				Vector3 endOfVector = cannonAimer.transform.forward * 100;
+				Vector3 CannonArmPosition = cannonAimer.transform.position; 
+				Vector3 secondPart =  CannonArmPosition += endOfVector;
+				// limit these angles properly
+				cannonArm.transform.right = -secondPart;
 				
-				//make it look like the cannon arm is facing where its shooting
-					cannonArm.transform.right = -vecEnd2;
 				
+				Ray cannonsSecondRay = new Ray(secondPart,cameraPlace.transform.position-secondPart);
+				RaycastHit connonsSecondRayHit;
 
-				Ray ray2NoC = new Ray(sendBack2,cameraPlace.transform.position-sendBack2);
-				RaycastHit ray2HitNoC;
-				if(Physics.Raycast (ray2NoC,out ray2HitNoC,range)){
+				if(Physics.Raycast (cannonsSecondRay,out connonsSecondRayHit,range)){
 					//if it hits the aimerwall mvoe the reticle there
-					if(ray2HitNoC.collider.tag == "aimerWall"){
-						Vector3 placeHit2 = ray2HitNoC.point;
-						cannonRet.transform.position = placeHit2;
+					if(connonsSecondRayHit.collider.tag == "aimerWall"){
+						Vector3 hittyThingy = connonsSecondRayHit.point;
+						cannonRet.transform.position = hittyThingy;
 						cannonRet.transform.forward = cameraPlace.transform.forward;
 					}
 				}
@@ -304,9 +319,6 @@ public class MechShoot : MonoBehaviour {
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
-
-						Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rockModeRayHit.normal);
-
 						Vector3 placeHitRock = rockModeRayHit.point;
 						missleTargetArea.transform.position = placeHitRock;
 						missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
@@ -352,8 +364,8 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
-				if(rockModeRayHit.collider.tag != "Terrain"){
+			 if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
+				 if(rockModeRayHit.collider.tag != "Terrain"){
 						lightBeam.SetActive(false);
 						notLightBeam.SetActive(true);
 					Vector3 placeHitRock = rockModeRayHit.point;

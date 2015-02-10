@@ -1,0 +1,183 @@
+fileFormatVersion: 2
+guid: 9ff43c810ad0e084e9e947f5359b4ade
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Base
+    100004: Body
+    100006: Bottom_CTRL
+    100008: Eyes
+    100010: Gem
+    100012: GlassBox
+    100014: Hips_CTRL
+    100016: jnt_Head
+    100018: jnt_Hip
+    100020: jnt_L_Ankle
+    100022: jnt_L_Ball
+    100024: jnt_L_Elbow
+    100026: jnt_L_GunMiddle
+    100028: jnt_L_GunTip
+    100030: jnt_L_Hand
+    100032: jnt_L_Hip
+    100034: jnt_L_Knee
+    100036: jnt_L_Shoulder
+    100038: jnt_L_Toe
+    100040: jnt_L_Wrist
+    100042: jnt_Neck
+    100044: jnt_R_Ankle
+    100046: jnt_R_Ball
+    100048: jnt_R_Elbow
+    100050: jnt_R_Hand
+    100052: jnt_R_Hip
+    100054: jnt_R_Knee
+    100056: jnt_R_Shoulder
+    100058: jnt_R_Toe
+    100060: jnt_Root_Bottom
+    100062: jnt_Root_Top
+    100064: jnt_Spine
+    100066: LeftArm
+    100068: LeftArm 1
+    100070: LeftDown
+    100072: LeftKnee_CTRL
+    100074: LefttBoot
+    100076: LeftUp
+    100078: Main
+    100080: Mech
+    100082: RightArm
+    100084: RightBoot
+    100086: RightDown
+    100088: RightKnee_CTRL
+    100090: RightUp
+    100092: Top
+    400000: //RootNode
+    400002: Base
+    400004: Body
+    400006: Bottom_CTRL
+    400008: Eyes
+    400010: Gem
+    400012: GlassBox
+    400014: Hips_CTRL
+    400016: jnt_Head
+    400018: jnt_Hip
+    400020: jnt_L_Ankle
+    400022: jnt_L_Ball
+    400024: jnt_L_Elbow
+    400026: jnt_L_GunMiddle
+    400028: jnt_L_GunTip
+    400030: jnt_L_Hand
+    400032: jnt_L_Hip
+    400034: jnt_L_Knee
+    400036: jnt_L_Shoulder
+    400038: jnt_L_Toe
+    400040: jnt_L_Wrist
+    400042: jnt_Neck
+    400044: jnt_R_Ankle
+    400046: jnt_R_Ball
+    400048: jnt_R_Elbow
+    400050: jnt_R_Hand
+    400052: jnt_R_Hip
+    400054: jnt_R_Knee
+    400056: jnt_R_Shoulder
+    400058: jnt_R_Toe
+    400060: jnt_Root_Bottom
+    400062: jnt_Root_Top
+    400064: jnt_Spine
+    400066: LeftArm
+    400068: LeftArm 1
+    400070: LeftDown
+    400072: LeftKnee_CTRL
+    400074: LefttBoot
+    400076: LeftUp
+    400078: Main
+    400080: Mech
+    400082: RightArm
+    400084: RightBoot
+    400086: RightDown
+    400088: RightKnee_CTRL
+    400090: RightUp
+    400092: Top
+    4300000: Top
+    4300002: Main
+    4300004: RightDown
+    4300006: LeftDown
+    4300008: RightUp
+    4300010: LeftUp
+    4300012: LeftArm
+    4300014: Gem
+    4300016: GlassBox
+    4300018: RightArm
+    4300020: Body
+    4300022: Base
+    4300024: RightBoot
+    4300026: LefttBoot
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Base
+    13700002: Body
+    13700004: Gem
+    13700006: GlassBox
+    13700008: LeftArm 1
+    13700010: LeftDown
+    13700012: LefttBoot
+    13700014: LeftUp
+    13700016: Main
+    13700018: RightArm
+    13700020: RightBoot
+    13700022: RightDown
+    13700024: RightUp
+    13700026: Top
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

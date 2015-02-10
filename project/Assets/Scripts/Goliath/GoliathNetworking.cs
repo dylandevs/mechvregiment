@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GoliathNetworking : MonoBehaviour {
+public class GoliathNetworking : Photon.MonoBehaviour {
 
 	private string roomName = "GoliathConnection_083";
 	private PhotonView photonView;

@@ -3,16 +3,17 @@ using System.Collections;
 
 public class cannonShot : MonoBehaviour {
 
-	public float cannonSpeed;
+	public Vector3 constantSpeed;
+	public float explosionRadius = 3f;
+	public GameObject plasmaExplodePrefab;
+
 	int layerMask = 1 << 16;
-	float rotSpeed;
 	float timer;
 
 	// Use this for initialization
 	void Start () {
-		cannonSpeed = 20.0f * Time.deltaTime; 
+		rigidbody.velocity = gameObject.transform.forward * 10;
 		layerMask = ~layerMask;
-		rotSpeed = 1 * Time.deltaTime; 
 	}
 	
 	// Update is called once per frame
@@ -20,14 +21,18 @@ public class cannonShot : MonoBehaviour {
 		// turn off object after a certain amount of time
 		timer += Time.deltaTime;
 		
-		if (timer > 8f) {
+		if (timer > 5f) {
 			gameObject.SetActive(false);
 			timer = 0;
 		}
 
 		// make it degrade over time********
-		gameObject.transform.Translate(transform.forward * cannonSpeed,Space.World);
-		gameObject.transform.Rotate(gameObject.transform.right* rotSpeed, Space.World);
+		//gameObject.transform.Translate(transform.forward * cannonSpeed,Space.World);
+
+		/*if(timer > 1.5){
+			gameObject.transform.Rotate(gameObject.transform.right* rotSpeed, Space.World);
+		}*/
+
 	}
 
 	void FixedUpdate(){
@@ -35,12 +40,36 @@ public class cannonShot : MonoBehaviour {
 
 		if (Physics.Raycast (ray, 50 * Time.deltaTime,layerMask)) 
 		{
-			gameObject.SetActive(false);
-			doDamageCannon();
+			if(collider.tag == "Player"){
+				gameObject.SetActive(false);
+				doDamageCannon();
+			}
+
+			else{
+				if (plasmaExplodePrefab != null) 
+				{
+					Instantiate(plasmaExplodePrefab, transform.position,Quaternion.identity);
+				}
+				
+				//hurts whats near the boom depending on a overlap sphere function
+				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
+				foreach (Collider c in colliders) 
+				{
+					/*objectHealth hp = c.GetComponent<objectHealth>();
+
+					if(hp != null)
+					{
+						float dist = Vector3.Distance(transform.position, c.transform.position);
+						float damageRatio = 1f - (dist / explosionRadius);
+						hp.ReciveDamage(damage * damageRatio);
+					}*/
+
+					gameObject.SetActive(false);
+				}
+			}
+
 		}
 	}
-
-	//*** add a self destruct to this and then make the ammo show up and dissapear accordingly*********
 
 	void doDamageCannon(){
 		//do damgy thingys
