@@ -91,4 +91,29 @@ public class GoliathNetworking : MonoBehaviour {
         Player4Avatar.transform.position = newPos;
         Player4Avatar.transform.rotation = newRot;
     }
+
+    [RPC]
+    public void AimPlayer1(){
+    }
+    [RPC]
+    public void UnaimPlayer1(){
+    }
+    [RPC]
+    public void AimPlayer2(){
+    }
+    [RPC]
+    public void UnaimPlayer2(){
+    }
+    [RPC]
+    public void AimPlayer3(){
+    }
+    [RPC]
+    public void UnaimPlayer3(){
+    }
+    [RPC]
+    public void AimPlayer4(){
+    }
+    [RPC]
+    public void UnaimPlayer4(){
+    }
 }
