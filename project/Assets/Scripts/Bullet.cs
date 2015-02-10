@@ -14,15 +14,17 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		lastPos = transform.position;
+		pool = transform.parent.GetComponent<PoolManager>();
 	}
 
-	public void setProperties(float baseDamage, string firer, Vector3 direction, float speed){
+	public void setProperties(float baseDamage, string firer, Vector3 direction, float speed, PoolManager markPool){
 		damage = baseDamage;
 		originator = firer;
 		velocity = direction.normalized * speed;
 		rigidbody.velocity = direction.normalized * speed;
 		life = 3;
+		bulletMarkPool = markPool;
+		lastPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -57,7 +59,6 @@ public class Bullet : MonoBehaviour {
 					// Hit the terrain, make mark
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
 					GameObject mark = bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
-					mark.GetComponent<BulletHoleBehaviour>().SetPool(bulletMarkPool);
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
@@ -73,13 +74,5 @@ public class Bullet : MonoBehaviour {
 			return false;
 		}
 		return false;
-	}
-
-	public void SetPool(PoolManager pooler){
-		pool = pooler;
-	}
-
-	public void SetMarkPool(PoolManager pooler){
-		bulletMarkPool = pooler;
 	}
 }

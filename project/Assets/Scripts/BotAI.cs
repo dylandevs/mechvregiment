@@ -300,10 +300,7 @@ public class BotAI : MonoBehaviour {
 
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(5.5f, gameObject.tag, direction, 4);
-		bulletScript.SetPool(projectilePool);
-		bulletScript.SetMarkPool(impactPool);
-
+		bulletScript.setProperties(5.5f, gameObject.tag, direction, 4, impactPool);
 	}
 
 	// Gradually turns to face given target

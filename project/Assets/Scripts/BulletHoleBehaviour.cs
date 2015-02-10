@@ -8,7 +8,7 @@ public class BulletHoleBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		pool = transform.parent.GetComponent<PoolManager>();
 	}
 	
 	// Update is called once per frame
@@ -21,9 +21,5 @@ public class BulletHoleBehaviour : MonoBehaviour {
 
 	public void Initialize(){
 		life = 10;
-	}
-
-	public void SetPool(PoolManager pooler){
-		pool = pooler;
 	}
 }

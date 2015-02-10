@@ -238,9 +238,7 @@ public class Weapon : MonoBehaviour {
 			
 			// Setting bullet properties
 			Bullet bulletScript = bullet.GetComponent<Bullet>();
-			bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed);
-			bulletScript.SetPool(projectilePool);
-			bulletScript.SetMarkPool(impactPool);
+			bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed, impactPool);
 		}
 		else{
 			RaycastHit rayHit;
@@ -251,7 +249,6 @@ public class Weapon : MonoBehaviour {
 					// Hit the terrain, make mark
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
 					GameObject mark = impactPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
-					mark.GetComponent<BulletHoleBehaviour>().SetPool(impactPool);
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
