@@ -44,26 +44,26 @@ public class BotAI : MonoBehaviour {
 	const int ThreshTolerance = 2;
 
 	// Bot attributes
-	const float ViewAngle = 120 / 2;
-	const float WalkSpeed = 1.5f;
-	const float MoveSpeed = 7f;
-	const float FireRate = 1.2f;
-	const float TurnStep = 0.02f;
-	const float FireAngle = 60 / 2;
-	const float MaxHealth = 100;
-	const float ResightRate = 0.25f;
+	public const float ViewAngle = 120 / 2;
+	public const float WalkSpeed = 1.5f;
+	public const float MoveSpeed = 7f;
+	public const float FireRate = 1.2f;
+	public const float TurnStep = 0.02f;
+	public const float FireAngle = 60 / 2;
+	public const float MaxHealth = 100;
+	public const float ResightRate = 0.25f;
 
 	// Storage variables
 	Transform allyGroup = null;
 	public GameObject opponent;
 	NavMeshAgent navMeshAgent;
-	
+
 	// Bot stats
 	State state = State.AllClear;
 	TargetComponent targetVisible = TargetComponent.None;
 	//byte state = 0;
 	float health = MaxHealth;
-	float reloadProg = FireRate;
+	public float reloadProg = FireRate;
 	bool isDead = false;
 	float resightEnemyProg = ResightRate;
 	float resightAllyProg = ResightRate;

@@ -16,8 +16,10 @@ public class Minimap : MonoBehaviour {
 	Vector2 mapRatio;
 	Vector3 terrainOffset;
 
-	public GameObject[] players;
-	public GameObject[] bots;
+	//private GameObject[] players;
+	//private GameObject[] minions;
+	public GameObject playerGroup;
+	public GameObject minionGroup;
 	public GameObject objective;
 	public GameObject goliath;
 	public GameObject mapIconPrefab;
@@ -25,6 +27,9 @@ public class Minimap : MonoBehaviour {
 	public List<MinimapIcon> icons = new List<MinimapIcon>();
 
 	public Sprite objectiveIcon;
+	public Sprite goliathIcon;
+	public Sprite minionIcon;
+	public Sprite scavengerIcon;
 
 	// Use this for initialization
 	void Start () {
@@ -78,25 +83,79 @@ public class Minimap : MonoBehaviour {
 		return iconTrans;
 	}
 
-	void PopulateMapIcons(){
+	Quaternion CalculateIconRotation(Quaternion objRot){
+		Quaternion iconRot = Quaternion.Euler(0, 0, objRot.eulerAngles.y);
+		return iconRot;
+	}
+
+	GameObject CreateIcon(Sprite sprite){
 		GameObject icon = Instantiate (mapIconPrefab) as GameObject;
 		icon.transform.SetParent (minimapMask.transform);
 		icon.transform.localPosition = Vector3.zero;
 		icon.transform.localScale = Vector3.one;
 		icon.transform.localRotation = Quaternion.identity;
-		icon.GetComponent<Image> ().sprite = objectiveIcon;
+		icon.GetComponent<Image> ().sprite = sprite;
 
-		MinimapIcon iconScript = icon.GetComponent<MinimapIcon> ();
+		return icon;
+	}
+
+	void PopulateMapIcons(){
+		GameObject icon;
+		MinimapIcon iconScript;
+
+		// Create objective icon
+		icon = CreateIcon(objectiveIcon);
+		iconScript = icon.GetComponent<MinimapIcon> ();
 		iconScript.associatedObject = objective;
 		iconScript.type = MinimapIcon.MMIconType.Objective;
-
 		icons.Add(iconScript);
+
+		// Create Goliath icons
+		icon = CreateIcon(goliathIcon);
+		iconScript = icon.GetComponent<MinimapIcon> ();
+		iconScript.associatedObject = goliath;
+		iconScript.type = MinimapIcon.MMIconType.Goliath;
+		icons.Add(iconScript);
+
+		// Create Minion icon
+		foreach (Transform minion in minionGroup.transform){
+			icon = CreateIcon(minionIcon);
+			iconScript = icon.GetComponent<MinimapIcon> ();
+			iconScript.associatedObject = minion.gameObject;
+			iconScript.type = MinimapIcon.MMIconType.Minion;
+			iconScript.img.color = new Color(1, 1, 1, 0);
+			icons.Add(iconScript);
+		}
+
+		// Create Scavenger icons
+		foreach (Transform scavenger in playerGroup.transform){
+			// Verify that current player is not selected
+			if (scavenger.gameObject != player.gameObject){
+				icon = CreateIcon(scavengerIcon);
+				iconScript = icon.GetComponent<MinimapIcon> ();
+				iconScript.associatedObject = scavenger.gameObject;
+				iconScript.type = MinimapIcon.MMIconType.Scavenger;
+				icons.Add(iconScript);
+			}
+		}
 	}
 
 	void UpdateMapIcons(){
 		foreach (MinimapIcon icon in icons){
 			if (icon.type == MinimapIcon.MMIconType.Objective){
 				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+			}
+			else if (icon.type == MinimapIcon.MMIconType.Scavenger){
+				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+				icon.transform.localRotation = CalculateIconRotation(icon.associatedObject.transform.rotation);
+			}
+			else if (icon.type == MinimapIcon.MMIconType.Goliath){
+				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+				icon.transform.localRotation = CalculateIconRotation(icon.associatedObject.transform.rotation);
+			}
+			else if (icon.type == MinimapIcon.MMIconType.Minion){
+				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+				icon.img.color = new Color(1, 1, 1, icon.GetEnemyOpacity());
 			}
 		}
 	}
