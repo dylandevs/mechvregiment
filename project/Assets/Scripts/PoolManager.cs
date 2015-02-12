@@ -14,6 +14,16 @@ public class PoolManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// Add existing children to pool
+		foreach (Transform child in transform){
+			if (child.gameObject.GetActive()){
+				activeObjectPool.Add(child.gameObject);
+			}
+			else{
+				inactiveObjectPool.Add(child.gameObject);
+			}
+		}
+
 		// Populates inactive list of objects
 		for (int i = 0; i < startingPool; i++){
 			inactiveObjectPool.Add(Instantiate(prefabObject) as GameObject);

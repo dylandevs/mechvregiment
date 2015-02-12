@@ -75,11 +75,13 @@ public class BotAI : MonoBehaviour {
 	// Inputs
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
+	private PoolManager pool;
 
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		allyGroup = transform.parent;
+		pool = transform.parent.GetComponent<PoolManager>();
 	}
 	
 	// Update is called once per frame
@@ -150,7 +152,7 @@ public class BotAI : MonoBehaviour {
 
 		}
 		else{
-			Destroy(gameObject);
+			pool.Deactivate(gameObject);
 		}
 	}
 
