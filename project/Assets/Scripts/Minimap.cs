@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Minimap : MonoBehaviour {
 
@@ -8,12 +10,21 @@ public class Minimap : MonoBehaviour {
 	public RectTransform minimapImg;
 	public GameObject mapObj;
 	public Player player;
-	public MapNoteManager notes;
 
 	Vector2 minimapSize;
 	Vector2 terrainSize;
 	Vector2 mapRatio;
 	Vector3 terrainOffset;
+
+	public GameObject[] players;
+	public GameObject[] bots;
+	public GameObject objective;
+	public GameObject goliath;
+	public GameObject mapIconPrefab;
+
+	public List<MinimapIcon> icons = new List<MinimapIcon>();
+
+	public Sprite objectiveIcon;
 
 	// Use this for initialization
 	void Start () {
@@ -23,11 +34,14 @@ public class Minimap : MonoBehaviour {
 		terrainOffset = mapObj.transform.position;
 		mapRatio.x = minimapSize.x / terrainSize.x;
 		mapRatio.y = minimapSize.y / terrainSize.y;
+
+		PopulateMapIcons ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		UpdateMapTransforms();
+		UpdateMapIcons ();
 	}
 
 	void UpdateMapTransforms(){
@@ -52,5 +66,38 @@ public class Minimap : MonoBehaviour {
 		mapRot = Quaternion.AngleAxis(mapRot.eulerAngles.y, Vector3.forward);
 
 		return mapRot;
+	}
+
+	Vector3 CalculateIconTranslation(Vector3 objTrans){
+		Vector3 iconTrans = objTrans - player.transform.position;
+
+		iconTrans.x *= mapRatio.x;
+		iconTrans.y = iconTrans.z * mapRatio.y;
+		iconTrans.z = 0;
+
+		return iconTrans;
+	}
+
+	void PopulateMapIcons(){
+		GameObject icon = Instantiate (mapIconPrefab) as GameObject;
+		icon.transform.SetParent (minimapMask.transform);
+		icon.transform.localPosition = Vector3.zero;
+		icon.transform.localScale = Vector3.one;
+		icon.transform.localRotation = Quaternion.identity;
+		icon.GetComponent<Image> ().sprite = objectiveIcon;
+
+		MinimapIcon iconScript = icon.GetComponent<MinimapIcon> ();
+		iconScript.associatedObject = objective;
+		iconScript.type = MinimapIcon.MMIconType.Objective;
+
+		icons.Add(iconScript);
+	}
+
+	void UpdateMapIcons(){
+		foreach (MinimapIcon icon in icons){
+			if (icon.type == MinimapIcon.MMIconType.Objective){
+				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+			}
+		}
 	}
 }
