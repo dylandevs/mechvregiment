@@ -36,12 +36,17 @@ public class Weapon : MonoBehaviour {
 	public int MagSize = 30;
 	public int ReserveSize = 120;
 	public float Damage = 15;
-	
+
+	// Cosmetic attributes
+	public float FlashDuration = 0.05f;
+
 	// Inputs
 	public GameObject generatorPos;
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
 	public Animator animator;
+	public GameObject flash;
+	public ParticleSystem smoke;
 	
 	// Ammo trackers
 	private int totalAmmo;
@@ -53,6 +58,7 @@ public class Weapon : MonoBehaviour {
 	private float fireProgress = 0;
 	private float recoilMoveProgress = 0;
 	private float recentringProgress = 0;
+	private float flashProgress = 0;
 	
 	// Spread tracker
 	private float spread = 0;
@@ -79,7 +85,7 @@ public class Weapon : MonoBehaviour {
 	private bool isFirstShot = true;
 	private bool isAds = false;
 	
-	// External references
+	// Cached references
 	private Player player;
 	private ControllerScript controller;
 	
@@ -189,6 +195,16 @@ public class Weapon : MonoBehaviour {
 				}
 			}
 		}
+
+		// Hide flash after duration
+		if (flashProgress > 0){
+			flashProgress -= Time.deltaTime;
+
+			if (flashProgress <= 0){
+				flashProgress = 0;
+				flash.SetActive(false);
+			}
+		}
 	}
 	
 	public void setPlayerReference(Player player){
@@ -269,7 +285,16 @@ public class Weapon : MonoBehaviour {
 		else{
 			fireSpread += FireSpreadRate;
 		}
-		
+
+		// Activate muzzle flash (if one is given)
+		if (flash){
+			flash.transform.RotateAround(flash.transform.position, flash.transform.up, Random.Range (0, 360));
+			flash.SetActive (true);
+			flashProgress = FlashDuration;
+		}
+
+		// Create smoke puff
+		smoke.Play ();
 		
 		SetRecoilTarget ();
 		
