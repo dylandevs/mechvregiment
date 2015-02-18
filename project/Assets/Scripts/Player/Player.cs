@@ -20,8 +20,8 @@ public class Player : MonoBehaviour {
 	public Crosshair crossScript;
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
-	public GameObject NetworkManager;
-	
+	public PlayerNetSend NetworkManager;
+
 	// Status variables
 	private float health = MaxHealth;
 	private float healTimer = 0;
@@ -85,7 +85,9 @@ public class Player : MonoBehaviour {
 		if (setADS != null) {
 			isAimingDownSights = (bool)setADS;
 			weapons[currentWeaponIndex].setAds(isAimingDownSights);
-			NetworkManager.GetComponent<PlayerNetSend>().TogglePlayerADS(id, (bool)setADS);
+			if (NetworkManager){
+				NetworkManager.TogglePlayerADS(id, (bool)setADS);
+			}
 		}
 		else{
 			isAimingDownSights = !isAimingDownSights;

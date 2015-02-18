@@ -294,7 +294,9 @@ public class Weapon : MonoBehaviour {
 		}
 
 		// Create smoke puff
-		smoke.Play ();
+		if (smoke){
+			smoke.Play ();
+		}
 		
 		SetRecoilTarget ();
 		

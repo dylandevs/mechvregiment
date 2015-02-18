@@ -28,6 +28,10 @@ public class MinimapIcon : MonoBehaviour {
 	}
 
 	public float GetEnemyOpacity(){
-		return (BotAI.FireRate - minionScript.reloadProg) * InvBaseEnemyTime;
+		if (associatedObject.GetActive()){
+			return (BotAI.FireRate - minionScript.reloadProg) * InvBaseEnemyTime;
+		}
+
+		return 0;
 	}
 }

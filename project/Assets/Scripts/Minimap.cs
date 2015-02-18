@@ -6,8 +6,10 @@ using System.Collections.Generic;
 public class Minimap : MonoBehaviour {
 
 	// Inputs
+	public RectTransform minimapRot;
+	public RectTransform minimapTrans;
 	public RectTransform minimapMask;
-	public RectTransform minimapImg;
+	public RectTransform objDirection;
 	public GameObject mapObj;
 	public Player player;
 
@@ -15,9 +17,7 @@ public class Minimap : MonoBehaviour {
 	Vector2 terrainSize;
 	Vector2 mapRatio;
 	Vector3 terrainOffset;
-
-	//private GameObject[] players;
-	//private GameObject[] minions;
+	
 	public GameObject playerGroup;
 	public GameObject minionGroup;
 	public GameObject objective;
@@ -33,7 +33,7 @@ public class Minimap : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		minimapSize = minimapImg.sizeDelta;
+		minimapSize = minimapTrans.sizeDelta;
 		terrainSize.x = mapObj.transform.collider.bounds.extents.x * 2;
 		terrainSize.y = mapObj.transform.collider.bounds.extents.z * 2;
 		terrainOffset = mapObj.transform.position;
@@ -47,11 +47,12 @@ public class Minimap : MonoBehaviour {
 	void Update () {
 		UpdateMapTransforms();
 		UpdateMapIcons ();
+		UpdateObjectiveDirection ();
 	}
 
 	void UpdateMapTransforms(){
-		minimapMask.localRotation = CalculateMapRotation();
-		minimapImg.localPosition = CalculateMapTranslation();
+		minimapRot.localRotation = CalculateMapRotation();
+		minimapTrans.localPosition = CalculateMapTranslation();
 	}
 
 	Vector3 CalculateMapTranslation(){
@@ -158,5 +159,17 @@ public class Minimap : MonoBehaviour {
 				icon.img.color = new Color(1, 1, 1, icon.GetEnemyOpacity());
 			}
 		}
+	}
+
+	void UpdateObjectiveDirection(){
+		Vector3 flatPlayerPos = player.transform.position;
+		flatPlayerPos.y = 0;
+		Vector3 flatObjPos = objective.transform.position;
+		flatObjPos.y = 0;
+
+		Vector3 diff = flatObjPos - flatPlayerPos;
+		Quaternion diffRot = Quaternion.FromToRotation (player.transform.forward, diff);
+
+		objDirection.localRotation = Quaternion.Euler (0, 0, -diffRot.eulerAngles.y);
 	}
 }
