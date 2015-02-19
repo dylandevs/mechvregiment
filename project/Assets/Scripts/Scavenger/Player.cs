@@ -16,11 +16,13 @@ public class Player : MonoBehaviour {
 	const float MaxHealth = 100;
 	const float RegenInc = 0.7f;
 
+	// Inputs
 	public Camera playerCam;
 	public Crosshair crossScript;
 	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
 	public PlayerNetSend NetworkManager;
+	public ScavUI display;
 
 	// Status variables
 	private float health = MaxHealth;
@@ -122,9 +124,11 @@ public class Player : MonoBehaviour {
 	}
 
 	// Deals damage to player and resets healing timer
-	public void Damage(float damage){
+	public void Damage(float damage, Vector3 direction){
 		health -= damage;
 		healTimer = HealWait;
+
+		display.indicateDamageDirection (direction);
 	}
 
 	public Weapon getCurrentWeapon(){
