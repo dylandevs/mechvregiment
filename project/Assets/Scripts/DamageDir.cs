@@ -9,6 +9,7 @@ public class DamageDir : MonoBehaviour {
 
 	float duration = 0;
 	Quaternion baseRot;
+	Quaternion origPlayerRot;
 
 	PoolManager pool;
 	Player player;
@@ -23,7 +24,7 @@ public class DamageDir : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Quaternion origRot = player.transform.rotation * baseRot;
+		Quaternion origRot = baseRot * origPlayerRot * Quaternion.Inverse (player.transform.rotation);
 		transform.localRotation = Quaternion.Euler(0, 0, 180-origRot.eulerAngles.y);
 
 		duration -= Time.deltaTime;
@@ -42,7 +43,8 @@ public class DamageDir : MonoBehaviour {
 		player = playerRef;
 		duration = baseDuration;
 
-		Quaternion origRot = player.transform.rotation * baseRot;
+		Quaternion origRot = baseRot;
+		origPlayerRot = player.transform.rotation;
 		transform.localRotation = Quaternion.Euler(0, 0, 180-origRot.eulerAngles.y);
 	}
 }
