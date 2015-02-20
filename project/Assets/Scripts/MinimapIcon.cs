@@ -12,7 +12,6 @@ public class MinimapIcon : MonoBehaviour {
 	// public Goliath goliathScript = null;
 
 	float InvBaseEnemyTime = 1;
-	float timerFired = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +27,7 @@ public class MinimapIcon : MonoBehaviour {
 	}
 
 	public float GetEnemyOpacity(){
-		if (associatedObject.GetActive()){
+		if (associatedObject.GetActive() && minionScript){
 			return (BotAI.FireRate - minionScript.reloadProg) * InvBaseEnemyTime;
 		}
 

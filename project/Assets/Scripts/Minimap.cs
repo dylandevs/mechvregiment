@@ -85,7 +85,7 @@ public class Minimap : MonoBehaviour {
 	}
 
 	Quaternion CalculateIconRotation(Quaternion objRot){
-		Quaternion iconRot = Quaternion.Euler(0, 0, objRot.eulerAngles.y);
+		Quaternion iconRot = Quaternion.Euler(0, 0, -objRot.eulerAngles.y);
 		return iconRot;
 	}
 

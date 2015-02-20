@@ -7,6 +7,7 @@ public class Weapon : MonoBehaviour {
 	public bool Automatic = true;
 	public bool PhysicalAmmo = false;
 	public float ReloadTime = 2;
+	private float InvReloadTime = 1;
 	public float BurstTime = 0.1f;
 	public float FireRate = 0.3f;
 	public int BurstLength = 3;
@@ -93,6 +94,7 @@ public class Weapon : MonoBehaviour {
 	void Start () {
 		totalAmmo = ReserveSize;
 		magAmmo = MagSize;
+		InvReloadTime = 1 / ReloadTime;
 	}
 	
 	// Update is called once per frame
@@ -188,11 +190,7 @@ public class Weapon : MonoBehaviour {
 		// Attempt to reload if possible
 		if (!isReloading){
 			if (magAmmo == 0){
-				StopBursting();
-				StopFireInterval();
-				if (!isAllAmmoDepleted){
-					StartReloading();
-				}
+				TryReloading();
 			}
 		}
 
@@ -345,7 +343,7 @@ public class Weapon : MonoBehaviour {
 		Quaternion horizontalAdjust = Quaternion.AngleAxis (xAdjust, Vector3.up);
 		
 		newFacing = verticalAdjust * horizontalAdjust * newFacing;
-		controller.setFacing (newFacing);
+		controller.SetFacing (newFacing);
 		
 		// Finished applying recoil
 		if (recoilMoveProgress <= 0) {
@@ -393,8 +391,6 @@ public class Weapon : MonoBehaviour {
 		totalRecenterRotation = totalRecenterRotation - initialFiringElevation;
 		//totalRecenterRotation *= 0.5f;
 		recenterTargetSet = false;
-
-		print (totalRecenterRotation);
 	}
 	
 	private void AttemptRecentering(){
@@ -413,7 +409,7 @@ public class Weapon : MonoBehaviour {
 		
 		// Apply rotation step
 		newFacing = Quaternion.AngleAxis(recenteringStep, controller.perpFacing) * newFacing;
-		controller.setFacing (newFacing);
+		controller.SetFacing (newFacing);
 		
 		// Finished recentering
 		if (recentringProgress <= 0) {
@@ -463,19 +459,16 @@ public class Weapon : MonoBehaviour {
 		if (totalAmmo > 0){
 			reloadProgress = ReloadTime;
 			isReloading = true;
-			print ("Reloading...");
 		}
 		else {
-			print ("All empty!");
 			isAllAmmoDepleted = true;
 		}
 		isFiring = false;
 	}
 	
-	private void StopReloading(){
+	public void StopReloading(){
 		reloadProgress = 0;
 		isReloading = false;
-		print ("Reloaded");
 	}
 	
 	private void Reload(){
@@ -490,7 +483,7 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	// Returns number of bullets in current magazine, and number of bullets in reserve
-	public int[] getAmmoCount(){
+	public int[] GetAmmoCount(){
 		int[] toReturn = new int[2];
 		toReturn [0] = magAmmo;
 		toReturn [1] = totalAmmo;
@@ -498,19 +491,33 @@ public class Weapon : MonoBehaviour {
 		return toReturn;
 	}
 	
-	public float getSpread(){
+	public float GetSpread(){
 		return spread + BaseSpread;
 	}
 	
-	public void setTargetSpread(float newSpread){
+	public void SetTargetSpread(float newSpread){
 		targetSpread = newSpread;
 	}
 	
-	public void setAds(bool adsSetting){
+	public void SetAds(bool adsSetting){
 		isAds = adsSetting;
 	}
 	
-	public bool getReloading(){
+	public bool IsReloading(){
 		return isReloading;
+	}
+
+	public void TryReloading(){
+		if (magAmmo < MagSize && !isReloading){
+			StopBursting();
+			StopFireInterval();
+			if (!isAllAmmoDepleted){
+				StartReloading();
+			}
+		}
+	}
+
+	public float GetReloadProgress(){
+		return 1 - Mathf.Min(reloadProgress * InvReloadTime, 1);
 	}
 }

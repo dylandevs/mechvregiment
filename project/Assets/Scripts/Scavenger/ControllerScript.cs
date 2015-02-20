@@ -85,7 +85,7 @@ public class ControllerScript : MonoBehaviour {
 			newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		}
 		
-		Weapon currentWeapon = player.getCurrentWeapon ();
+		Weapon currentWeapon = player.GetCurrentWeapon ();
 
 		if (!isKeyboard){
 
@@ -128,7 +128,7 @@ public class ControllerScript : MonoBehaviour {
 
 			// Toggle crouching
 			if (B_Press && currentlyGrounded){
-				setCrouching(!isCrouching);
+				SetCrouching(!isCrouching);
 			}
 
 			// Trigger change weapon
@@ -137,12 +137,17 @@ public class ControllerScript : MonoBehaviour {
 				weaponAnim = player.getCurrentWeapon().animator;
 			}*/
 			if (DPad_Next){
-				player.cycleWeapons(1);
-				weaponAnim = player.getCurrentWeapon().animator;
+				player.CycleWeapons(1);
+				weaponAnim = player.GetCurrentWeapon().animator;
 			}
 			else if (DPad_Prev){
-				player.cycleWeapons(-1);
-				weaponAnim = player.getCurrentWeapon().animator;
+				player.CycleWeapons(-1);
+				weaponAnim = player.GetCurrentWeapon().animator;
+			}
+
+			// Reloading
+			if (Y_Press){
+				player.TriggerReload();
 			}
 
 			if (currentlyGrounded){
@@ -154,17 +159,17 @@ public class ControllerScript : MonoBehaviour {
 					anim.SetTrigger(jumpHash);
 
 					// Cancel crouch
-					setCrouching(false);
+					SetCrouching(false);
 				}
 				
 				// Lateral movement (strafing)
 				if (L_XAxis != 0){
 					if (Mathf.Abs(L_XAxis) > RunThresh){
-						newVel += RunSpeed * perpFacing * signOf(L_XAxis);
+						newVel += RunSpeed * perpFacing * SignOf(L_XAxis);
 						spread += currentWeapon.RunSpreadAdjust;
 					}
 					else{
-						newVel += CrouchSpeed * perpFacing * signOf(L_XAxis);
+						newVel += CrouchSpeed * perpFacing * SignOf(L_XAxis);
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 				}
@@ -178,14 +183,14 @@ public class ControllerScript : MonoBehaviour {
 						spread += currentWeapon.SprintSpreadAdjust;
 
 						// Cancel crouch
-						setCrouching(false);
+						SetCrouching(false);
 					}
 					// Run
 					else if (Mathf.Abs(L_YAxis) > RunThresh){
 						if (isCrouching){
 							spread += currentWeapon.CrouchSpreadAdjust;
 						}
-						newVel += RunSpeed * facing2D * -signOf(L_YAxis);
+						newVel += RunSpeed * facing2D * -SignOf(L_YAxis);
 						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.RunSpreadAdjust;
 					}
@@ -194,7 +199,7 @@ public class ControllerScript : MonoBehaviour {
 						if (isCrouching){
 							spread += currentWeapon.CrouchSpreadAdjust;
 						}
-						newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -signOf(L_YAxis);
+						newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -SignOf(L_YAxis);
 						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
@@ -203,10 +208,10 @@ public class ControllerScript : MonoBehaviour {
 			else{
 				spread += currentWeapon.JumpSpreadAdjust;
 			}
-			
+
 			// Toggle ADS
-			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.getReloading()) {
-				player.toggleADS(true);
+			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading()) {
+				player.ToggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
@@ -216,7 +221,7 @@ public class ControllerScript : MonoBehaviour {
 				speedFactor *= ADSSpeedFactor;
 			}
 			else{
-				player.toggleADS(false);
+				player.ToggleADS(false);
 				anim.SetInteger(fireHash, 0);
 				weaponAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
@@ -231,19 +236,19 @@ public class ControllerScript : MonoBehaviour {
 
 			// Rotation about Y axis
 			if (R_XAxis != 0){
-				float adjustment = R_XAxis * R_XAxis * signOf(R_XAxis) * 5;
+				float adjustment = R_XAxis * R_XAxis * SignOf(R_XAxis) * 5;
 				
 				// Slow movement for ADS
 				if (aimingDownSight){
 					adjustment *= 0.5f;
 				}
 				
-				setFacing(Quaternion.AngleAxis(adjustment, Vector3.up) * facing);
+				SetFacing(Quaternion.AngleAxis(adjustment, Vector3.up) * facing);
 			}
 			
 			// Vertical tilt of camera
 			if (R_YAxis != 0){
-				float adjustment = R_YAxis * R_YAxis * signOf(R_YAxis) * 5;
+				float adjustment = R_YAxis * R_YAxis * SignOf(R_YAxis) * 5;
 				
 				// Slow movement for ADS
 				if (aimingDownSight){
@@ -255,7 +260,7 @@ public class ControllerScript : MonoBehaviour {
 
 				// Limit angle so straight up/down are not possible
 				if (vertAngle >= 10 && vertAngle <= 170){
-					setFacing(newFacing);
+					SetFacing(newFacing);
 				}
 				else{
 					// Do nothing
@@ -264,13 +269,13 @@ public class ControllerScript : MonoBehaviour {
 			
 			// Firing script
 			if (TriggersR != 0){
-				player.setFiringState(true);
+				player.SetFiringState(true);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}
 			}
 			else{
-				player.setFiringState(false);
+				player.SetFiringState(false);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 0);
 				}
@@ -354,8 +359,8 @@ public class ControllerScript : MonoBehaviour {
 			}
 			
 			// Toggle ADS
-			if (Mouse_Right && currentlyGrounded && !currentWeapon.getReloading()) {
-				player.toggleADS(true);
+			if (Mouse_Right && currentlyGrounded && !currentWeapon.IsReloading()) {
+				player.ToggleADS(true);
 				anim.SetInteger(fireHash, 2);
 				weaponAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
@@ -365,7 +370,7 @@ public class ControllerScript : MonoBehaviour {
 				speedFactor *= ADSSpeedFactor;
 			}
 			else{
-				player.toggleADS(false);
+				player.ToggleADS(false);
 				anim.SetInteger(fireHash, 0);
 				weaponAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
@@ -387,13 +392,13 @@ public class ControllerScript : MonoBehaviour {
 				
 				// Limit angle so straight up/down are not possible
 				if (newVertAngle > 170){
-					setFacing(Quaternion.AngleAxis(170, perpFacing) * Vector3.up);
+					SetFacing(Quaternion.AngleAxis(170, perpFacing) * Vector3.up);
 				}
 				else if (newVertAngle < 10){
-					setFacing(Quaternion.AngleAxis(10, perpFacing) * Vector3.up);
+					SetFacing(Quaternion.AngleAxis(10, perpFacing) * Vector3.up);
 				}
 				else{
-					setFacing(newFacing);
+					SetFacing(newFacing);
 				}
 			}
 			
@@ -404,19 +409,19 @@ public class ControllerScript : MonoBehaviour {
 					deltaMousePos.x *= 0.5f;
 				}
 				
-				setFacing(Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing);
+				SetFacing(Quaternion.AngleAxis(deltaMousePos.x, Vector3.up) * facing);
 			}
 			
 			// Firing script
 			if (Mouse_Left){
 				//player.tryFire();
-				player.setFiringState(true);
+				player.SetFiringState(true);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 1);
 				}
 			}
 			else{
-				player.setFiringState(false);
+				player.SetFiringState(false);
 				if (anim.GetInteger(fireHash) != 2){
 					anim.SetInteger (fireHash, 0);
 				}
@@ -430,7 +435,7 @@ public class ControllerScript : MonoBehaviour {
 		rigidbody.velocity = newVel;
 		
 		// Apply spread to weapon based on actions
-		currentWeapon.setTargetSpread (spread);
+		currentWeapon.SetTargetSpread (spread);
 
 		// Update previous controller state
 		prevState = state;
@@ -446,15 +451,15 @@ public class ControllerScript : MonoBehaviour {
 		anim.SetBool (crouchHash, isCrouching);
 	}
 
-	void setCrouching(bool crouchState){
+	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
-		player.setCrouching(isCrouching);
+		player.SetCrouching(isCrouching);
 
 		// Trigger crouch animation
 	}
 
 	// Sets facing according to input
-	public void setFacing(Vector3 newFacing){
+	public void SetFacing(Vector3 newFacing){
 		facing = newFacing;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 		transform.LookAt(transform.position + facing2D);
@@ -489,14 +494,14 @@ public class ControllerScript : MonoBehaviour {
 	}
 	
 	// Sets controller that this player will be associated with
-	public void setController(int newId){
+	public void SetController(int newId){
 		if (newId > 0 && newId < 5){
 			controllerId = newId - 1;
 		}
 	}
 	
 	// Gets sign of given float value
-	int signOf(float number){
+	int SignOf(float number){
 		if (number < 0){
 			return -1;
 		}

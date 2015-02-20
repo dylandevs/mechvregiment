@@ -42,8 +42,8 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		tryRegen();
-		crossScript.updateSpread (weapons [currentWeaponIndex].getSpread ());
+		TryRegen();
+		crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 	}
 
 	public void Initialize(int playerId, float[] window){
@@ -61,10 +61,11 @@ public class Player : MonoBehaviour {
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
 
 		// Setting player UI
-		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].getSpread());
+		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
+		display.Initialize(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
 
 		// Setting controller
-		playerController.setController(id);
+		playerController.SetController(id);
 	}
 
 	public void SetToKeyboard(){
@@ -72,7 +73,7 @@ public class Player : MonoBehaviour {
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
-	void tryRegen(){
+	void TryRegen(){
 		if (health < MaxHealth){
 			if (healTimer <= 0){
 				health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
@@ -83,28 +84,28 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public bool toggleADS(bool? setADS = null){
+	public bool ToggleADS(bool? setADS = null){
 		if (setADS != null) {
 			isAimingDownSights = (bool)setADS;
-			weapons[currentWeaponIndex].setAds(isAimingDownSights);
+			weapons[currentWeaponIndex].SetAds(isAimingDownSights);
 			if (NetworkManager){
 				NetworkManager.TogglePlayerADS(id, (bool)setADS);
 			}
 		}
 		else{
 			isAimingDownSights = !isAimingDownSights;
-			weapons[currentWeaponIndex].setAds(isAimingDownSights);
+			weapons[currentWeaponIndex].SetAds(isAimingDownSights);
 		}
 
 		return isAimingDownSights;
 	}
 
-	public void setCrouching(bool crouchState){
+	public void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
 	}
 
 	// Changes currently selected weapon
-	public void cycleWeapons(int adjustment){
+	public void CycleWeapons(int adjustment){
 		int prevWeaponIndex = currentWeaponIndex;
 		currentWeaponIndex += adjustment;
 		if (currentWeaponIndex >= weapons.Length){
@@ -114,10 +115,11 @@ public class Player : MonoBehaviour {
 			currentWeaponIndex = weapons.Length - 1;
 		}
 
-		// Play weapon change animation
+		// TODO: Play weapon change animation
 
 		// Activate new weapon
 		if (prevWeaponIndex != currentWeaponIndex){
+			weapons [prevWeaponIndex].StopReloading();
 			weapons [prevWeaponIndex].gameObject.SetActive (false);
 			weapons [currentWeaponIndex].gameObject.SetActive (true);
 		}
@@ -128,15 +130,19 @@ public class Player : MonoBehaviour {
 		health -= damage;
 		healTimer = HealWait;
 
-		display.indicateDamageDirection (direction);
+		display.IndicateDamageDirection (direction);
 	}
 
-	public Weapon getCurrentWeapon(){
+	public Weapon GetCurrentWeapon(){
 		return weapons [currentWeaponIndex];
 	}
 
 	// Attempts to fire bullet
-	public void setFiringState(bool isFiring){
+	public void SetFiringState(bool isFiring){
 		weapons [currentWeaponIndex].setFiringState (isFiring);
+	}
+
+	public void TriggerReload(){
+		weapons [currentWeaponIndex].TryReloading ();
 	}
 }

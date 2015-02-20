@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ScavUI : MonoBehaviour {
 
 	// Inputs
+	public Camera uiCam;
 	public PoolManager damageDirPool;
 	public Player player;
+	public Image reloadGraphic;
+
+	private float[] renderWindow = new float[]{0, 0, 1, 1};
 
 	// Use this for initialization
 	void Start () {
@@ -14,10 +19,10 @@ public class ScavUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		UpdateReloadProgress ();
 	}
 
-	public void indicateDamageDirection(Vector3 hitVector){
+	public void IndicateDamageDirection(Vector3 hitVector){
 
 		// Determining rotation relative to player forward
 		Quaternion rot = Quaternion.identity;
@@ -29,5 +34,26 @@ public class ScavUI : MonoBehaviour {
 		GameObject indicator = damageDirPool.Retrieve ();
 		DamageDir indicatorScript = indicator.GetComponent<DamageDir> ();
 		indicatorScript.Initialize (player, rot);
+	}
+
+	public void Initialize(float xLow, float xHigh, float yLow, float yHigh, float baseWeaponSpread = 0){
+		renderWindow[0] = xLow;
+		renderWindow[1] = xHigh;
+		renderWindow[2] = yLow;
+		renderWindow[3] = yHigh;
+
+		uiCam.camera.rect = new Rect(renderWindow[0], renderWindow[2], renderWindow[1] - renderWindow[0], renderWindow[3] - renderWindow[2]);
+	}
+
+	public void UpdateReloadProgress(){
+		Weapon currWeapon = player.GetCurrentWeapon ();
+		if (currWeapon.IsReloading()){
+			float progress = currWeapon.GetReloadProgress();
+			reloadGraphic.fillAmount = progress;
+			reloadGraphic.color = new Color(1, 1, 1, 1 - progress);
+		}
+		else{
+			reloadGraphic.color = new Color(1, 1, 1, 0);
+		}
 	}
 }
