@@ -1,0 +1,422 @@
+fileFormatVersion: 2
+guid: 962dc13957da91245a32f2c323c9cf5f
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Back_Pipes_L
+    100002: Back_Pipes_R
+    100004: Back_Prisms_L
+    100006: Back_Prisms_R
+    100008: Beacon
+    100010: Button
+    100012: CenterPiece
+    100014: Flooor
+    100016: Front_Pipes_L
+    100018: Front_Pipes_R
+    100020: Front_Prisms_L
+    100022: Front_Prisms_R
+    100024: Left_Half
+    100026: pPipe2
+    100028: pPipe2 1
+    100030: pPipe3
+    100032: pPipe3 1
+    100034: pPipe4
+    100036: pPipe4 1
+    100038: pPipe5
+    100040: pPipe5 1
+    100042: pPipe6
+    100044: pPipe6 1
+    100046: pPipe7
+    100048: pPipe7 1
+    100050: pPipe8
+    100052: pPipe8 1
+    100054: pPrism1
+    100056: pPrism1 1
+    100058: pPrism10
+    100060: pPrism10 1
+    100062: pPrism11
+    100064: pPrism11 1
+    100066: pPrism12
+    100068: pPrism12 1
+    100070: pPrism3
+    100072: pPrism3 1
+    100074: pPrism4
+    100076: pPrism4 1
+    100078: pPrism5
+    100080: pPrism5 1
+    100082: pPrism6
+    100084: pPrism6 1
+    100086: pPrism7
+    100088: pPrism7 1
+    100090: pPrism8
+    100092: pPrism8 1
+    100094: pPrism9
+    100096: pPrism9 1
+    100098: Right_Half
+    100100: //RootNode
+    100102: Stand
+    100104: Switch
+    400000: Back_Pipes_L
+    400002: Back_Pipes_R
+    400004: Back_Prisms_L
+    400006: Back_Prisms_R
+    400008: Beacon
+    400010: Button
+    400012: CenterPiece
+    400014: Flooor
+    400016: Front_Pipes_L
+    400018: Front_Pipes_R
+    400020: Front_Prisms_L
+    400022: Front_Prisms_R
+    400024: Left_Half
+    400026: pPipe2
+    400028: pPipe2 1
+    400030: pPipe3
+    400032: pPipe3 1
+    400034: pPipe4
+    400036: pPipe4 1
+    400038: pPipe5
+    400040: pPipe5 1
+    400042: pPipe6
+    400044: pPipe6 1
+    400046: pPipe7
+    400048: pPipe7 1
+    400050: pPipe8
+    400052: pPipe8 1
+    400054: pPrism1
+    400056: pPrism1 1
+    400058: pPrism10
+    400060: pPrism10 1
+    400062: pPrism11
+    400064: pPrism11 1
+    400066: pPrism12
+    400068: pPrism12 1
+    400070: pPrism3
+    400072: pPrism3 1
+    400074: pPrism4
+    400076: pPrism4 1
+    400078: pPrism5
+    400080: pPrism5 1
+    400082: pPrism6
+    400084: pPrism6 1
+    400086: pPrism7
+    400088: pPrism7 1
+    400090: pPrism8
+    400092: pPrism8 1
+    400094: pPrism9
+    400096: pPrism9 1
+    400098: Right_Half
+    400100: //RootNode
+    400102: Stand
+    400104: Switch
+    2300000: Beacon
+    2300002: Button
+    2300004: CenterPiece
+    2300006: Flooor
+    2300008: pPipe2
+    2300010: pPipe2 1
+    2300012: pPipe3
+    2300014: pPipe3 1
+    2300016: pPipe4
+    2300018: pPipe4 1
+    2300020: pPipe5
+    2300022: pPipe5 1
+    2300024: pPipe6
+    2300026: pPipe6 1
+    2300028: pPipe7
+    2300030: pPipe7 1
+    2300032: pPipe8
+    2300034: pPipe8 1
+    2300036: pPrism1
+    2300038: pPrism1 1
+    2300040: pPrism10
+    2300042: pPrism10 1
+    2300044: pPrism11
+    2300046: pPrism11 1
+    2300048: pPrism12
+    2300050: pPrism12 1
+    2300052: pPrism3
+    2300054: pPrism3 1
+    2300056: pPrism4
+    2300058: pPrism4 1
+    2300060: pPrism5
+    2300062: pPrism5 1
+    2300064: pPrism6
+    2300066: pPrism6 1
+    2300068: pPrism7
+    2300070: pPrism7 1
+    2300072: pPrism8
+    2300074: pPrism8 1
+    2300076: pPrism9
+    2300078: pPrism9 1
+    2300080: Stand
+    3300000: Beacon
+    3300002: Button
+    3300004: CenterPiece
+    3300006: Flooor
+    3300008: pPipe2
+    3300010: pPipe2 1
+    3300012: pPipe3
+    3300014: pPipe3 1
+    3300016: pPipe4
+    3300018: pPipe4 1
+    3300020: pPipe5
+    3300022: pPipe5 1
+    3300024: pPipe6
+    3300026: pPipe6 1
+    3300028: pPipe7
+    3300030: pPipe7 1
+    3300032: pPipe8
+    3300034: pPipe8 1
+    3300036: pPrism1
+    3300038: pPrism1 1
+    3300040: pPrism10
+    3300042: pPrism10 1
+    3300044: pPrism11
+    3300046: pPrism11 1
+    3300048: pPrism12
+    3300050: pPrism12 1
+    3300052: pPrism3
+    3300054: pPrism3 1
+    3300056: pPrism4
+    3300058: pPrism4 1
+    3300060: pPrism5
+    3300062: pPrism5 1
+    3300064: pPrism6
+    3300066: pPrism6 1
+    3300068: pPrism7
+    3300070: pPrism7 1
+    3300072: pPrism8
+    3300074: pPrism8 1
+    3300076: pPrism9
+    3300078: pPrism9 1
+    3300080: Stand
+    4300000: CenterPiece
+    4300002: Stand
+    4300004: Button
+    4300006: Beacon
+    4300008: Flooor
+    4300010: pPrism7
+    4300012: pPrism8
+    4300014: pPrism9
+    4300016: pPrism10
+    4300018: pPrism12
+    4300020: pPipe2
+    4300022: pPrism7
+    4300024: pPrism8
+    4300026: pPrism9
+    4300028: pPrism10
+    4300030: pPrism12
+    4300032: pPipe2
+    4300034: pPipe3
+    4300036: pPipe4
+    4300038: pPipe5
+    4300040: pPipe5
+    4300042: pPipe4
+    4300044: pPipe3
+    4300046: pPrism11
+    4300048: pPrism3
+    4300050: pPrism4
+    4300052: pPrism11
+    4300054: pPrism3
+    4300056: pPrism4
+    4300058: pPrism6
+    4300060: pPrism5
+    4300062: pPrism1
+    4300064: pPrism6
+    4300066: pPrism5
+    4300068: pPrism1
+    4300070: pPipe6
+    4300072: pPipe7
+    4300074: pPipe8
+    4300076: pPipe6
+    4300078: pPipe7
+    4300080: pPipe8
+    7400000: Activate
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Activate
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 52
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Back_Pipes_L
+        weight: 1
+      - path: Back_Pipes_L/pPipe3
+        weight: 1
+      - path: Back_Pipes_L/pPipe4
+        weight: 1
+      - path: Back_Pipes_L/pPipe5
+        weight: 1
+      - path: Back_Pipes_R
+        weight: 1
+      - path: Back_Pipes_R/pPipe3 1
+        weight: 1
+      - path: Back_Pipes_R/pPipe4 1
+        weight: 1
+      - path: Back_Pipes_R/pPipe5 1
+        weight: 1
+      - path: Back_Prisms_L
+        weight: 1
+      - path: Back_Prisms_L/pPrism3
+        weight: 1
+      - path: Back_Prisms_L/pPrism4
+        weight: 1
+      - path: Back_Prisms_L/pPrism11
+        weight: 1
+      - path: Back_Prisms_R
+        weight: 1
+      - path: Back_Prisms_R/pPrism3 1
+        weight: 1
+      - path: Back_Prisms_R/pPrism4 1
+        weight: 1
+      - path: Back_Prisms_R/pPrism11 1
+        weight: 1
+      - path: Beacon
+        weight: 1
+      - path: CenterPiece
+        weight: 1
+      - path: Flooor
+        weight: 1
+      - path: Front_Pipes_L
+        weight: 1
+      - path: Front_Pipes_L/pPipe6
+        weight: 1
+      - path: Front_Pipes_L/pPipe7
+        weight: 1
+      - path: Front_Pipes_L/pPipe8
+        weight: 1
+      - path: Front_Pipes_R
+        weight: 1
+      - path: Front_Pipes_R/pPipe6 1
+        weight: 1
+      - path: Front_Pipes_R/pPipe7 1
+        weight: 1
+      - path: Front_Pipes_R/pPipe8 1
+        weight: 1
+      - path: Front_Prisms_L
+        weight: 1
+      - path: Front_Prisms_L/pPrism1
+        weight: 1
+      - path: Front_Prisms_L/pPrism5
+        weight: 1
+      - path: Front_Prisms_L/pPrism6
+        weight: 1
+      - path: Front_Prisms_R
+        weight: 1
+      - path: Front_Prisms_R/pPrism1 1
+        weight: 1
+      - path: Front_Prisms_R/pPrism5 1
+        weight: 1
+      - path: Front_Prisms_R/pPrism6 1
+        weight: 1
+      - path: Left_Half
+        weight: 1
+      - path: Left_Half/pPipe2
+        weight: 1
+      - path: Left_Half/pPrism7
+        weight: 1
+      - path: Left_Half/pPrism8
+        weight: 1
+      - path: Left_Half/pPrism9
+        weight: 1
+      - path: Left_Half/pPrism10
+        weight: 1
+      - path: Left_Half/pPrism12
+        weight: 1
+      - path: Right_Half
+        weight: 1
+      - path: Right_Half/pPipe2 1
+        weight: 1
+      - path: Right_Half/pPrism7 1
+        weight: 1
+      - path: Right_Half/pPrism8 1
+        weight: 1
+      - path: Right_Half/pPrism9 1
+        weight: 1
+      - path: Right_Half/pPrism10 1
+        weight: 1
+      - path: Right_Half/pPrism12 1
+        weight: 1
+      - path: Switch
+        weight: 1
+      - path: Switch/Button
+        weight: 1
+      - path: Switch/Stand
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

@@ -35,7 +35,6 @@ public class PlayerManager : MonoBehaviour {
 				if (playerScripts[i]){
 					for (int j = 0; j < NumControllers; j++){
 						if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
-							print ("Assigned " + j);
 							controllersUsed[j] = true;
 							playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, connectedControllers));
 							playerScripts[i].gameObject.SetActive(true);

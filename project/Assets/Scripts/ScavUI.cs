@@ -8,7 +8,9 @@ public class ScavUI : MonoBehaviour {
 	public Camera uiCam;
 	public PoolManager damageDirPool;
 	public Player player;
+
 	public Image reloadGraphic;
+	public Image damageGraphic;
 
 	private float[] renderWindow = new float[]{0, 0, 1, 1};
 
@@ -55,5 +57,9 @@ public class ScavUI : MonoBehaviour {
 		else{
 			reloadGraphic.color = new Color(1, 1, 1, 0);
 		}
+	}
+
+	public void UpdateDamageOverlay(float newVal){
+		damageGraphic.color = new Color (1, 1, 1, newVal);
 	}
 }

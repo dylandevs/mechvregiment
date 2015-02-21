@@ -85,6 +85,7 @@ public class Weapon : MonoBehaviour {
 	private int bulletsOfBurstFired = 0;
 	private bool isFirstShot = true;
 	private bool isAds = false;
+	private bool semiAutoReady = true;
 	
 	// Cached references
 	private Player player;
@@ -101,11 +102,16 @@ public class Weapon : MonoBehaviour {
 	void Update () {
 
 		// If currently in firing state, attempt to fire burst
-		if (isFiring) {
+		if ((isFiring && Automatic) || (semiAutoReady && !Automatic && isFiring)) {
 			if (!isAllAmmoDepleted && !recenterTargetSet){
 				SetRecenteringTarget();
 			}
 			FireBurst();
+
+			if (!Automatic){
+				semiAutoReady = false;
+				isFiring = false;
+			}
 		}
 		else if (recenterTargetSet && !isRecoiling){
 			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f || (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && isReloading)){
@@ -115,7 +121,7 @@ public class Weapon : MonoBehaviour {
 				EndRecentering();
 			}
 		}
-		
+
 		// Adjust recoil
 		if (isRecoiling) {
 			ApplyRecoil();
@@ -429,7 +435,17 @@ public class Weapon : MonoBehaviour {
 			isFiring = firingState;
 		}
 		else if (isAllAmmoDepleted){
-			// Empty weapon sound
+			// TODO: Empty weapon sound
+		}
+
+		// Changes firing state based on semi-automatic setting
+		if (!semiAutoReady){
+			if (!isFiring){
+				semiAutoReady = true;
+			}
+			else{
+				isFiring = false;
+			}
 		}
 	}
 	

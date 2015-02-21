@@ -12,9 +12,10 @@ public class Player : MonoBehaviour {
 
 	public int id = -1;
 
-	const float HealWait = 5.0f;
-	const float MaxHealth = 100;
-	const float RegenInc = 0.7f;
+	public float HealWait = 5.0f;
+	public float MaxHealth = 100;
+	private float InvMaxHealth = 1;
+	public float RegenInc = 25f;
 
 	// Inputs
 	public Camera playerCam;
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour {
 	public ScavUI display;
 
 	// Status variables
-	private float health = MaxHealth;
+	private float health = 0;
 	private float healTimer = 0;
 	private bool isAimingDownSights = false;
 	private bool isCrouching = false;
@@ -37,7 +38,8 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		InvMaxHealth = 1 / MaxHealth;
+		health = MaxHealth;
 	}
 	
 	// Update is called once per frame
@@ -77,6 +79,7 @@ public class Player : MonoBehaviour {
 		if (health < MaxHealth){
 			if (healTimer <= 0){
 				health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
+				display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 			}
 			else{
 				healTimer -= Time.deltaTime;
@@ -130,7 +133,15 @@ public class Player : MonoBehaviour {
 		health -= damage;
 		healTimer = HealWait;
 
+		health = Mathf.Max (health, 0);
+
 		display.IndicateDamageDirection (direction);
+		display.UpdateDamageOverlay (1 - health * InvMaxHealth);
+
+		if (health <= 0){
+			// TODO: Trigger death
+			print ("Dead.");
+		}
 	}
 
 	public Weapon GetCurrentWeapon(){
