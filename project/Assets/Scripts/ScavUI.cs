@@ -12,16 +12,49 @@ public class ScavUI : MonoBehaviour {
 	public Image reloadGraphic;
 	public Image damageGraphic;
 
+	public CanvasGroup availableGunsWrapper;
+	public CanvasGroup[] availableGuns;
+	private Image[] availableGunGraphics;
+	public Image currentGun;
+
+	public float FlashedGunAlpha = 0.7f;
+	public float InactiveGunAlpha = 0.5f;
+	public float ActiveGunAlpha = 1;
+	public float WeaponFlashLength = 0.5f;
+	public float WeaponFadeTime = 1;
+	private float weaponFadeRate = 1;
+
+	// Time trackers
+	float weaponFlashProgress = 0;
+
+	// Render area holder
 	private float[] renderWindow = new float[]{0, 0, 1, 1};
 
 	// Use this for initialization
 	void Start () {
-		
+		// Getting graphics of different weapons
+		availableGunGraphics = new Image[availableGuns.Length];
+		for (int i = 0; i < availableGuns.Length; i++){
+			availableGunGraphics[i] = availableGuns[i].transform.GetChild(0).GetComponent<Image>();
+		}
+
+		weaponFadeRate = FlashedGunAlpha / WeaponFadeTime;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		UpdateReloadProgress ();
+
+		if (weaponFlashProgress > 0){
+			weaponFlashProgress -= Time.deltaTime;
+
+			if (weaponFlashProgress < 0){
+				weaponFlashProgress = 0;
+			}
+		}
+		else if (availableGunsWrapper.alpha > 0){
+			availableGunsWrapper.alpha -= Time.deltaTime * weaponFadeRate;
+		}
 	}
 
 	public void IndicateDamageDirection(Vector3 hitVector){
@@ -61,5 +94,18 @@ public class ScavUI : MonoBehaviour {
 
 	public void UpdateDamageOverlay(float newVal){
 		damageGraphic.color = new Color (1, 1, 1, newVal);
+	}
+
+	// Switch weapon, show all available choices
+	public void ActivateNewWeapon(int newWeaponIndex){
+		availableGunsWrapper.alpha = FlashedGunAlpha;
+
+		foreach (CanvasGroup gun in availableGuns){
+			gun.alpha = InactiveGunAlpha;
+		}
+
+		availableGuns [newWeaponIndex].alpha = ActiveGunAlpha;
+		currentGun.sprite = availableGunGraphics [newWeaponIndex].sprite;
+		weaponFlashProgress = WeaponFlashLength;
 	}
 }

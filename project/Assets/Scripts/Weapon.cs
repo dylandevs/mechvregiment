@@ -101,6 +101,22 @@ public class Weapon : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		// Progress through reload
+		if (isReloading) {
+			reloadProgress -= Time.deltaTime;
+			
+			// Perform reload action at end if uninterrupted
+			if (reloadProgress <= 0){
+				Reload();
+				StopReloading();
+			}
+		}
+		else{
+			if (magAmmo == 0){
+				TryReloading();
+			}
+		}
+
 		// If currently in firing state, attempt to fire burst
 		if ((isFiring && Automatic) || (semiAutoReady && !Automatic && isFiring)) {
 			if (!isAllAmmoDepleted && !recenterTargetSet){
@@ -163,17 +179,6 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 		
-		// Progress through reload
-		if (isReloading) {
-			reloadProgress -= Time.deltaTime;
-			
-			// Perform reload action at end if uninterrupted
-			if (reloadProgress <= 0){
-				Reload();
-				StopReloading();
-			}
-		}
-		
 		// Progress through burst, firing bullets automatically as time elapses
 		if (isBursting) {
 			burstProgress -= Time.deltaTime;
@@ -192,13 +197,6 @@ public class Weapon : MonoBehaviour {
 				}
 			}
 		}
-		
-		// Attempt to reload if possible
-		if (!isReloading){
-			if (magAmmo == 0){
-				TryReloading();
-			}
-		}
 
 		// Hide flash after duration
 		if (flashProgress > 0){
@@ -211,11 +209,11 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 	
-	public void setPlayerReference(Player player){
+	public void SetPlayerReference(Player player){
 		this.player = player;
 	}
 	
-	public void setControllerReference(ControllerScript controller){
+	public void SetControllerReference(ControllerScript controller){
 		this.controller = controller;
 	}
 	
@@ -535,5 +533,32 @@ public class Weapon : MonoBehaviour {
 
 	public float GetReloadProgress(){
 		return 1 - Mathf.Min(reloadProgress * InvReloadTime, 1);
+	}
+
+	public void ResetState(){
+		// Reset timers
+		reloadProgress = 0;
+		burstProgress = 0;
+		fireProgress = 0;
+		recoilMoveProgress = 0;
+		recentringProgress = 0;
+		flashProgress = 0;
+
+		// Reset recentring
+		recenterTargetSet = false;
+		totalRecenterRotation = 0;
+		initialFiringElevation = 0;
+		currentRecenterRotation = 0;
+
+		// Reset state
+		isReloading = false;
+		isBursting = false;
+		isRecoiling = false;
+		isOnFireInterval = false;
+		isFiring = false;
+		bulletsOfBurstFired = 0;
+		isFirstShot = true;
+		isAds = false;
+		semiAutoReady = true;
 	}
 }

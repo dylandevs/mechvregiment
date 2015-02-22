@@ -56,8 +56,8 @@ public class Player : MonoBehaviour {
 		// Storing weapon references to component scripts
 		for (int i = 0; i < weaponModels.Length; i++) {
 			weapons[i] = weaponModels[i].GetComponent<Weapon>();
-			weapons[i].setPlayerReference(this);
-			weapons[i].setControllerReference(this.playerController);
+			weapons[i].SetPlayerReference(this);
+			weapons[i].SetControllerReference(this.playerController);
 		}
 
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
@@ -125,6 +125,7 @@ public class Player : MonoBehaviour {
 			weapons [prevWeaponIndex].StopReloading();
 			weapons [prevWeaponIndex].gameObject.SetActive (false);
 			weapons [currentWeaponIndex].gameObject.SetActive (true);
+			display.ActivateNewWeapon(currentWeaponIndex);
 		}
 	}
 
