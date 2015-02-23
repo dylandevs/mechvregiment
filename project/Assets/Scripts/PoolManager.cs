@@ -29,19 +29,8 @@ public class PoolManager : MonoBehaviour {
 		for (int i = 0; i < startingPool; i++){
 			inactiveObjectPool.Add(Instantiate(prefabObject) as GameObject);
 			inactiveObjectPool[i].SetActive(false);
+			inactiveObjectPool[i].transform.SetParent(transform, !retainLocal);
 
-			Vector3 localPos = inactiveObjectPool[i].transform.position;
-			Quaternion localRot = inactiveObjectPool[i].transform.rotation;
-			Vector3 localScale = inactiveObjectPool[i].transform.localScale;
-
-			inactiveObjectPool[i].transform.SetParent(transform);
-
-			// Restore local transforms
-			if (retainLocal){
-				inactiveObjectPool[i].transform.localPosition = localPos;
-				inactiveObjectPool[i].transform.localRotation = localRot;
-				inactiveObjectPool[i].transform.localScale = localScale;
-			}
 		}
 	}
 
@@ -90,18 +79,7 @@ public class PoolManager : MonoBehaviour {
 		else{
 			GameObject returnedObj = Instantiate(prefabObject, pos, rot) as GameObject;
 			temporaryObjectPool.Add(returnedObj);
-
-			Vector3 localPos = returnedObj.transform.position;
-			Quaternion localRot = returnedObj.transform.rotation;
-			Vector3 localScale = returnedObj.transform.localScale;
-
-			returnedObj.transform.SetParent(transform);
-
-			if (retainLocal){
-				returnedObj.transform.localPosition = localPos;
-				returnedObj.transform.localRotation = localRot;
-				returnedObj.transform.localScale = localScale;
-			}
+			returnedObj.transform.SetParent(transform, !retainLocal);
 
 			return returnedObj;
 		}

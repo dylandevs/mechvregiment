@@ -17,6 +17,9 @@ public class ScavUI : MonoBehaviour {
 	private Image[] availableGunGraphics;
 	public Image currentGun;
 
+	public GameObject ammoManagerWrapper;
+	private AmmoRenderManager[] ammoManagers;
+
 	public float FlashedGunAlpha = 0.7f;
 	public float InactiveGunAlpha = 0.5f;
 	public float ActiveGunAlpha = 1;
@@ -39,6 +42,12 @@ public class ScavUI : MonoBehaviour {
 		}
 
 		weaponFadeRate = FlashedGunAlpha / WeaponFadeTime;
+
+		// Getting ammo managers
+		ammoManagers = new AmmoRenderManager[ammoManagerWrapper.transform.childCount];
+		for (int i = 0; i < ammoManagerWrapper.transform.childCount; i++){
+			ammoManagers[i] = ammoManagerWrapper.transform.GetChild(i).GetComponent<AmmoRenderManager>();
+		}
 	}
 	
 	// Update is called once per frame
@@ -107,5 +116,11 @@ public class ScavUI : MonoBehaviour {
 		availableGuns [newWeaponIndex].alpha = ActiveGunAlpha;
 		currentGun.sprite = availableGunGraphics [newWeaponIndex].sprite;
 		weaponFlashProgress = WeaponFlashLength;
+
+		foreach (AmmoRenderManager ammo in ammoManagers){
+			ammo.DeactivateRender();
+		}
+
+		ammoManagers [newWeaponIndex].ActivateRender ();
 	}
 }

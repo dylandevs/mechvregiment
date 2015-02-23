@@ -42,6 +42,7 @@ public class Weapon : MonoBehaviour {
 	public float FlashDuration = 0.05f;
 
 	// Inputs
+	public AmmoRenderManager ammoRenderer;
 	public GameObject generatorPos;
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
@@ -90,7 +91,11 @@ public class Weapon : MonoBehaviour {
 	// Cached references
 	private Player player;
 	private ControllerScript controller;
-	
+
+	void Awake(){
+		ammoRenderer.Initialize (MagSize);
+	}
+
 	// Use this for initialization
 	void Start () {
 		totalAmmo = ReserveSize;
@@ -303,6 +308,7 @@ public class Weapon : MonoBehaviour {
 		SetRecoilTarget ();
 		
 		magAmmo--;
+		ammoRenderer.ExpendSingleRound ();
 	}
 	
 	// Sets tracking variables for recoil
@@ -494,6 +500,8 @@ public class Weapon : MonoBehaviour {
 			magAmmo += totalAmmo;
 			totalAmmo = 0;
 		}
+
+		ammoRenderer.Reload (magAmmo);
 	}
 	
 	// Returns number of bullets in current magazine, and number of bullets in reserve

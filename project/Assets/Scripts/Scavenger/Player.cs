@@ -58,6 +58,7 @@ public class Player : MonoBehaviour {
 			weapons[i] = weaponModels[i].GetComponent<Weapon>();
 			weapons[i].SetPlayerReference(this);
 			weapons[i].SetControllerReference(this.playerController);
+			weapons[i].gameObject.SetActive(false);
 		}
 
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
