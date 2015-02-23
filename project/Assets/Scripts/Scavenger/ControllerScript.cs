@@ -29,6 +29,7 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
 	float speedFactor = 1;
+	float initialSpineAngle = 0;
 
 	// XInput variables
 	private GamePadState state;
@@ -41,6 +42,7 @@ public class ControllerScript : MonoBehaviour {
 	public Animator weaponAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
+	public GameObject spineJoint;
 	
 	// Animation hash id
 	int fwdSpeedHash = Animator.StringToHash("FwdSpeed");
@@ -67,6 +69,7 @@ public class ControllerScript : MonoBehaviour {
 		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
 		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
 		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
+		initialSpineAngle = spineJoint.transform.localRotation.z;
 	}
 	
 	// Update is called once per frame
@@ -464,6 +467,19 @@ public class ControllerScript : MonoBehaviour {
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 		transform.LookAt(transform.position + facing2D);
 		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
+
+		// Sets spine angle by determining angle of elevation of facing
+		Vector3 spineAngles = spineJoint.transform.localRotation.eulerAngles;
+		Quaternion recoveryRotation = Quaternion.FromToRotation(transform.forward, Vector3.forward);
+		Vector3 straightenedFacing = recoveryRotation * facing;
+
+		float adjustmentZ = Quaternion.FromToRotation(straightenedFacing, Vector3.forward).eulerAngles.x;
+		if (adjustmentZ > 180){
+			adjustmentZ = adjustmentZ - 360;
+		}
+		adjustmentZ *= 0.5f;
+
+		spineJoint.transform.localRotation = Quaternion.Euler(spineAngles.x, spineAngles.y, initialSpineAngle + adjustmentZ);
 	}
 
 	public Vector2 getFacing2D(){
