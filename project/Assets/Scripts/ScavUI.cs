@@ -8,6 +8,7 @@ public class ScavUI : MonoBehaviour {
 	public Camera uiCam;
 	public PoolManager damageDirPool;
 	public Player player;
+	public CanvasScaler scaler;
 
 	public Image reloadGraphic;
 	public Image damageGraphic;
@@ -19,6 +20,9 @@ public class ScavUI : MonoBehaviour {
 
 	public GameObject ammoManagerWrapper;
 	private AmmoRenderManager[] ammoManagers;
+
+	public UnityEngine.UI.Text magCount;
+	public UnityEngine.UI.Text reserveCount;
 
 	public float FlashedGunAlpha = 0.7f;
 	public float InactiveGunAlpha = 0.5f;
@@ -64,6 +68,9 @@ public class ScavUI : MonoBehaviour {
 		else if (availableGunsWrapper.alpha > 0){
 			availableGunsWrapper.alpha -= Time.deltaTime * weaponFadeRate;
 		}
+
+		int[] ammoCounts = player.GetCurrentWeapon().GetAmmoCount();
+		UpdateAmmoCount(ammoCounts[0], ammoCounts[1]);
 	}
 
 	public void IndicateDamageDirection(Vector3 hitVector){
@@ -80,13 +87,9 @@ public class ScavUI : MonoBehaviour {
 		indicatorScript.Initialize (player, rot);
 	}
 
-	public void Initialize(float xLow, float xHigh, float yLow, float yHigh, float baseWeaponSpread = 0){
-		renderWindow[0] = xLow;
-		renderWindow[1] = xHigh;
-		renderWindow[2] = yLow;
-		renderWindow[3] = yHigh;
-
-		uiCam.camera.rect = new Rect(renderWindow[0], renderWindow[2], renderWindow[1] - renderWindow[0], renderWindow[3] - renderWindow[2]);
+	public void Initialize(float x, float y, float width, float height, float uiScale = 1, float baseWeaponSpread = 0){
+		uiCam.camera.rect = new Rect(x, y, width, height);
+		scaler.referenceResolution = scaler.referenceResolution * uiScale;
 	}
 
 	public void UpdateReloadProgress(){
@@ -122,5 +125,10 @@ public class ScavUI : MonoBehaviour {
 		}
 
 		ammoManagers [newWeaponIndex].ActivateRender ();
+	}
+
+	public void UpdateAmmoCount(int magAmmo, int reserveAmmo){
+		magCount.text = magAmmo.ToString();
+		reserveCount.text = reserveAmmo.ToString();
 	}
 }

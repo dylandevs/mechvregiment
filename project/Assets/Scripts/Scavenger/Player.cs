@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
 		crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 	}
 
-	public void Initialize(int playerId, float[] window){
+	public void Initialize(int playerId, float[] window, float uiScale){
 		id = playerId;
 
 		weapons = new Weapon[weaponModels.Length];
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour {
 
 		// Setting player UI
 		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
-		display.Initialize(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
+		display.Initialize(window[0], window[1], window[2], window[3], uiScale, weapons[currentWeaponIndex].GetSpread());
 
 		// Setting controller
 		playerController.SetController(id);

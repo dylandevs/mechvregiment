@@ -4,6 +4,8 @@ using XInputDotNetPure;
 
 public class PlayerManager : MonoBehaviour {
 
+	public bool force4Split = false;
+
 	const int NumControllers = 4;
 	
 	public Player[] playerScripts = new Player[NumControllers];
@@ -36,7 +38,7 @@ public class PlayerManager : MonoBehaviour {
 					for (int j = 0; j < NumControllers; j++){
 						if (GamePad.GetState((PlayerIndex)j).IsConnected && !controllersUsed[j]){
 							controllersUsed[j] = true;
-							playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, connectedControllers));
+							playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, connectedControllers), GetUIReferenceScale(connectedControllers));
 							playerScripts[i].gameObject.SetActive(true);
 							break;
 						}
@@ -45,32 +47,41 @@ public class PlayerManager : MonoBehaviour {
 			}
 		}
 		else{
-			playerScripts[0].Initialize(1, getWindowCoords(1, 1));
+			playerScripts[0].Initialize(1, getWindowCoords(1, 1), 1);
 			playerScripts[0].SetToKeyboard();
 			playerScripts[0].gameObject.SetActive(true);
 		}
 	}
 
+	float GetUIReferenceScale(int connectedControllers){
+		if (connectedControllers == 1){
+			return 1;
+		}
+		else{
+			return 2;
+		}
+	}
+
 	// Returns appropriate window coordinates
 	float[] getWindowCoords(int playerIndex, int totalControllers){
-		if (totalControllers == 2){
+		if (totalControllers > 2 || force4Split){
 			switch(playerIndex){
 			case 1:
-				return new float[]{0, 1, 0.5f, 1};
+				return new float[]{0, 0.5f, 0.5f, 0.5f};
 			case 2:
-				return new float[]{0, 1, 0, 0.5f};
+				return new float[]{0.5f, 0.5f, 0.5f, 0.5f};
+			case 3:
+				return new float[]{0.5f, 0, 0.5f, 0.5f};
+			case 4:
+				return new float[]{0, 0, 0.5f, 0.5f};
 			}
 		}
-		else if (totalControllers > 2){
+		else if (totalControllers == 2){
 			switch(playerIndex){
 			case 1:
-				return new float[]{0, 0.5f, 0.5f, 1};
+				return new float[]{0, 0.5f, 1, 0.5f};
 			case 2:
-				return new float[]{0.5f, 1, 0.5f, 1};
-			case 3:
-				return new float[]{0, 0.5f, 0, 0.5f};
-			case 4:
-				return new float[]{0.5f, 1, 0, 0.5f};
+				return new float[]{0, 0, 1, 0.5f};
 			}
 		}
 

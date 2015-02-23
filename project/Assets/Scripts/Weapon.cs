@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour {
 	public ParticleSystem smoke;
 	
 	// Ammo trackers
-	private int totalAmmo;
+	private int reserveAmmo;
 	private int magAmmo;
 	
 	// Time trackers
@@ -98,7 +98,7 @@ public class Weapon : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		totalAmmo = ReserveSize;
+		reserveAmmo = ReserveSize;
 		magAmmo = MagSize;
 		InvReloadTime = 1 / ReloadTime;
 	}
@@ -475,14 +475,8 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	private void StartReloading(){
-		// Only reload if some reserve left
-		if (totalAmmo > 0){
-			reloadProgress = ReloadTime;
-			isReloading = true;
-		}
-		else {
-			isAllAmmoDepleted = true;
-		}
+		reloadProgress = ReloadTime;
+		isReloading = true;
 		isFiring = false;
 	}
 	
@@ -493,12 +487,12 @@ public class Weapon : MonoBehaviour {
 	
 	private void Reload(){
 		int requiredAmmo = MagSize - magAmmo;
-		if (totalAmmo >= requiredAmmo) {
+		if (reserveAmmo >= requiredAmmo) {
 			magAmmo = MagSize;
-			totalAmmo -= requiredAmmo;
+			reserveAmmo -= requiredAmmo;
 		} else {
-			magAmmo += totalAmmo;
-			totalAmmo = 0;
+			magAmmo += reserveAmmo;
+			reserveAmmo = 0;
 		}
 
 		ammoRenderer.Reload (magAmmo);
@@ -508,7 +502,7 @@ public class Weapon : MonoBehaviour {
 	public int[] GetAmmoCount(){
 		int[] toReturn = new int[2];
 		toReturn [0] = magAmmo;
-		toReturn [1] = totalAmmo;
+		toReturn [1] = reserveAmmo;
 		
 		return toReturn;
 	}
@@ -530,7 +524,11 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void TryReloading(){
-		if (magAmmo < MagSize && !isReloading){
+		// Only reload if some reserve left
+		if (reserveAmmo + magAmmo == 0){
+			isAllAmmoDepleted = true;
+		}
+		else if (magAmmo < MagSize && !isReloading && reserveAmmo > 0){
 			StopBursting();
 			StopFireInterval();
 			if (!isAllAmmoDepleted){
