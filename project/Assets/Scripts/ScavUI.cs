@@ -5,7 +5,9 @@ using System.Collections;
 public class ScavUI : MonoBehaviour {
 
 	// Inputs
+	public Camera playerCam;
 	public Camera uiCam;
+	public Camera gunCam;
 	public PoolManager damageDirPool;
 	public Player player;
 	public CanvasScaler scaler;
@@ -18,18 +20,23 @@ public class ScavUI : MonoBehaviour {
 	private Image[] availableGunGraphics;
 	public Image currentGun;
 
-	public GameObject ammoManagerWrapper;
-	private AmmoRenderManager[] ammoManagers;
-
-	public UnityEngine.UI.Text magCount;
-	public UnityEngine.UI.Text reserveCount;
-
 	public float FlashedGunAlpha = 0.7f;
 	public float InactiveGunAlpha = 0.5f;
 	public float ActiveGunAlpha = 1;
 	public float WeaponFlashLength = 0.5f;
 	public float WeaponFadeTime = 1;
 	private float weaponFadeRate = 1;
+	
+	public GameObject ammoManagerWrapper;
+	private AmmoRenderManager[] ammoManagers;
+	
+	public UnityEngine.UI.Text magCount;
+	public UnityEngine.UI.Text reserveCount;
+
+	public GameObject crossTop;
+	public GameObject crossRgt;
+	public GameObject crossBot;
+	public GameObject crossLft;
 
 	// Time trackers
 	float weaponFlashProgress = 0;
@@ -88,7 +95,10 @@ public class ScavUI : MonoBehaviour {
 	}
 
 	public void Initialize(float x, float y, float width, float height, float uiScale = 1, float baseWeaponSpread = 0){
+		// Setting camera and ui scale
 		uiCam.camera.rect = new Rect(x, y, width, height);
+		playerCam.camera.rect = new Rect(x, y, width, height);
+		gunCam.camera.rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
 	}
 
@@ -130,5 +140,12 @@ public class ScavUI : MonoBehaviour {
 	public void UpdateAmmoCount(int magAmmo, int reserveAmmo){
 		magCount.text = magAmmo.ToString();
 		reserveCount.text = reserveAmmo.ToString();
+	}
+
+	public void UpdateCrosshairSpread(float spread){
+		crossTop.transform.localPosition = new Vector3 (0, spread, 0);
+		crossRgt.transform.localPosition = new Vector3 (spread, 0, 0);
+		crossBot.transform.localPosition = new Vector3 (0, -spread, 0);
+		crossLft.transform.localPosition = new Vector3 (-spread, 0, 0);
 	}
 }

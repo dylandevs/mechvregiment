@@ -39,7 +39,7 @@ public class ControllerScript : MonoBehaviour {
 	public GameObject playerCam;
 	public Player player;
 	public Animator anim;
-	public Animator weaponAnim;
+	private Animator weaponAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
 	public GameObject spineJoint;
@@ -89,6 +89,8 @@ public class ControllerScript : MonoBehaviour {
 		}
 		
 		Weapon currentWeapon = player.GetCurrentWeapon ();
+		weaponAnim = player.GetCurrentWeapon().animator;
+
 
 		if (!isKeyboard){
 

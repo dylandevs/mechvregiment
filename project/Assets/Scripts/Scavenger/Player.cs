@@ -19,8 +19,6 @@ public class Player : MonoBehaviour {
 
 	// Inputs
 	public Camera playerCam;
-	public Crosshair crossScript;
-	public PlayerViewport playerRenderer;
 	public ControllerScript playerController;
 	public PlayerNetSend NetworkManager;
 	public ScavUI display;
@@ -31,8 +29,10 @@ public class Player : MonoBehaviour {
 	private bool isAimingDownSights = false;
 	private bool isCrouching = false;
 
-	public GameObject[] weaponModels = new GameObject[]{};
-	public GameObject[] weaponModels3 = new GameObject[]{};
+	public GameObject weaponWrapper;
+	public GameObject weaponWrapper3;
+	private GameObject[] weaponModels;
+	private GameObject[] weaponModels3;
 	private Weapon[] weapons;
 	int currentWeaponIndex = 0;
 
@@ -45,11 +45,17 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		TryRegen();
-		crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
+		//crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
+		display.UpdateCrosshairSpread(weapons [currentWeaponIndex].GetSpread ());
 	}
 
 	public void Initialize(int playerId, float[] window, float uiScale){
 		id = playerId;
+
+		weaponModels = new GameObject[weaponWrapper.transform.childCount];
+		for(int i = 0; i < weaponWrapper.transform.childCount; i++){
+			weaponModels[i] = weaponWrapper.transform.GetChild(i).gameObject;
+		}
 
 		weapons = new Weapon[weaponModels.Length];
 
@@ -64,7 +70,7 @@ public class Player : MonoBehaviour {
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
 
 		// Setting player UI
-		playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
+		//playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
 		display.Initialize(window[0], window[1], window[2], window[3], uiScale, weapons[currentWeaponIndex].GetSpread());
 
 		// Setting controller
@@ -142,7 +148,7 @@ public class Player : MonoBehaviour {
 
 		if (health <= 0){
 			// TODO: Trigger death
-			print ("Dead.");
+
 		}
 	}
 
