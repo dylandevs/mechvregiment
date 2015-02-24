@@ -277,10 +277,12 @@ public class Weapon : MonoBehaviour {
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					Player playerHit = rayHit.collider.GetComponent<Player>();
 					playerHit.Damage(Damage, bulletDirection);
+					player.TriggerHitMarker();
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 					botHit.Damage(Damage);
+					player.TriggerHitMarker();
 				}
 			}
 		}

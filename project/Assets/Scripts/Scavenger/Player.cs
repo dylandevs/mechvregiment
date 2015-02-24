@@ -164,4 +164,8 @@ public class Player : MonoBehaviour {
 	public void TriggerReload(){
 		weapons [currentWeaponIndex].TryReloading ();
 	}
+
+	public void TriggerHitMarker(){
+		display.TriggerHitMarker();
+	}
 }

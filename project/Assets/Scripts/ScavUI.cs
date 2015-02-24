@@ -38,6 +38,10 @@ public class ScavUI : MonoBehaviour {
 	public GameObject crossBot;
 	public GameObject crossLft;
 
+	public float HitMarkerFadeTime = 0.3f;
+	private float hitMarkerFadeRate = 1;
+	public CanvasGroup hitMarker;
+
 	// Time trackers
 	float weaponFlashProgress = 0;
 
@@ -59,6 +63,8 @@ public class ScavUI : MonoBehaviour {
 		for (int i = 0; i < ammoManagerWrapper.transform.childCount; i++){
 			ammoManagers[i] = ammoManagerWrapper.transform.GetChild(i).GetComponent<AmmoRenderManager>();
 		}
+
+		hitMarkerFadeRate = 1 / HitMarkerFadeTime;
 	}
 	
 	// Update is called once per frame
@@ -78,6 +84,10 @@ public class ScavUI : MonoBehaviour {
 
 		int[] ammoCounts = player.GetCurrentWeapon().GetAmmoCount();
 		UpdateAmmoCount(ammoCounts[0], ammoCounts[1]);
+
+		if (hitMarker.alpha > 0){
+			hitMarker.alpha -= Time.deltaTime * hitMarkerFadeRate;
+		}
 	}
 
 	public void IndicateDamageDirection(Vector3 hitVector){
@@ -147,5 +157,9 @@ public class ScavUI : MonoBehaviour {
 		crossRgt.transform.localPosition = new Vector3 (spread, 0, 0);
 		crossBot.transform.localPosition = new Vector3 (0, -spread, 0);
 		crossLft.transform.localPosition = new Vector3 (-spread, 0, 0);
+	}
+
+	public void TriggerHitMarker(){
+		hitMarker.alpha = 1;
 	}
 }
