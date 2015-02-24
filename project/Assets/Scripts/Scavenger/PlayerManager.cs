@@ -54,7 +54,7 @@ public class PlayerManager : MonoBehaviour {
 	}
 
 	float GetUIReferenceScale(int connectedControllers){
-		if (connectedControllers == 1){
+		if (connectedControllers == 1 && !force4Split){
 			return 1;
 		}
 		else{
@@ -86,7 +86,7 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		// Default to full screen
-		return new float[]{0, 1, 0, 1};
+		return new float[]{0, 0, 1, 1};
 
 	}
 }
