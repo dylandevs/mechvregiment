@@ -262,6 +262,7 @@ public class Weapon : MonoBehaviour {
 			// Setting bullet properties
 			Bullet bulletScript = bullet.GetComponent<Bullet>();
 			bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed, impactPool);
+			bulletScript.playerSource = player;
 		}
 		else{
 			RaycastHit rayHit;

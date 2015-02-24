@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour {
 	Vector3 lastPos = Vector3.zero;
 	float life = 3.0f;
 
+	public Player playerSource = null;
+
 	PoolManager pool;
 	PoolManager bulletMarkPool;
 
@@ -64,10 +66,18 @@ public class Bullet : MonoBehaviour {
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					Player playerHit = rayHit.collider.GetComponent<Player>();
 					playerHit.Damage(damage, velocity);
+					if (playerSource){
+						playerSource.TriggerHitMarker();
+						playerSource = null;
+					}
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 					botHit.Damage(damage);
+					if (playerSource){
+						playerSource.TriggerHitMarker();
+						playerSource = null;
+					}
 				}
 				return true;
 			}
