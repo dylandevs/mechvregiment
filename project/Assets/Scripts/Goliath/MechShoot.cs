@@ -9,19 +9,23 @@ public class MechShoot : MonoBehaviour {
 	//variables for rocketFire
 	public float coolDownRocket = 4f;
 	float cooldownRemainingRocket = 0;	
+	public float rocketAimSpeed;
 
 	//modes
-	public bool rocketMode;
-	public bool minionMode;
-	public bool miniGunMode;
-	public bool keyboard;
+	public bool rocketMode = false;
+	public bool minionMode = false;
+	public bool miniGunMode = true;
+	public bool carrying = false;
+
+	//flag stuff
+	public GameObject flag;
+	public GameObject flagCarried;
 
 	//aiming stuff
 	public GameObject miniGunAimer;
 	public GameObject missleReticle;
 	public GameObject missleTargetArea;
 	public GameObject rocketAimer;
-	public float rocketAimSpeed;
 	public GameObject miniGunReticle;
 	public GameObject cameraPlace;
 	public GameObject retWall;
@@ -31,7 +35,10 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonAimer;
 	public GameObject cannonArm;
 	public GameObject cannonRet;
-	int layerMask = 1 << 22; //for avoiding the ret wall
+	public LayerMask mask;
+	public LayerMask maskForRet;
+	public GameObject hydraLeft;
+	public GameObject hydraRight;
 
 	//firing objcts
 	public MinigunFirer miniGunFirer;
@@ -44,16 +51,15 @@ public class MechShoot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		flagCarried.SetActive(false);
 		rocketAimSpeed = 15 * Time.deltaTime;
 		miniGunMode = true;
-		layerMask = ~layerMask;
-		keyboard = false;
-
+		carrying = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
 		//All hydra butons and uses
 		float lTrig = SixenseInput.Controllers[left].Trigger;
 		float rTrig = SixenseInput.Controllers[right].Trigger;
@@ -75,6 +81,7 @@ public class MechShoot : MonoBehaviour {
 			resetModes();
 			miniGunMode = true;
 		}
+
 
 
 
@@ -141,8 +148,7 @@ public class MechShoot : MonoBehaviour {
 			Ray ray = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
 			RaycastHit hitInfoAimer;
 			//check if it hit something then send a ray back to display the reticle
-			if(Physics.Raycast (ray, out hitInfoAimer,range,layerMask)){
-
+			if(Physics.Raycast (ray, out hitInfoAimer,range,mask)){
 				Vector3 hitPoint = hitInfoAimer.point;
 				//create a hit variable for the second raycast
 				Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
@@ -150,8 +156,10 @@ public class MechShoot : MonoBehaviour {
 				//make it look like the minigun arm is facing where its shooting
 				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 				// limit the angles properly
-				miniGunArm.transform.right = -vecEnd;
-				if(Physics.Raycast (ray2,out ray2Hit,range)){
+
+
+				miniGunArm.transform.up = -vecEnd;
+				if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
 					//if it hits the aimerwall mvoe the reticle there
 					if(ray2Hit.collider.tag == "aimerWall"){
 						Vector3 placeHit = ray2Hit.point;
@@ -161,7 +169,7 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-			if(Physics.Raycast (ray, out hitInfoAimer ,20,layerMask)){
+			if(Physics.Raycast (ray, out hitInfoAimer ,20)){
 				if(hitInfoAimer.collider.tag != "Terrain"){
 					Vector3 placeHitRock = hitInfoAimer.point;
 					Vector3 retPos = placeHitRock.normalized * -3;
@@ -176,11 +184,11 @@ public class MechShoot : MonoBehaviour {
 				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
 			// limit these angles properly
-				miniGunArm.transform.right = -vecEnd;
+				miniGunArm.transform.up = -vecEnd;
 
 				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
 				RaycastHit ray2HitNo;
-				if(Physics.Raycast (ray2No,out ray2HitNo,range)){
+				if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
 					//if it hits the aimerwall mvoe the reticle there
 					if(ray2HitNo.collider.tag == "aimerWall"){
 						Vector3 placeHit2 = ray2HitNo.point;
@@ -196,7 +204,7 @@ public class MechShoot : MonoBehaviour {
 			Ray rayCannon = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
 			RaycastHit hitInfoAimerCannon;
 			//check if it hit something then send a ray back to display the reticle
-			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon,range,layerMask)){
+			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon,range,mask)){
 				
 				Vector3 hitPointCannon = hitInfoAimerCannon.point;
 				//create a hit variable for the second raycast
@@ -204,8 +212,8 @@ public class MechShoot : MonoBehaviour {
 				RaycastHit ray2HitCannon;
 				//make it look like the minigun arm is facing where its shooting
 				Vector3 vecEndCannon = cannonAimer.transform.forward * 100;
-				cannonArm.transform.right = -vecEndCannon;
-				if(Physics.Raycast (ray2Cannon,out ray2HitCannon,range)){
+				cannonArm.transform.up = -vecEndCannon;
+				if(Physics.Raycast (ray2Cannon,out ray2HitCannon,range,maskForRet)){
 					//if it hits the aimerwall mvoe the reticle there
 					if(ray2HitCannon.collider.tag == "aimerWall"){
 						Vector3 placeHitCannon = ray2HitCannon.point;
@@ -215,7 +223,7 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon ,20,layerMask)){
+			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon ,20,mask)){
 				if(hitInfoAimerCannon.collider.tag != "Terrain"){
 					Vector3 placeHitRockC = hitInfoAimerCannon.point;
 					Vector3 retPosC = placeHitRockC.normalized * -3;
@@ -230,13 +238,13 @@ public class MechShoot : MonoBehaviour {
 				Vector3 CannonArmPosition = cannonAimer.transform.position; 
 				Vector3 secondPart =  CannonArmPosition += endOfVector;
 				// limit these angles properly
-				cannonArm.transform.right = -secondPart;
+				cannonArm.transform.up = -secondPart;
 				
 				
 				Ray cannonsSecondRay = new Ray(secondPart,cameraPlace.transform.position-secondPart);
 				RaycastHit connonsSecondRayHit;
 
-				if(Physics.Raycast (cannonsSecondRay,out connonsSecondRayHit,range)){
+				if(Physics.Raycast (cannonsSecondRay,out connonsSecondRayHit,range,maskForRet)){
 					//if it hits the aimerwall mvoe the reticle there
 					if(connonsSecondRayHit.collider.tag == "aimerWall"){
 						Vector3 hittyThingy = connonsSecondRayHit.point;
@@ -317,7 +325,7 @@ public class MechShoot : MonoBehaviour {
 				Ray rayRockMode = new Ray(rocketAimer.transform.position,rocketAimer.transform.forward);
 				RaycastHit rockModeRayHit;
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
+				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,mask)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
 						Vector3 placeHitRock = rockModeRayHit.point;
 						missleTargetArea.transform.position = placeHitRock;
@@ -346,15 +354,17 @@ public class MechShoot : MonoBehaviour {
 
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
+			print ("min Mode On");
 			//makes the ray
-			Ray rayRockMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
-			RaycastHit rockModeRayHit;
+			Ray minMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
+			RaycastHit minHit;
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-			if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
-				if(rockModeRayHit.collider.tag == "Terrain"){
+			if(Physics.Raycast (minMode, out minHit,range,mask)){
+				if(minHit.collider.tag == "Terrain"){
 					lightBeam.SetActive(true);
+					print ("case 1");
 					notLightBeam.SetActive(false);
-					Vector3 placeHitRock = rockModeRayHit.point;
+					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
 
 					//fire the rocket function in rocket arm script
@@ -364,16 +374,36 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-			 if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,layerMask)){
-				 if(rockModeRayHit.collider.tag != "Terrain"){
+			if(Physics.Raycast (minMode, out minHit,range,mask)){
+				if(minHit.collider.tag != "Terrain"){
+					print ("case 2");
 						lightBeam.SetActive(false);
 						notLightBeam.SetActive(true);
-					Vector3 placeHitRock = rockModeRayHit.point;
+					Vector3 placeHitRock = minHit.point;
 					notLightBeam.transform.position = placeHitRock;
 				}
 			}
+
+
+	}
+
+		if(carrying == true){
+			//turns off all other modes
+			resetModes();
+			//turns off world flag and replaces it with carried version
+			flag.SetActive(false);
+			flagCarried.SetActive(true);
+			//play animation for mech carrying flag thingy; 
+			
+			//drops the flag
+			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.BUMPER) ){
+				carrying = false;
+				releaseFlag();
+				miniGunMode = true;
+			}
+			
+		}
 	}//this is end of update
-}
 	//function to reset the modes
 	void resetModes(){
 		miniGunMode = false;
@@ -385,5 +415,20 @@ public class MechShoot : MonoBehaviour {
 		miniGunReticle.SetActive (false);
 		lightBeam.SetActive(false);
 		notLightBeam.SetActive (false);
+	}
+
+	public void releaseFlag(){
+		//moves the realflag to the fake flags position and adds a force to it so it flies away
+		flag.transform.position = flagCarried.transform.position + new Vector3 (0,25,0);
+		flag.SetActive(true);
+		flag.rigidbody.AddForce(Vector3.up * 500);
+		flag.rigidbody.AddForce(Vector3.right * Random.Range (-200F, 200F));
+		flagCarried.SetActive(false);
+	}
+
+	public void updateAimerPos(){
+		//add limitations to aimers and unparent it
+		miniGunAimer.transform.rotation = hydraRight.transform.rotation;
+		miniGunAimer.transform.rotation = hydraLeft.transform.rotation;
 	}
 }

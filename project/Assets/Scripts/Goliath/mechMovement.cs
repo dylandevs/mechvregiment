@@ -6,6 +6,8 @@ public class mechMovement : MonoBehaviour {
 	//game objects and positions
 	public GameObject bottomHalf;
 	public GameObject topHalf;
+	public GameObject miniMapCam;
+	public MechShoot triggerFlagDropThing;
 	public Vector3 topDir;
 	public Vector3 bottomDir;
 
@@ -63,8 +65,8 @@ public class mechMovement : MonoBehaviour {
 		if(mechHealth >=1){
 
 			//Hydra Movement
-			bottomHalf.transform.Translate(transform.forward * moveSpeedY * rStickY);
-			bottomHalf.transform.Translate(transform.right * moveSpeedX * rStickX);
+			bottomHalf.transform.Translate(transform.forward * moveSpeedY * lStickY);
+			bottomHalf.transform.Translate(transform.right * moveSpeedX * lStickX);
 
 			if(rStickX >= 0.01){
 				isMoving = true;
@@ -75,12 +77,13 @@ public class mechMovement : MonoBehaviour {
 
 			//Hydra Rotaiton
 			if (topHalf.transform.eulerAngles.x <= 25||topHalf.transform.eulerAngles.x >= 180) {
-				topHalf.transform.Rotate(topHalf.transform.right * rotSpeedY * -lStickY, Space.World);
+				topHalf.transform.Rotate(topHalf.transform.right * rotSpeedY * -rStickY, Space.World);
 				//print ("I am turning around by " + -1*lStickY);
 			}
 
 			// figure out what the frack is going on here
-			topHalf.transform.Rotate (topHalf.transform.up * rotSpeedX * lStickX, Space.World);
+			topHalf.transform.Rotate (topHalf.transform.up * rotSpeedX * rStickX, Space.Self);
+
 			//print ("I am looking updown by " + -1*lStickX);
 
 
@@ -134,6 +137,9 @@ public class mechMovement : MonoBehaviour {
 		
 		// when mech is disabled start timer to restart
 		if(currMechHealth <=0){
+			if(triggerFlagDropThing.carrying == true){
+				triggerFlagDropThing.releaseFlag();
+			}
 			restartTimer += Time.deltaTime;
 		}
 		
@@ -175,8 +181,15 @@ public class mechMovement : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
+		//aligns the body top and bottom half
 		Vector3 newPos = bottomHalf.transform.position;
-		newPos += new Vector3 (0,3,0);
+		newPos += new Vector3 (0,4,0);
 		topHalf.transform.position = newPos;
+
+		//update minimap
+		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,100,0);
+		miniMapCam.transform.position = newPosCam;
+		Quaternion camRot = Quaternion.Euler(90,topHalf.transform.rotation.eulerAngles.y,0);
+		miniMapCam.transform.rotation = camRot;
 	}
 }

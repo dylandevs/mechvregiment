@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GoliathNetworking : Photon.MonoBehaviour {
+public class GoliathNetworking : MonoBehaviour {
 
 	private string roomName = "GoliathConnection_083";
 	private PhotonView photonView;
@@ -68,7 +68,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     }
     [RPC]
     public void ExchangeGoliathPositioning(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
-    	print("I'm sending the position over");
+    	//print("I'm sending the position over");
     }
 
     [RPC]
@@ -92,12 +92,14 @@ public class GoliathNetworking : Photon.MonoBehaviour {
         Player4Avatar.transform.rotation = newRot;
     }
 
-    [RPC]
-    public void AimPlayer1(){
-    }
-    [RPC]
-    public void UnaimPlayer1(){
-    }
+	[RPC]
+	public void AimPlayer1(){
+		Player1Avatar.GetComponent<PlayerAvatar>().SetAim(true);
+	}
+	[RPC]
+	public void UnaimPlayer1(){
+		Player1Avatar.GetComponent<PlayerAvatar>().SetAim(false);
+	}
     [RPC]
     public void AimPlayer2(){
     }

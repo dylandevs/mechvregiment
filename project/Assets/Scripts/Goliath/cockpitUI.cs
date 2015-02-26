@@ -12,6 +12,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject mechHolagramY;
 	public GameObject mechHolagramR;
 	public GameObject mechHologramDisabled;
+	public GameObject templeShield;
 
 	float coolDown;
 	float mechShield;
@@ -36,6 +37,7 @@ public class cockpitUI : MonoBehaviour {
 		//update the mech health hologram
 		if(mechShield <=0){
 			shieldActive = false;
+			templeShield.SetActive(false);
 			mechHolagramB.SetActive(false);
 		}
 		

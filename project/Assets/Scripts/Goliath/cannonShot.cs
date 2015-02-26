@@ -4,15 +4,15 @@ using System.Collections;
 public class cannonShot : MonoBehaviour {
 
 	public Vector3 constantSpeed;
-	public float explosionRadius = 3f;
+	public float explosionRadius = 5f;
 	public GameObject plasmaExplodePrefab;
 
-	int layerMask = 1 << 16;
+	int layerMask = 1 << 3;
 	float timer;
 
 	// Use this for initialization
 	void Start () {
-		rigidbody.velocity = gameObject.transform.forward * 10;
+		rigidbody.velocity = gameObject.transform.forward * 100;
 		layerMask = ~layerMask;
 	}
 	
@@ -25,14 +25,6 @@ public class cannonShot : MonoBehaviour {
 			gameObject.SetActive(false);
 			timer = 0;
 		}
-
-		// make it degrade over time********
-		//gameObject.transform.Translate(transform.forward * cannonSpeed,Space.World);
-
-		/*if(timer > 1.5){
-			gameObject.transform.Rotate(gameObject.transform.right* rotSpeed, Space.World);
-		}*/
-
 	}
 
 	void FixedUpdate(){
@@ -47,7 +39,7 @@ public class cannonShot : MonoBehaviour {
 
 			else{
 				if (plasmaExplodePrefab != null) 
-				{
+				{	//make Boom
 					Instantiate(plasmaExplodePrefab, transform.position,Quaternion.identity);
 				}
 				

@@ -9,6 +9,9 @@ public class MinigunFirer : MonoBehaviour {
 	public GameObject cannonShotStart;
 	public GameObject cannonAimer;
 
+
+public LayerMask mask;
+
 	public bool cannonShoot;
 	public bool fire;
 
@@ -22,7 +25,6 @@ public class MinigunFirer : MonoBehaviour {
 	float cannonCD = 8f;
 	float cooldownRemaining = 0;
 	float cannonCDR = 0;
-	int layerMask = 1 << 22;
 	bool warmedUp;
 	bool overHeated;
 
@@ -34,7 +36,6 @@ public class MinigunFirer : MonoBehaviour {
 		warmUpTimer = 2f;
 		cannonShoot = false;
 		fire = false;
-		layerMask = ~layerMask;
 		cannonCounter = 1;
 		//during warm up
 		coolDownWarmUp = 1f;
@@ -88,26 +89,31 @@ public class MinigunFirer : MonoBehaviour {
 			//gets the starting aimer angle
 			Vector3 tempStart = miniGunAimer.transform.forward;
 			//ads a randoma mount of spread to the angle
-			Vector3 startShot =  tempStart += new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			Ray ray = new Ray (miniGunAimer.transform.position, startShot);
+			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
+			Ray ray = new Ray (miniGunAimer.transform.position, endShot);
+
+			//draws the line and shows it working
+			Debug.DrawLine(miniGunAimer.transform.position,endShot * 100 + miniGunAimer.transform.position, Color.red);
 
 			RaycastHit hitInfo;
-			//fires the adjusted ray
-			if (Physics.Raycast (ray, out hitInfo, range,layerMask)) {
+			//fires the adjusted ray and maskes the retwall
+			if (Physics.Raycast (ray, out hitInfo, range, mask)) {
 				// if it hits a person do some damage  *********************
 				Vector3 hitPoint = hitInfo.point;
+				print(hitInfo.collider.name);
 				//if graphic is there apply a bullet decal
-				if(hitInfo.collider.tag != "Player"){
-					if (sparkPrefab != null) {
+					if (sparkPrefab != null && hitInfo.collider.tag != "Player") {
 						Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
 						Instantiate(sparkPrefab, hitPoint + hitInfo.normal * 0.01f, hitRotation);
+					print ("hit !player");
 					}
-				}
-				else{
-					doDamageMini();
-				}
 
-			}
+					if(hitInfo.collider.tag == "Player"){
+						doDamageMini();
+						//add a hit graphic.
+					}
+		
+				}
 				//lower bullets whenever a shot is taken
 				//still needs to be warmed up
 				if(warmedUp == true){
