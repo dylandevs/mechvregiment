@@ -35,8 +35,12 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonAimer;
 	public GameObject cannonArm;
 	public GameObject cannonRet;
+	//masks
 	public LayerMask mask;
 	public LayerMask maskForRet;
+	//make it ignore players
+	public LayerMask maskRocket;
+
 	public GameObject hydraLeft;
 	public GameObject hydraRight;
 
@@ -151,53 +155,18 @@ public class MechShoot : MonoBehaviour {
 			if(Physics.Raycast (ray, out hitInfoAimer,range,mask)){
 				Vector3 hitPoint = hitInfoAimer.point;
 				//create a hit variable for the second raycast
-				Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
-				RaycastHit ray2Hit;
 				//make it look like the minigun arm is facing where its shooting
 				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 				// limit the angles properly
-
-
 				miniGunArm.transform.up = -vecEnd;
-				if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
-					//if it hits the aimerwall mvoe the reticle there
-					if(ray2Hit.collider.tag == "aimerWall"){
-						Vector3 placeHit = ray2Hit.point;
-						miniGunReticle.transform.position = placeHit;
-						miniGunReticle.transform.forward = cameraPlace.transform.forward;
-					}
-				}
 			}
-
-			if(Physics.Raycast (ray, out hitInfoAimer ,20)){
-				if(hitInfoAimer.collider.tag != "Terrain"){
-					Vector3 placeHitRock = hitInfoAimer.point;
-					Vector3 retPos = placeHitRock.normalized * -3;
-					miniGunReticle.transform.position = placeHitRock + retPos;
-					miniGunReticle.transform.forward = hitInfoAimer.normal;
-				}
-			}
-
-			//this is for when it doesnt hit an object it still displays
 			else{
 				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
 				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
-			// limit these angles properly
+				// limit these angles properly
 				miniGunArm.transform.up = -vecEnd;
-
-				Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
-				RaycastHit ray2HitNo;
-				if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
-					//if it hits the aimerwall mvoe the reticle there
-					if(ray2HitNo.collider.tag == "aimerWall"){
-						Vector3 placeHit2 = ray2HitNo.point;
-						miniGunReticle.transform.position = placeHit2;
-						miniGunReticle.transform.forward = cameraPlace.transform.forward;
-					}
-				}
 			}
-
 
 
 			//CANNON AIMING
@@ -320,22 +289,23 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 		 	*/
+
+			//******* change it so that is there is no target says no target *******
+
+
 			//makes the ray
 			if(cooldownRemainingRocket <=0){
 				Ray rayRockMode = new Ray(rocketAimer.transform.position,rocketAimer.transform.forward);
 				RaycastHit rockModeRayHit;
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,mask)){
+				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,maskRocket)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
 						Vector3 placeHitRock = rockModeRayHit.point;
 						missleTargetArea.transform.position = placeHitRock;
 						missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
 					}
-					else{
-							//have to fix the missle decal not turning over!!
-						Vector3 placeHitRock = rockModeRayHit.point;
-						missleTargetArea.transform.position = placeHitRock;
-						missleTargetArea.transform.LookAt(-rockModeRayHit.normal + -placeHitRock);
+					else {
+					//make a target out of range graphic
 					}
 				}
 			}
@@ -354,7 +324,6 @@ public class MechShoot : MonoBehaviour {
 
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
-			print ("min Mode On");
 			//makes the ray
 			Ray minMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
 			RaycastHit minHit;
@@ -362,7 +331,6 @@ public class MechShoot : MonoBehaviour {
 			if(Physics.Raycast (minMode, out minHit,range,mask)){
 				if(minHit.collider.tag == "Terrain"){
 					lightBeam.SetActive(true);
-					print ("case 1");
 					notLightBeam.SetActive(false);
 					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
@@ -376,7 +344,6 @@ public class MechShoot : MonoBehaviour {
 
 			if(Physics.Raycast (minMode, out minHit,range,mask)){
 				if(minHit.collider.tag != "Terrain"){
-					print ("case 2");
 						lightBeam.SetActive(false);
 						notLightBeam.SetActive(true);
 					Vector3 placeHitRock = minHit.point;

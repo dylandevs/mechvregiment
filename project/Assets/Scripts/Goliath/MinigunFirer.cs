@@ -8,17 +8,23 @@ public class MinigunFirer : MonoBehaviour {
 	public GameObject sparkPrefab;
 	public GameObject cannonShotStart;
 	public GameObject cannonAimer;
+	public GameObject tracerStart;
+	public GameObject cameraPlace;
+	public GameObject miniGunReticle;
 
+	public UIEffectHandling effects;
+	public PoolManager tracerPool;
 
-public LayerMask mask;
+	public LayerMask mask;
+	public LayerMask maskForRet;
 
 	public bool cannonShoot;
 	public bool fire;
 
-	public float range = 100.0f;
-
+	public float range = 10000000.0f;
 	public float overHeat;
-	 float coolDown;
+
+	float coolDown;
 	float coolDownWarmUp;
 	float warmUpTimer;
 	int cannonCounter;
@@ -45,6 +51,66 @@ public LayerMask mask;
 	
 	// Update is called once per frame
 	void Update () {
+		//adjust the reticle 
+
+		//get primary direction
+		Ray ray = new Ray(tracerStart.transform.position, tracerStart.transform.forward);
+		RaycastHit rayHit;
+
+		Debug.DrawRay(tracerStart.transform.position,tracerStart.transform.forward * 1000, Color.red);
+
+		if(Physics.Raycast (ray, out rayHit,range,mask)){
+			Vector3 hitPoint = rayHit.point;
+			//fire a ray back at the end of the first ray
+			Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
+			RaycastHit ray2Hit;
+
+			print ("i hit something");
+
+			Debug.DrawRay(hitPoint,cameraPlace.transform.position-hitPoint, Color.green);
+
+			if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
+				//if it hits the aimerwall mvoe the reticle there
+				if(ray2Hit.collider.tag == "aimerWall"){
+					Vector3 placeHit = ray2Hit.point;
+					miniGunReticle.transform.position = placeHit;
+					miniGunReticle.transform.forward = cameraPlace.transform.forward;
+				}
+			}
+		}
+		
+		else if(Physics.Raycast (ray, out rayHit ,20)){
+			if(rayHit.collider.tag != "Terrain"){
+				Vector3 placeHitRock = rayHit.point;
+				Vector3 retPos = placeHitRock.normalized * -3;
+				miniGunReticle.transform.position = placeHitRock + retPos;
+				miniGunReticle.transform.forward = rayHit.normal;
+			}
+		}
+	
+		//this is for when it doesnt hit an object it still displays
+		else{
+			Vector3 vecEnd = tracerStart.transform.forward * range;
+			Vector3 miniArmPos = tracerStart.transform.position; 
+			Vector3 sendBack =  miniArmPos += vecEnd;
+			// limit these angles properly
+
+			print ("i hit nothing");
+
+			Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
+			Debug.DrawRay(sendBack,cameraPlace.transform.position-sendBack, Color.yellow);
+			RaycastHit ray2HitNo;
+			if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
+				//if it hits the aimerwall mvoe the reticle there
+				if(ray2HitNo.collider.tag == "aimerWall"){
+					Vector3 placeHit2 = ray2HitNo.point;
+					miniGunReticle.transform.position = placeHit2;
+					miniGunReticle.transform.forward = cameraPlace.transform.forward;
+				}
+			}
+		}
+
+
 		//**cooldown stuff**
 		//counting down until next shot is fired
 		cooldownRemaining -= Time.deltaTime * 5;
@@ -83,32 +149,30 @@ public LayerMask mask;
 
 		//fires the minigun based on  if there's ammo firing allowed and no cooldown left
 		if (fire == true && cooldownRemaining <= 0 && overHeated == false) {
-			//whenever a bullet is fired increase the overHeatMeter
+
 			overHeat ++;
-			
 			//gets the starting aimer angle
 			Vector3 tempStart = miniGunAimer.transform.forward;
 			//ads a randoma mount of spread to the angle
 			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			Ray ray = new Ray (miniGunAimer.transform.position, endShot);
+			Ray rayFire = new Ray (tracerStart.transform.position, endShot);;
 
-			//draws the line and shows it working
-			Debug.DrawLine(miniGunAimer.transform.position,endShot * 100 + miniGunAimer.transform.position, Color.red);
+			//handles effects
+			GameObject tracer = tracerPool.Retrieve(tracerStart.transform.position);
+			tracer.transform.forward = endShot;
 
-			RaycastHit hitInfo;
+			RaycastHit hitInfoFire;
 			//fires the adjusted ray and maskes the retwall
-			if (Physics.Raycast (ray, out hitInfo, range, mask)) {
+			if (Physics.Raycast (rayFire, out hitInfoFire, range, mask)) {
 				// if it hits a person do some damage  *********************
-				Vector3 hitPoint = hitInfo.point;
-				print(hitInfo.collider.name);
+				Vector3 hitPointFire = hitInfoFire.point;
 				//if graphic is there apply a bullet decal
-					if (sparkPrefab != null && hitInfo.collider.tag != "Player") {
-						Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-						Instantiate(sparkPrefab, hitPoint + hitInfo.normal * 0.01f, hitRotation);
-					print ("hit !player");
+				if (sparkPrefab != null && hitInfoFire.collider.tag != "Player") {
+					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
+					Instantiate(sparkPrefab, hitPointFire + hitInfoFire.normal * 0.01f, hitRotation);
 					}
 
-					if(hitInfo.collider.tag == "Player"){
+				if(hitInfoFire.collider.tag == "Player"){
 						doDamageMini();
 						//add a hit graphic.
 					}

@@ -9,7 +9,7 @@ public class RocketScript : MonoBehaviour {
 	public GameObject explosionPrefab;
 	public float damage = 200f;  //damage at center
 	public float explosionRadius = 3f;
-
+	public GameObject missleRemains;
 	//speeds for rockets
 	private float speed = 20f;
 	private float trnSpeed = 20f;
@@ -58,6 +58,9 @@ public class RocketScript : MonoBehaviour {
 		if (explosionPrefab != null) 
 		{
 			Instantiate(explosionPrefab, transform.position,Quaternion.identity);
+
+			//change this to the location of the raycast ending
+			Instantiate(missleRemains,transform.position,Quaternion.identity);
 		}
 		
 		//hurts whats near the boom depending on a overlap sphere function

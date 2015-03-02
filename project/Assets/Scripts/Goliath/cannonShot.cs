@@ -6,6 +6,9 @@ public class cannonShot : MonoBehaviour {
 	public Vector3 constantSpeed;
 	public float explosionRadius = 5f;
 	public GameObject plasmaExplodePrefab;
+	public Vector3 explosionLocation;
+	public Quaternion hitRotation;
+	public Vector3 remainsLocation;
 
 	int layerMask = 1 << 3;
 	float timer;
@@ -29,6 +32,12 @@ public class cannonShot : MonoBehaviour {
 
 	void FixedUpdate(){
 		Ray ray = new Ray(transform.position,transform.forward);
+		RaycastHit hit;
+
+		explosionLocation = transform.position;
+
+		//hitRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+		//remainsLocation = hit.point + hit.normal;
 
 		if (Physics.Raycast (ray, 50 * Time.deltaTime,layerMask)) 
 		{
@@ -39,8 +48,8 @@ public class cannonShot : MonoBehaviour {
 
 			else{
 				if (plasmaExplodePrefab != null) 
-				{	//make Boom
-					Instantiate(plasmaExplodePrefab, transform.position,Quaternion.identity);
+				{	
+				 //tell effects script what to do
 				}
 				
 				//hurts whats near the boom depending on a overlap sphere function
