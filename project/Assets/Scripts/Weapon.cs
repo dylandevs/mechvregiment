@@ -51,6 +51,7 @@ public class Weapon : MonoBehaviour {
 	public Animator animator;
 	public GameObject flash;
 	public ParticleSystem smoke;
+	public ParticleEmitter flash3;
 	
 	// Ammo trackers
 	private int reserveAmmo;
@@ -337,6 +338,10 @@ public class Weapon : MonoBehaviour {
 		// Create smoke puff
 		if (smoke){
 			smoke.Play ();
+		}
+
+		if (flash3){
+			flash3.Emit();
 		}
 		
 		SetRecoilTarget ();
