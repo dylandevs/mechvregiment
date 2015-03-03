@@ -11,6 +11,7 @@ public class Weapon : MonoBehaviour {
 	public float BurstTime = 0.1f;
 	public float FireRate = 0.3f;
 	public int BurstLength = 3;
+	public int TracerInterval = 5;
 	
 	// Recoil variables
 	public Vector2 RecoilPattern = Vector2.zero;
@@ -46,6 +47,7 @@ public class Weapon : MonoBehaviour {
 	public GameObject generatorPos;
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
+	public PoolManager tracerPool;
 	public Animator animator;
 	public GameObject flash;
 	public ParticleSystem smoke;
@@ -87,6 +89,9 @@ public class Weapon : MonoBehaviour {
 	private bool isFirstShot = true;
 	private bool isAds = false;
 	private bool semiAutoReady = true;
+
+	// Tracer tracker
+	private int untilNextTracer = 0;
 	
 	// Cached references
 	private Player player;
@@ -267,8 +272,7 @@ public class Weapon : MonoBehaviour {
 		else{
 			RaycastHit rayHit;
 			if (Physics.Raycast(bulletOrigin, bulletDirection, out rayHit, 1000)){
-				//print (travelDist);
-				
+
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the terrain, make mark
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
@@ -285,6 +289,33 @@ public class Weapon : MonoBehaviour {
 					botHit.Damage(Damage);
 					player.TriggerHitMarker();
 				}
+
+				// Fire tracer at hit point
+				if (TracerInterval > 0 && tracerPool){
+					if (untilNextTracer == 0){
+						untilNextTracer = TracerInterval;
+						GameObject tracer = tracerPool.Retrieve(generatorPos.transform.position);
+						tracer.transform.forward = rayHit.point - generatorPos.transform.position;
+						tracer.layer = generatorPos.layer;
+
+						untilNextTracer = TracerInterval;
+					}
+				}
+				untilNextTracer--;
+			}
+			// Fire tracer into forward space
+			else{
+				if (TracerInterval > 0 && tracerPool){
+					if (untilNextTracer == 0){
+						untilNextTracer = TracerInterval;
+						GameObject tracer = tracerPool.Retrieve(generatorPos.transform.position);
+						tracer.transform.forward = (controller.facing * 100 + player.playerCam.transform.position) - generatorPos.transform.position;
+						tracer.layer = generatorPos.layer;
+
+						untilNextTracer = TracerInterval;
+					}
+				}
+				untilNextTracer--;
 			}
 		}
 		
@@ -498,6 +529,7 @@ public class Weapon : MonoBehaviour {
 			reserveAmmo = 0;
 		}
 
+		untilNextTracer = 0;
 		ammoRenderer.Reload (magAmmo);
 	}
 	
