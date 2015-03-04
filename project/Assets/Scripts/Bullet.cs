@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour {
 	float life = 3.0f;
 
 	public Player playerSource = null;
+	public LayerMask shootableLayer;
 
 	PoolManager pool;
 	PoolManager bulletMarkPool;
@@ -54,7 +55,8 @@ public class Bullet : MonoBehaviour {
 		RaycastHit rayHit;
 		float travelDist = Vector3.Distance (lastPos, transform.position);
 		if (travelDist > 0){
-			if (Physics.Raycast(lastPos, velocity, out rayHit, travelDist)){
+
+			if (Physics.Raycast(lastPos, velocity, out rayHit, travelDist, shootableLayer)){
 				//print (travelDist);
 
 				if (rayHit.collider.gameObject.tag == "Terrain"){
@@ -64,8 +66,8 @@ public class Bullet : MonoBehaviour {
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
-					Player playerHit = rayHit.collider.GetComponent<Player>();
-					playerHit.Damage(damage, velocity);
+					PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
+					playerHit.DamagePlayer(damage, velocity);
 					if (playerSource){
 						playerSource.TriggerHitMarker();
 						playerSource = null;

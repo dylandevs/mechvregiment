@@ -269,10 +269,11 @@ public class Weapon : MonoBehaviour {
 			Bullet bulletScript = bullet.GetComponent<Bullet>();
 			bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed, impactPool);
 			bulletScript.playerSource = player;
+			bulletScript.shootableLayer = player.shootableLayer;
 		}
 		else{
 			RaycastHit rayHit;
-			if (Physics.Raycast(bulletOrigin, bulletDirection, out rayHit, 1000)){
+			if (Physics.Raycast(bulletOrigin, bulletDirection, out rayHit, 1000, player.shootableLayer)){
 
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the terrain, make mark
@@ -281,8 +282,8 @@ public class Weapon : MonoBehaviour {
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
-					Player playerHit = rayHit.collider.GetComponent<Player>();
-					playerHit.Damage(Damage, bulletDirection);
+					PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
+					playerHit.DamagePlayer(Damage, bulletDirection);
 					player.TriggerHitMarker();
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){

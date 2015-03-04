@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
 	public ControllerScript playerController;
 	public PlayerNetSend NetworkManager;
 	public ScavUI display;
+	public LayerMask shootableLayer;
 
 	// Status variables
 	private float health = 0;
