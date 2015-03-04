@@ -288,7 +288,7 @@ public class Weapon : MonoBehaviour {
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
-					botHit.Damage(Damage);
+					botHit.Damage(Damage, player.gameObject);
 					player.TriggerHitMarker();
 				}
 

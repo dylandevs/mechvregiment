@@ -39,6 +39,7 @@ public class BotAI : MonoBehaviour {
 	const float SearchTurnRate = 0.5f;
 
 	// Distance thresholds
+	const int FireThresh = 18;
 	const int ThreshClose = 12;
 	const int ThreshMed = 20;
 	const int ThreshTolerance = 2;
@@ -52,11 +53,15 @@ public class BotAI : MonoBehaviour {
 	public const float FireAngle = 60 / 2;
 	public const float MaxHealth = 100;
 	public const float ResightRate = 0.25f;
+	public LayerMask shootableLayer;
 
 	// Storage variables
-	Transform allyGroup = null;
-	public GameObject opponent;
+	public GameObject allyGroup;
+	private BotAI[] allies;
+	public GameObject playerGroup;
+	private Player[] players;
 	NavMeshAgent navMeshAgent;
+	public GameObject currentTarget;
 
 	// Bot stats
 	State state = State.AllClear;
@@ -67,6 +72,7 @@ public class BotAI : MonoBehaviour {
 	bool isDead = false;
 	float resightEnemyProg = ResightRate;
 	float resightAllyProg = ResightRate;
+	bool isFiring = false;
 	
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
@@ -80,13 +86,23 @@ public class BotAI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
-		allyGroup = transform.parent;
 		pool = transform.parent.GetComponent<PoolManager>();
+
+		allies = new BotAI[allyGroup.transform.childCount];
+		for (int i = 0; i < allyGroup.transform.childCount; i++){
+			allies[i] = allyGroup.transform.GetChild(i).GetComponent<BotAI>();
+		}
+
+		players = new Player[playerGroup.transform.childCount];
+		for (int i = 0; i < playerGroup.transform.childCount; i++){
+			players[i] = playerGroup.transform.GetChild(i).GetComponent<Player>();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		facing = transform.rotation * baseFacing;
+		isFiring = false;
 		//Vector3 newVel = Vector3.zero;
 
 		// Living behaviour
@@ -134,7 +150,8 @@ public class BotAI : MonoBehaviour {
 				alertTime = AlertDuration;
 				lastSighted = opponent.transform.position;
 			}
-			else if (state == State.Firing){
+
+			if (isFiring){
 				if (reloadProg >= FireRate && angle < ViewAngle){
 					fireInDirection(opponent.transform);
 					reloadProg = 0;
@@ -173,13 +190,14 @@ public class BotAI : MonoBehaviour {
 		}
 
 		// Check status of nearby allies
-		if (allyGroup != null && state < State.Sighted && resightAllyProg <= 0){
+		if (state < State.Sighted && resightAllyProg <= 0){
 			if (alliesAlarmed()){
 				if (diffVec.magnitude > ThreshClose){
 					newState = State.Sighted;
 				}
-				else {
-					newState = State.Firing;
+				if (diffVec.magnitude < FireThresh) {
+					//newState = State.Firing;
+					isFiring = true;
 				}
 			}
 			resightAllyProg = ResightRate;
@@ -212,9 +230,10 @@ public class BotAI : MonoBehaviour {
 					
 					float distance = rayHit.distance;
 					if (distance < ThreshClose){
-						returnState = State.Firing;
+						//returnState = State.Firing;
+						isFiring = true;
 					}
-					else if (distance < ThreshMed){
+					if (distance < ThreshMed){
 						returnState = State.Sighted;
 					}
 					//print ("head");
@@ -232,10 +251,11 @@ public class BotAI : MonoBehaviour {
 					if (rayHit.collider.transform == target){
 						
 						float distance = rayHit.distance;
-						if (distance < ThreshClose){
-							returnState = State.Firing;
+						if (distance < FireThresh){
+							//returnState = State.Firing;
+							isFiring = true;
 						}
-						else if (distance < ThreshMed){
+						if (distance < ThreshMed){
 							returnState = State.Sighted;
 						}
 						//print ("torso");
@@ -256,8 +276,9 @@ public class BotAI : MonoBehaviour {
 						
 						float distance = rayHit.distance;
 						
-						if (distance < ThreshClose){
-							returnState = State.Firing;
+						if (distance < FireThresh){
+							//returnState = State.Firing;
+							isFiring = true;
 						}
 						else if (distance < ThreshMed){
 							returnState = State.Sighted;
@@ -303,6 +324,7 @@ public class BotAI : MonoBehaviour {
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
 		bulletScript.setProperties(5.5f, gameObject.tag, direction, 4, impactPool);
+		bulletScript.shootableLayer = shootableLayer;
 	}
 
 	// Gradually turns to face given target
@@ -336,7 +358,7 @@ public class BotAI : MonoBehaviour {
 	bool alliesAlarmed(){
 		// TODO: Add StatePos object
 
-		BotAI[] allies = allyGroup.GetComponentsInChildren<BotAI>();
+
 		foreach(BotAI ally in allies){
 			if (ally.getState() >= State.Searching){
 
@@ -432,13 +454,17 @@ public class BotAI : MonoBehaviour {
 	}
 
 	// Deals damage to bot
-	public void Damage(float damage){
+	public void Damage(float damage, GameObject playerSource = null){
 		health -= damage;
 
 		// Schedule bot for death
 		if (health <= 0){
 			//Destroy (gameObject);
 			isDead = true;
+		}
+
+		if (playerSource){
+			opponent = playerSource;
 		}
 	}
 }

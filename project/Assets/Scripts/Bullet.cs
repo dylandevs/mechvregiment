@@ -75,10 +75,14 @@ public class Bullet : MonoBehaviour {
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
-					botHit.Damage(damage);
+
 					if (playerSource){
+						botHit.Damage(damage, playerSource.gameObject);
 						playerSource.TriggerHitMarker();
 						playerSource = null;
+					}
+					else{
+						botHit.Damage(damage);
 					}
 				}
 				return true;
