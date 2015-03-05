@@ -9,8 +9,14 @@ public class BotAI : MonoBehaviour {
 	const byte Sighted = 2;
 	const byte Firing = 3;*/
 
-	public enum State{AllClear, Searching, Sighted, Firing};
+	public enum State{AllClear, Searching, Approaching, VeryClose};
 	enum TargetComponent{Head, Torso, Feet, None};
+
+	// Distance thresholds
+	const int ThreshFire = 18;
+	const int ThreshApproach = 20;
+	const int ThreshClose = 12;
+	const int ThreshTolerance = 2;
 
 	// Predefined state colours
 	Color safeCol = new Color32(0, 255, 0, 1);
@@ -31,18 +37,14 @@ public class BotAI : MonoBehaviour {
 
 	// Search behaviour attributes
 	float alertTime = 0;
+	float searchTime = 0;
 	float searchDelay = 0;
-	const float SearchDelayLow = 4;
-	const float SearchDelayHigh = 7;
-	const float AlertDuration = 20;
+	const float SearchDelayLow = 3;
+	const float SearchDelayHigh = 5;
+	const float AlertDuration = 4;
+	const float SearchDuration = 12;
 	const float SearchRad = 15;
 	const float SearchTurnRate = 0.5f;
-
-	// Distance thresholds
-	const int FireThresh = 18;
-	const int ThreshClose = 12;
-	const int ThreshMed = 20;
-	const int ThreshTolerance = 2;
 
 	// Bot attributes
 	public const float ViewAngle = 120 / 2;
@@ -61,7 +63,7 @@ public class BotAI : MonoBehaviour {
 	public GameObject playerGroup;
 	private Player[] players;
 	NavMeshAgent navMeshAgent;
-	public GameObject currentTarget;
+	public GameObject currentTarget = null;
 
 	// Bot stats
 	State state = State.AllClear;
@@ -70,9 +72,7 @@ public class BotAI : MonoBehaviour {
 	float health = MaxHealth;
 	public float reloadProg = FireRate;
 	bool isDead = false;
-	float resightEnemyProg = ResightRate;
-	float resightAllyProg = ResightRate;
-	bool isFiring = false;
+	float resightProg = ResightRate;
 	
 	public Vector3 lastSighted;
 	Vector3 baseFacing = new Vector3(0, 0, 1);
@@ -102,70 +102,59 @@ public class BotAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		facing = transform.rotation * baseFacing;
-		isFiring = false;
-		//Vector3 newVel = Vector3.zero;
 
 		// Living behaviour
 		if (!isDead){
-			// Calculating useful values
-			Vector3 diffVec = opponent.transform.position - transform.position;
-			float angle = Vector3.Angle(facing, diffVec);
 
-			//state = checkInSight(opponent.transform);
+			if (!currentTarget){
+				AttemptAcquireTarget();
+			}
 
-			state = getCurrentState(angle, diffVec);
+			if (currentTarget){
+				// Calculating useful values
+				Vector3 diffVec = currentTarget.transform.position - transform.position;
+				float angle = Vector3.Angle(facing, diffVec);
 
-			/*// Check status of nearby allies
-			if (allyGroup != null && state == AllClear || state == Searching){
-				if (alliesAlarmed()){
-					if (diffVec.magnitude > ThreshClose){
-						state = Sighted;
-					}
-					else {
-						state = Firing;
+				CalculateCurrentState();
+
+				// Determine if firing is appropriate
+				if (diffVec.magnitude < ThreshFire && currentTarget && state > State.Searching){
+					if (reloadProg >= FireRate && angle < ViewAngle){
+						fireInDirection(currentTarget.transform);
+						reloadProg = 0;
 					}
 				}
-			}*/
+			}
 
 			// Act based on state
 			if (state == State.AllClear){
 				setSurfaceColour(safeCol);
-				idle();
-				//navMeshAgent.velocity = Vector3.zero;
+				Idle();
 			}
 			else if (state == State.Searching){
 				navMeshAgent.stoppingDistance = 0;
 				navMeshAgent.speed = MoveSpeed;
 				setSurfaceColour(srchCol);
-				search();
+				Search();
 			}
-			else if (state == State.Sighted){
-				//faceTarget(opponent);
-				//newVel += MoveSpeed * facing;
+			else if (state == State.Approaching){
 				navMeshAgent.stoppingDistance = ThreshClose;
 				navMeshAgent.speed = MoveSpeed;
 				navMeshAgent.destination = lastSighted;
 				setSurfaceColour(warnCol);
-
-				alertTime = AlertDuration;
-				lastSighted = opponent.transform.position;
 			}
-
-			if (isFiring){
-				if (reloadProg >= FireRate && angle < ViewAngle){
-					fireInDirection(opponent.transform);
-					reloadProg = 0;
-				}
-				faceTarget(opponent.transform);
+			else if (state == State.VeryClose){
+				FaceTarget(currentTarget);
 				setSurfaceColour(dngrCol);
 				navMeshAgent.velocity = Vector3.zero;
-
-				alertTime = AlertDuration;
-				lastSighted = opponent.transform.position;
 			}
 
-			// Keep reloading regardless of state
-			reloadProg += Time.deltaTime;
+			if (reloadProg < FireRate){
+				reloadProg += Time.deltaTime;
+			}
+			if (alertTime > 0){
+				alertTime -= Time.deltaTime;
+			}
 
 		}
 		else{
@@ -173,131 +162,127 @@ public class BotAI : MonoBehaviour {
 		}
 	}
 
-	State getCurrentState(float angle, Vector3 diffVec){
-		State newState = state;
-		resightAllyProg -= Time.deltaTime;
-		resightEnemyProg -= Time.deltaTime;
+	// Tries to find viable target from existing list
+	void AttemptAcquireTarget(){
+		float closestDistance = 0;
 
-		// Get state based on cone of vision
-		if (resightEnemyProg <= 0) {
-			newState = checkInSight (opponent.transform);
-			resightEnemyProg = ResightRate;
-		}
+		foreach (Player player in players){
+			if (player.gameObject.GetActive()){
+				if (IsInSight(player.gameObject)){
+					float distance = Vector3.Distance(player.transform.position, transform.position);
 
-		// Determine if still searching
-		if (alertTime > 0 && newState < State.Sighted){
-			newState = State.Searching;
-		}
-
-		// Check status of nearby allies
-		if (state < State.Sighted && resightAllyProg <= 0){
-			if (alliesAlarmed()){
-				if (diffVec.magnitude > ThreshClose){
-					newState = State.Sighted;
-				}
-				if (diffVec.magnitude < FireThresh) {
-					//newState = State.Firing;
-					isFiring = true;
+					if (distance > closestDistance){
+						currentTarget = player.gameObject;
+						closestDistance = distance;
+					}
 				}
 			}
-			resightAllyProg = ResightRate;
 		}
-
-		return newState;
 	}
 
-	// Determines whether given vector difference is near, mid, or long range and within FoV
-	State checkInSight(Transform target, bool isAlly = false){//float angle, Vector3 diffVec){
-		Vector3 diffVec = target.position - transform.position;
-		Vector3 headVec = diffVec + new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
-		Vector3 feetVec = diffVec - new Vector3 (0, target.collider.bounds.extents.y - 0.1f, 0);
+	void CalculateCurrentState(){
+		State newState = state;
+		resightProg -= Time.deltaTime;
+
+		if (resightProg <= 0){
+
+			float distanceToTarget = Vector3.Distance(currentTarget.transform.position, transform.position);
+
+			// If fully alert, can detect nearby enemies outside of FoV
+			if (alertTime > 0){
+				if (distanceToTarget < ThreshClose){
+					newState = State.VeryClose;
+					alertTime = AlertDuration;
+				}
+				else if (distanceToTarget < ThreshApproach){
+					newState = State.Approaching;
+					alertTime = AlertDuration;
+				}
+
+				lastSighted = currentTarget.transform.position;
+			}
+
+			// If no targets in sight, check status of allies
+			if (state < State.Approaching){
+				BotAI ally = null;
+				if (ally = AreAlliesAlarmed()){
+					currentTarget = ally.currentTarget;
+					lastSighted = ally.lastSighted;
+					newState = ally.state;
+					
+					if (newState > State.Searching){
+						alertTime = AlertDuration;
+					}
+				}
+			}
+
+			if (alertTime <= 0){
+				// Calculate state based on visibility of current target
+				if (IsInSight(currentTarget)){
+					
+					if (distanceToTarget < ThreshClose){
+						newState = State.VeryClose;
+					}
+					else if (distanceToTarget < ThreshApproach){
+						newState = State.Approaching;
+					}
+
+					alertTime = AlertDuration;
+					searchTime = SearchDuration;
+					lastSighted = currentTarget.transform.position;
+				}
+				else if (searchTime > 0){
+					newState = State.Searching;
+					currentTarget = null;
+				}
+				else{
+					newState = State.AllClear;
+					currentTarget = null;
+				}
+			}
+
+			resightProg = ResightRate;
+		}
+
+		state = newState;
+	}
+
+	// Check whether subject is in sight
+	bool IsInSight(GameObject subject){
+		Vector3 diffVec = subject.transform.position - transform.position;
+		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
+		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
 		float angle = Vector3.Angle(facing, diffVec);
-		State returnState = State.AllClear;
 
 		// Check if within FoV
 		if (angle <= ViewAngle){
-
+			
 			// Cast ray to determine obstructions in sight
 			RaycastHit rayHit;
-
-
+			
 			// Check head
-
 			if (Physics.Raycast(transform.position, headVec, out rayHit)){
-				
 				// If hit target, no obstruction
-				if (rayHit.collider.transform == target){
-					
-					float distance = rayHit.distance;
-					if (distance < ThreshClose){
-						//returnState = State.Firing;
-						isFiring = true;
-					}
-					if (distance < ThreshMed){
-						returnState = State.Sighted;
-					}
-					//print ("head");
-
-					if (!isAlly){
-						targetVisible = TargetComponent.Head;
-					}
+				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){	
+					return true;
 				}
 			}
-
-			if (returnState == State.AllClear){
-				if (Physics.Raycast(transform.position, diffVec, out rayHit)){
-					
-					// If hit target, no obstruction
-					if (rayHit.collider.transform == target){
-						
-						float distance = rayHit.distance;
-						if (distance < FireThresh){
-							//returnState = State.Firing;
-							isFiring = true;
-						}
-						if (distance < ThreshMed){
-							returnState = State.Sighted;
-						}
-						//print ("torso");
-						
-						if (!isAlly){
-							targetVisible = TargetComponent.Torso;
-						}
-					}
+			else if (Physics.Raycast(transform.position, diffVec, out rayHit)){
+				// If hit target, no obstruction
+				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){
+					return true;
 				}
 			}
-
 			// Check feet
-			if (returnState == State.AllClear){
-				if (Physics.Raycast(transform.position, feetVec, out rayHit)){
-					
-					// If hit target, no obstruction
-					if (rayHit.collider.transform == target){
-						
-						float distance = rayHit.distance;
-						
-						if (distance < FireThresh){
-							//returnState = State.Firing;
-							isFiring = true;
-						}
-						else if (distance < ThreshMed){
-							returnState = State.Sighted;
-						}
-						//print ("feet");
-
-						if (!isAlly){
-							targetVisible = TargetComponent.Feet;
-						}
-					}
+			else if (Physics.Raycast(transform.position, feetVec, out rayHit)){	
+				// If hit target, no obstruction
+				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){
+					return true;
 				}
 			}
 		}
 
-		if (returnState == State.AllClear){
-			targetVisible = TargetComponent.None;
-		}
-
-		return returnState;
+		return false;
 	}
 
 	// Calculates direction to fire in based on last-seen target component
@@ -329,10 +314,10 @@ public class BotAI : MonoBehaviour {
 
 	// Gradually turns to face given target
 	// NOTE: This is time step-based, meaning variable turning speeds. Consider using a fixed/max turn speed?
-	void faceTarget(Transform target){
+	void FaceTarget(GameObject target){
 
 		// Shifting y coordinates into bot transform space
-		Vector3 targetVec = target.position;
+		Vector3 targetVec = target.transform.position;
 		targetVec.y = transform.position.y;
 		Vector3 newDiffVec = targetVec - transform.position;
 
@@ -346,46 +331,29 @@ public class BotAI : MonoBehaviour {
 		renderer.material.color = newCol;
 	}
 
-	public State getState(){
-		return state;
-	}
-
-	public Transform getTransform(){
-		return transform;
-	}
-
 	// Determines whether any allies in view are in alarmed state
-	bool alliesAlarmed(){
-		// TODO: Add StatePos object
-
+	BotAI AreAlliesAlarmed(){
+		float closestAllyDist = 0;
+		BotAI closestAlly = null;
+		State mostAlarmed = state;
 
 		foreach(BotAI ally in allies){
-			if (ally.getState() >= State.Searching){
+			if (ally.state > mostAlarmed && ally.gameObject.GetActive()){
 
-				// Check if ally is in sight of current bot
-				State allyVisible = checkInSight(ally.getTransform(), true);
-
-				if (allyVisible >= State.Searching){
-					lastSighted = ally.lastSighted;
-					return true;
+				float distance = Vector3.Distance(ally.transform.position, transform.position);
+				
+				if (distance > closestAllyDist && distance <= ThreshApproach){
+					closestAlly = ally;
+					mostAlarmed = ally.state;
 				}
 			}
 		}
 
-		return false;
-	}
-
-	// Resets idle variables
-	void resetIdle(){
-		actionTime = 0;
-		idleDelay = 4.5f;
-		idleState = 0;
-		navMeshAgent.stoppingDistance = 0;
-		navMeshAgent.speed = WalkSpeed;
+		return closestAlly;
 	}
 
 	// Idle behaviour management
-	void idle(){
+	void Idle(){
 
 		// Increment time progress, set state if necessary
 		actionTime += Time.deltaTime;
@@ -395,7 +363,7 @@ public class BotAI : MonoBehaviour {
 			navMeshAgent.speed = WalkSpeed;
 			idleState = IdleMoving;
 			actionTime = 0;
-			navMeshAgent.destination = getRandPos(IdleWalkRad, transform.position);
+			navMeshAgent.destination = GetRandPos(IdleWalkRad, transform.position);
 			idleDelay = Random.Range(IdleDelayLow, IdleDelayHigh);
 		}
 
@@ -407,7 +375,7 @@ public class BotAI : MonoBehaviour {
 		}
 		else if (idleState == IdleMoving){
 			// Stop moving if arrived or if time exceeded
-			if (hasAgentArrivedAtDest() || actionTime > idleDelay) {
+			if (HasAgentArrivedAtDest() || actionTime > idleDelay) {
 				navMeshAgent.Stop();
 				idleState = IdleTurning;
 				actionTime = 0;
@@ -416,36 +384,31 @@ public class BotAI : MonoBehaviour {
 		}
 	}
 
-	// Resets search variables
-	void resetSearchVariables(){
-		searchDelay = 0;
-	}
-
 	// Search behaviour management
-	void search(){
+	void Search(){
 
 		// Decrement alert progress
-		alertTime -= Time.deltaTime;
+		searchTime -= Time.deltaTime;
 		searchDelay -= Time.deltaTime;
 
 		// Move to new position
 		if (searchDelay <= 0){
 			searchDelay = Random.Range(SearchDelayLow, SearchDelayHigh);
-			navMeshAgent.destination = getRandPos(SearchRad, lastSighted);
+			navMeshAgent.destination = GetRandPos(SearchRad, lastSighted);
 		}
-		else if (hasAgentArrivedAtDest()){
+		else if (HasAgentArrivedAtDest()){
 			// Rotate side to side
 			transform.rotation *= Quaternion.Euler(new Vector3(0, SearchTurnRate, 0) * Mathf.Sin(alertTime));
 		}
 	}
 	
-	bool hasAgentArrivedAtDest(){
+	bool HasAgentArrivedAtDest(){
 		float remainder = navMeshAgent.remainingDistance;
 		return (remainder != Mathf.Infinity && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0);
 	}
 
 	// Gets random position on navmesh within given radius
-	Vector3 getRandPos(float radius, Vector3 centre){
+	Vector3 GetRandPos(float radius, Vector3 centre){
 		Vector3 chosenDir = Random.insideUnitSphere * radius;
 		chosenDir += centre;
 		NavMeshHit hit;
@@ -464,7 +427,7 @@ public class BotAI : MonoBehaviour {
 		}
 
 		if (playerSource){
-			opponent = playerSource;
+			currentTarget = playerSource;
 		}
 	}
 }
