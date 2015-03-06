@@ -490,25 +490,35 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Testing for ground directly beneath and at edges of collider
 	bool IsGrounded(){
-		bool groundState = false;
+		RaycastHit rayHit;
 
-		if (!groundState){
-			groundState = Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, groundCheckVector.y);
+		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y)){
+			if (rayHit.collider.tag == "Terrain"){
+				return true;
+			}
 		}
-		if (!groundState) {
-			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, groundCheckVector.y);
+		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
+			if (rayHit.collider.tag == "Terrain"){
+				return true;
+			}
 		}
-		if (!groundState){
-			groundState = Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, groundCheckVector.y);
+		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
+			if (rayHit.collider.tag == "Terrain"){
+				return true;
+			}
 		}
-		if (!groundState){
-			groundState = Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, groundCheckVector.y);
+		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
+			if (rayHit.collider.tag == "Terrain"){
+				return true;
+			}
 		}
-		if (!groundState){
-			groundState = Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, groundCheckVector.y);
+		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
+			if (rayHit.collider.tag == "Terrain"){
+				return true;
+			}
 		}
-		
-		return groundState;
+
+		return false;
 	}
 	
 	// Sets controller that this player will be associated with
