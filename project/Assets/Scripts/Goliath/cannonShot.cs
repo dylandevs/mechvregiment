@@ -5,17 +5,23 @@ public class cannonShot : MonoBehaviour {
 
 	public Vector3 constantSpeed;
 	public float explosionRadius = 5f;
-	public GameObject plasmaExplodePrefab;
+
+	public PoolManager plasmaExplodePool;
+	public PoolManager pool;
+
+	public ParticleEmitter explode1;
+	public ParticleEmitter explode2;
+
 	public Vector3 explosionLocation;
-	public Quaternion hitRotation;
 	public Vector3 remainsLocation;
 
 	int layerMask = 1 << 3;
 	float timer;
-
+	float speed = 6;
+	float waitOutTimer;
 	// Use this for initialization
 	void Start () {
-		rigidbody.velocity = gameObject.transform.forward * 100;
+		pool = transform.parent.GetComponent<PoolManager>();
 		layerMask = ~layerMask;
 	}
 	
@@ -24,10 +30,12 @@ public class cannonShot : MonoBehaviour {
 		// turn off object after a certain amount of time
 		timer += Time.deltaTime;
 		
-		if (timer > 5f) {
-			gameObject.SetActive(false);
+		if (timer > 8f) {
+			pool.Deactivate(gameObject);
 			timer = 0;
 		}
+
+		transform.Translate(Vector3.forward * speed * Time.deltaTime);
 	}
 
 	void FixedUpdate(){
@@ -39,19 +47,15 @@ public class cannonShot : MonoBehaviour {
 		//hitRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		//remainsLocation = hit.point + hit.normal;
 
-		if (Physics.Raycast (ray, 50 * Time.deltaTime,layerMask)) 
+		if (Physics.Raycast (ray,out hit, 50 * Time.deltaTime,layerMask)) 
 		{
-			if(collider.tag == "Player"){
-				gameObject.SetActive(false);
+			if(hit.collider.tag == "Player"){
 				doDamageCannon();
 			}
-
 			else{
-				if (plasmaExplodePrefab != null) 
-				{	
-				 //tell effects script what to do
-				}
-				
+
+				GameObject plasmaExplosion = plasmaExplodePool.Retrieve(hit.point);
+
 				//hurts whats near the boom depending on a overlap sphere function
 				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 				foreach (Collider c in colliders) 
@@ -65,11 +69,23 @@ public class cannonShot : MonoBehaviour {
 						hp.ReciveDamage(damage * damageRatio);
 					}*/
 
-					gameObject.SetActive(false);
+					explode1.emit = false;
+					explode2.emit = false;
+					waitOutTimer = 3;
+					if(waitOutTimer > 0){
+						waitOutTimer -= Time.deltaTime;
+						pool.Deactivate(gameObject);
+					}
+
 				}
 			}
 
 		}
+	}
+
+	void OnEnable(){
+		explode1.emit = true;
+		explode2.emit = true;
 	}
 
 	void doDamageCannon(){

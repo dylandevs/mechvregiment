@@ -3,66 +3,101 @@ using System.Collections;
 
 public class RocketScript : MonoBehaviour {
 	//misse target area
-	public GameObject target;
+	public Vector3 target;
 
 	//stuff fr detonation
-	public GameObject explosionPrefab;
 	public float damage = 200f;  //damage at center
 	public float explosionRadius = 3f;
-	public GameObject missleRemains;
+
+	//public GameObject missleRemains;
+	public ParticleEmitter smokeParticles;
+
+	//the smoke and the misslemesh
+	public GameObject missleMesh;
+
 	//speeds for rockets
-	private float speed = 20f;
+	private float speed = 100f;
 	private float trnSpeed = 20f;
-	private float speedTwo = 50f;
-	private float trnSpeedTwo = 200f;
 	private Vector3 mustHit;
 
+	PoolManager pool;
+	public PoolManager explosionPool;
+
+	public float destroyDelay;
 	float timer = 0;
+	float turnTimer;
+	bool hitGround;
 
 	void Start(){
-
+		pool = transform.parent.GetComponent<PoolManager>();
 	}
 
 	// Update is called once per frame
 	void Update(){
 		timer += Time.deltaTime * 5;
 	}
+
 	void FixedUpdate () {
+
 		//must only do once seems to add consistantly
-		mustHit = target.transform.position += new Vector3 (Random.Range (-0.5F, 0.5F), 0, Random.Range (-0.5F, 0.5F));
-
-		if(timer <= 7){
-			transform.Translate (Vector3.forward * speed * Time.deltaTime);
-			var q = Quaternion.LookRotation(mustHit - transform.position);
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, q, trnSpeed * Time.deltaTime);
+		if (destroyDelay > 0){
+			destroyDelay -= Time.deltaTime;
+			if(destroyDelay < 4){
+				smokeParticles.emit = false;
+			}
+			if (destroyDelay <= 0){
+				gameObject.SetActive(false);
+			}
 		}
 
-		if(timer >= 7.1){
-			transform.Translate (Vector3.forward * speedTwo * Time.deltaTime);
-			var q = Quaternion.LookRotation(mustHit - transform.position);
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, q, trnSpeedTwo * Time.deltaTime);
+		if(turnTimer > 0){
+			turnTimer -= Time.deltaTime;
+			Vector3 targetDir = mustHit - transform.position;
+			float step = speed * Time.deltaTime;
+			Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
+			Debug.DrawRay(transform.position, newDir, Color.red);
+			transform.rotation = Quaternion.LookRotation(newDir);
 		}
 
-		//fire a raycast ahead to ensure you wont miss and go through a collider
-		Ray ray = new Ray(transform.position,transform.forward);
-		if (Physics.Raycast (ray, 1)) 
-		{
-			Detonate();
+		if(hitGround == false){
+			transform.Translate(Vector3.forward * speed * Time.deltaTime);
 		}
-		
+
+		if(hitGround == false){
+			//fire a raycast ahead to ensure you wont miss and go through a collider
+			Ray ray = new Ray(transform.position,transform.forward);
+			RaycastHit explosionLocation;
+
+			if (Physics.Raycast (ray,out explosionLocation, 2f)) 
+			{
+				missleMesh.SetActive(false);
+				hitGround = true;
+				Vector3 explosionPlace = explosionLocation.point;
+				//spawns the Boom
+				explosionPool.Retrieve(explosionPlace);
+				Detonate();
+			}
+		}
+
 	}// end of fixed update
+
+	void OnEnable(){
+		smokeParticles.emit = true;
+		turnTimer = 1;
+		hitGround = false;
+		missleMesh.SetActive(true);
+	}
+
+	public void SetTarget(Vector3 newTarget){
+		mustHit = newTarget + new Vector3 (Random.Range (-10F, 10F), 0, Random.Range (-10F, 10F));
+	}
 
 	void Detonate()
 	{
-		//makes the boom effects if there is one loaded
-		if (explosionPrefab != null) 
-		{
-			Instantiate(explosionPrefab, transform.position,Quaternion.identity);
 
-			//change this to the location of the raycast ending
-			Instantiate(missleRemains,transform.position,Quaternion.identity);
-		}
-		
+		destroyDelay = 5f;
+
+
 		//hurts whats near the boom depending on a overlap sphere function
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 		foreach (Collider c in colliders) 
@@ -79,9 +114,6 @@ public class RocketScript : MonoBehaviour {
 			
 			//turns it off nd rests rotation
 			//reset the object
-			gameObject.SetActive(false);
-			timer = 0;
-			
 		}
 	}
 }

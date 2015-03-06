@@ -3,12 +3,12 @@ using System.Collections;
 
 public class MechShoot : MonoBehaviour {
 	//minigun things
-	public float range = 100.0f;
+	public float range = 100000000000.0f;
 	public float damage = 50f;
 
 	//variables for rocketFire
-	public float coolDownRocket = 4f;
-	float cooldownRemainingRocket = 0;	
+	public float coolDownRocket = 10f;
+	public float cooldownRemainingRocket = 0;	
 	public float rocketAimSpeed;
 
 	//modes
@@ -35,6 +35,12 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonAimer;
 	public GameObject cannonArm;
 	public GameObject cannonRet;
+	public GameObject cannonEffect;
+	public GameObject cannonEffect2;
+	public GameObject cannonEffectParent;
+	public GameObject cannonEffect2Parent;
+	public GameObject rangeIndicator;
+	public GameObject outOfRange;
 	//masks
 	public LayerMask mask;
 	public LayerMask maskForRet;
@@ -46,13 +52,13 @@ public class MechShoot : MonoBehaviour {
 
 	//firing objcts
 	public MinigunFirer miniGunFirer;
-	public GameObject rocketFirer;
 	public RocketFirer rocketScript;
 	
 	//hydra variables
 	const int left = 0;
 	const int right = 1;
 
+	float missleRetTimer;
 	// Use this for initialization
 	void Start () {
 		flagCarried.SetActive(false);
@@ -63,6 +69,20 @@ public class MechShoot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//update aimer pos.
+		updateAimerPos();
+
+		//show missile landing zone
+		if(missleRetTimer > 0){
+			missleReticle.SetActive(true);
+			missleRetTimer -= Time.deltaTime;
+
+			if(missleRetTimer <= 0){
+				missleReticle.SetActive(false);
+			}
+
+		}
+
 
 		//All hydra butons and uses
 		float lTrig = SixenseInput.Controllers[left].Trigger;
@@ -85,9 +105,6 @@ public class MechShoot : MonoBehaviour {
 			resetModes();
 			miniGunMode = true;
 		}
-
-
-
 
 		//MODE HANDLING for keyboard************************
 		/*
@@ -114,11 +131,17 @@ public class MechShoot : MonoBehaviour {
 
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
-
 		if (miniGunMode == true) {
 			//aiming the minigun and placing the reticle in the right place
 			miniGunReticle.SetActive(true);
 			cannonRet.SetActive(true);
+			cannonEffect.SetActive(true);
+			cannonEffect2.SetActive(true);
+
+			//spin the reticle
+			cannonEffectParent.transform.Rotate(cannonEffect.transform.right * Time.deltaTime * 10,Space.World);
+			cannonEffect2Parent.transform.Rotate(cannonEffect2.transform.right * Time.deltaTime * 10,Space.World);
+			
 			//********needs adjusting after model import*****************************************************
 			//aim the position of where the minigun is going to fire from
 			/*
@@ -188,6 +211,12 @@ public class MechShoot : MonoBehaviour {
 						Vector3 placeHitCannon = ray2HitCannon.point;
 						cannonRet.transform.position = placeHitCannon;
 						cannonRet.transform.forward = cameraPlace.transform.forward;
+
+						cannonEffect.transform.position = placeHitCannon;
+						cannonEffect.transform.forward = cameraPlace.transform.forward;
+
+						cannonEffect2.transform.position = placeHitCannon;
+						cannonEffect2.transform.forward = cameraPlace.transform.forward;
 					}
 				}
 			}
@@ -198,6 +227,12 @@ public class MechShoot : MonoBehaviour {
 					Vector3 retPosC = placeHitRockC.normalized * -3;
 					cannonRet.transform.position = placeHitRockC + retPosC;
 					cannonRet.transform.forward = hitInfoAimerCannon.normal;
+
+					cannonEffect.transform.position = placeHitRockC + retPosC;
+					cannonEffect.transform.forward = hitInfoAimerCannon.normal;
+					
+					cannonEffect2.transform.position = placeHitRockC + retPosC;
+					cannonEffect2.transform.forward = hitInfoAimerCannon.normal;
 				}
 			}
 				
@@ -219,6 +254,12 @@ public class MechShoot : MonoBehaviour {
 						Vector3 hittyThingy = connonsSecondRayHit.point;
 						cannonRet.transform.position = hittyThingy;
 						cannonRet.transform.forward = cameraPlace.transform.forward;
+
+						cannonEffect2.transform.position = hittyThingy;
+						cannonEffect2.transform.forward = cameraPlace.transform.forward;
+						
+						cannonEffect.transform.position = hittyThingy;
+						cannonEffect.transform.forward = cameraPlace.transform.forward;
 					}
 				}
 			}
@@ -262,6 +303,7 @@ public class MechShoot : MonoBehaviour {
 				
 			//turn on the aiming device
 			missleReticle.SetActive(true);
+			rangeIndicator.SetActive(true);
 			//********needs adjusting after model import*****************************************************
 			/*
 			if(keyboard == true){
@@ -292,27 +334,37 @@ public class MechShoot : MonoBehaviour {
 
 			//******* change it so that is there is no target says no target *******
 
+			//updates arm pos
+			Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+			miniGunArm.transform.up = -vecEnd;
 
 			//makes the ray
-			if(cooldownRemainingRocket <=0){
-				Ray rayRockMode = new Ray(rocketAimer.transform.position,rocketAimer.transform.forward);
+			if(cooldownRemainingRocket <=0){	
+				Ray rayRockMode = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
 				RaycastHit rockModeRayHit;
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-				if(Physics.Raycast (rayRockMode, out rockModeRayHit,range,maskRocket)){
+				if(Physics.Raycast (rayRockMode, out rockModeRayHit,30,maskRocket)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
+
+						outOfRange.SetActive(false);
+
 						Vector3 placeHitRock = rockModeRayHit.point;
-						missleTargetArea.transform.position = placeHitRock;
+						missleTargetArea.transform.position = placeHitRock + new Vector3(0,0.1f,0);
 						missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
+						
+							if(rTrig > 0.8f && cooldownRemainingRocket <= 0){
+								missleRetTimer = 5.5f;
+								cooldownRemainingRocket = coolDownRocket;
+								rocketScript.rocketDelayTimer = RocketFirer.RocketDelay;
+							}
+						}
+
+				}else {
+					outOfRange.SetActive(true);
 					}
-					else {
-					//make a target out of range graphic
-					}
-				}
 			}
-			if(rTrig > 0.8f && cooldownRemainingRocket <= 0){
-				cooldownRemainingRocket = coolDownRocket;
-				rocketScript.firing = true;
-			}
+			
+
 
 			//fire the rocket function in rocket arm script
 /*
@@ -324,6 +376,9 @@ public class MechShoot : MonoBehaviour {
 
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
+
+			updateAimerPos();
+
 			//makes the ray
 			Ray minMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
 			RaycastHit minHit;
@@ -378,10 +433,14 @@ public class MechShoot : MonoBehaviour {
 		minionMode = false;
 		//turn off the aimers when not in the mode
 		cannonRet.SetActive(false);
+		rangeIndicator.SetActive(false);
+		outOfRange.SetActive(false);
 		missleReticle.SetActive(false);
 		miniGunReticle.SetActive (false);
 		lightBeam.SetActive(false);
 		notLightBeam.SetActive (false);
+		cannonEffect.SetActive(false);
+		cannonEffect2.SetActive(false);
 	}
 
 	public void releaseFlag(){
@@ -395,7 +454,13 @@ public class MechShoot : MonoBehaviour {
 
 	public void updateAimerPos(){
 		//add limitations to aimers and unparent it
-		miniGunAimer.transform.rotation = hydraRight.transform.rotation;
-		miniGunAimer.transform.rotation = hydraLeft.transform.rotation;
+		miniGunAimer.transform.localEulerAngles = hydraRight.transform.localEulerAngles;
+		miniGunAimer.transform.position = hydraRight.transform.position;
+
+		rocketAimer.transform.position = hydraRight.transform.position;
+		rocketAimer.transform.localEulerAngles = hydraRight.transform.localEulerAngles;
+
+		cannonAimer.transform.localEulerAngles = hydraLeft.transform.localEulerAngles;
+		cannonAimer.transform.position = hydraLeft.transform.position;
 	}
 }

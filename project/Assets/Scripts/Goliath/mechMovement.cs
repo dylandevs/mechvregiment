@@ -5,7 +5,8 @@ public class mechMovement : MonoBehaviour {
 
 	//game objects and positions
 	public GameObject bottomHalf;
-	public GameObject topHalf;
+	public GameObject topHalfX;
+	public GameObject topHalfY;
 	public GameObject miniMapCam;
 	public MechShoot triggerFlagDropThing;
 	public Vector3 topDir;
@@ -71,18 +72,19 @@ public class mechMovement : MonoBehaviour {
 			if(rStickX >= 0.01){
 				isMoving = true;
 			}
+
 			if(rStickY >= 0.01){
 				isMoving = true;
 			}
 
 			//Hydra Rotaiton
-			if (topHalf.transform.eulerAngles.x <= 25||topHalf.transform.eulerAngles.x >= 180) {
-				topHalf.transform.Rotate(topHalf.transform.right * rotSpeedY * -rStickY, Space.World);
+			if (topHalfX.transform.eulerAngles.x <= 25||topHalfX.transform.eulerAngles.x >= 180) {
+				topHalfY.transform.Rotate(topHalfY.transform.right * rotSpeedY * -rStickY, Space.World);
 				//print ("I am turning around by " + -1*lStickY);
 			}
 
 			// figure out what the frack is going on here
-			topHalf.transform.Rotate (topHalf.transform.up * rotSpeedX * rStickX, Space.Self);
+			topHalfX.transform.Rotate (topHalfX.transform.up * rotSpeedX * rStickX, Space.World);
 
 			//print ("I am looking updown by " + -1*lStickX);
 
@@ -155,7 +157,7 @@ public class mechMovement : MonoBehaviour {
 		}
 
 		//match the top half to the bottom half when not moving
-		topDir = topHalf.transform.eulerAngles;
+		topDir = topHalfX.transform.eulerAngles;
 		bottomDir = bottomHalf.transform.eulerAngles;
 	
 		if (isMoving == false) {
@@ -166,9 +168,9 @@ public class mechMovement : MonoBehaviour {
 		}
 		
 
-	}// End oaf update
+	}// End of update
 
-	void damage(float amount){
+	void takeDamage(float amount){
 
 		damagedTime = 0;
 
@@ -184,12 +186,12 @@ public class mechMovement : MonoBehaviour {
 		//aligns the body top and bottom half
 		Vector3 newPos = bottomHalf.transform.position;
 		newPos += new Vector3 (0,4,0);
-		topHalf.transform.position = newPos;
+		topHalfX.transform.position = newPos;
 
 		//update minimap
 		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,100,0);
 		miniMapCam.transform.position = newPosCam;
-		Quaternion camRot = Quaternion.Euler(90,topHalf.transform.rotation.eulerAngles.y,0);
+		Quaternion camRot = Quaternion.Euler(90,topHalfX.transform.rotation.eulerAngles.y,0);
 		miniMapCam.transform.rotation = camRot;
 	}
 }

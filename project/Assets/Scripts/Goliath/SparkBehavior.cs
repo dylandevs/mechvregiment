@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MuzzleFlashScript : MonoBehaviour {
+public class SparkBehavior : MonoBehaviour {
 
-	float life = 0.11f;
+	float life = 0.25f;
 	PoolManager pool;
 	// Use this for initialization
 	void Start () {
@@ -12,16 +12,16 @@ public class MuzzleFlashScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		
 		life -= Time.deltaTime;
-
+		
 		if (life <= 0) {
 			pool.Deactivate(gameObject);
 		}
 	}
-
+	
 	void OnEnable(){
-		life = 0.11f;
+		life = 0.25f;
 	}
-
+	
 }

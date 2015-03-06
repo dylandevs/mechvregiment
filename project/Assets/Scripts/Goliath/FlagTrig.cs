@@ -21,7 +21,7 @@ public class FlagTrig : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collide){
 		print(collide.tag);
-		if(collide.tag == "aimerWall"){
+		if(collide.tag == "Player"){
 			flagActive = true;
 		}
 		//display Right bumper to pick up UI

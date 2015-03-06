@@ -12,17 +12,22 @@ public class MinigunFirer : MonoBehaviour {
 	public GameObject cameraPlace;
 	public GameObject miniGunReticle;
 
-	public UIEffectHandling effects;
+	public PoolManager sparks;
 	public PoolManager tracerPool;
+	public PoolManager flashPool;
+	public PoolManager plasmaExplosion;
+	public PoolManager plasmaShot;
 
 	public LayerMask mask;
 	public LayerMask maskForRet;
 
 	public bool cannonShoot;
 	public bool fire;
+	public bool overHeated;
 
 	public float range = 10000000.0f;
 	public float overHeat;
+	public float cannonCDR = 0;
 
 	float coolDown;
 	float coolDownWarmUp;
@@ -30,9 +35,9 @@ public class MinigunFirer : MonoBehaviour {
 	int cannonCounter;
 	float cannonCD = 8f;
 	float cooldownRemaining = 0;
-	float cannonCDR = 0;
+
 	bool warmedUp;
-	bool overHeated;
+
 
 	// Use this for initialization
 	void Start () {
@@ -51,24 +56,18 @@ public class MinigunFirer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//adjust the reticle 
 
+		//adjust the reticle 
 		//get primary direction
 		Ray ray = new Ray(tracerStart.transform.position, tracerStart.transform.forward);
 		RaycastHit rayHit;
-
-		Debug.DrawRay(tracerStart.transform.position,tracerStart.transform.forward * 1000, Color.red);
 
 		if(Physics.Raycast (ray, out rayHit,range,mask)){
 			Vector3 hitPoint = rayHit.point;
 			//fire a ray back at the end of the first ray
 			Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
 			RaycastHit ray2Hit;
-
-			print ("i hit something");
-
-			Debug.DrawRay(hitPoint,cameraPlace.transform.position-hitPoint, Color.green);
-
+			
 			if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
 				if(ray2Hit.collider.tag == "aimerWall"){
@@ -90,15 +89,10 @@ public class MinigunFirer : MonoBehaviour {
 	
 		//this is for when it doesnt hit an object it still displays
 		else{
-			Vector3 vecEnd = tracerStart.transform.forward * range;
+			Vector3 vecEnd = tracerStart.transform.forward * 10000;
 			Vector3 miniArmPos = tracerStart.transform.position; 
 			Vector3 sendBack =  miniArmPos += vecEnd;
-			// limit these angles properly
-
-			print ("i hit nothing");
-
 			Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
-			Debug.DrawRay(sendBack,cameraPlace.transform.position-sendBack, Color.yellow);
 			RaycastHit ray2HitNo;
 			if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
@@ -109,7 +103,6 @@ public class MinigunFirer : MonoBehaviour {
 				}
 			}
 		}
-
 
 		//**cooldown stuff**
 		//counting down until next shot is fired
@@ -132,7 +125,7 @@ public class MinigunFirer : MonoBehaviour {
 			warmedUp = false;
 		}
 		//when hitting overheated can't fire
-		if(overHeat > 50){
+		if(overHeat > 75){
 			overHeated = true;
 		}
 		if(overHeat <= 0){
@@ -157,28 +150,19 @@ public class MinigunFirer : MonoBehaviour {
 			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
 			Ray rayFire = new Ray (tracerStart.transform.position, endShot);;
 
-			//handles effects
+			//handles effects of bullet
+
 			GameObject tracer = tracerPool.Retrieve(tracerStart.transform.position);
-			tracer.transform.forward = endShot;
+			tracer.transform.up = endShot;
+
+			TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
+			tracerRound.sparkPool = sparks;
+			//flash
+			GameObject flash = flashPool.Retrieve(tracerStart.transform.position);
+			flash.transform.up = endShot;
 
 			RaycastHit hitInfoFire;
-			//fires the adjusted ray and maskes the retwall
-			if (Physics.Raycast (rayFire, out hitInfoFire, range, mask)) {
-				// if it hits a person do some damage  *********************
-				Vector3 hitPointFire = hitInfoFire.point;
-				//if graphic is there apply a bullet decal
-				if (sparkPrefab != null && hitInfoFire.collider.tag != "Player") {
-					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
-					Instantiate(sparkPrefab, hitPointFire + hitInfoFire.normal * 0.01f, hitRotation);
-					}
 
-				if(hitInfoFire.collider.tag == "Player"){
-						doDamageMini();
-						//add a hit graphic.
-					}
-		
-				}
-				//lower bullets whenever a shot is taken
 				//still needs to be warmed up
 				if(warmedUp == true){
 					cooldownRemaining = coolDown;
@@ -189,49 +173,25 @@ public class MinigunFirer : MonoBehaviour {
 					cooldownRemaining = coolDownWarmUp;
 					
 				}
-
-			
 		}
 
 		//fires the cannon shot based on the cool down
 		if(cannonShoot == true){
 			if(cannonCDR <=0){
-				GameObject currentCannonShot = cannonShot [cannonCounter];
-				currentCannonShot.transform.position = cannonShotStart.transform.position;
-				currentCannonShot.transform.forward = cannonAimer.transform.forward;
-				currentCannonShot.SetActive(true);
-				cannonCounter += 1;
-				if(cannonCounter >= 4){
-					cannonCounter = 1;
-				}
+
+				Quaternion shotDir = cannonShotStart.transform.rotation;
+				GameObject plasmaShotCurr = plasmaShot.Retrieve(cannonShotStart.transform.position,shotDir);
+
+				cannonShot plasmaShotscript = plasmaShotCurr.GetComponent<cannonShot>();
+				plasmaShotscript.plasmaExplodePool = plasmaExplosion;
+
+
 				cannonCDR = cannonCD;
 			}
 		}
-		
-	//reload funtion trigger
-	/*if (Input.GetKeyDown ("r")) {
-		gunReload ();
-	}
-	*/
-
-
 	}// end of update//
-
-	void doDamageMini(){
-		
-		/*objectHealth h = go.GetComponent<objectHealth>();
-
-					if(h != null)
-					{
-					h.ReciveDamage(damage);
-					}*/
-		
-		// applies bullet spark to location fo impact
-	}
-
-	//reloading the minigun
 	
-	//ammo counter GUI
+	//overHeat counter GUI
 	void OnGUI() {
 		GUI.Label (new Rect (15, 40, 200, 20), overHeat.ToString());
 	}
