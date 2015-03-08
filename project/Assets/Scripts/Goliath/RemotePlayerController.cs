@@ -188,6 +188,7 @@ public class RemotePlayerController : MonoBehaviour {
 
 		// Apply velocity and force
 		rigidbody.velocity = newVel;
+		print (newVel);
 
 		// Apply calculated speed animation
 		//anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
