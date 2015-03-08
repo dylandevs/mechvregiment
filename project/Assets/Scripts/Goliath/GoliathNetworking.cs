@@ -10,7 +10,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public GameObject GoliathTop;
 	public GameObject GoliathBottom;
 
-	public GameObject[] playerAvatars;
+	public RemotePlayerController[] playerAvatars;
 
 //INITIALIZATION
 
@@ -74,6 +74,13 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			playerAvatars[playerNum].transform.position = newPos;
 			playerAvatars[playerNum].transform.rotation = newRot;
 			playerAvatars[playerNum].rigidbody.velocity = velocity;
+		}
+	}
+
+	[RPC]
+	public void SyncControllerInput(int playerNum, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL){
+		if (playerNum > 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].SetControllerInputs(R_XAxis, R_YAxis, L_XAxis, L_YAxis, LS_Held, TriggersR, TriggersL);
 		}
 	}
 }
