@@ -10,10 +10,7 @@ public class GoliathNetworking : MonoBehaviour {
 	public GameObject GoliathTop;
 	public GameObject GoliathBottom;
 
-    public GameObject Player1Avatar;
-    public GameObject Player2Avatar;
-    public GameObject Player3Avatar;
-    public GameObject Player4Avatar;
+	public GameObject[] playerAvatars;
 
 //INITIALIZATION
 
@@ -71,51 +68,11 @@ public class GoliathNetworking : MonoBehaviour {
     	//print("I'm sending the position over");
     }
 
-    [RPC]
-    public void PositionPlayer1(Vector3 newPos, Quaternion newRot){
-        Player1Avatar.transform.position = newPos;
-        Player1Avatar.transform.rotation = newRot;
-    }
-    [RPC]
-    public void PositionPlayer2(Vector3 newPos, Quaternion newRot){
-        Player2Avatar.transform.position = newPos;
-        Player2Avatar.transform.rotation = newRot;
-    }
-    [RPC]
-    public void PositionPlayer3(Vector3 newPos, Quaternion newRot){
-        Player3Avatar.transform.position = newPos;
-        Player3Avatar.transform.rotation = newRot;
-    }
-    [RPC]
-    public void PositionPlayer4(Vector3 newPos, Quaternion newRot){
-        Player4Avatar.transform.position = newPos;
-        Player4Avatar.transform.rotation = newRot;
-    }
-
-	[RPC]
-	public void AimPlayer1(){
-		Player1Avatar.GetComponent<PlayerAvatar>().SetAim(true);
+	public void SetPlayerKinematics(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 velocity){
+		if (playerNum > 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].transform.position = newPos;
+			playerAvatars[playerNum].transform.rotation = newRot;
+			playerAvatars[playerNum].rigidbody.velocity = velocity;
+		}
 	}
-	[RPC]
-	public void UnaimPlayer1(){
-		Player1Avatar.GetComponent<PlayerAvatar>().SetAim(false);
-	}
-    [RPC]
-    public void AimPlayer2(){
-    }
-    [RPC]
-    public void UnaimPlayer2(){
-    }
-    [RPC]
-    public void AimPlayer3(){
-    }
-    [RPC]
-    public void UnaimPlayer3(){
-    }
-    [RPC]
-    public void AimPlayer4(){
-    }
-    [RPC]
-    public void UnaimPlayer4(){
-    }
 }

@@ -5,15 +5,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
     private string roomName = "GoliathConnection_083";
 	private PhotonView photonView;
-	private float sendTimer = 0.05f;
+	public float SendInterval = 0.05f;
+	private float sendTimer = 0;
 
 	public GameObject goliathTop;
 	public GameObject goliathBot;
 
-	public GameObject player1;
-	public GameObject player2;
-	public GameObject player3;
-	public GameObject player4;
+	public Player[] players;
 
 	// Use this for initialization
 	void Start () {
@@ -35,13 +33,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
         else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
         	if(sendTimer <= 0){
                 //Here's where the RPC calls go so they happen once properly joined.
-                print("Sent RPC calls for frame.");
-	        	photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
+
+				for(int i = 0; i < players.Length; i++){
+					SetPlayerKinematics(i, players[i].transform.position, players[i].transform.rotation, players[i].rigidbody.velocity);
+				}
+	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
 	        	photonView.RPC("PositionPlayer2", PhotonTargets.All, player2.transform.position, player2.transform.rotation);
 	        	photonView.RPC("PositionPlayer3", PhotonTargets.All, player3.transform.position, player3.transform.rotation);
-	        	photonView.RPC("PositionPlayer4", PhotonTargets.All, player4.transform.position, player4.transform.rotation);
+	        	photonView.RPC("PositionPlayer4", PhotonTargets.All, player4.transform.position, player4.transform.rotation);*/
         
-                sendTimer = 0.05f;
+				sendTimer = SendInterval;
 			}
         }
         else {
@@ -71,51 +72,17 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		DecerealizeTransform(goliathBot, botPos, botRot);
 	}
 	[RPC]
-	void PositionPlayer1(Vector3 newPos, Quaternion newRot){}
+	void SetPlayerKinematics(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 velocity){}
+
 	[RPC]
-	void PositionPlayer2(Vector3 newPos, Quaternion newRot){}
+	void SyncControllerInput(int playerId, float L_XAxis, float L_YAxis){}
+
 	[RPC]
-	void PositionPlayer3(Vector3 newPos, Quaternion newRot){}
-	[RPC]
-	void PositionPlayer4(Vector3 newPos, Quaternion newRot){}
+	void SetPlayerFacing(int playerId, Vector3 facing){}
 
 	public void TogglePlayerADS (int playerNum, bool setADS){
 		if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
-			switch(playerNum){
-				case 1:
-				default:
-					if(setADS) photonView.RPC("AimPlayer1", PhotonTargets.All);
-					else photonView.RPC("UnaimPlayer1", PhotonTargets.All);
-					break;
-				case 2:
-				if(setADS) photonView.RPC("AimPlayer2", PhotonTargets.All);
-					else photonView.RPC("UnaimPlayer2", PhotonTargets.All);
-					break;
-				case 3:
-					if(setADS) photonView.RPC("AimPlayer3", PhotonTargets.All);
-					else photonView.RPC("UnaimPlayer3", PhotonTargets.All);
-					break;
-				case 4:
-					if(setADS) photonView.RPC("AimPlayer4", PhotonTargets.All);
-					else photonView.RPC("UnaimPlayer4", PhotonTargets.All);
-					break;
-			}
+
 		}
 	}
-	[RPC]
-	void AimPlayer1(){}
-	[RPC]
-	void UnaimPlayer1(){}
-	[RPC]
-	void AimPlayer2(){}
-	[RPC]
-	void UnaimPlayer2(){}
-	[RPC]
-	void AimPlayer3(){}
-	[RPC]
-	void UnaimPlayer3(){}
-	[RPC]
-	void AimPlayer4(){}
-	[RPC]
-	void UnaimPlayer4(){}
 }
