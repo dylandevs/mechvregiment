@@ -136,14 +136,14 @@ public class RemotePlayerController : MonoBehaviour {
 			speedFactor *= CrouchSpeedFactor;
 		}
 
-		/*// Rotation about Y axis
+		// Rotation about Y axis
 		if (R_XAxis != 0){
 			float adjustment = R_XAxis * R_XAxis * SignOf(R_XAxis) * 5;
 			
-			// Slow movement for ADS
+			/*// Slow movement for ADS
 			if (aimingDownSight){
 				adjustment *= 0.5f;
-			}
+			}*/
 			
 			SetFacing(Quaternion.AngleAxis(adjustment, Vector3.up) * facing);
 		}
@@ -152,10 +152,10 @@ public class RemotePlayerController : MonoBehaviour {
 		if (R_YAxis != 0){
 			float adjustment = R_YAxis * R_YAxis * SignOf(R_YAxis) * 5;
 			
-			// Slow movement for ADS
+			/*// Slow movement for ADS
 			if (aimingDownSight){
 				adjustment *= 0.5f;
-			}
+			}*/
 			
 			Vector3 newFacing = Quaternion.AngleAxis(adjustment, perpFacing) * facing;
 			float vertAngle = Vector3.Angle(newFacing, Vector3.up);
@@ -167,7 +167,7 @@ public class RemotePlayerController : MonoBehaviour {
 			else{
 				// Do nothing
 			}
-		}*/
+		}
 		
 		// Firing script
 		/*if (TriggersR != 0){

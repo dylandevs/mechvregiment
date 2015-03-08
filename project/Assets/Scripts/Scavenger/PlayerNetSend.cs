@@ -37,7 +37,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				for(int i = 0; i < players.Length; i++){
 					ControllerScript control = players[i].playerController;
 
-					//photonView.RPC ("SetPlayerKinematics", PhotonTargets.All, i, players[i].transform.position, players[i].transform.rotation, players[i].rigidbody.velocity);
+					photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
+					photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
 					photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL);
 				}
 	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
@@ -75,7 +76,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		DecerealizeTransform(goliathBot, botPos, botRot);
 	}
 	[RPC]
-	void SetPlayerKinematics(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 velocity){}
+	void SetPlayerPosition(int playerNum, Vector3 newPos){}
 
 	[RPC]
 	void SyncControllerInput(int playerId, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL){}
