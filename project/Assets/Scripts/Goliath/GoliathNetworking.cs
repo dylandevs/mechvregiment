@@ -68,6 +68,7 @@ public class GoliathNetworking : MonoBehaviour {
     	//print("I'm sending the position over");
     }
 
+	[RPC]
 	public void SetPlayerKinematics(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 velocity){
 		if (playerNum > 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].transform.position = newPos;
