@@ -35,11 +35,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
                 //Here's where the RPC calls go so they happen once properly joined.
 
 				for(int i = 0; i < players.Length; i++){
-					ControllerScript control = players[i].playerController;
+					if (players[i].gameObject.GetActive()){
+						ControllerScript control = players[i].playerController;
 
-					photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
-					photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
-					photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL);
+						photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
+						photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
+						photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL);
+					}
 				}
 	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
 	        	photonView.RPC("PositionPlayer2", PhotonTargets.All, player2.transform.position, player2.transform.rotation);

@@ -85,38 +85,40 @@ public class RemotePlayerController : MonoBehaviour {
 		
 		/*Weapon currentWeapon = player.GetCurrentWeapon ();
 		weaponAnim = player.GetCurrentWeapon().animator;*/	
-		
-		// Lateral movement (strafing)
-		if (L_XAxis != 0){
-			if (Mathf.Abs(L_XAxis) > RunThresh){
-				newVel += RunSpeed * perpFacing * SignOf(L_XAxis);
+
+		if (currentlyGrounded){
+			// Lateral movement (strafing)
+			if (L_XAxis != 0){
+				if (Mathf.Abs(L_XAxis) > RunThresh){
+					newVel += RunSpeed * perpFacing * SignOf(L_XAxis);
+				}
+				else{
+					newVel += CrouchSpeed * perpFacing * SignOf(L_XAxis);
+				}
 			}
-			else{
-				newVel += CrouchSpeed * perpFacing * SignOf(L_XAxis);
+			
+			// Longitudinal movement
+			if (L_YAxis != 0){
+				// Sprint
+				if (LS_Held && L_YAxis < RunThresh){
+					newVel += SprintSpeed * facing2D;
+					//anim.SetBool(sprintHash, true);
+
+					// Cancel crouch
+					SetCrouching(false);
+				}
+				// Run
+				else if (Mathf.Abs(L_YAxis) > RunThresh){
+					newVel += RunSpeed * facing2D * -SignOf(L_YAxis);
+					//anim.SetBool(sprintHash, false);
+				}
+				// Walk
+				else{
+					newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -SignOf(L_YAxis);
+					//anim.SetBool(sprintHash, false);
+				}
 			}
 		}
-		
-		// Longitudinal movement
-		if (L_YAxis != 0){
-			// Sprint
-			if (LS_Held && L_YAxis < RunThresh){
-				newVel += SprintSpeed * facing2D;
-				//anim.SetBool(sprintHash, true);
-
-				// Cancel crouch
-				SetCrouching(false);
-			}
-			// Run
-			else if (Mathf.Abs(L_YAxis) > RunThresh){
-				newVel += RunSpeed * facing2D * -SignOf(L_YAxis);
-				//anim.SetBool(sprintHash, false);
-			}
-			// Walk
-			else{
-				newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -SignOf(L_YAxis);
-				//anim.SetBool(sprintHash, false);
-			}
-		}			
 
 		// Toggle ADS
 		if (TriggersL != 0 && currentlyGrounded /*&& !currentWeapon.IsReloading()*/) {

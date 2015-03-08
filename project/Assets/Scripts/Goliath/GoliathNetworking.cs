@@ -70,21 +70,21 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	[RPC]
 	public void SetPlayerPosition(int playerNum, Vector3 newPos){
-		if (playerNum > 0 && playerNum < playerAvatars.Length){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].transform.position = newPos;
 		}
 	}
 
 	[RPC]
 	public void SyncControllerInput(int playerNum, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL){
-		if (playerNum > 0 && playerNum < playerAvatars.Length){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].SetControllerInputs(R_XAxis, R_YAxis, L_XAxis, L_YAxis, LS_Held, TriggersR, TriggersL);
 		}
 	}
 
 	[RPC]
 	public void SetPlayerFacing(int playerNum, Vector3 newFacing){
-		if (playerNum > 0 && playerNum < playerAvatars.Length){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].SetFacing(newFacing);
 		}
 	}
