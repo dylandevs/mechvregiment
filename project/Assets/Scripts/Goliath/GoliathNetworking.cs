@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GoliathNetworking : MonoBehaviour {
+public class GoliathNetworking : Photon.MonoBehaviour {
 
 	private string roomName = "GoliathConnection_083";
-	private PhotonView photonView;
+	//private PhotonView photonView;
 	private float sendTimer = 0.05f;	
 
 	public GameObject GoliathTop;
@@ -16,7 +16,7 @@ public class GoliathNetworking : MonoBehaviour {
 
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
-		photonView = PhotonView.Get (this);
+		//photonView = PhotonView.Get (this);
 	}
 	
 //UPDATE

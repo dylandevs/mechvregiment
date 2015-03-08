@@ -21,9 +21,12 @@ public class ControllerScript : MonoBehaviour {
 
 	public bool isKeyboard = false;
 	public int controllerId = -1;
+	[HideInInspector]
 	public Vector3 facing = new Vector3(0, 0, 1);
 	Vector3 facing2D = new Vector3(0, 0, 1);
+	[HideInInspector]
 	public Vector3 perpFacing = new Vector3(1, 0, 0);
+	[HideInInspector]
 	public Vector3 cameraOffset = Vector3.zero;
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
@@ -60,6 +63,36 @@ public class ControllerScript : MonoBehaviour {
 
 	// State trackers
 	bool isCrouching = false;
+	
+	// Publicly accessible controller attributes
+	[HideInInspector]
+	public bool A_Press = false;
+	[HideInInspector]
+	public bool B_Press = false;
+	[HideInInspector]
+	public bool X_Press = false;
+	[HideInInspector]
+	public bool Y_Press = false;
+	[HideInInspector]
+	public bool DPad_Next = false;
+	[HideInInspector]
+	public bool DPad_Prev = false;
+	[HideInInspector]
+	public float R_XAxis = 0;
+	[HideInInspector]
+	public float R_YAxis = 0;
+	[HideInInspector]
+	public bool RS_Press = false;
+	[HideInInspector]
+	public float L_XAxis = 0;
+	[HideInInspector]
+	public float L_YAxis = 0;
+	[HideInInspector]
+	public bool LS_Held = false;
+	[HideInInspector]
+	public float TriggersR = 0;
+	[HideInInspector]
+	public float TriggersL = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -108,24 +141,24 @@ public class ControllerScript : MonoBehaviour {
 			}
 			
 			// Getting controller values
-			bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
-			bool B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
-			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
-			bool Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
+			A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
+			B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
+			X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+			Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
 
-			bool DPad_Next = (state.DPad.Right == ButtonState.Pressed && prevState.DPad.Right == ButtonState.Released);
-			bool DPad_Prev = (state.DPad.Left == ButtonState.Pressed && prevState.DPad.Left == ButtonState.Released);
+			DPad_Next = (state.DPad.Right == ButtonState.Pressed && prevState.DPad.Right == ButtonState.Released);
+			DPad_Prev = (state.DPad.Left == ButtonState.Pressed && prevState.DPad.Left == ButtonState.Released);
 			
-			float R_XAxis = state.ThumbSticks.Right.X;
-			float R_YAxis = -state.ThumbSticks.Right.Y;
-			bool RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
+			R_XAxis = state.ThumbSticks.Right.X;
+			R_YAxis = -state.ThumbSticks.Right.Y;
+			RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
 			
-			float L_XAxis = state.ThumbSticks.Left.X;
-			float L_YAxis = -state.ThumbSticks.Left.Y;
-			bool LS_Held = (state.Buttons.LeftStick == ButtonState.Pressed);
+			L_XAxis = state.ThumbSticks.Left.X;
+			L_YAxis = -state.ThumbSticks.Left.Y;
+			LS_Held = (state.Buttons.LeftStick == ButtonState.Pressed);
 			
-			float TriggersR = state.Triggers.Right;
-			float TriggersL = state.Triggers.Left;
+			TriggersR = state.Triggers.Right;
+			TriggersL = state.Triggers.Left;
 			
 			if (RS_Press){
 				
