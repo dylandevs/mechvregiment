@@ -17,6 +17,8 @@ public class BotAI : MonoBehaviour {
 	const int ThreshApproach = 20;
 	const int ThreshClose = 12;
 	const int ThreshDangerClose = 6;
+	const int ThreshSearch = 32;
+	const int ThreshHearing = 42;
 
 	// Predefined state colours
 	Color safeCol = new Color32(0, 255, 0, 1);
@@ -135,19 +137,25 @@ public class BotAI : MonoBehaviour {
 				AttemptAcquireAllyTarget();
 			}
 
+			// If still unable to visually spot target, listen
+			if (state < State.Approaching){
+				ListenForGunshots();
+			}
+
 			// Act based on state
 			if (state == State.AllClear){
+				if (prevState != state){
+					currentTarget = null;
+				}
 				setSurfaceColour(safeCol);
 				Idle();
 			}
 			else if (state == State.Searching){
 				// If is newly searching
 				if (prevState != state){
-					searchTime = SearchDuration;
+					currentTarget = null;
 					navMeshAgent.speed = MoveSpeed;
 				}
-				
-				//navMeshAgent.stoppingDistance = 0;
 
 				setSurfaceColour(srchCol);
 				Search();
@@ -155,10 +163,9 @@ public class BotAI : MonoBehaviour {
 			else if (state == State.Approaching){
 				// If newly approaching
 				if (prevState != state){
-					alertTime = AlertDuration;
+					//alertTime = AlertDuration;
 					navMeshAgent.speed = MoveSpeed;
 				}
-				//navMeshAgent.stoppingDistance = ThreshClose;
 
 				navMeshAgent.destination = lastSighted;
 				setSurfaceColour(warnCol);
@@ -180,7 +187,6 @@ public class BotAI : MonoBehaviour {
 			if (searchTime > 0){
 				searchTime -= Time.deltaTime;
 			}
-
 			prevState = state;
 
 		}
@@ -204,6 +210,14 @@ public class BotAI : MonoBehaviour {
 						closestDistance = distance;
 					}
 				}
+
+				// When searching, more sensitive to players
+				else if (distance < ThreshSearch && state == State.Searching){
+					currentTarget = player.gameObject;
+					closestDistance = distance;
+					alertTime = AlertDuration;
+					break;
+				}
 			}
 		}
 	}
@@ -217,6 +231,22 @@ public class BotAI : MonoBehaviour {
 			
 			//alertTime = ally.alertTime;
 			//print (alertTime);
+		}
+	}
+
+	void ListenForGunshots(){
+		foreach (Player player in players){
+			if (player.gameObject.GetActive()){
+				if (player.GetCurrentWeapon().IsFiringAudibly()){
+					if (Vector3.Distance (player.transform.position, transform.position) < ThreshHearing){
+						state = State.Searching;
+						lastSighted = player.transform.position;
+						searchTime = SearchDuration;
+
+						break;
+					}
+				}
+			}
 		}
 	}
 	
@@ -266,13 +296,11 @@ public class BotAI : MonoBehaviour {
 					}
 					lastSighted = currentTarget.transform.position;
 				}
-				else if (prevState > State.Searching){
+
+				// Start searching area
+				else if (prevState > State.Searching) {
+					searchTime = SearchDuration;
 					newState = State.Searching;
-					currentTarget = null;
-				}
-				else{
-					newState = State.AllClear;
-					currentTarget = null;
 				}
 			}
 
@@ -421,10 +449,10 @@ public class BotAI : MonoBehaviour {
 	BotAI AreAlliesAlarmed(){
 		float closestAllyDist = 0;
 		BotAI closestAlly = null;
-		State mostAlarmed = state;
+		State mostAlarmed = State.AllClear;
 
 		foreach(BotAI ally in allies){
-			if (ally.state > mostAlarmed && ally.gameObject.GetActive()){
+			if (ally.state >= State.Approaching && ally.gameObject.GetActive()){
 
 				float distance = Vector3.Distance(ally.transform.position, transform.position);
 				
@@ -484,6 +512,10 @@ public class BotAI : MonoBehaviour {
 		else if (HasAgentArrivedAtDest()){
 			// Rotate side to side
 			transform.rotation *= Quaternion.Euler(new Vector3(0, SearchTurnRate, 0) * Mathf.Sin(alertTime));
+		}
+
+		if (searchTime <= 0){
+			state = State.AllClear;
 		}
 	}
 	

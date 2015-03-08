@@ -6,12 +6,14 @@ public class Weapon : MonoBehaviour {
 	// Weapon attributes
 	public bool Automatic = true;
 	public bool PhysicalAmmo = false;
+	public bool Audible = true;
 	public float ReloadTime = 2;
 	private float InvReloadTime = 1;
 	public float BurstTime = 0.1f;
 	public float FireRate = 0.3f;
 	public int BurstLength = 3;
 	public int TracerInterval = 5;
+	public float FiringNoiseDuration = 0.5f;
 	
 	// Recoil variables
 	public Vector2 RecoilPattern = Vector2.zero;
@@ -64,6 +66,7 @@ public class Weapon : MonoBehaviour {
 	private float recoilMoveProgress = 0;
 	private float recentringProgress = 0;
 	private float flashProgress = 0;
+	private float fireNoiseProgress = 0;
 	
 	// Spread tracker
 	private float spread = 0;
@@ -218,6 +221,11 @@ public class Weapon : MonoBehaviour {
 				flash.SetActive(false);
 			}
 		}
+
+		// Detectable firing sound
+		if (fireNoiseProgress > 0){
+			fireNoiseProgress -= Time.deltaTime;
+		}
 	}
 	
 	public void SetPlayerReference(Player player){
@@ -349,6 +357,9 @@ public class Weapon : MonoBehaviour {
 		
 		magAmmo--;
 		ammoRenderer.ExpendSingleRound ();
+		if (Audible){
+			fireNoiseProgress = FiringNoiseDuration;
+		}
 	}
 	
 	// Sets tracking variables for recoil
@@ -607,5 +618,9 @@ public class Weapon : MonoBehaviour {
 		isFirstShot = true;
 		isAds = false;
 		semiAutoReady = true;
+	}
+
+	public bool IsFiringAudibly(){
+		return (Audible && fireNoiseProgress > 0);
 	}
 }
