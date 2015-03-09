@@ -95,7 +95,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	void SetPlayerPosition(int playerNum, Vector3 newPos){}
 
 	[RPC]
-	void SyncControllerInput(int playerId, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL){}
+	void SyncControllerInput(int playerId, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL, bool isGrounded){}
 
 	[RPC]
 	void SetPlayerFacing(int playerId, Vector3 facing){}

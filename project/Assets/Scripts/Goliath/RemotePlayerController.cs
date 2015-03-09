@@ -81,9 +81,9 @@ public class RemotePlayerController : MonoBehaviour {
 
 		//bool currentlyGrounded = IsGrounded();
 		
-		if (isGrounded){
+		/*if (isGrounded){
 			newVel = new Vector3(0, rigidbody.velocity.y, 0);
-		}
+		}*/
 		
 		/*Weapon currentWeapon = player.GetCurrentWeapon ();
 		weaponAnim = player.GetCurrentWeapon().animator;*/	
