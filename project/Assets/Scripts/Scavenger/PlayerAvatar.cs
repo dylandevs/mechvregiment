@@ -43,6 +43,7 @@ public class PlayerAvatar : MonoBehaviour {
 		syncProg = 0;
 
 		syncDelay = Time.time - lastSync;
+		invSyncDelay = 1 / syncDelay;
 		lastSync = Time.time;
 
 		lastSyncPos = rigidbody.position;
