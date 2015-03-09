@@ -42,9 +42,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 					if (players[i].gameObject.GetActive()){
 						ControllerScript control = players[i].playerController;
 
-						photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
-						photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
-						photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL, control.currentlyGrounded);
+						//photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
+						//photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
+						//photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL, control.currentlyGrounded);
+						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, players[i].rigidbody.position, players[i].rigidbody.rotation, players[i].rigidbody.velocity);
 					}
 				}
 	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
@@ -99,6 +100,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	void SetPlayerFacing(int playerId, Vector3 facing){}
+
+	[RPC]
+	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	public void TogglePlayerADS (int playerNum, bool setADS){
 		if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
