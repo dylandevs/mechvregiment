@@ -30,36 +30,35 @@ public class cannonShot : MonoBehaviour {
 		// turn off object after a certain amount of time
 		timer += Time.deltaTime;
 		
-		if (timer > 8f) {
+		if (timer > 15f) {
 			pool.Deactivate(gameObject);
 			timer = 0;
 		}
 
 		transform.Translate(Vector3.forward * speed * Time.deltaTime);
-	}
 
-	void FixedUpdate(){
 		Ray ray = new Ray(transform.position,transform.forward);
 		RaycastHit hit;
 
 		explosionLocation = transform.position;
-
+		Debug.DrawRay(transform.position,transform.forward * 25 * Time.deltaTime,Color.red);
 		//hitRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		//remainsLocation = hit.point + hit.normal;
 
-		if (Physics.Raycast (ray,out hit, 50 * Time.deltaTime,layerMask)) 
+		if (Physics.Raycast (ray,out hit, 25 * Time.deltaTime,layerMask)) 
 		{
+			print(hit.collider.tag);
 			if(hit.collider.tag == "Player"){
 				doDamageCannon();
 			}
 			else{
-
 				GameObject plasmaExplosion = plasmaExplodePool.Retrieve(hit.point);
 
 				//hurts whats near the boom depending on a overlap sphere function
 				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 				foreach (Collider c in colliders) 
 				{
+
 					/*objectHealth hp = c.GetComponent<objectHealth>();
 
 					if(hp != null)
@@ -71,7 +70,8 @@ public class cannonShot : MonoBehaviour {
 
 					explode1.emit = false;
 					explode2.emit = false;
-					waitOutTimer = 3;
+					print(explode1.emit);
+					waitOutTimer = 5;
 					if(waitOutTimer > 0){
 						waitOutTimer -= Time.deltaTime;
 						pool.Deactivate(gameObject);

@@ -11,6 +11,7 @@ public class MinigunFirer : MonoBehaviour {
 	public GameObject tracerStart;
 	public GameObject cameraPlace;
 	public GameObject miniGunReticle;
+	public GameObject cannonReticle;
 
 	public PoolManager sparks;
 	public PoolManager tracerPool;
@@ -62,15 +63,11 @@ public class MinigunFirer : MonoBehaviour {
 		Ray ray = new Ray(tracerStart.transform.position, tracerStart.transform.forward);
 		RaycastHit rayHit;
 
-		Debug.DrawRay(tracerStart.transform.position, tracerStart.transform.forward * 100,Color.green);
-
-		if(Physics.Raycast (ray, out rayHit,range,mask)){
+		if(Physics.Raycast (ray, out rayHit,100,mask)){
 			Vector3 hitPoint = rayHit.point;
 			//fire a ray back at the end of the first ray
 			Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
 			RaycastHit ray2Hit;
-
-			Debug.DrawRay(hitPoint,cameraPlace.transform.position-hitPoint,Color.yellow);
 
 			if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
@@ -82,7 +79,7 @@ public class MinigunFirer : MonoBehaviour {
 			}
 		}
 		
-		else if(Physics.Raycast (ray, out rayHit ,20)){
+		else if(Physics.Raycast (ray, out rayHit ,10)){
 			if(rayHit.collider.tag != "Terrain"){
 				Vector3 placeHitRock = rayHit.point;
 				Vector3 retPos = placeHitRock.normalized * -3;
@@ -93,12 +90,10 @@ public class MinigunFirer : MonoBehaviour {
 	
 		//this is for when it doesnt hit an object it still displays
 		else{
-			Vector3 vecEnd = tracerStart.transform.forward * 10000;
+			Vector3 vecEnd = tracerStart.transform.forward * 100;
 			Vector3 miniArmPos = tracerStart.transform.position; 
 			Vector3 sendBack =  miniArmPos += vecEnd;
 			Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
-
-			Debug.DrawRay(sendBack,cameraPlace.transform.position-sendBack,Color.black);
 
 			RaycastHit ray2HitNo;
 			if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
@@ -180,6 +175,52 @@ public class MinigunFirer : MonoBehaviour {
 					cooldownRemaining = coolDownWarmUp;
 					
 				}
+		}
+
+		Ray rayCannon = new Ray(cannonShotStart.transform.position, cannonShotStart.transform.forward);
+		RaycastHit rayHitCannon;
+		
+		if(Physics.Raycast (rayCannon, out rayHitCannon,100,mask)){
+			Vector3 hitPoint = rayHitCannon.point;
+			//fire a ray back at the end of the first ray
+			Ray ray2Cannon = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
+			RaycastHit ray2HitCannon;
+			
+			if(Physics.Raycast (ray2Cannon,out ray2HitCannon,range, maskForRet)){
+				//if it hits the aimerwall mvoe the reticle there
+				if(ray2HitCannon.collider.tag == "aimerWall"){
+					Vector3 placeHit = ray2HitCannon.point;
+					cannonReticle.transform.position = placeHit;
+					cannonReticle.transform.forward = cameraPlace.transform.forward;
+				}
+			}
+		}
+		
+		else if(Physics.Raycast (rayCannon, out rayHitCannon ,10)){
+			if(rayHitCannon.collider.tag != "Terrain"){
+				Vector3 placeHitRock = rayHitCannon.point;
+				Vector3 retPos = placeHitRock.normalized * -3;
+				cannonReticle.transform.position = placeHitRock + retPos;
+				cannonReticle.transform.forward = rayHit.normal;
+			}
+		}
+		
+		//this is for when it doesnt hit an object it still displays
+		else{
+			Vector3 vecEnd = cannonShotStart.transform.forward * 100;
+			Vector3 miniArmPos = cannonShotStart.transform.position; 
+			Vector3 sendBack =  miniArmPos += vecEnd;
+			Ray ray2NoCannon = new Ray(sendBack,cameraPlace.transform.position-sendBack);
+			
+			RaycastHit ray2HitNoCannon;
+			if(Physics.Raycast (ray2NoCannon,out ray2HitNoCannon,range, maskForRet)){
+				//if it hits the aimerwall mvoe the reticle there
+				if(ray2HitNoCannon.collider.tag == "aimerWall"){
+					Vector3 placeHit2 = ray2HitNoCannon.point;
+					cannonReticle.transform.position = placeHit2;
+					cannonReticle.transform.forward = cameraPlace.transform.forward;
+				}
+			}
 		}
 
 		//fires the cannon shot based on the cool down

@@ -41,6 +41,7 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonEffect2Parent;
 	public GameObject rangeIndicator;
 	public GameObject outOfRange;
+
 	//masks
 	public LayerMask mask;
 	public LayerMask maskForRet;
@@ -176,8 +177,6 @@ public class MechShoot : MonoBehaviour {
 			RaycastHit hitInfoAimer;
 			//check if it hit something then send a ray back to display the reticle
 
-			Debug.DrawRay(miniGunAimer.transform.position,miniGunAimer.transform.forward * 100, Color.blue);
-
 			if(Physics.Raycast (ray, out hitInfoAimer,range,mask)){
 				Vector3 hitPoint = hitInfoAimer.point;
 				//create a hit variable for the second raycast
@@ -196,75 +195,24 @@ public class MechShoot : MonoBehaviour {
 
 
 			//CANNON AIMING
-			Ray rayCannon = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
+			//update arm pos
+
+			Ray rayCannonStart = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
 			RaycastHit hitInfoAimerCannon;
-			//check if it hit something then send a ray back to display the reticle
-			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon,range,mask)){
-				
-				Vector3 hitPointCannon = hitInfoAimerCannon.point;
+			if(Physics.Raycast (rayCannonStart, out hitInfoAimerCannon,range,mask)){
+				Vector3 hitPoint = hitInfoAimerCannon.point;
 				//create a hit variable for the second raycast
-				Ray ray2Cannon = new Ray(hitPointCannon,cameraPlace.transform.position-hitPointCannon);
-				RaycastHit ray2HitCannon;
 				//make it look like the minigun arm is facing where its shooting
-				Vector3 vecEndCannon = cannonAimer.transform.forward * 100;
-				cannonArm.transform.up = -vecEndCannon;
-				if(Physics.Raycast (ray2Cannon,out ray2HitCannon,range,maskForRet)){
-					//if it hits the aimerwall mvoe the reticle there
-					if(ray2HitCannon.collider.tag == "aimerWall"){
-						Vector3 placeHitCannon = ray2HitCannon.point;
-						cannonRet.transform.position = placeHitCannon;
-						cannonRet.transform.forward = cameraPlace.transform.forward;
-
-						cannonEffect.transform.position = placeHitCannon;
-						cannonEffect.transform.forward = cameraPlace.transform.forward;
-
-						cannonEffect2.transform.position = placeHitCannon;
-						cannonEffect2.transform.forward = cameraPlace.transform.forward;
-					}
-				}
+				Vector3 vecEnd = cannonAimer.transform.forward * 100;
+				// limit the angles properly
+				cannonArm.transform.up = -vecEnd;
 			}
-
-			if(Physics.Raycast (rayCannon, out hitInfoAimerCannon ,20,mask)){
-				if(hitInfoAimerCannon.collider.tag != "Terrain"){
-					Vector3 placeHitRockC = hitInfoAimerCannon.point;
-					Vector3 retPosC = placeHitRockC.normalized * -3;
-					cannonRet.transform.position = placeHitRockC + retPosC;
-					cannonRet.transform.forward = hitInfoAimerCannon.normal;
-
-					cannonEffect.transform.position = placeHitRockC + retPosC;
-					cannonEffect.transform.forward = hitInfoAimerCannon.normal;
-					
-					cannonEffect2.transform.position = placeHitRockC + retPosC;
-					cannonEffect2.transform.forward = hitInfoAimerCannon.normal;
-				}
-			}
-				
-			//this is for when it doesnt hit an object it still displays
 			else{
-				Vector3 endOfVector = cannonAimer.transform.forward * 100;
-				Vector3 CannonArmPosition = cannonAimer.transform.position; 
-				Vector3 secondPart =  CannonArmPosition += endOfVector;
+				Vector3 vecEnd = cannonAimer.transform.forward * 100;
+				Vector3 miniArmPos = cannonArm.transform.position; 
+				Vector3 sendBack =  miniArmPos += vecEnd;
 				// limit these angles properly
-				cannonArm.transform.up = -secondPart;
-				
-				
-				Ray cannonsSecondRay = new Ray(secondPart,cameraPlace.transform.position-secondPart);
-				RaycastHit connonsSecondRayHit;
-
-				if(Physics.Raycast (cannonsSecondRay,out connonsSecondRayHit,range,maskForRet)){
-					//if it hits the aimerwall mvoe the reticle there
-					if(connonsSecondRayHit.collider.tag == "aimerWall"){
-						Vector3 hittyThingy = connonsSecondRayHit.point;
-						cannonRet.transform.position = hittyThingy;
-						cannonRet.transform.forward = cameraPlace.transform.forward;
-
-						cannonEffect2.transform.position = hittyThingy;
-						cannonEffect2.transform.forward = cameraPlace.transform.forward;
-						
-						cannonEffect.transform.position = hittyThingy;
-						cannonEffect.transform.forward = cameraPlace.transform.forward;
-					}
-				}
+				cannonArm.transform.up = -vecEnd;
 			}
 			
 			if(lTrig > 0.8f){
@@ -338,7 +286,7 @@ public class MechShoot : MonoBehaviour {
 			//******* change it so that is there is no target says no target *******
 
 			//updates arm pos
-			Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+			Vector3 vecEnd = miniGunAimer.transform.forward * 75;
 			miniGunArm.transform.up = -vecEnd;
 
 			//makes the ray
