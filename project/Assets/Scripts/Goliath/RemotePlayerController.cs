@@ -56,6 +56,8 @@ public class RemotePlayerController : MonoBehaviour {
 	
 	float TriggersR = 0;
 	float TriggersL = 0;
+
+	bool isGrounded = true;
 	
 	// Use this for initialization
 	void Start () {
@@ -77,16 +79,16 @@ public class RemotePlayerController : MonoBehaviour {
 
 		speedFactor = 1;
 
-		bool currentlyGrounded = IsGrounded();
+		//bool currentlyGrounded = IsGrounded();
 		
-		if (currentlyGrounded){
+		if (isGrounded){
 			newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		}
 		
 		/*Weapon currentWeapon = player.GetCurrentWeapon ();
 		weaponAnim = player.GetCurrentWeapon().animator;*/	
 
-		if (currentlyGrounded){
+		if (isGrounded){
 			// Lateral movement (strafing)
 			if (L_XAxis != 0){
 				if (Mathf.Abs(L_XAxis) > RunThresh){
@@ -121,7 +123,7 @@ public class RemotePlayerController : MonoBehaviour {
 		}
 
 		// Toggle ADS
-		if (TriggersL != 0 && currentlyGrounded /*&& !currentWeapon.IsReloading()*/) {
+		if (TriggersL != 0 && isGrounded /*&& !currentWeapon.IsReloading()*/) {
 			//player.ToggleADS(true);
 			//anim.SetInteger(fireHash, 2);
 			//weaponAnim.SetBool(adsHash, true);
@@ -190,7 +192,6 @@ public class RemotePlayerController : MonoBehaviour {
 
 		// Apply velocity and force
 		rigidbody.velocity = newVel;
-		print (newVel);
 
 		// Apply calculated speed animation
 		//anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
@@ -231,7 +232,7 @@ public class RemotePlayerController : MonoBehaviour {
 	}
 
 	// Testing for ground directly beneath and at edges of collider
-	bool IsGrounded(){
+	/*bool IsGrounded(){
 		RaycastHit rayHit;
 		
 		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y)){
@@ -261,7 +262,7 @@ public class RemotePlayerController : MonoBehaviour {
 		}
 		
 		return false;
-	}
+	}*/
 	
 	// Gets sign of given float value
 	int SignOf(float number){
@@ -271,7 +272,7 @@ public class RemotePlayerController : MonoBehaviour {
 		return 1;
 	}
 
-	public void SetControllerInputs(float Rx, float Ry, float Lx, float Ly, bool Ls, float Tr, float Tl){
+	public void SetControllerInputs(float Rx, float Ry, float Lx, float Ly, bool Ls, float Tr, float Tl, bool ground){
 		R_XAxis = Rx;
 		R_YAxis = Ry;
 		
@@ -281,5 +282,6 @@ public class RemotePlayerController : MonoBehaviour {
 
 		TriggersR = Tr;
 		TriggersL = Tl;
+		isGrounded = ground;
 	}
 }

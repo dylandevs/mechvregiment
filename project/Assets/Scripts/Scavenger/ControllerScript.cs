@@ -93,6 +93,8 @@ public class ControllerScript : MonoBehaviour {
 	public float TriggersR = 0;
 	[HideInInspector]
 	public float TriggersL = 0;
+	[HideInInspector]
+	public bool currentlyGrounded = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -113,7 +115,7 @@ public class ControllerScript : MonoBehaviour {
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
-		bool currentlyGrounded = IsGrounded();
+		currentlyGrounded = IsGrounded();
 		float spread = 0;
 		speedFactor = 1;
 		

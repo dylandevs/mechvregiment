@@ -5,13 +5,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
     private string roomName = "GoliathConnection_083";
 	//private PhotonView photonView;
-	public float SendInterval = 0.05f;
+	private float SendInterval = 0.05f;
 	private float sendTimer = 0;
 
 	public GameObject goliathTop;
 	public GameObject goliathBot;
 
 	public Player[] players;
+
+	float SendInterval2 = 0.02f;
+	float sendTimer2 = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +29,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		sendTimer -= Time.deltaTime;
+		sendTimer2 -= Time.deltaTime;
         if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
             Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
             MakeRoom();
@@ -40,7 +44,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 						photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
 						photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
-						photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL);
+						photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL, control.currentlyGrounded);
 					}
 				}
 	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
@@ -49,6 +53,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	        	photonView.RPC("PositionPlayer4", PhotonTargets.All, player4.transform.position, player4.transform.rotation);*/
         
 				sendTimer = SendInterval;
+			}
+
+			if (sendTimer2 <= 0){
+				for(int i = 0; i < players.Length; i++){
+					if (players[i].gameObject.GetActive()){
+						ControllerScript control = players[i].playerController;
+						
+						//photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
+					}
+				}
+
+				sendTimer2 = SendInterval2;
 			}
         }
         else {
@@ -70,8 +86,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     }
 
 //RPC CALLS
-	[RPC]
-	void UpdateNathanPos(Vector3 pos){print ("BNOAEBJIRTF");}
 	[RPC]
 	public void ExchangeGoliathPositioning(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
 		DecerealizeTransform(goliathTop, topPos, topRot);
