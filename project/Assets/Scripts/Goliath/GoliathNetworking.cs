@@ -71,7 +71,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	[RPC]
 	public void SetPlayerPosition(int playerNum, Vector3 newPos){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			playerAvatars[playerNum].transform.position = newPos;
+			//playerAvatars[playerNum].transform.position = newPos;
+			playerAvatars[playerNum].rigidbody.MovePosition(newPos);
 		}
 	}
 
