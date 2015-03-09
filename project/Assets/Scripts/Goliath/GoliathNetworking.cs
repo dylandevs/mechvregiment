@@ -91,7 +91,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}*/
 
 	[RPC]
-	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
+	public void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].SetNextTargetTransform(newPos, newRot, currVelocity);
 		}
