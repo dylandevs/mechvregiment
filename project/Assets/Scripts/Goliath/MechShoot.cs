@@ -175,6 +175,9 @@ public class MechShoot : MonoBehaviour {
 			Ray ray = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
 			RaycastHit hitInfoAimer;
 			//check if it hit something then send a ray back to display the reticle
+
+			Debug.DrawRay(miniGunAimer.transform.position,miniGunAimer.transform.forward * 100, Color.blue);
+
 			if(Physics.Raycast (ray, out hitInfoAimer,range,mask)){
 				Vector3 hitPoint = hitInfoAimer.point;
 				//create a hit variable for the second raycast

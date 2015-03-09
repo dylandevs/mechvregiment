@@ -1,0 +1,223 @@
+fileFormatVersion: 2
+guid: e240505bb59622347ba4a94f47a17082
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Back
+    100004: Base
+    100006: Base 1
+    100008: Body
+    100010: Bottom_CTRL
+    100012: Chair
+    100014: Circles
+    100016: Cockpit
+    100018: Entrance
+    100020: Gem
+    100022: GlassBox
+    100024: Hips_CTRL
+    100026: Hologram
+    100028: Hologram 1
+    100030: jnt_Head
+    100032: jnt_Hip
+    100034: jnt_L_Ankle
+    100036: jnt_L_Ball
+    100038: jnt_L_Elbow
+    100040: jnt_L_GunBarrel
+    100042: jnt_L_GunBase
+    100044: jnt_L_Hand
+    100046: jnt_L_Hip
+    100048: jnt_L_Knee
+    100050: jnt_L_Shoulder
+    100052: jnt_L_Toe
+    100054: jnt_L_Wrist
+    100056: jnt_R_Ankle
+    100058: jnt_R_Ball
+    100060: jnt_R_Elbow
+    100062: jnt_R_Hand
+    100064: jnt_R_Hip
+    100066: jnt_R_Knee
+    100068: jnt_R_Shoulder
+    100070: jnt_R_Toe
+    100072: jnt_Root_Bottom
+    100074: jnt_Root_Top
+    100076: jnt_Spine
+    100078: LeftArm
+    100080: LeftArm 1
+    100082: LeftArm 2
+    100084: LeftBoot
+    100086: LeftKnee_CTRL
+    100088: LefttBoot
+    100090: Map
+    100092: Map 1
+    100094: Mech_CockpitVesrion
+    100096: MechMini
+    100098: Pipes
+    100100: RightArm
+    100102: RightArm 1
+    100104: RightBoot
+    100106: RightBoot 1
+    100108: RightKnee_CTRL
+    100110: RockLikeStand
+    100112: Screens
+    100114: Wireframe
+    400000: //RootNode
+    400002: Back
+    400004: Base
+    400006: Base 1
+    400008: Body
+    400010: Bottom_CTRL
+    400012: Chair
+    400014: Circles
+    400016: Cockpit
+    400018: Entrance
+    400020: Gem
+    400022: GlassBox
+    400024: Hips_CTRL
+    400026: Hologram
+    400028: Hologram 1
+    400030: jnt_Head
+    400032: jnt_Hip
+    400034: jnt_L_Ankle
+    400036: jnt_L_Ball
+    400038: jnt_L_Elbow
+    400040: jnt_L_GunBarrel
+    400042: jnt_L_GunBase
+    400044: jnt_L_Hand
+    400046: jnt_L_Hip
+    400048: jnt_L_Knee
+    400050: jnt_L_Shoulder
+    400052: jnt_L_Toe
+    400054: jnt_L_Wrist
+    400056: jnt_R_Ankle
+    400058: jnt_R_Ball
+    400060: jnt_R_Elbow
+    400062: jnt_R_Hand
+    400064: jnt_R_Hip
+    400066: jnt_R_Knee
+    400068: jnt_R_Shoulder
+    400070: jnt_R_Toe
+    400072: jnt_Root_Bottom
+    400074: jnt_Root_Top
+    400076: jnt_Spine
+    400078: LeftArm
+    400080: LeftArm 1
+    400082: LeftArm 2
+    400084: LeftBoot
+    400086: LeftKnee_CTRL
+    400088: LefttBoot
+    400090: Map
+    400092: Map 1
+    400094: Mech_CockpitVesrion
+    400096: MechMini
+    400098: Pipes
+    400100: RightArm
+    400102: RightArm 1
+    400104: RightBoot
+    400106: RightBoot 1
+    400108: RightKnee_CTRL
+    400110: RockLikeStand
+    400112: Screens
+    400114: Wireframe
+    4300000: Chair
+    4300002: Screens
+    4300004: Circles
+    4300006: Back
+    4300008: Pipes
+    4300010: Entrance
+    4300012: Wireframe
+    4300014: RockLikeStand
+    4300016: Map
+    4300018: Body
+    4300020: RightArm
+    4300022: LeftArm
+    4300024: Base
+    4300026: LeftBoot
+    4300028: RightBoot
+    4300030: Hologram
+    4300032: Base
+    4300034: RightBoot
+    4300036: LefttBoot
+    4300038: LeftArm
+    4300040: Gem
+    4300042: GlassBox
+    4300044: RightArm
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Back
+    13700002: Base
+    13700004: Base 1
+    13700006: Body
+    13700008: Chair
+    13700010: Circles
+    13700012: Entrance
+    13700014: Gem
+    13700016: GlassBox
+    13700018: Hologram 1
+    13700020: LeftArm 1
+    13700022: LeftArm 2
+    13700024: LeftBoot
+    13700026: LefttBoot
+    13700028: Map 1
+    13700030: Pipes
+    13700032: RightArm
+    13700034: RightArm 1
+    13700036: RightBoot
+    13700038: RightBoot 1
+    13700040: RockLikeStand
+    13700042: Screens
+    13700044: Wireframe
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

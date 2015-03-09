@@ -62,12 +62,16 @@ public class MinigunFirer : MonoBehaviour {
 		Ray ray = new Ray(tracerStart.transform.position, tracerStart.transform.forward);
 		RaycastHit rayHit;
 
+		Debug.DrawRay(tracerStart.transform.position, tracerStart.transform.forward * 100,Color.green);
+
 		if(Physics.Raycast (ray, out rayHit,range,mask)){
 			Vector3 hitPoint = rayHit.point;
 			//fire a ray back at the end of the first ray
 			Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
 			RaycastHit ray2Hit;
-			
+
+			Debug.DrawRay(hitPoint,cameraPlace.transform.position-hitPoint,Color.yellow);
+
 			if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
 				if(ray2Hit.collider.tag == "aimerWall"){
@@ -93,6 +97,9 @@ public class MinigunFirer : MonoBehaviour {
 			Vector3 miniArmPos = tracerStart.transform.position; 
 			Vector3 sendBack =  miniArmPos += vecEnd;
 			Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
+
+			Debug.DrawRay(sendBack,cameraPlace.transform.position-sendBack,Color.black);
+
 			RaycastHit ray2HitNo;
 			if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
