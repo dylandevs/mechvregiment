@@ -16,6 +16,7 @@ public class Player : MonoBehaviour {
 	public float MaxHealth = 100;
 	private float InvMaxHealth = 1;
 	public float RegenInc = 25f;
+	public float RespawnWait = 5.0f;
 
 	// Inputs
 	public Camera playerCam;
@@ -27,8 +28,10 @@ public class Player : MonoBehaviour {
 	// Status variables
 	private float health = 0;
 	private float healTimer = 0;
+	private float respawnTimer = 0;
 	private bool isAimingDownSights = false;
 	private bool isCrouching = false;
+	public bool isDead = true;
 
 	public GameObject weaponWrapper;
 	public GameObject weaponWrapper3;
@@ -45,7 +48,12 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		TryRegen();
+		if (!isDead){
+			TryRegen();
+		}
+		else{
+			TryRespawn();
+		}
 		//crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 		display.UpdateCrosshairSpread(weapons [currentWeaponIndex].GetSpread ());
 	}
@@ -82,17 +90,35 @@ public class Player : MonoBehaviour {
 		playerController.isKeyboard = true;
 	}
 
+	private void TryRespawn(){
+		if (respawnTimer > 0){
+			respawnTimer -= Time.deltaTime;
+		}
+		else{
+			Respawn();
+		}
+	}
+
+	private void Respawn(){
+		isDead = false;
+	}
+
 	// Regenerates if healing timer is depleted and health is below maximum
-	void TryRegen(){
+	private void TryRegen(){
 		if (health < MaxHealth){
-			if (healTimer <= 0){
-				health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
-				display.UpdateDamageOverlay (1 - health * InvMaxHealth);
+			if (healTimer > 0){
+				healTimer -= Time.deltaTime;
+
 			}
 			else{
-				healTimer -= Time.deltaTime;
+				Regen();
 			}
 		}
+	}
+
+	private void Regen(){
+		health = Mathf.Min(MaxHealth, health + RegenInc * Time.deltaTime);
+		display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 	}
 
 	public bool ToggleADS(bool? setADS = null){
@@ -139,17 +165,19 @@ public class Player : MonoBehaviour {
 
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage, Vector3 direction){
-		health -= damage;
-		healTimer = HealWait;
+		if (!isDead){
+			health -= damage;
+			healTimer = HealWait;
 
-		health = Mathf.Max (health, 0);
+			health = Mathf.Max (health, 0);
 
-		display.IndicateDamageDirection (direction);
-		display.UpdateDamageOverlay (1 - health * InvMaxHealth);
+			display.IndicateDamageDirection (direction);
+			display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 
-		if (health <= 0){
-			// TODO: Trigger death
-
+			if (health <= 0){
+				// TODO: Trigger death
+				isDead = true;
+			}
 		}
 	}
 

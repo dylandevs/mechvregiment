@@ -129,6 +129,11 @@ public class ControllerScript : MonoBehaviour {
 
 		if (!isKeyboard){
 
+			// Ignore all controller input if dead
+			if (player.isDead){
+				return;
+			}
+
 			// Ignore input if unassigned
 			if (controllerId == -1) {
 				return;
@@ -560,6 +565,7 @@ public class ControllerScript : MonoBehaviour {
 	public void SetController(int newId){
 		if (newId > 0 && newId < 5){
 			controllerId = newId - 1;
+			player.isDead = false;
 		}
 	}
 	
