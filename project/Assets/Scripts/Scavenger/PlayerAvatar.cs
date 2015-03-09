@@ -48,7 +48,7 @@ public class PlayerAvatar : MonoBehaviour {
 		lastSyncPos = rigidbody.position;
 		nextSyncPos = nextPos + currVelocity * syncDelay;
 
-		lastSyncRot = nextSyncRot;
+		lastSyncRot = rigidbody.rotation;
 		nextSyncRot = nextRot;
 	}
 
