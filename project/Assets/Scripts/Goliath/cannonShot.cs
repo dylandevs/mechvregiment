@@ -4,7 +4,7 @@ using System.Collections;
 public class cannonShot : MonoBehaviour {
 
 	public Vector3 constantSpeed;
-	public float explosionRadius = 5f;
+	public float explosionRadius = 8f;
 
 	public PoolManager plasmaExplodePool;
 	public PoolManager pool;
@@ -17,7 +17,7 @@ public class cannonShot : MonoBehaviour {
 
 	int layerMask = 1 << 3;
 	float timer;
-	float speed = 6;
+	float speed = 25;
 	float waitOutTimer;
 	// Use this for initialization
 	void Start () {

@@ -185,7 +185,7 @@ public class mechMovement : MonoBehaviour {
 	void FixedUpdate(){
 		//aligns the body top and bottom half
 		Vector3 newPos = bottomHalf.transform.position;
-		newPos += new Vector3 (0,4,0);
+		newPos += new Vector3 (0,0.25f,0);
 		topHalfX.transform.position = newPos;
 
 		//update minimap

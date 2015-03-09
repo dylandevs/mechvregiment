@@ -60,7 +60,7 @@ public class cockpitUI : MonoBehaviour {
 			coolDown = minigun.overHeat;
 			cannonCDR = minigun.cannonCDR;
 
-			float fillAmount = coolDown / 75;
+			float fillAmount = coolDown / 150;
 			miniGunImage.fillAmount = fillAmount;
 			miniGunImage.color = Color.Lerp(Color.green, Color.red, fillAmount);
 

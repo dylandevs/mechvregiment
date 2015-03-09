@@ -49,9 +49,9 @@ public class MinigunFirer : MonoBehaviour {
 		fire = false;
 		cannonCounter = 1;
 		//during warm up
-		coolDownWarmUp = 1f;
+		coolDownWarmUp = 0.5f;
 		//after warmed up
-		coolDown = 0.5f;
+		coolDown = 0.2f;
 	}
 	
 	// Update is called once per frame
@@ -132,7 +132,7 @@ public class MinigunFirer : MonoBehaviour {
 			warmedUp = false;
 		}
 		//when hitting overheated can't fire
-		if(overHeat > 75){
+		if(overHeat > 150){
 			overHeated = true;
 		}
 		if(overHeat <= 0){
@@ -140,7 +140,7 @@ public class MinigunFirer : MonoBehaviour {
 		}
 		//over heat recovery
 		if(overHeated == true){
-			overHeat -= Time.deltaTime * 8; 
+			overHeat -= Time.deltaTime * 15; 
 		}
 
 		else if(overHeat >=0 && fire == false){
@@ -154,19 +154,19 @@ public class MinigunFirer : MonoBehaviour {
 			//gets the starting aimer angle
 			Vector3 tempStart = miniGunAimer.transform.forward;
 			//ads a randoma mount of spread to the angle
-			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			Ray rayFire = new Ray (tracerStart.transform.position, endShot);;
+			//Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
+			Ray rayFire = new Ray (tracerStart.transform.position, tempStart);;
 
 			//handles effects of bullet
 
 			GameObject tracer = tracerPool.Retrieve(tracerStart.transform.position);
-			tracer.transform.up = endShot;
+			tracer.transform.up = tempStart;
 
 			TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
 			tracerRound.sparkPool = sparks;
 			//flash
 			GameObject flash = flashPool.Retrieve(tracerStart.transform.position);
-			flash.transform.up = endShot;
+			flash.transform.up = tempStart;
 
 			RaycastHit hitInfoFire;
 

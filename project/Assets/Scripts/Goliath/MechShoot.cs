@@ -346,7 +346,7 @@ public class MechShoot : MonoBehaviour {
 				Ray rayRockMode = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
 				RaycastHit rockModeRayHit;
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-				if(Physics.Raycast (rayRockMode, out rockModeRayHit,30,maskRocket)){
+				if(Physics.Raycast (rayRockMode, out rockModeRayHit,100,maskRocket)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
 
 						outOfRange.SetActive(false);

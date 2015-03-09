@@ -102,6 +102,11 @@ public class RocketScript : MonoBehaviour {
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 		foreach (Collider c in colliders) 
 		{
+
+			if(c.gameObject.collider.tag == "Player"){
+				print("hit player");
+			}
+
 			/*objectHealth hp = c.GetComponent<objectHealth>();
 
 			if(hp != null)
