@@ -181,16 +181,35 @@ public class MechShoot : MonoBehaviour {
 				Vector3 hitPoint = hitInfoAimer.point;
 				//create a hit variable for the second raycast
 				//make it look like the minigun arm is facing where its shooting
-				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+				Vector3 vecEnd = miniGunAimer.transform.up * 100f;
 				// limit the angles properly
+
+				/*Vector3 target = vecEnd - miniGunAimer.transform.position;
+
+				miniGunArm.transform.rotation = Quaternion.LookRotation(target);
+
+				Debug.DrawRay(miniGunArm.transform.position,target,Color.blue);
+*/
+				//miniGunArm.transform.LookAt(vecEnd);
 				miniGunArm.transform.up = -vecEnd;
+
+
 			}
 			else{
-				Vector3 vecEnd = miniGunAimer.transform.forward * 100;
+				Vector3 vecEnd = miniGunAimer.transform.up * 100;
 				Vector3 miniArmPos = miniGunAimer.transform.position; 
 				Vector3 sendBack =  miniArmPos += vecEnd;
 				// limit these angles properly
+
+				
+
+				//Vector3 target = sendBack - miniGunAimer.transform.position;
+
+				//miniGunArm.transform.rotation = Quaternion.LookRotation(target);
 				miniGunArm.transform.up = -vecEnd;
+
+				//Debug.DrawRay(miniGunArm.transform.position,target,Color.red);
+
 			}
 
 
