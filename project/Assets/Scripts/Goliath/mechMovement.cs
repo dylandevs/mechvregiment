@@ -43,11 +43,11 @@ public class mechMovement : MonoBehaviour {
 		currMechHealth = 1000;
 		mechShield = 200;
 		shieldActive = true;
-		moveSpeedY = 5 * Time.deltaTime;
-		rotSpeedY = Time.deltaTime * 50;
+		moveSpeedY = 15 * Time.deltaTime;
+		rotSpeedY = Time.deltaTime * 80;
 
-		moveSpeedX = 5 * Time.deltaTime;
-		rotSpeedX = Time.deltaTime * 50;
+		moveSpeedX = 15 * Time.deltaTime;
+		rotSpeedX = Time.deltaTime * 100;
 	}
 	
 	// Update is called once per frame
@@ -66,14 +66,25 @@ public class mechMovement : MonoBehaviour {
 		if(mechHealth >=1){
 
 			//Hydra Movement
-			bottomHalf.transform.Translate(transform.forward * moveSpeedY * lStickY);
-			bottomHalf.transform.Translate(transform.right * moveSpeedX * lStickX);
+			bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
+			bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 
-			if(rStickX >= 0.01){
+			Debug.DrawRay(bottomHalf.transform.position, bottomHalf.transform.forward *100,Color.red);
+			Debug.DrawRay(bottomHalf.transform.position, bottomHalf.transform.right *100,Color.blue);
+
+			if(lStickX >= 0.05f){
 				isMoving = true;
 			}
 
-			if(rStickY >= 0.01){
+			if(lStickY >= 0.05f){
+				isMoving = true;
+			}
+
+			if(lStickX <= -0.05f){
+				isMoving = true;
+			}
+			
+			if(lStickY <= -0.05f){
 				isMoving = true;
 			}
 
@@ -189,7 +200,7 @@ public class mechMovement : MonoBehaviour {
 		topHalfX.transform.position = newPos;
 
 		//update minimap
-		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,100,0);
+		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,30,0);
 		miniMapCam.transform.position = newPosCam;
 		Quaternion camRot = Quaternion.Euler(90,topHalfX.transform.rotation.eulerAngles.y,0);
 		miniMapCam.transform.rotation = camRot;
