@@ -38,7 +38,9 @@ public class Player : MonoBehaviour {
 	private GameObject[] weaponModels;
 	private GameObject[] weaponModels3;
 	private Weapon[] weapons;
-	int currentWeaponIndex = 0;
+
+	[HideInInspector]
+	public int currentWeaponIndex = 0;
 
 	// Recorded variables
 	private Vector3 startingPos;

@@ -2011,7 +2011,7 @@ ModelImporter:
     - serializedVersion: 16
       name: ADS_AR
       takeName: Take 001
-      firstFrame: 75
+      firstFrame: 83
       lastFrame: 85
       wrapMode: 0
       orientationOffsetY: 0

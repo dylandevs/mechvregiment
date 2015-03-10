@@ -502,6 +502,8 @@ public class Weapon : MonoBehaviour {
 				isFiring = false;
 			}
 		}
+
+		player.playerController.anim.SetBool ("Firing", isFiring);
 	}
 	
 	private void StartFireInterval(){

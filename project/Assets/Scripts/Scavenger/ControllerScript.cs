@@ -32,7 +32,7 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
 	float speedFactor = 1;
-	float initialSpineAngle = 0;
+	Vector3 initialSpineAngles;
 
 	// XInput variables
 	private GamePadState state;
@@ -56,6 +56,7 @@ public class ControllerScript : MonoBehaviour {
 	int adsHash = Animator.StringToHash("Aiming");
 	int jumpHash = Animator.StringToHash("Jump");
 	int crouchHash = Animator.StringToHash ("Crouching");
+	int weaponHash = Animator.StringToHash ("WeaponNum");
 	
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -104,7 +105,7 @@ public class ControllerScript : MonoBehaviour {
 		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
 		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
 		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
-		initialSpineAngle = spineJoint.transform.localRotation.x;
+		initialSpineAngles = spineJoint.transform.localRotation.eulerAngles;
 	}
 	
 	// Update is called once per frame
@@ -202,10 +203,12 @@ public class ControllerScript : MonoBehaviour {
 			if (DPad_Next){
 				player.CycleWeapons(1);
 				weaponAnim = player.GetCurrentWeapon().animator;
+				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 			else if (DPad_Prev){
 				player.CycleWeapons(-1);
 				weaponAnim = player.GetCurrentWeapon().animator;
+				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 
 			// Reloading
@@ -275,20 +278,22 @@ public class ControllerScript : MonoBehaviour {
 			// Toggle ADS
 			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading()) {
 				player.ToggleADS(true);
-				anim.SetInteger(fireHash, 2);
+				//anim.SetBool(fireHash, true);
 				weaponAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
 				gunCamAnim.SetBool(adsHash, true);
+				anim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
 				speedFactor *= ADSSpeedFactor;
 			}
 			else{
 				player.ToggleADS(false);
-				anim.SetInteger(fireHash, 0);
+				//anim.SetBool(fireHash, false);
 				weaponAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
 				gunCamAnim.SetBool(adsHash, false);
+				anim.SetBool(adsHash, false);
 				aimingDownSight = false;
 			}
 
@@ -333,15 +338,11 @@ public class ControllerScript : MonoBehaviour {
 			// Firing script
 			if (TriggersR != 0){
 				player.SetFiringState(true);
-				if (anim.GetInteger(fireHash) != 2){
-					anim.SetInteger (fireHash, 1);
-				}
+				//anim.SetBool(fireHash, true);
 			}
 			else{
 				player.SetFiringState(false);
-				if (anim.GetInteger(fireHash) != 2){
-					anim.SetInteger (fireHash, 0);
-				}
+				//anim.SetBool(fireHash, false);
 			}
 		}
 
@@ -424,20 +425,22 @@ public class ControllerScript : MonoBehaviour {
 			// Toggle ADS
 			if (Mouse_Right && currentlyGrounded && !currentWeapon.IsReloading()) {
 				player.ToggleADS(true);
-				anim.SetInteger(fireHash, 2);
+				//anim.SetBool(fireHash, true);
 				weaponAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
 				gunCamAnim.SetBool(adsHash, true);
+				anim.SetBool(adsHash, true);
 				aimingDownSight = true;
 				spread += currentWeapon.AdsSpreadAdjust;
 				speedFactor *= ADSSpeedFactor;
 			}
 			else{
 				player.ToggleADS(false);
-				anim.SetInteger(fireHash, 0);
+				//anim.SetBool(fireHash, false);
 				weaponAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
 				gunCamAnim.SetBool(adsHash, false);
+				anim.SetBool(adsHash, false);
 				aimingDownSight = false;
 			}
 			
@@ -479,15 +482,11 @@ public class ControllerScript : MonoBehaviour {
 			if (Mouse_Left){
 				//player.tryFire();
 				player.SetFiringState(true);
-				if (anim.GetInteger(fireHash) != 2){
-					anim.SetInteger (fireHash, 1);
-				}
+				anim.SetBool(fireHash, true);
 			}
 			else{
 				player.SetFiringState(false);
-				if (anim.GetInteger(fireHash) != 2){
-					anim.SetInteger (fireHash, 0);
-				}
+				anim.SetBool(fireHash, false);
 			}
 		}
 
@@ -537,10 +536,10 @@ public class ControllerScript : MonoBehaviour {
 		if (spineAdjust > 180){
 			spineAdjust = spineAdjust - 360;
 		}
-		spineAdjust += 180;
-		spineAdjust *= 0.5f;
 
-		spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngle - spineAdjust, spineAngles.y, spineAngles.z);
+		spineAdjust *= 0.75f;
+
+		spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles.x - spineAdjust, initialSpineAngles.y, initialSpineAngles.z);
 	}
 
 	public Vector2 getFacing2D(){
