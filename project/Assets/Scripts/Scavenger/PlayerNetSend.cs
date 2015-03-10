@@ -5,7 +5,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
     private string roomName = "GoliathConnection_083";
 	//private PhotonView photonView;
-	private float SendInterval = 0.05f;
+	private float SendInterval = 0.15f;
 	private float sendTimer = 0;
 
 	public GameObject goliathTop;
@@ -40,7 +40,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 				for(int i = 0; i < players.Length; i++){
 					if (players[i].gameObject.GetActive()){
-						ControllerScript control = players[i].playerController;
+						//ControllerScript control = players[i].playerController;
 
 						//photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
 						//photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
@@ -56,7 +56,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				sendTimer = SendInterval;
 			}
 
-			if (sendTimer2 <= 0){
+			/*if (sendTimer2 <= 0){
 				for(int i = 0; i < players.Length; i++){
 					if (players[i].gameObject.GetActive()){
 						ControllerScript control = players[i].playerController;
@@ -66,7 +66,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				}
 
 				sendTimer2 = SendInterval2;
-			}
+			}*/
         }
         else {
         	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());

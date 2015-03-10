@@ -296,7 +296,7 @@ public class Weapon : MonoBehaviour {
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
-					botHit.Damage(Damage, player.gameObject);
+					botHit.Damage(Damage, player);
 					player.TriggerHitMarker();
 				}
 
@@ -593,31 +593,11 @@ public class Weapon : MonoBehaviour {
 		return 1 - Mathf.Min(reloadProgress * InvReloadTime, 1);
 	}
 
-	public void ResetState(){
-		// Reset timers
-		reloadProgress = 0;
-		burstProgress = 0;
-		fireProgress = 0;
-		recoilMoveProgress = 0;
-		recentringProgress = 0;
-		flashProgress = 0;
-
-		// Reset recentring
-		recenterTargetSet = false;
-		totalRecenterRotation = 0;
-		initialFiringElevation = 0;
-		currentRecenterRotation = 0;
-
-		// Reset state
-		isReloading = false;
-		isBursting = false;
-		isRecoiling = false;
-		isOnFireInterval = false;
-		isFiring = false;
-		bulletsOfBurstFired = 0;
-		isFirstShot = true;
-		isAds = false;
-		semiAutoReady = true;
+	public void ReplenishWeapon(){
+		// Resets ammunition count
+		reserveAmmo = ReserveSize;
+		magAmmo = MagSize;
+		StopReloading();
 	}
 
 	public bool IsFiringAudibly(){

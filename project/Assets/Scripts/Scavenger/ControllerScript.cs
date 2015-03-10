@@ -104,7 +104,7 @@ public class ControllerScript : MonoBehaviour {
 		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
 		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
 		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
-		initialSpineAngle = spineJoint.transform.localRotation.z;
+		initialSpineAngle = spineJoint.transform.localRotation.x;
 	}
 	
 	// Update is called once per frame
@@ -129,11 +129,6 @@ public class ControllerScript : MonoBehaviour {
 
 		if (!isKeyboard){
 
-			// Ignore all controller input if dead
-			if (player.isDead){
-				return;
-			}
-
 			// Ignore input if unassigned
 			if (controllerId == -1) {
 				return;
@@ -146,26 +141,49 @@ public class ControllerScript : MonoBehaviour {
 					return;
 				}
 			}
-			
-			// Getting controller values
-			A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
-			B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
-			X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
-			Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
 
-			DPad_Next = (state.DPad.Right == ButtonState.Pressed && prevState.DPad.Right == ButtonState.Released);
-			DPad_Prev = (state.DPad.Left == ButtonState.Pressed && prevState.DPad.Left == ButtonState.Released);
-			
-			R_XAxis = state.ThumbSticks.Right.X;
-			R_YAxis = -state.ThumbSticks.Right.Y;
-			RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
-			
-			L_XAxis = state.ThumbSticks.Left.X;
-			L_YAxis = -state.ThumbSticks.Left.Y;
-			LS_Held = (state.Buttons.LeftStick == ButtonState.Pressed);
-			
-			TriggersR = state.Triggers.Right;
-			TriggersL = state.Triggers.Left;
+			// Ignore all input if dead
+			if (player.isDead){
+				A_Press = false;
+				B_Press = false;
+				X_Press = false;
+				Y_Press = false;
+				
+				DPad_Next = false;
+				DPad_Prev = false;
+				
+				R_XAxis = 0;
+				R_YAxis = 0;
+				RS_Press = false;
+				
+				L_XAxis = 0;
+				L_YAxis = 0;
+				LS_Held = false;
+				
+				TriggersR = 0;
+				TriggersL = 0;
+			}
+			else{
+			// Getting controller values
+				A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
+				B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
+				X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+				Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
+
+				DPad_Next = (state.DPad.Right == ButtonState.Pressed && prevState.DPad.Right == ButtonState.Released);
+				DPad_Prev = (state.DPad.Left == ButtonState.Pressed && prevState.DPad.Left == ButtonState.Released);
+				
+				R_XAxis = state.ThumbSticks.Right.X;
+				R_YAxis = -state.ThumbSticks.Right.Y;
+				RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
+				
+				L_XAxis = state.ThumbSticks.Left.X;
+				L_YAxis = -state.ThumbSticks.Left.Y;
+				LS_Held = (state.Buttons.LeftStick == ButtonState.Pressed);
+				
+				TriggersR = state.Triggers.Right;
+				TriggersL = state.Triggers.Left;
+			}
 			
 			if (RS_Press){
 				
@@ -515,13 +533,14 @@ public class ControllerScript : MonoBehaviour {
 		Quaternion recoveryRotation = Quaternion.FromToRotation(transform.forward, Vector3.forward);
 		Vector3 straightenedFacing = recoveryRotation * facing;
 
-		float adjustmentZ = Quaternion.FromToRotation(straightenedFacing, Vector3.forward).eulerAngles.x;
-		if (adjustmentZ > 180){
-			adjustmentZ = adjustmentZ - 360;
+		float spineAdjust = Quaternion.FromToRotation(straightenedFacing, Vector3.forward).eulerAngles.x;
+		if (spineAdjust > 180){
+			spineAdjust = spineAdjust - 360;
 		}
-		adjustmentZ *= 0.5f;
+		spineAdjust += 180;
+		spineAdjust *= 0.5f;
 
-		spineJoint.transform.localRotation = Quaternion.Euler(spineAngles.x, spineAngles.y, initialSpineAngle + adjustmentZ);
+		spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngle - spineAdjust, spineAngles.y, spineAngles.z);
 	}
 
 	public Vector2 getFacing2D(){

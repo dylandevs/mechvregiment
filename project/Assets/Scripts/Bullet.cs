@@ -77,7 +77,7 @@ public class Bullet : MonoBehaviour {
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 
 					if (playerSource){
-						botHit.Damage(damage, playerSource.gameObject);
+						botHit.Damage(damage, playerSource);
 						playerSource.TriggerHitMarker();
 						playerSource = null;
 					}

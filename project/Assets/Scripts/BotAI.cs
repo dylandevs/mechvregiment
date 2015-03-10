@@ -67,7 +67,7 @@ public class BotAI : MonoBehaviour {
 	public GameObject playerGroup;
 	private Player[] players;
 	NavMeshAgent navMeshAgent;
-	public GameObject currentTarget = null;
+	public Player currentTarget = null;
 
 	// Bot stats
 	public State state = State.AllClear;
@@ -111,7 +111,16 @@ public class BotAI : MonoBehaviour {
 		// Living behaviour
 		if (!isDead){
 
-			if (!currentTarget){
+			// Check first to see if target is alive
+			if (currentTarget){
+				if (currentTarget.isDead){
+					currentTarget = null;
+					state = State.Searching;
+					searchTime = SearchDuration;
+				}
+			}
+
+			if (!currentTarget) {
 				AttemptAcquireTarget();
 			}
 
@@ -126,7 +135,7 @@ public class BotAI : MonoBehaviour {
 				if (diffVec.magnitude < ThreshFire && currentTarget && state > State.Searching){
 					if (reloadProg >= FireRate && angle < ViewAngle){
 						//fireInDirection(currentTarget.transform);
-						FireAtPredictively(currentTarget);
+						FireAtPredictively(currentTarget.gameObject);
 						reloadProg = 0;
 					}
 				}
@@ -173,7 +182,7 @@ public class BotAI : MonoBehaviour {
 			else if (state == State.VeryClose){
 				alertTime = AlertDuration;
 
-				FaceTarget(currentTarget);
+				FaceTarget(currentTarget.gameObject);
 				setSurfaceColour(dngrCol);
 				navMeshAgent.velocity = Vector3.zero;
 			}
@@ -200,20 +209,20 @@ public class BotAI : MonoBehaviour {
 		float closestDistance = 0;
 
 		foreach (Player player in players){
-			if (player.gameObject.GetActive()){
+			if (player.gameObject.GetActive() && !player.isDead){
 				float distance = Vector3.Distance(player.transform.position, transform.position);
 
 				// Add players that are in sight, or extremely close
 				if (IsInSight(player.gameObject) || distance < ThreshDangerClose){
 					if (distance > closestDistance){
-						currentTarget = player.gameObject;
+						currentTarget = player;
 						closestDistance = distance;
 					}
 				}
 
 				// When searching, more sensitive to players
 				else if (distance < ThreshSearch && state == State.Searching){
-					currentTarget = player.gameObject;
+					currentTarget = player;
 					closestDistance = distance;
 					alertTime = AlertDuration;
 					break;
@@ -224,9 +233,12 @@ public class BotAI : MonoBehaviour {
 
 	void AttemptAcquireAllyTarget(){
 		BotAI ally = null;
-		if (ally = AreAlliesAlarmed()){
-			currentTarget = ally.currentTarget;
-			lastSighted = ally.lastSighted;
+		if ((ally = AreAlliesAlarmed()) && ally.currentTarget){
+			if (!ally.currentTarget.isDead){
+				currentTarget = ally.currentTarget;
+				lastSighted = ally.lastSighted;
+			}
+
 			//state = ally.state;
 			
 			//alertTime = ally.alertTime;
@@ -266,17 +278,19 @@ public class BotAI : MonoBehaviour {
 			// If no targets nearby, check status of allies
 			else if (state < State.Approaching){
 				BotAI ally = null;
-				if (ally = AreAlliesAlarmed()){
-					currentTarget = ally.currentTarget;
-					lastSighted = ally.lastSighted;
+				if ((ally = AreAlliesAlarmed()) && ally.currentTarget){
+					if (!ally.currentTarget.isDead){
+						currentTarget = ally.currentTarget;
+						lastSighted = ally.lastSighted;
 
-					alertTime = ally.alertTime;
+						alertTime = ally.alertTime;
+					}
 				}
 			}
 			
 			// If fully alert, can detect nearby enemies outside of FoV
 			if (alertTime > 0){
-				if (distanceToTarget < ThreshClose && IsSightUnobstructed(currentTarget)){
+				if (distanceToTarget < ThreshClose && IsSightUnobstructed(currentTarget.gameObject)){
 					newState = State.VeryClose;
 				}
 				else {
@@ -287,7 +301,7 @@ public class BotAI : MonoBehaviour {
 			}
 			else{
 				// Calculate state based on visibility of current target
-				if (IsInSight(currentTarget)){
+				if (IsInSight(currentTarget.gameObject)){
 					if (distanceToTarget < ThreshClose){
 						newState = State.VeryClose;
 					}
@@ -534,7 +548,7 @@ public class BotAI : MonoBehaviour {
 	}
 
 	// Deals damage to bot
-	public void Damage(float damage, GameObject playerSource = null){
+	public void Damage(float damage, Player playerSource = null){
 		health -= damage;
 
 		// Schedule bot for death

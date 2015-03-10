@@ -40,10 +40,14 @@ public class Player : MonoBehaviour {
 	private Weapon[] weapons;
 	int currentWeaponIndex = 0;
 
+	// Recorded variables
+	private Vector3 startingPos;
+
 	// Use this for initialization
 	void Start () {
 		InvMaxHealth = 1 / MaxHealth;
 		health = MaxHealth;
+		startingPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -101,6 +105,10 @@ public class Player : MonoBehaviour {
 
 	private void Respawn(){
 		isDead = false;
+		transform.position = startingPos;
+		health = MaxHealth;
+		healTimer = 0;
+		display.UpdateDamageOverlay (0);
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -108,7 +116,6 @@ public class Player : MonoBehaviour {
 		if (health < MaxHealth){
 			if (healTimer > 0){
 				healTimer -= Time.deltaTime;
-
 			}
 			else{
 				Regen();
@@ -175,8 +182,8 @@ public class Player : MonoBehaviour {
 			display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 
 			if (health <= 0){
-				// TODO: Trigger death
 				isDead = true;
+				respawnTimer = RespawnWait;
 			}
 		}
 	}
