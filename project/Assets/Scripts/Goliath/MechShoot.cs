@@ -173,66 +173,13 @@ public class MechShoot : MonoBehaviour {
 			*/
 			//MINIGUN AIMING
 			//set the reticle based on a raycast
-			Ray ray = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
-			RaycastHit hitInfoAimer;
-			//check if it hit something then send a ray back to display the reticle
+			Vector3 adjustedRotM = miniGunAimer.transform.localEulerAngles + new Vector3(-90,0,0);
+			Vector3 adjustedRotV = cannonAimer.transform.localEulerAngles + new Vector3(-90,0,0);
 
-			if(Physics.Raycast (ray, out hitInfoAimer,range,mask)){
-				Vector3 hitPoint = hitInfoAimer.point;
-				//create a hit variable for the second raycast
-				//make it look like the minigun arm is facing where its shooting
-				Vector3 vecEnd = miniGunAimer.transform.up * 100f;
-				// limit the angles properly
+			miniGunArm.transform.localEulerAngles = adjustedRotM;
+			cannonArm.transform.localEulerAngles = adjustedRotV;
 
-				/*Vector3 target = vecEnd - miniGunAimer.transform.position;
-
-				miniGunArm.transform.rotation = Quaternion.LookRotation(target);
-
-				Debug.DrawRay(miniGunArm.transform.position,target,Color.blue);
-*/
-				//miniGunArm.transform.LookAt(vecEnd);
-				miniGunArm.transform.up = -vecEnd;
-
-
-			}
-			else{
-				Vector3 vecEnd = miniGunAimer.transform.up * 100;
-				Vector3 miniArmPos = miniGunAimer.transform.position; 
-				Vector3 sendBack =  miniArmPos += vecEnd;
-				// limit these angles properly
-
-				
-
-				//Vector3 target = sendBack - miniGunAimer.transform.position;
-
-				//miniGunArm.transform.rotation = Quaternion.LookRotation(target);
-				miniGunArm.transform.up = -vecEnd;
-
-				//Debug.DrawRay(miniGunArm.transform.position,target,Color.red);
-
-			}
-
-
-			//CANNON AIMING
-			//update arm pos
-
-			Ray rayCannonStart = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
-			RaycastHit hitInfoAimerCannon;
-			if(Physics.Raycast (rayCannonStart, out hitInfoAimerCannon,range,mask)){
-				Vector3 hitPoint = hitInfoAimerCannon.point;
-				//create a hit variable for the second raycast
-				//make it look like the minigun arm is facing where its shooting
-				Vector3 vecEnd = cannonAimer.transform.forward * 100;
-				// limit the angles properly
-				cannonArm.transform.up = -vecEnd;
-			}
-			else{
-				Vector3 vecEnd = cannonAimer.transform.forward * 100;
-				Vector3 miniArmPos = cannonArm.transform.position; 
-				Vector3 sendBack =  miniArmPos += vecEnd;
-				// limit these angles properly
-				cannonArm.transform.up = -vecEnd;
-			}
+	
 			
 			if(lTrig > 0.8f){
 				miniGunFirer.cannonShoot = true;
@@ -305,8 +252,8 @@ public class MechShoot : MonoBehaviour {
 			//******* change it so that is there is no target says no target *******
 
 			//updates arm pos
-			Vector3 vecEnd = miniGunAimer.transform.forward * 75;
-			miniGunArm.transform.up = -vecEnd;
+			Vector3 adjustedRotM = miniGunAimer.transform.localEulerAngles + new Vector3(-90,0,0);
+			miniGunArm.transform.localEulerAngles = adjustedRotM;
 
 			//makes the ray
 			if(cooldownRemainingRocket <=0){	

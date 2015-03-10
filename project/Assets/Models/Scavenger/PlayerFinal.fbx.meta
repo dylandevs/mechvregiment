@@ -4927,7 +4927,7 @@ ModelImporter:
     - serializedVersion: 16
       name: ADS_Pistol
       takeName: Take 001
-      firstFrame: 240
+      firstFrame: 248
       lastFrame: 250
       wrapMode: 0
       orientationOffsetY: 0
@@ -7195,7 +7195,7 @@ ModelImporter:
     - serializedVersion: 16
       name: ADS_Mine
       takeName: Take 001
-      firstFrame: 255
+      firstFrame: 263
       lastFrame: 265
       wrapMode: 0
       orientationOffsetY: 0

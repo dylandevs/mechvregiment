@@ -57,6 +57,7 @@ public class ControllerScript : MonoBehaviour {
 	int jumpHash = Animator.StringToHash("Jump");
 	int crouchHash = Animator.StringToHash ("Crouching");
 	int weaponHash = Animator.StringToHash ("WeaponNum");
+	int changeWeapHash = Animator.StringToHash ("ChangeWeapon");
 	
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -203,11 +204,13 @@ public class ControllerScript : MonoBehaviour {
 			if (DPad_Next){
 				player.CycleWeapons(1);
 				weaponAnim = player.GetCurrentWeapon().animator;
+				anim.SetTrigger(changeWeapHash);
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 			else if (DPad_Prev){
 				player.CycleWeapons(-1);
 				weaponAnim = player.GetCurrentWeapon().animator;
+				anim.SetTrigger(changeWeapHash);
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 
