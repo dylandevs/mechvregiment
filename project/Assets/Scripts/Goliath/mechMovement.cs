@@ -84,17 +84,31 @@ public class mechMovement : MonoBehaviour {
 			if(lStickY <= -0.05f){
 				isMoving = true;
 			}
-			Quaternion nextRot = topHalfY.transform.rotation;
-			nextRot += (topHalfY.transform.right * rotSpeedY * -rStickY);
-			Vector3 checkVar = Quaternion.Euler(nextRot);
-			//Hydra Rotaiton
-			if (topHalfX.transform.eulerAngles.x <= 25 || topHalfX.transform.eulerAngles.x <= -180) {
-				topHalfY.transform.Rotate(topHalfY.transform.right * rotSpeedY * -rStickY, Space.World);
+
+			Quaternion currRot = topHalfY.transform.localRotation;
+			Vector3 nextRot = currRot.eulerAngles;
+
+			if (nextRot.x >= 180){
+				nextRot.x = nextRot.x - 360;
+			}
+
+			float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
+			if (nextRotX <= 30 && nextRotX >= -30) {
+				topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
 				//print ("I am turning around by " + -1*lStickY);
 			}
+
+			print (nextRotX);
 			
-			// figure out what the frack is going on here
-			topHalfX.transform.Rotate (topHalfX.transform.up * rotSpeedX * rStickX, Space.World);
+			/*Quaternion currRotY = topHalfX.transform.localRotation;
+			Vector3 nextRotY = currRot.eulerAngles;
+			float nextRotYY = nextRotY.y + (rotSpeedX * rStickX);
+				
+			print(nextRotYY);
+
+			topHalfX.transform.localRotation = Quaternion.Euler(nextRotY.x,nextRotYY,0);*/
+
+			topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
 
 			//print ("I am looking updown by " + -1*lStickX);
 
@@ -201,7 +215,7 @@ public class mechMovement : MonoBehaviour {
 		//update minimap
 		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,30,0);
 		miniMapCam.transform.position = newPosCam;
-		Quaternion camRot = Quaternion.Euler(90,topHalfX.transform.rotation.eulerAngles.y,0);
+		Quaternion camRot = Quaternion.Euler(90,topHalfX.transform.localEulerAngles.y,0);
 		miniMapCam.transform.rotation = camRot;
 	}
 }
