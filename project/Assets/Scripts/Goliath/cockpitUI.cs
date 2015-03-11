@@ -8,11 +8,7 @@ public class cockpitUI : MonoBehaviour {
 	public mechMovement holoVars;
 	public MechShoot mechShoot;
 
-	public GameObject mechHolagramB;
-	public GameObject mechHolagramG;
-	public GameObject mechHolagramY;
-	public GameObject mechHolagramR;
-	public GameObject mechHologramDisabled;
+	public GameObject mechHolagram;
 	public GameObject templeShield;
 
 	public Image miniGunImage;
@@ -47,7 +43,7 @@ public class cockpitUI : MonoBehaviour {
 		minigunMode = mechShoot.miniGunMode;
 		missleMode = mechShoot.rocketMode;
 		minionMode = mechShoot.minionMode;
-
+		mechHolagram.transform.Rotate(Vector3.up * Time.deltaTime * 8);
 		if(minigunMode == true){
 			resetImages();
 
@@ -117,31 +113,24 @@ public class cockpitUI : MonoBehaviour {
 		if(mechShield <=0){
 			shieldActive = false;
 			templeShield.SetActive(false);
-			mechHolagramB.SetActive(false);
 		}
 		
 		if(shieldActive == true){
-			mechHolagramB.SetActive(true);
+			mechHolagram.renderer.material.color = Color.blue;
+			Color tempColour = mechHolagram.renderer.material.color;
+			tempColour.a = 0.5f;
+			mechHolagram.renderer.material.color = tempColour;
+
 		}
-		else if(currMechHealth >=501){
-			mechHologramDisabled.SetActive(false);
-			mechHolagramG.SetActive(true);
+		else{
+			float lerpAmnt = currMechHealth / 100;
+			mechHolagram.renderer.material.color = Color.Lerp(Color.green, Color.red, lerpAmnt);
+			Color tempColour = mechHolagram.renderer.material.color;
+			tempColour.a = 0.5f;
+			mechHolagram.renderer.material.color = tempColour;
+
 		}
-		else if(currMechHealth <= 500 && currMechHealth >=251){
-			mechHolagramG.SetActive(false);
-			mechHolagramY.SetActive(true);
-		}
-		else if(currMechHealth <=250 && currMechHealth >=1){
-			mechHolagramY.SetActive(false);
-			mechHolagramR.SetActive(true);
-		}
-		else if(currMechHealth <= 0){
-			mechHolagramR.SetActive(false);
-			mechHolagramG.SetActive(false);
-			mechHolagramY.SetActive(false);
-			mechHologramDisabled.SetActive(true);
-			//turn on whatever other graphics are going to show when disabled
-		}
+
 
 
 

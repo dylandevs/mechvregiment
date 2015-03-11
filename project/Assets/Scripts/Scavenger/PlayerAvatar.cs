@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerAvatar : MonoBehaviour {
 
 	public GameObject NetworkManager;
+	public int PlayerNum = 1;
 
 	private float syncProg = 0;
 	private float syncDelay = 0;
@@ -19,6 +20,7 @@ public class PlayerAvatar : MonoBehaviour {
 	
 	// Input
 	public Animator anim;
+	public GameObject shotCollider;
 
 	// Cached values
 	private int fwdSpeedHash = Animator.StringToHash("FwdSpeed");
@@ -45,6 +47,7 @@ public class PlayerAvatar : MonoBehaviour {
 
 		// Set all children to Player tag
 		SetTagRecursively(gameObject, "Player");
+		SetLayerRecursively(shotCollider, LayerMask.NameToLayer("PlayerCollider1"));
 	}
 	
 	// Update is called once per frame
@@ -57,6 +60,14 @@ public class PlayerAvatar : MonoBehaviour {
 		
 		foreach (Transform child in baseObj.transform){
 			SetTagRecursively(child.gameObject, tag);
+		}
+	}
+
+	void SetLayerRecursively(GameObject baseObj, int layer){
+		baseObj.layer = layer;
+		
+		foreach (Transform child in baseObj.transform){
+			SetLayerRecursively(child.gameObject, layer);
 		}
 	}
 

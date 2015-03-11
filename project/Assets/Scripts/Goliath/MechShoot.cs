@@ -260,13 +260,13 @@ public class MechShoot : MonoBehaviour {
 				Ray rayRockMode = new Ray(miniGunAimer.transform.position,miniGunAimer.transform.forward);
 				RaycastHit rockModeRayHit;
 				//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-				if(Physics.Raycast (rayRockMode, out rockModeRayHit,100,maskRocket)){
+				if(Physics.Raycast (rayRockMode, out rockModeRayHit,50,maskRocket)){
 					if(rockModeRayHit.collider.tag == "Terrain"){
 
 						outOfRange.SetActive(false);
 
 						Vector3 placeHitRock = rockModeRayHit.point;
-						missleTargetArea.transform.position = placeHitRock + new Vector3(0,0.1f,0);
+						missleTargetArea.transform.position = placeHitRock + new Vector3(0,0.5f,0);
 						missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
 						
 							if(rTrig > 0.8f && cooldownRemainingRocket <= 0){
@@ -293,6 +293,10 @@ public class MechShoot : MonoBehaviour {
 
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
+			//update arm pos
+
+			Vector3 adjustedRotV = cannonAimer.transform.localEulerAngles + new Vector3(-90,0,0);
+			cannonArm.transform.localEulerAngles = adjustedRotV;
 
 			updateAimerPos();
 
@@ -371,13 +375,26 @@ public class MechShoot : MonoBehaviour {
 
 	public void updateAimerPos(){
 		//add limitations to aimers and unparent it
-		miniGunAimer.transform.localEulerAngles = hydraRight.transform.localEulerAngles;
-		miniGunAimer.transform.position = hydraRight.transform.position;
 
-		rocketAimer.transform.position = hydraRight.transform.position;
-		rocketAimer.transform.localEulerAngles = hydraRight.transform.localEulerAngles;
+		if(hydraRight.transform.localEulerAngles.y > 320 || hydraRight.transform.localEulerAngles.y < 40){
+			if(hydraRight.transform.localEulerAngles.x > 355 || hydraRight.transform.localEulerAngles.x < 45){
+				miniGunAimer.transform.localEulerAngles = new Vector3 (hydraRight.transform.localEulerAngles.x,hydraRight.transform.localEulerAngles.y,0);
+				miniGunAimer.transform.position = hydraRight.transform.position;
+			}
+		}
 
-		cannonAimer.transform.localEulerAngles = hydraLeft.transform.localEulerAngles;
-		cannonAimer.transform.position = hydraLeft.transform.position;
-	}
-}
+		if(hydraRight.transform.localEulerAngles.y > 320 || hydraRight.transform.localEulerAngles.y < 50){
+			if(hydraRight.transform.localEulerAngles.x > 350 || hydraRight.transform.localEulerAngles.x < 50){
+				rocketAimer.transform.localEulerAngles = new Vector3 (hydraRight.transform.localEulerAngles.x,hydraRight.transform.localEulerAngles.y,0);
+				rocketAimer.transform.position = hydraRight.transform.position;
+			}
+		}
+
+		if(hydraLeft.transform.localEulerAngles.y > 320 || hydraLeft.transform.localEulerAngles.y < 40){
+			if(hydraLeft.transform.localEulerAngles.x > 355 || hydraLeft.transform.localEulerAngles.x < 45){
+				cannonAimer.transform.localEulerAngles = new Vector3 (hydraLeft.transform.localEulerAngles.x,hydraLeft.transform.localEulerAngles.y,0);
+				cannonAimer.transform.position = hydraLeft.transform.position;
+			}
+		}
+	}//end of update aimer pos
+}// end of class

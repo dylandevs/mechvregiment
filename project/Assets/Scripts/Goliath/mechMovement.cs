@@ -69,9 +69,6 @@ public class mechMovement : MonoBehaviour {
 			bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
 			bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 
-			Debug.DrawRay(bottomHalf.transform.position, bottomHalf.transform.forward *100,Color.red);
-			Debug.DrawRay(bottomHalf.transform.position, bottomHalf.transform.right *100,Color.blue);
-
 			if(lStickX >= 0.05f){
 				isMoving = true;
 			}
@@ -87,13 +84,15 @@ public class mechMovement : MonoBehaviour {
 			if(lStickY <= -0.05f){
 				isMoving = true;
 			}
-
+			Quaternion nextRot = topHalfY.transform.rotation;
+			nextRot += (topHalfY.transform.right * rotSpeedY * -rStickY);
+			Vector3 checkVar = Quaternion.Euler(nextRot);
 			//Hydra Rotaiton
-			if (topHalfX.transform.eulerAngles.x <= 25||topHalfX.transform.eulerAngles.x >= 180) {
+			if (topHalfX.transform.eulerAngles.x <= 25 || topHalfX.transform.eulerAngles.x <= -180) {
 				topHalfY.transform.Rotate(topHalfY.transform.right * rotSpeedY * -rStickY, Space.World);
 				//print ("I am turning around by " + -1*lStickY);
 			}
-
+			
 			// figure out what the frack is going on here
 			topHalfX.transform.Rotate (topHalfX.transform.up * rotSpeedX * rStickX, Space.World);
 
@@ -196,7 +195,7 @@ public class mechMovement : MonoBehaviour {
 	void FixedUpdate(){
 		//aligns the body top and bottom half
 		Vector3 newPos = bottomHalf.transform.position;
-		newPos += new Vector3 (0,0.25f,0);
+		newPos += new Vector3 (0,1.5f,0);
 		topHalfX.transform.position = newPos;
 
 		//update minimap

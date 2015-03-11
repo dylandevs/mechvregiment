@@ -31,8 +31,7 @@ public class cannonShot : MonoBehaviour {
 		timer += Time.deltaTime;
 		
 		if (timer > 15f) {
-			pool.Deactivate(gameObject);
-			timer = 0;
+			waitOutTimer = 3;
 		}
 
 		transform.Translate(Vector3.forward * speed * Time.deltaTime);
@@ -45,14 +44,23 @@ public class cannonShot : MonoBehaviour {
 		//hitRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		//remainsLocation = hit.point + hit.normal;
 
+		if(waitOutTimer > 0){
+			waitOutTimer -= Time.deltaTime;
+			if(waitOutTimer <= 0){
+				pool.Deactivate(gameObject);
+			}
+		}
 		if (Physics.Raycast (ray,out hit, 25 * Time.deltaTime,layerMask)) 
 		{
-			print(hit.collider.tag);
 			if(hit.collider.tag == "Player"){
 				doDamageCannon();
 			}
 			else{
 				GameObject plasmaExplosion = plasmaExplodePool.Retrieve(hit.point);
+
+				explode1.emit = false;
+				explode2.emit = false;
+				waitOutTimer = 4;
 
 				//hurts whats near the boom depending on a overlap sphere function
 				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
@@ -67,15 +75,6 @@ public class cannonShot : MonoBehaviour {
 						float damageRatio = 1f - (dist / explosionRadius);
 						hp.ReciveDamage(damage * damageRatio);
 					}*/
-
-					explode1.emit = false;
-					explode2.emit = false;
-					print(explode1.emit);
-					waitOutTimer = 5;
-					if(waitOutTimer > 0){
-						waitOutTimer -= Time.deltaTime;
-						pool.Deactivate(gameObject);
-					}
 
 				}
 			}

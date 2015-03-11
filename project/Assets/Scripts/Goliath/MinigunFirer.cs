@@ -63,11 +63,15 @@ public class MinigunFirer : MonoBehaviour {
 		Ray ray = new Ray(tracerStart.transform.position, tracerStart.transform.forward);
 		RaycastHit rayHit;
 
+		Debug.DrawRay(tracerStart.transform.position, tracerStart.transform.forward * 1000,Color.red );
+
 		if(Physics.Raycast (ray, out rayHit,100,mask)){
 			Vector3 hitPoint = rayHit.point;
 			//fire a ray back at the end of the first ray
 			Ray ray2 = new Ray(hitPoint,cameraPlace.transform.position-hitPoint);
 			RaycastHit ray2Hit;
+
+			Debug.DrawRay(hitPoint,cameraPlace.transform.position-hitPoint,Color.yellow);
 
 			if(Physics.Raycast (ray2,out ray2Hit,range, maskForRet)){
 				//if it hits the aimerwall mvoe the reticle there
@@ -88,12 +92,15 @@ public class MinigunFirer : MonoBehaviour {
 			}
 		}
 	
+
 		//this is for when it doesnt hit an object it still displays
 		else{
 			Vector3 vecEnd = tracerStart.transform.forward * 100;
 			Vector3 miniArmPos = tracerStart.transform.position; 
 			Vector3 sendBack =  miniArmPos += vecEnd;
 			Ray ray2No = new Ray(sendBack,cameraPlace.transform.position-sendBack);
+
+			Debug.DrawRay(sendBack,cameraPlace.transform.position-sendBack,Color.grey);
 
 			RaycastHit ray2HitNo;
 			if(Physics.Raycast (ray2No,out ray2HitNo,range, maskForRet)){
@@ -147,7 +154,7 @@ public class MinigunFirer : MonoBehaviour {
 
 			overHeat ++;
 			//gets the starting aimer angle
-			Vector3 tempStart = miniGunAimer.transform.forward;
+			Vector3 tempStart = tracerStart.transform.forward;
 			//ads a randoma mount of spread to the angle
 			//Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
 			Ray rayFire = new Ray (tracerStart.transform.position, tempStart);;
