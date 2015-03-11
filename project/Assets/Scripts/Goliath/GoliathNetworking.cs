@@ -68,32 +68,52 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	//print("I'm sending the position over");
     }
 
-	/*[RPC]
-	public void SetPlayerPosition(int playerNum, Vector3 newPos){
-		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			//playerAvatars[playerNum].transform.position = newPos;
-			playerAvatars[playerNum].rigidbody.MovePosition(newPos);
-		}
-	}
-
-	[RPC]
-	public void SyncControllerInput(int playerNum, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL, bool isGrounded){
-		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			playerAvatars[playerNum].SetControllerInputs(R_XAxis, R_YAxis, L_XAxis, L_YAxis, LS_Held, TriggersR, TriggersL, isGrounded);
-		}
-	}
-
-	[RPC]
-	public void SetPlayerFacing(int playerNum, Vector3 newFacing){
-		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			playerAvatars[playerNum].SetFacing(newFacing);
-		}
-	}*/
-
 	[RPC]
 	public void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
 			playerAvatars[playerNum].SetNextTargetTransform(newPos, newRot, currVelocity);
+		}
+	}
+
+	[RPC]
+	public void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].UpdateAnimValues(fwdSpeed, rgtSpeed, speed, crouching, sprinting, ads, firing);
+		}
+	}
+	
+	[RPC]
+	public void PlayerCycleWeapon(int playerNum, int newWeapon){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].CycleNewWeapon(newWeapon);
+		}
+	}
+	
+	[RPC]
+	public void PlayerJump(int playerNum){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].TriggerJump();
+		}
+	}
+	
+	[RPC]
+	public void PlayerDeath(int playerNum, bool forward){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].DeathAnim(forward);
+		}
+	}
+	
+	[RPC]
+	public void PlayerRespawn(int playerNum){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].TriggerRespawn();
+		}
+	}
+	
+	[RPC]
+	public void PlayerReload(int playerNum){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].TriggerReload();
 		}
 	}
 }

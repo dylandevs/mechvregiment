@@ -14,7 +14,7 @@ public class AmmoRenderManager : MonoBehaviour {
 	public Vector2 iconOffsets = Vector2.zero;
 	public Image ammoGraphic;
 	public CanvasGroup ammoWrapper;
-	private Image[] ammoGroup;
+	private Image[] ammoGroup = null;
 
 	// Use this for initialization
 	void Start () {
@@ -61,8 +61,10 @@ public class AmmoRenderManager : MonoBehaviour {
 	}
 
 	public void Reload(int ammoCount){
-		for (int i = 0; i < ammoCount; i++){
-			ammoGroup [i].color = readyRoundColor;
+		if (ammoGroup != null){
+			for (int i = 0; i < ammoCount; i++){
+				ammoGroup [i].color = readyRoundColor;
+			}
 		}
 		remainingAmmo = ammoCount;
 	}

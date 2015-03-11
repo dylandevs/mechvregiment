@@ -26,6 +26,7 @@ public class ScavLayer : MonoBehaviour {
 		SetLayerRecursively(PlayerShadowWrapper, view1Layer);
 		SetLayerRecursively(PlayerMeshWrapper, view3Layer);
 		SetLayerRecursively(PlayerShotColliderWrapper, shotColliderLayer);
+		SetTagRecursively(PlayerShotColliderWrapper, "Player");
 		SetLayerRecursively(Weapon1Wrapper, weaponLayer);
 		SetLayerRecursively(Weapon3Wrapper, view3Layer);
 
@@ -49,6 +50,14 @@ public class ScavLayer : MonoBehaviour {
 
 		foreach (Transform child in baseObj.transform){
 			SetLayerRecursively(child.gameObject, layer);
+		}
+	}
+
+	void SetTagRecursively(GameObject baseObj, string tag){
+		baseObj.tag = tag;
+
+		foreach (Transform child in baseObj.transform){
+			SetTagRecursively(child.gameObject, tag);
 		}
 	}
 }

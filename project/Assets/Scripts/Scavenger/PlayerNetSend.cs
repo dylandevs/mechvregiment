@@ -4,7 +4,6 @@ using System.Collections;
 public class PlayerNetSend : Photon.MonoBehaviour {
 
     private string roomName = "GoliathConnection_083";
-	//private PhotonView photonView;
 	private float SendInterval = 0.15f;
 	private float sendTimer = 0;
 
@@ -12,9 +11,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject goliathBot;
 
 	public Player[] players;
-
-	float SendInterval2 = 0.02f;
-	float sendTimer2 = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +25,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		sendTimer -= Time.deltaTime;
-		sendTimer2 -= Time.deltaTime;
         if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
             Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
             MakeRoom();
@@ -39,34 +34,17 @@ public class PlayerNetSend : Photon.MonoBehaviour {
                 //Here's where the RPC calls go so they happen once properly joined.
 
 				for(int i = 0; i < players.Length; i++){
-					if (players[i].gameObject.GetActive()){
-						//ControllerScript control = players[i].playerController;
+					Player player = players[i];
+					ControllerScript control = player.playerController;
 
-						//photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
-						//photonView.RPC ("SetPlayerFacing", PhotonTargets.All, i, control.facing);
-						//photonView.RPC ("SyncControllerInput", PhotonTargets.All, i, control.R_XAxis, control.R_YAxis, control.L_XAxis, control.L_YAxis, control.LS_Held, control.TriggersR, control.TriggersL, control.currentlyGrounded);
-						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, players[i].rigidbody.position, players[i].rigidbody.rotation, players[i].rigidbody.velocity);
+					if (players[i].gameObject.GetActive()){
+						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
+						photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching, control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring);
 					}
 				}
-	        	/*photonView.RPC("PositionPlayer1", PhotonTargets.All, player1.transform.position, player1.transform.rotation);
-	        	photonView.RPC("PositionPlayer2", PhotonTargets.All, player2.transform.position, player2.transform.rotation);
-	        	photonView.RPC("PositionPlayer3", PhotonTargets.All, player3.transform.position, player3.transform.rotation);
-	        	photonView.RPC("PositionPlayer4", PhotonTargets.All, player4.transform.position, player4.transform.rotation);*/
-        
+	        	        
 				sendTimer = SendInterval;
 			}
-
-			/*if (sendTimer2 <= 0){
-				for(int i = 0; i < players.Length; i++){
-					if (players[i].gameObject.GetActive()){
-						ControllerScript control = players[i].playerController;
-						
-						//photonView.RPC ("SetPlayerPosition", PhotonTargets.All, i, players[i].transform.position);
-					}
-				}
-
-				sendTimer2 = SendInterval2;
-			}*/
         }
         else {
         	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
@@ -92,21 +70,25 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		DecerealizeTransform(goliathTop, topPos, topRot);
 		DecerealizeTransform(goliathBot, botPos, botRot);
 	}
-	[RPC]
-	void SetPlayerPosition(int playerNum, Vector3 newPos){}
-
-	[RPC]
-	void SyncControllerInput(int playerId, float R_XAxis, float R_YAxis, float L_XAxis, float L_YAxis, bool LS_Held, float TriggersR, float TriggersL, bool isGrounded){}
-
-	[RPC]
-	void SetPlayerFacing(int playerId, Vector3 facing){}
 
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
-	public void TogglePlayerADS (int playerNum, bool setADS){
-		if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
-
-		}
-	}
+	[RPC]
+	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
+	
+	[RPC]
+	public void PlayerCycleWeapon(int playerNum, int newWeapon){}
+	
+	[RPC]
+	public void PlayerJump(int playerNum){}
+	
+	[RPC]
+	public void PlayerDeath(int playerNum, bool forward){}
+	
+	[RPC]
+	public void PlayerRespawn(int playerNum){}
+	
+	[RPC]
+	public void PlayerReload(int playerNum){}
 }

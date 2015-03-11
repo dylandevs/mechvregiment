@@ -88,7 +88,8 @@ public class Weapon : MonoBehaviour {
 	private bool isRecoiling = false;
 	private bool isOnFireInterval = false;
 	private bool isAllAmmoDepleted = false;
-	private bool isFiring = false;
+	[HideInInspector]
+	public bool isFiring = false;
 	private int bulletsOfBurstFired = 0;
 	private bool isFirstShot = true;
 	private bool isAds = false;
@@ -99,7 +100,10 @@ public class Weapon : MonoBehaviour {
 	
 	// Cached references
 	private Player player;
+	private Animator playerAnim;
 	private ControllerScript controller;
+	private int fireHash = Animator.StringToHash("Firing");
+	private int reloadHash = Animator.StringToHash("Reload");
 
 	void Awake(){
 		ammoRenderer.Initialize (MagSize);
@@ -230,6 +234,7 @@ public class Weapon : MonoBehaviour {
 	
 	public void SetPlayerReference(Player player){
 		this.player = player;
+		playerAnim = player.anim;
 	}
 	
 	public void SetControllerReference(ControllerScript controller){
@@ -503,7 +508,7 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 
-		player.playerController.anim.SetBool ("Firing", isFiring);
+		playerAnim.SetBool (fireHash, (isFiring && !isReloading && !isAllAmmoDepleted));
 	}
 	
 	private void StartFireInterval(){
@@ -531,6 +536,8 @@ public class Weapon : MonoBehaviour {
 		reloadProgress = ReloadTime;
 		isReloading = true;
 		isFiring = false;
+		playerAnim.SetTrigger(reloadHash);
+		player.networkManager.PlayerReload(player.initializer.Layer);
 	}
 	
 	public void StopReloading(){
@@ -600,6 +607,7 @@ public class Weapon : MonoBehaviour {
 		reserveAmmo = ReserveSize;
 		magAmmo = MagSize;
 		StopReloading();
+		ammoRenderer.Reload (MagSize);
 	}
 
 	public bool IsFiringAudibly(){

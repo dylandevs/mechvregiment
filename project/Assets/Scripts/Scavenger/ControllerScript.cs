@@ -41,7 +41,7 @@ public class ControllerScript : MonoBehaviour {
 	// Inputs
 	public GameObject playerCam;
 	public Player player;
-	public Animator anim;
+	private Animator anim;
 	private Animator weaponAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
@@ -61,10 +61,14 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
-	bool aimingDownSight = false;
 
 	// State trackers
-	bool isCrouching = false;
+	[HideInInspector]
+	public bool isCrouching = false;
+	[HideInInspector]
+	public bool isSprinting = false;
+	[HideInInspector]
+	public bool aimingDownSight = false;
 	
 	// Publicly accessible controller attributes
 	[HideInInspector]
@@ -97,6 +101,14 @@ public class ControllerScript : MonoBehaviour {
 	public float TriggersL = 0;
 	[HideInInspector]
 	public bool currentlyGrounded = false;
+
+	// Publicly-accessible animation attributes
+	[HideInInspector]
+	public float forwardSpeed = 0;
+	[HideInInspector]
+	public float rightSpeed = 0;
+	[HideInInspector]
+	public float speed = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -107,6 +119,8 @@ public class ControllerScript : MonoBehaviour {
 		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
 		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
 		initialSpineAngles = spineJoint.transform.localRotation.eulerAngles;
+
+		anim = player.anim;
 	}
 	
 	// Update is called once per frame
@@ -118,8 +132,11 @@ public class ControllerScript : MonoBehaviour {
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
 		currentlyGrounded = IsGrounded();
+
+		// Setting default attributes
 		float spread = 0;
 		speedFactor = 1;
+		isSprinting = false;
 		
 		if (currentlyGrounded){
 			newVel = new Vector3(0, rigidbody.velocity.y, 0);
@@ -229,6 +246,8 @@ public class ControllerScript : MonoBehaviour {
 
 					// Cancel crouch
 					SetCrouching(false);
+
+					player.networkManager.PlayerJump(player.initializer.Layer);
 				}
 				
 				// Lateral movement (strafing)
@@ -245,11 +264,12 @@ public class ControllerScript : MonoBehaviour {
 				
 				// Longitudinal movement
 				if (L_YAxis != 0){
+
 					// Sprint
 					if (LS_Held && L_YAxis < RunThresh){
 						newVel += SprintSpeed * facing2D;
-						anim.SetBool(sprintHash, true);
 						spread += currentWeapon.SprintSpreadAdjust;
+						isSprinting = true;
 
 						// Cancel crouch
 						SetCrouching(false);
@@ -260,7 +280,6 @@ public class ControllerScript : MonoBehaviour {
 							spread += currentWeapon.CrouchSpreadAdjust;
 						}
 						newVel += RunSpeed * facing2D * -SignOf(L_YAxis);
-						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.RunSpreadAdjust;
 					}
 					// Walk
@@ -269,7 +288,6 @@ public class ControllerScript : MonoBehaviour {
 							spread += currentWeapon.CrouchSpreadAdjust;
 						}
 						newVel += Mathf.Lerp(0, RunSpeed, Mathf.Abs(L_YAxis)/RunThresh) * facing2D * -SignOf(L_YAxis);
-						anim.SetBool(sprintHash, false);
 						spread += currentWeapon.WalkSpreadAdjust;
 					}
 				}			
@@ -506,21 +524,28 @@ public class ControllerScript : MonoBehaviour {
 		prevState = state;
 
 		// Apply calculated speed animation
-		//anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
 		Quaternion revFacingRot = Quaternion.FromToRotation(facing2D, Vector3.forward);
 		Vector3 rotatedVelocity = revFacingRot * rigidbody.velocity;
 
-		anim.SetFloat(fwdSpeedHash, rotatedVelocity.z);
-		anim.SetFloat(rgtSpeedHash, rotatedVelocity.x);
-		anim.SetFloat(speedHash, rigidbody.velocity.magnitude);
+		forwardSpeed = rotatedVelocity.z;
+		rightSpeed = rotatedVelocity.x;
+		speed = rigidbody.velocity.magnitude;
+
+		anim.SetFloat(fwdSpeedHash, forwardSpeed);
+		anim.SetFloat(rgtSpeedHash, rightSpeed);
+		anim.SetFloat(speedHash, speed);
 		anim.SetBool (crouchHash, isCrouching);
+		anim.SetBool(sprintHash, isSprinting);
+
+		// Snap spine back to initial rotations
+		if (player.isDead){
+			spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles);
+		}
 	}
 
 	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
 		player.SetCrouching(isCrouching);
-
-		// Trigger crouch animation
 	}
 
 	// Sets facing according to input
@@ -530,19 +555,21 @@ public class ControllerScript : MonoBehaviour {
 		transform.LookAt(transform.position + facing2D);
 		playerCam.transform.LookAt(transform.position + facing + cameraOffset);
 
-		// Sets spine angle by determining angle of elevation of facing
-		Vector3 spineAngles = spineJoint.transform.localRotation.eulerAngles;
-		Quaternion recoveryRotation = Quaternion.FromToRotation(transform.forward, Vector3.forward);
-		Vector3 straightenedFacing = recoveryRotation * facing;
+		if (!player.isDead){
+			// Sets spine angle by determining angle of elevation of facing
+			Vector3 spineAngles = spineJoint.transform.localRotation.eulerAngles;
+			Quaternion recoveryRotation = Quaternion.FromToRotation(transform.forward, Vector3.forward);
+			Vector3 straightenedFacing = recoveryRotation * facing;
 
-		float spineAdjust = Quaternion.FromToRotation(straightenedFacing, Vector3.forward).eulerAngles.x;
-		if (spineAdjust > 180){
-			spineAdjust = spineAdjust - 360;
+			float spineAdjust = Quaternion.FromToRotation(straightenedFacing, Vector3.forward).eulerAngles.x;
+			if (spineAdjust >= 180){
+				spineAdjust = spineAdjust - 360;
+			}
+
+			spineAdjust *= 0.75f;
+
+			spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles.x - spineAdjust, initialSpineAngles.y, initialSpineAngles.z);
 		}
-
-		spineAdjust *= 0.75f;
-
-		spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles.x - spineAdjust, initialSpineAngles.y, initialSpineAngles.z);
 	}
 
 	public Vector2 getFacing2D(){

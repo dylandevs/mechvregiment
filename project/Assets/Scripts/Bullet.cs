@@ -91,4 +91,8 @@ public class Bullet : MonoBehaviour {
 		}
 		return false;
 	}
+
+	void OnEnable(){
+		playerSource = null;
+	}
 }

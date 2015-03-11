@@ -21,9 +21,11 @@ public class Player : MonoBehaviour {
 	// Inputs
 	public Camera playerCam;
 	public ControllerScript playerController;
-	public PlayerNetSend NetworkManager;
+	public PlayerNetSend networkManager;
 	public ScavUI display;
 	public LayerMask shootableLayer;
+	public Animator anim;
+	public ScavLayer initializer;
 
 	// Status variables
 	private float health = 0;
@@ -44,6 +46,10 @@ public class Player : MonoBehaviour {
 
 	// Recorded variables
 	private Vector3 startingPos;
+	private int flinchHash = Animator.StringToHash("Flinch");
+	private int resetHash = Animator.StringToHash("Reset");
+	private int fwdDeadHash = Animator.StringToHash("DieFwd");
+	private int bckDeadHash = Animator.StringToHash("DieBck");
 
 	// Use this for initialization
 	void Start () {
@@ -111,6 +117,16 @@ public class Player : MonoBehaviour {
 		health = MaxHealth;
 		healTimer = 0;
 		display.UpdateDamageOverlay (0);
+
+		// Enable firing layer
+		anim.SetLayerWeight(1, 1);
+		anim.SetTrigger(resetHash);
+
+		networkManager.PlayerRespawn(initializer.Layer);
+
+		foreach (Weapon weapon in weapons){
+			weapon.ReplenishWeapon();
+		}
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -134,9 +150,6 @@ public class Player : MonoBehaviour {
 		if (setADS != null) {
 			isAimingDownSights = (bool)setADS;
 			weapons[currentWeaponIndex].SetAds(isAimingDownSights);
-			if (NetworkManager){
-				NetworkManager.TogglePlayerADS(id, (bool)setADS);
-			}
 		}
 		else{
 			isAimingDownSights = !isAimingDownSights;
@@ -170,6 +183,8 @@ public class Player : MonoBehaviour {
 			weapons [currentWeaponIndex].gameObject.SetActive (true);
 			display.ActivateNewWeapon(currentWeaponIndex);
 		}
+		
+		networkManager.PlayerCycleWeapon(initializer.Layer, currentWeaponIndex);
 	}
 
 	// Deals damage to player and resets healing timer
@@ -186,7 +201,23 @@ public class Player : MonoBehaviour {
 			if (health <= 0){
 				isDead = true;
 				respawnTimer = RespawnWait;
+
+				// Disable firing layer
+				anim.SetLayerWeight(1, 0);
+
+				if (Vector3.Angle(direction, transform.forward) < 90){
+					anim.SetTrigger(fwdDeadHash);
+					networkManager.PlayerDeath(initializer.Layer, true);
+				}
+				else{
+					anim.SetTrigger(bckDeadHash);
+					networkManager.PlayerDeath(initializer.Layer, false);
+				}
+
+
 			}
+
+			anim.SetTrigger(flinchHash);
 		}
 	}
 
