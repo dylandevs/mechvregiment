@@ -247,7 +247,7 @@ public class ControllerScript : MonoBehaviour {
 					// Cancel crouch
 					SetCrouching(false);
 
-					player.networkManager.PlayerJump(player.initializer.Layer);
+					player.networkManager.photonView.RPC ("PlayerJump", PhotonTargets.All, player.initializer.Layer - 1);
 				}
 				
 				// Lateral movement (strafing)

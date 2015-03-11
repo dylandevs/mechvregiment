@@ -91,4 +91,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void PlayerReload(int playerNum){}
+
+	[RPC]
+	public void PlayerForceFire(int playerNum){}
 }

@@ -116,4 +116,11 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			playerAvatars[playerNum].TriggerReload();
 		}
 	}
+
+	[RPC]
+	public void PlayerForceFire(int playerNum){
+		if (playerNum >= 0 && playerNum < playerAvatars.Length){
+			playerAvatars[playerNum].TriggerFire();
+		}
+	}
 }

@@ -12,7 +12,6 @@ public class PlayerAvatar : MonoBehaviour {
 
 	private Vector3 lastSyncPos;
 	private Vector3 nextSyncPos;
-	//private Vector3 syncVelocity = Vector3.zero;
 
 	private Quaternion lastSyncRot;
 	private Quaternion nextSyncRot;
@@ -66,10 +65,6 @@ public class PlayerAvatar : MonoBehaviour {
 			syncProg += Time.deltaTime;
 			transform.position = Vector3.Lerp (lastSyncPos, nextSyncPos, syncProg * invSyncDelay);
 			transform.rotation = Quaternion.Lerp (lastSyncRot, nextSyncRot, syncProg * invSyncDelay);
-			//rigidbody.MovePosition (Vector3.Lerp (lastSyncPos, nextSyncPos, syncProg * invSyncDelay));
-			//rigidbody.MovePosition (Vector3.SmoothDamp (lastSyncPos, nextSyncPos, ref syncVelocity, syncDelay));
-			//rigidbody.MoveRotation (Quaternion.Lerp (lastSyncRot, nextSyncRot, syncProg * invSyncDelay));;
-			//print (rigidbody.position + " " + nextSyncPos);
 		}
 	}
 
@@ -140,5 +135,9 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void TriggerReload(){
 		anim.SetTrigger(reloadHash);
+	}
+
+	public void TriggerFire(){
+		anim.SetBool(fireHash, true);
 	}
 }

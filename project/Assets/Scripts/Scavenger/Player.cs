@@ -122,7 +122,7 @@ public class Player : MonoBehaviour {
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
 
-		networkManager.PlayerRespawn(initializer.Layer);
+		networkManager.photonView.RPC ("PlayerRespawn", PhotonTargets.All, initializer.Layer - 1);
 
 		foreach (Weapon weapon in weapons){
 			weapon.ReplenishWeapon();
@@ -183,8 +183,7 @@ public class Player : MonoBehaviour {
 			weapons [currentWeaponIndex].gameObject.SetActive (true);
 			display.ActivateNewWeapon(currentWeaponIndex);
 		}
-		
-		networkManager.PlayerCycleWeapon(initializer.Layer, currentWeaponIndex);
+		networkManager.photonView.RPC ("PlayerCycleWeapon", PhotonTargets.All, initializer.Layer - 1, currentWeaponIndex);
 	}
 
 	// Deals damage to player and resets healing timer
@@ -207,14 +206,12 @@ public class Player : MonoBehaviour {
 
 				if (Vector3.Angle(direction, transform.forward) < 90){
 					anim.SetTrigger(fwdDeadHash);
-					networkManager.PlayerDeath(initializer.Layer, true);
+					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
 				}
 				else{
 					anim.SetTrigger(bckDeadHash);
-					networkManager.PlayerDeath(initializer.Layer, false);
+					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
 				}
-
-
 			}
 
 			anim.SetTrigger(flinchHash);

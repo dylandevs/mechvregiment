@@ -365,6 +365,8 @@ public class Weapon : MonoBehaviour {
 		if (Audible){
 			fireNoiseProgress = FiringNoiseDuration;
 		}
+
+		player.networkManager.photonView.RPC("PlayerForceFire", PhotonTargets.All, player.initializer.Layer - 1);
 	}
 	
 	// Sets tracking variables for recoil
@@ -537,7 +539,7 @@ public class Weapon : MonoBehaviour {
 		isReloading = true;
 		isFiring = false;
 		playerAnim.SetTrigger(reloadHash);
-		player.networkManager.PlayerReload(player.initializer.Layer);
+		player.networkManager.photonView.RPC("PlayerReload", PhotonTargets.All, player.initializer.Layer - 1);
 	}
 	
 	public void StopReloading(){
