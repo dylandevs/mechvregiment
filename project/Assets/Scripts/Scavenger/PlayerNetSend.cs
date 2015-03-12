@@ -74,9 +74,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
+	// Player RPC
 	[RPC]
 	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
-	
+
 	[RPC]
 	public void PlayerCycleWeapon(int playerNum, int newWeapon){}
 	
@@ -94,4 +95,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void PlayerForceFire(int playerNum){}
+
+	// Minion RPC
+	[RPC]
+	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
+
+	// Projectile RPC
+	[RPC]
+	public void CreateMine(){}
+
+	[RPC]
+	public void CreateMinionBullet(){}
+
+	[RPC]
+	public void CreatePlayerBullet(){}
 }

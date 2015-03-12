@@ -73,15 +73,22 @@ public class Player : MonoBehaviour {
 	public void Initialize(int playerId, float[] window, float uiScale){
 		id = playerId;
 
-		weaponModels = new GameObject[weaponWrapper.transform.childCount];
-		for(int i = 0; i < weaponWrapper.transform.childCount; i++){
+		int weaponCount = weaponWrapper.transform.childCount;
+		weaponModels = new GameObject[weaponCount];
+		for(int i = 0; i < weaponCount; i++){
 			weaponModels[i] = weaponWrapper.transform.GetChild(i).gameObject;
 		}
 
-		weapons = new Weapon[weaponModels.Length];
+		int weaponCount3 = weaponWrapper3.transform.childCount;
+		weaponModels3 = new GameObject[weaponCount3];
+		for(int i = 0; i < weaponCount3; i++){
+			weaponModels3[i] = weaponWrapper3.transform.GetChild(i).gameObject;
+		}
+
+		weapons = new Weapon[weaponCount];
 
 		// Storing weapon references to component scripts
-		for (int i = 0; i < weaponModels.Length; i++) {
+		for (int i = 0; i < weaponCount; i++) {
 			weapons[i] = weaponModels[i].GetComponent<Weapon>();
 			weapons[i].SetPlayerReference(this);
 			weapons[i].SetControllerReference(this.playerController);
@@ -91,7 +98,6 @@ public class Player : MonoBehaviour {
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
 
 		// Setting player UI
-		//playerRenderer.InitializePlayerInterface(window[0], window[1], window[2], window[3], weapons[currentWeaponIndex].GetSpread());
 		display.Initialize(window[0], window[1], window[2], window[3], uiScale, weapons[currentWeaponIndex].GetSpread());
 
 		// Setting controller
@@ -180,7 +186,9 @@ public class Player : MonoBehaviour {
 		if (prevWeaponIndex != currentWeaponIndex){
 			weapons [prevWeaponIndex].StopReloading();
 			weapons [prevWeaponIndex].gameObject.SetActive (false);
+			weaponModels3[prevWeaponIndex].SetActive(false);
 			weapons [currentWeaponIndex].gameObject.SetActive (true);
+			weaponModels3 [currentWeaponIndex].SetActive(true);
 			display.ActivateNewWeapon(currentWeaponIndex);
 		}
 		networkManager.photonView.RPC ("PlayerCycleWeapon", PhotonTargets.All, initializer.Layer - 1, currentWeaponIndex);
