@@ -88,6 +88,8 @@ public class BotAI : MonoBehaviour {
 	public PoolManager impactPool;
 	private PoolManager pool;
 
+	private int networkedId = 0;
+
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();

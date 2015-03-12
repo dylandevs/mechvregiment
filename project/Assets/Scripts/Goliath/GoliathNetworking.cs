@@ -12,6 +12,12 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	public PlayerAvatar[] playerAvatars;
 
+	public PoolManager playerMineManager;
+	public PoolManager playerBulletManager;
+	
+	public PoolManager minionManager;
+	public PoolManager minionBulletManager;
+
 //INITIALIZATION
 
 	void Start () {
@@ -68,6 +74,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	//print("I'm sending the position over");
     }
 
+	// Player RPC
 	[RPC]
 	public void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
@@ -123,4 +130,26 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			playerAvatars[playerNum].TriggerFire();
 		}
 	}
+
+	[RPC]
+	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
+
+	// Minion RPC
+	[RPC]
+	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
+
+	}
+	
+	[RPC]
+	public void ApplyMinionDamage(int minionNum, float damage){}
+	
+	// Projectile RPC
+	[RPC]
+	public void CreateMine(){}
+	
+	[RPC]
+	public void CreateMinionBullet(){}
+	
+	[RPC]
+	public void CreatePlayerBullet(){}
 }

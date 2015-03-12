@@ -11,6 +11,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject goliathBot;
 
 	public Player[] players;
+	public PoolManager playerMineManager;
+	public PoolManager playerBulletManager;
+
+	public PoolManager minionManager;
+	public PoolManager minionBulletManager;
 
 	// Use this for initialization
 	void Start () {
@@ -100,6 +105,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
+	[RPC]
+	public void ApplyMinionDamage(int minionNum, float damage){}
+
 	// Projectile RPC
 	[RPC]
 	public void CreateMine(){}
@@ -108,5 +116,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void CreateMinionBullet(){}
 
 	[RPC]
+	public void DestroyMinionBullet(){}
+
+	[RPC]
 	public void CreatePlayerBullet(){}
+
+	[RPC]
+	public void DestroyPlayerBullet(){}
 }

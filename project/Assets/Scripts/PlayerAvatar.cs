@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerAvatar : MonoBehaviour {
 
-	public GameObject NetworkManager;
+	public GoliathNetworking networkManager;
 	public int PlayerNum = 1;
 
 	private float syncProg = 0;
@@ -91,20 +91,6 @@ public class PlayerAvatar : MonoBehaviour {
 
 		lastSyncRot = transform.rotation;
 		nextSyncRot = nextRot;
-
-		//rigidbody.MovePosition(nextPos);
-
-		//syncVelocity = currVelocity;
-
-	}
-
-	public void SetAim(bool ADS){
-		if(ADS){
-			print("aiming");
-		}
-		else {
-			print("not aiming");
-		}
 	}
 
 	public void UpdateAnimValues(float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){
@@ -120,6 +106,10 @@ public class PlayerAvatar : MonoBehaviour {
 	public void CycleNewWeapon(int newWeapon){
 		anim.SetTrigger(changeWeapHash);
 		anim.SetInteger(weaponHash, newWeapon);
+	}
+
+	public void Damage(float damage, Vector3 direction){
+		networkManager.ApplyPlayerDamage(PlayerNum, damage, direction);
 	}
 
 	public void TriggerJump(){

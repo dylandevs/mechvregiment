@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PoolManager : MonoBehaviour {
 
+	private int poolCounter = 0;
+
 	public int startingPool = 1;
 	public bool loopable = false;
 	public bool retainLocal = false;
@@ -15,6 +17,8 @@ public class PoolManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		int poolCounter = 0;
+
 		// Add existing children to pool
 		foreach (Transform child in transform){
 			if (child.gameObject.GetActive()){
@@ -22,6 +26,12 @@ public class PoolManager : MonoBehaviour {
 			}
 			else{
 				inactiveObjectPool.Add(child.gameObject);
+			}
+
+			Pooled pooledScript = null;
+			if (pooledScript = child.GetComponent<Pooled>() as Pooled){
+				pooledScript.index = poolCounter;
+				poolCounter++;
 			}
 		}
 
@@ -31,6 +41,10 @@ public class PoolManager : MonoBehaviour {
 			inactiveObjectPool[i].SetActive(false);
 			inactiveObjectPool[i].transform.SetParent(transform, !retainLocal);
 
+			Pooled pooledScript = null;
+			if (pooledScript = inactiveObjectPool[i].GetComponent<Pooled>() as Pooled){
+				pooledScript.index = transform.childCount - 1;
+			}
 		}
 	}
 
