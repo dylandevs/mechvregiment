@@ -59,7 +59,17 @@ public class MechShoot : MonoBehaviour {
 	const int left = 0;
 	const int right = 1;
 
+	//pilot movement stuff
+	public GameObject leftArm;
+	public GameObject rightArm;
+
 	float missleRetTimer;
+	bool inRangeMiniX;
+	bool inRangeCannonX;
+	bool inRangeMiniY;
+	bool inRangeCannonY;
+	bool ableToShoot;
+	bool ableToShootM;
 	// Use this for initialization
 	void Start () {
 		flagCarried.SetActive(false);
@@ -72,7 +82,6 @@ public class MechShoot : MonoBehaviour {
 	void Update () {
 		//update aimer pos.
 		updateAimerPos();
-
 		//show missile landing zone
 		if(missleRetTimer > 0){
 			missleReticle.SetActive(true);
@@ -134,10 +143,28 @@ public class MechShoot : MonoBehaviour {
 		cooldownRemainingRocket -= Time.deltaTime;
 		if (miniGunMode == true) {
 			//aiming the minigun and placing the reticle in the right place
-			miniGunReticle.SetActive(true);
-			cannonRet.SetActive(true);
-			cannonEffect.SetActive(true);
-			cannonEffect2.SetActive(true);
+			if(inRangeMiniX == true && inRangeMiniY == true){
+				ableToShootM = true;
+				miniGunReticle.SetActive(true);
+			}
+			else if(inRangeMiniX == false || inRangeCannonY){
+				ableToShootM = false;
+				miniGunReticle.SetActive(false);
+			}
+
+			if(inRangeCannonX == true && inRangeCannonY == true){
+				ableToShoot = true;
+				cannonRet.SetActive(true);
+				cannonEffect.SetActive(true);
+				cannonEffect2.SetActive(true);
+			}
+			else if(inRangeCannonX == false || inRangeCannonY == false){
+				ableToShoot = false;
+				cannonRet.SetActive(false);
+				cannonEffect.SetActive(false);
+				cannonEffect2.SetActive(false);
+			}
+
 
 			//spin the reticle
 			cannonEffectParent.transform.Rotate(cannonEffect.transform.right * Time.deltaTime * 10,Space.World);
@@ -181,16 +208,16 @@ public class MechShoot : MonoBehaviour {
 
 	
 			
-			if(lTrig > 0.8f){
+			if(lTrig > 0.8f && ableToShoot == true){
 				miniGunFirer.cannonShoot = true;
 			}
-			if(rTrig > 0.8f){
+			if(rTrig > 0.8f && ableToShootM == true){
 				miniGunFirer.fire = true;
 			}
-			if(lTrig < 0.7f){
+			if(lTrig < 0.8f && ableToShoot == true){
 				miniGunFirer.cannonShoot = false;
 			}
-			if(rTrig < 0.7f){
+			if(rTrig < 0.8f && ableToShootM == true){
 				miniGunFirer.fire = false;
 			}
 
@@ -375,13 +402,15 @@ public class MechShoot : MonoBehaviour {
 
 	public void updateAimerPos(){
 		//add limitations to aimers and unparent it
-
 		if(hydraRight.transform.localEulerAngles.y > 320 || hydraRight.transform.localEulerAngles.y < 40){
+			inRangeMiniY = true;
 			if(hydraRight.transform.localEulerAngles.x > 355 || hydraRight.transform.localEulerAngles.x < 45){
+				inRangeMiniX = true;
 				miniGunAimer.transform.localEulerAngles = new Vector3 (hydraRight.transform.localEulerAngles.x,hydraRight.transform.localEulerAngles.y,0);
 				miniGunAimer.transform.position = hydraRight.transform.position;
-			}
-		}
+			}else inRangeMiniY = false;
+		}else inRangeMiniX = false;
+
 
 		if(hydraRight.transform.localEulerAngles.y > 320 || hydraRight.transform.localEulerAngles.y < 50){
 			if(hydraRight.transform.localEulerAngles.x > 350 || hydraRight.transform.localEulerAngles.x < 50){
@@ -391,10 +420,19 @@ public class MechShoot : MonoBehaviour {
 		}
 
 		if(hydraLeft.transform.localEulerAngles.y > 320 || hydraLeft.transform.localEulerAngles.y < 40){
+			inRangeCannonY = true;
 			if(hydraLeft.transform.localEulerAngles.x > 355 || hydraLeft.transform.localEulerAngles.x < 45){
+				inRangeCannonX = true;
 				cannonAimer.transform.localEulerAngles = new Vector3 (hydraLeft.transform.localEulerAngles.x,hydraLeft.transform.localEulerAngles.y,0);
 				cannonAimer.transform.position = hydraLeft.transform.position;
-			}
-		}
+			}else inRangeCannonY = false;
+		}else inRangeCannonX = false;
+
+		//the change in the pilot arm to match aiming
+		rightArm.transform.localEulerAngles = miniGunArm.transform.localEulerAngles;
+		leftArm.transform.localEulerAngles = cannonArm.transform.localEulerAngles;
+
+		//print("pilot" + rightArm.transform.localEulerAngles);
+		//print("miniGun" + miniGunArm.transform.localEulerAngles);
 	}//end of update aimer pos
 }// end of class

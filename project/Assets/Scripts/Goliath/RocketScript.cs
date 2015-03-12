@@ -17,7 +17,6 @@ public class RocketScript : MonoBehaviour {
 
 	//speeds for rockets
 	private float speed = 100f;
-	private float trnSpeed = 20f;
 	private Vector3 mustHit;
 
 	PoolManager pool;
@@ -46,7 +45,7 @@ public class RocketScript : MonoBehaviour {
 				smokeParticles.emit = false;
 			}
 			if (destroyDelay <= 0){
-				gameObject.SetActive(false);
+				pool.Deactivate(gameObject);
 			}
 		}
 

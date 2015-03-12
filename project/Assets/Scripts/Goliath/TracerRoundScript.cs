@@ -62,7 +62,7 @@ public class TracerRoundScript : MonoBehaviour {
 		Ray rayLeft = new Ray(transform.position,transform.forward * -0.5f);
 		RaycastHit hitInfoLeft;
 		Debug.DrawRay(transform.position,transform.forward * -0.5f, Color.red);
-		if (Physics.Raycast (ray,out hitInfoLeft, 0.5f,mask)) 
+		if (Physics.Raycast (rayLeft,out hitInfoLeft, 0.5f,mask)) 
 		{
 			if (hitInfoLeft.collider.tag == "Player") {
 				print("hitLeft");
@@ -74,7 +74,7 @@ public class TracerRoundScript : MonoBehaviour {
 		Ray rayRight = new Ray(transform.position,transform.forward * 0.5f);
 		RaycastHit hitInfoRight;
 		Debug.DrawRay(transform.position,transform.forward * 0.5f, Color.red);
-		if (Physics.Raycast (ray,out hitInfoRight, 0.5f,mask)) 
+		if (Physics.Raycast (rayRight,out hitInfoRight, 0.5f,mask)) 
 		{
 			if (hitInfoRight.collider.tag == "Player") {
 				print("hitRight");

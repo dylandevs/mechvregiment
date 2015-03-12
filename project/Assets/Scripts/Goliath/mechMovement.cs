@@ -97,8 +97,6 @@ public class mechMovement : MonoBehaviour {
 				topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
 				//print ("I am turning around by " + -1*lStickY);
 			}
-
-			print (nextRotX);
 			
 			/*Quaternion currRotY = topHalfX.transform.localRotation;
 			Vector3 nextRotY = currRot.eulerAngles;

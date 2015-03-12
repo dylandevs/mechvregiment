@@ -155,9 +155,10 @@ public class MinigunFirer : MonoBehaviour {
 			overHeat ++;
 			//gets the starting aimer angle
 			Vector3 tempStart = tracerStart.transform.forward;
+			//for spread if we wish to turn it back on
 			//ads a randoma mount of spread to the angle
 			//Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			Ray rayFire = new Ray (tracerStart.transform.position, tempStart);;
+			//Ray rayFire = new Ray (tracerStart.transform.position, tempStart);;
 
 			//handles effects of bullet
 
@@ -169,9 +170,6 @@ public class MinigunFirer : MonoBehaviour {
 			//flash
 			GameObject flash = flashPool.Retrieve(tracerStart.transform.position);
 			flash.transform.up = tempStart;
-
-			RaycastHit hitInfoFire;
-
 				//still needs to be warmed up
 				if(warmedUp == true){
 					cooldownRemaining = coolDown;

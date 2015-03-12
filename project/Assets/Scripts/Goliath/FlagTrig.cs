@@ -15,13 +15,13 @@ public class FlagTrig : MonoBehaviour {
 		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.BUMPER)){
 			pickedUp();
 		}
-
-
 	}
 
-	void OnTriggerEnter(Collider collide){
-		print(collide.tag);
-		if(collide.tag == "Player"){
+	void OnTriggerEnter(Collider other){
+		print(other.tag);
+		print(other.name);
+
+		if(other.tag == "Player"){
 			flagActive = true;
 		}
 		//display Right bumper to pick up UI

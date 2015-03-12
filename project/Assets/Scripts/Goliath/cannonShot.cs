@@ -17,7 +17,7 @@ public class cannonShot : MonoBehaviour {
 
 	int layerMask = 1 << 3;
 	float timer;
-	float speed = 25;
+	float speed = 30;
 	float waitOutTimer;
 	// Use this for initialization
 	void Start () {
@@ -28,10 +28,14 @@ public class cannonShot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// turn off object after a certain amount of time
-		timer += Time.deltaTime;
-		
-		if (timer > 15f) {
-			waitOutTimer = 3;
+		if(timer >=0){
+			timer -= Time.deltaTime;
+		}
+		if (timer <= 0f) {
+			timer = 50;
+			explode1.emit = false;
+			explode2.emit = false;
+			waitOutTimer = 4;
 		}
 
 		transform.Translate(Vector3.forward * speed * Time.deltaTime);
@@ -40,17 +44,18 @@ public class cannonShot : MonoBehaviour {
 		RaycastHit hit;
 
 		explosionLocation = transform.position;
-		Debug.DrawRay(transform.position,transform.forward * 25 * Time.deltaTime,Color.red);
 		//hitRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		//remainsLocation = hit.point + hit.normal;
 
+		//not decreasing when things are not hit
 		if(waitOutTimer > 0){
 			waitOutTimer -= Time.deltaTime;
 			if(waitOutTimer <= 0){
 				pool.Deactivate(gameObject);
 			}
 		}
-		if (Physics.Raycast (ray,out hit, 25 * Time.deltaTime,layerMask)) 
+
+		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime ,layerMask)) 
 		{
 			if(hit.collider.tag == "Player"){
 				doDamageCannon();
@@ -83,6 +88,8 @@ public class cannonShot : MonoBehaviour {
 	}
 
 	void OnEnable(){
+		waitOutTimer = 0;
+		timer = 5;
 		explode1.emit = true;
 		explode2.emit = true;
 	}
