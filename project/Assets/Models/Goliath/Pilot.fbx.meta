@@ -242,6 +242,7 @@ ModelImporter:
     7400010: plasmaFire
     7400012: minionIdle
     7400014: minionFire
+    7400016: Take 001
     9500000: //RootNode
     13700000: blade_L
     13700002: blade_R
@@ -771,264 +772,10 @@ ModelImporter:
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
-      name: minigunFire
-      takeName: Take 001
-      firstFrame: 30
-      lastFrame: 40
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Controls
-        weight: 1
-      - path: Controls/crtl_Hips
-        weight: 1
-      - path: Controls/crtl_Hips/crtl_Chest
-        weight: 1
-      - path: Controls/crtl_Hips/ctrl_Abs
-        weight: 1
-      - path: Controls/crtl_Hips/ctrl_Back
-        weight: 1
-      - path: Controls/crtl_Hips/ctrl_HipSway
-        weight: 1
-      - path: Controls/crtl_Hips/ctrl_L_Calvicle
-        weight: 1
-      - path: Controls/crtl_Hips/ctrl_R_Calvicle
-        weight: 1
-      - path: Controls/ctrl_Global
-        weight: 1
-      - path: Controls/ctrl_L_Arm
-        weight: 1
-      - path: Controls/ctrl_L_Arm/ctrl_L_Index
-        weight: 1
-      - path: Controls/ctrl_L_Arm/ctrl_L_Mid
-        weight: 1
-      - path: Controls/ctrl_L_Arm/ctrl_L_Pinky
-        weight: 1
-      - path: Controls/ctrl_L_Arm/ctrl_L_Thumb
-        weight: 1
-      - path: Controls/ctrl_L_Elbow
-        weight: 1
-      - path: Controls/ctrl_L_Foot
-        weight: 1
-      - path: Controls/ctrl_L_Foot/ctrl_L_Knee
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_HeelPeel
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_HeelPeel/ikHandle_L_Ankle
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap/ikHandle_L_Ball
-        weight: 1
-      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap/ikHandle_L_Toe
-        weight: 1
-      - path: Controls/ctrl_R_Arm
-        weight: 1
-      - path: Controls/ctrl_R_Arm/ctrl_R_Index
-        weight: 1
-      - path: Controls/ctrl_R_Arm/ctrl_R_Mid
-        weight: 1
-      - path: Controls/ctrl_R_Arm/ctrl_R_Pinky
-        weight: 1
-      - path: Controls/ctrl_R_Arm/ctrl_R_Thumb
-        weight: 1
-      - path: Controls/ctrl_R_Elbow
-        weight: 1
-      - path: Controls/ctrl_R_Foot
-        weight: 1
-      - path: Controls/ctrl_R_Foot/ctrl_R_Knee
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel/ikHandle_R_Ball
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel/ikHandle_R_Toe
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_ToeTap
-        weight: 1
-      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_ToeTap/ikHandle_R_Ankle
-        weight: 1
-      - path: ikHandle_L_Arm
-        weight: 1
-      - path: ikHandle_R_Arm
-        weight: 1
-      - path: ikHandle_Spine
-        weight: 1
-      - path: PILOT
-        weight: 1
-      - path: PILOT/blade_L
-        weight: 1
-      - path: PILOT/blade_R
-        weight: 1
-      - path: PILOT/body
-        weight: 1
-      - path: Root
-        weight: 1
-      - path: Root/curve_Spine
-        weight: 1
-      - path: Root/Pelvis
-        weight: 1
-      - path: Root/Pelvis/jnt_L_Hip
-        weight: 1
-      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee
-        weight: 1
-      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle
-        weight: 1
-      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball
-        weight: 1
-      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball/jnt_L_Toe
-        weight: 1
-      - path: Root/Pelvis/jnt_R_Hip
-        weight: 1
-      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee
-        weight: 1
-      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle
-        weight: 1
-      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball
-        weight: 1
-      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball/jnt_R_Toe
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_HeadBase
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_HeadBase/jnt_HeadTip
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3/jnt_L_Index4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2/jnt_L_Middle3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2/jnt_L_Middle3/jnt_L_Middle4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3/jnt_L_Pinky4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3/jnt_L_Thumb4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3/jnt_R_Index4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2/jnt_R_Middle3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2/jnt_R_Middle3/jnt_R_Middle4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3/jnt_R_Pinky4
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3
-        weight: 1
-      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3/jnt_R_Thumb4
-        weight: 1
-      - path: Root/SpineClusterGroup
-        weight: 1
-      - path: Root/SpineClusterGroup/clusterAbs
-        weight: 1
-      - path: Root/SpineClusterGroup/clusterChest
-        weight: 1
-      - path: Root/SpineClusterGroup/clusterHips
-        weight: 1
-      - path: Root/SpineClusterGroup/clusterNeckbase
-        weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
-    - serializedVersion: 16
       name: missleFire
       takeName: Take 001
-      firstFrame: 5
-      lastFrame: 20
+      firstFrame: 20
+      lastFrame: 25
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -2051,6 +1798,260 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Controls
+        weight: 1
+      - path: Controls/crtl_Hips
+        weight: 1
+      - path: Controls/crtl_Hips/crtl_Chest
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_Abs
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_Back
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_HipSway
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_L_Calvicle
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_R_Calvicle
+        weight: 1
+      - path: Controls/ctrl_Global
+        weight: 1
+      - path: Controls/ctrl_L_Arm
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Index
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Mid
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Pinky
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Thumb
+        weight: 1
+      - path: Controls/ctrl_L_Elbow
+        weight: 1
+      - path: Controls/ctrl_L_Foot
+        weight: 1
+      - path: Controls/ctrl_L_Foot/ctrl_L_Knee
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_HeelPeel
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_HeelPeel/ikHandle_L_Ankle
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap/ikHandle_L_Ball
+        weight: 1
+      - path: Controls/ctrl_L_Foot/L_Ankle/L_ToeTip/L_Swivel/L_ToeTap/ikHandle_L_Toe
+        weight: 1
+      - path: Controls/ctrl_R_Arm
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Index
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Mid
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Pinky
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Thumb
+        weight: 1
+      - path: Controls/ctrl_R_Elbow
+        weight: 1
+      - path: Controls/ctrl_R_Foot
+        weight: 1
+      - path: Controls/ctrl_R_Foot/ctrl_R_Knee
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel/ikHandle_R_Ball
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_HeelPeel/ikHandle_R_Toe
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_ToeTap
+        weight: 1
+      - path: Controls/ctrl_R_Foot/R_Ankle/R_ToeTip/R_Swivel/R_ToeTap/ikHandle_R_Ankle
+        weight: 1
+      - path: ikHandle_L_Arm
+        weight: 1
+      - path: ikHandle_R_Arm
+        weight: 1
+      - path: ikHandle_Spine
+        weight: 1
+      - path: PILOT
+        weight: 1
+      - path: PILOT/blade_L
+        weight: 1
+      - path: PILOT/blade_R
+        weight: 1
+      - path: PILOT/body
+        weight: 1
+      - path: Root
+        weight: 1
+      - path: Root/curve_Spine
+        weight: 1
+      - path: Root/Pelvis
+        weight: 1
+      - path: Root/Pelvis/jnt_L_Hip
+        weight: 1
+      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee
+        weight: 1
+      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle
+        weight: 1
+      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball
+        weight: 1
+      - path: Root/Pelvis/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball/jnt_L_Toe
+        weight: 1
+      - path: Root/Pelvis/jnt_R_Hip
+        weight: 1
+      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee
+        weight: 1
+      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle
+        weight: 1
+      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball
+        weight: 1
+      - path: Root/Pelvis/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball/jnt_R_Toe
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_HeadBase
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_HeadBase/jnt_HeadTip
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3/jnt_L_Index4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2/jnt_L_Middle3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Middle1/jnt_L_Middle2/jnt_L_Middle3/jnt_L_Middle4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3/jnt_L_Pinky4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3/jnt_L_Thumb4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3/jnt_R_Index4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2/jnt_R_Middle3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Middle1/jnt_R_Middle2/jnt_R_Middle3/jnt_R_Middle4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3/jnt_R_Pinky4
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3
+        weight: 1
+      - path: Root/Pelvis/jnt_Spine1/jnt_Spine2/jnt_Chest/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3/jnt_R_Thumb4
+        weight: 1
+      - path: Root/SpineClusterGroup
+        weight: 1
+      - path: Root/SpineClusterGroup/clusterAbs
+        weight: 1
+      - path: Root/SpineClusterGroup/clusterChest
+        weight: 1
+      - path: Root/SpineClusterGroup/clusterHips
+        weight: 1
+      - path: Root/SpineClusterGroup/clusterNeckbase
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 210
+      lastFrame: 240
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

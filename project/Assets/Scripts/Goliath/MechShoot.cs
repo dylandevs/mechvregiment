@@ -41,6 +41,7 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonEffect2Parent;
 	public GameObject rangeIndicator;
 	public GameObject outOfRange;
+	public GameObject minionFlag;
 
 	//masks
 	public LayerMask mask;
@@ -65,7 +66,9 @@ public class MechShoot : MonoBehaviour {
 
 	public Animator pilotAnimator;
 
+	float shootTimer;
 	float missleRetTimer;
+
 	bool inRangeMiniX;
 	bool inRangeCannonX;
 	bool inRangeMiniY;
@@ -75,8 +78,16 @@ public class MechShoot : MonoBehaviour {
 
 	int miniIdle = Animator.StringToHash("miniGunIdle");
 	int miniFire = Animator.StringToHash("miniGunFire");
+
 	int missleIdle = Animator.StringToHash("missleIdle");
 	int missleFire = Animator.StringToHash("missleFire");
+
+	int cannonIdle = Animator.StringToHash("cannonIdle");
+	int cannonFire = Animator.StringToHash("cannonFire");
+
+	int minionIdle = Animator.StringToHash("minionIdle");
+	int minionPlace = Animator.StringToHash("minionSet");
+
 
 
 	// Use this for initialization
@@ -152,6 +163,10 @@ public class MechShoot : MonoBehaviour {
 		cooldownRemainingRocket -= Time.deltaTime;
 		if (miniGunMode == true) {
 
+			pilotAnimator.SetBool(minionIdle,false);
+			pilotAnimator.SetBool(missleFire,false);
+			pilotAnimator.SetBool(missleIdle,false);
+
 			//aiming the minigun and placing the reticle in the right place
 			if(inRangeMiniX == true && inRangeMiniY == true){
 				ableToShootM = true;
@@ -219,7 +234,10 @@ public class MechShoot : MonoBehaviour {
 	
 			
 			if(lTrig > 0.8f && ableToShoot == true){
+				shootTimer = 1f;
 				miniGunFirer.cannonShoot = true;
+				pilotAnimator.SetBool(cannonIdle,false);
+				pilotAnimator.SetBool(cannonFire,true);
 			}
 			if(rTrig > 0.8f && ableToShootM == true){
 				pilotAnimator.SetBool(miniIdle,false);
@@ -228,7 +246,13 @@ public class MechShoot : MonoBehaviour {
 				miniGunFirer.fire = true;
 			}
 			if(lTrig < 0.8f && ableToShoot == true){
-
+				if(shootTimer >=0){
+					shootTimer-= Time.deltaTime;
+				}
+				if(shootTimer <=0){
+					pilotAnimator.SetBool(cannonFire,false);
+					pilotAnimator.SetBool(cannonIdle,true);
+				}
 				miniGunFirer.cannonShoot = false;
 			}
 			if(rTrig < 0.8f && ableToShootM == true){
@@ -262,7 +286,6 @@ public class MechShoot : MonoBehaviour {
 		if (rocketMode == true) {
 			//set animations	
 			pilotAnimator.SetBool(miniFire,false);
-			pilotAnimator.SetBool(missleIdle,true);
 
 			//turn on the aiming device
 			missleReticle.SetActive(true);
@@ -316,9 +339,15 @@ public class MechShoot : MonoBehaviour {
 						missleTargetArea.transform.LookAt(rockModeRayHit.normal + -placeHitRock);
 						
 							if(rTrig > 0.8f && cooldownRemainingRocket <= 0){
+								pilotAnimator.SetBool(missleIdle,false);
+								pilotAnimator.SetBool(missleFire,true);
 								missleRetTimer = 5.5f;
 								cooldownRemainingRocket = coolDownRocket;
 								rocketScript.rocketDelayTimer = RocketFirer.RocketDelay;
+							}
+							if(rTrig < 0.1f){
+								pilotAnimator.SetBool(missleIdle,true);
+								pilotAnimator.SetBool(missleFire,false);
 							}
 						}
 
@@ -340,27 +369,43 @@ public class MechShoot : MonoBehaviour {
 		//minion mode has been entered now time to aim
 		if (minionMode == true) {
 			//update arm pos
+			updateAimerPos();
+			pilotAnimator.SetBool(cannonIdle,false);
+			pilotAnimator.SetBool(minionIdle,true);
 
 			Vector3 adjustedRotV = cannonAimer.transform.localEulerAngles + new Vector3(-90,0,0);
 			cannonArm.transform.localEulerAngles = adjustedRotV;
-
-			updateAimerPos();
 
 			//makes the ray
 			Ray minMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
 			RaycastHit minHit;
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 			if(Physics.Raycast (minMode, out minHit,range,mask)){
+				print(minHit.collider.name);
 				if(minHit.collider.tag == "Terrain"){
 					lightBeam.SetActive(true);
 					notLightBeam.SetActive(false);
 					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
 
-					//fire the rocket function in rocket arm script
-					if (Input.GetKeyDown ("space")) {
-						//do something with minions
+					if(lTrig > 0.8f){
+						pilotAnimator.SetBool(minionPlace,true);
+						pilotAnimator.SetBool(minionIdle,false);
+						minionFlag.SetActive(true);
+						minionFlag.transform.position = minHit.transform.position;
 					}
+
+					if(lTrig < 0.1f){
+						pilotAnimator.SetBool(minionPlace,false);
+						pilotAnimator.SetBool(minionIdle,true);
+					}
+
+
+					//fire the rocket function in rocket arm script
+					//if (Input.GetKeyDown ("space")) {
+						//do something with minions
+					//}
+
 				}
 			}
 
@@ -449,7 +494,7 @@ public class MechShoot : MonoBehaviour {
 
 		//the change in the pilot arm to match aiming
 
-		Vector3 adjustedRotP = -miniGunAimer.transform.localEulerAngles + new Vector3(0,50,20);
+		Vector3 adjustedRotP = new Vector3(miniGunAimer.transform.localEulerAngles.x, -miniGunAimer.transform.localEulerAngles.y, -miniGunAimer.transform.localEulerAngles.z) + new Vector3(0,50,20);
 		rightArm.transform.localEulerAngles = adjustedRotP;
 
 		Vector3 adjustedRotPL = cannonAimer.transform.localEulerAngles + new Vector3(0,50,20);

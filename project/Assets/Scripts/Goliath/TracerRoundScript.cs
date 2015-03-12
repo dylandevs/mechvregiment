@@ -41,7 +41,6 @@ public class TracerRoundScript : MonoBehaviour {
 			//if graphic is there apply a bullet decal
 			
 			if (hitInfoFire.collider.tag != "Player") {
-				print("hit something else");
 				//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
 				//and add a remaining bullet hole
 				GameObject spark = sparkPool.Retrieve(hitInfoFirePoint);
@@ -49,9 +48,9 @@ public class TracerRoundScript : MonoBehaviour {
 			}
 			
 			if(hitInfoFire.collider.tag == "Player"){
-				doDamageMini();
-				print ("hit player");
-				
+				GameObject hitPlayer = hitInfoFire.collider.gameObject;
+				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
+				hitPlayerScript.Damage(damage,gameObject.transform.forward);
 				//add a hit graphic.
 			}
 			//turn off the bullet prefab
@@ -65,8 +64,9 @@ public class TracerRoundScript : MonoBehaviour {
 		if (Physics.Raycast (rayLeft,out hitInfoLeft, 0.5f,mask)) 
 		{
 			if (hitInfoLeft.collider.tag == "Player") {
-				print("hitLeft");
-				doDamageMini();
+				GameObject hitPlayer = hitInfoLeft.collider.gameObject;
+				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
+				hitPlayerScript.Damage(damage,gameObject.transform.forward);
 				pool.Deactivate(gameObject);
 			}
 		}
@@ -77,8 +77,9 @@ public class TracerRoundScript : MonoBehaviour {
 		if (Physics.Raycast (rayRight,out hitInfoRight, 0.5f,mask)) 
 		{
 			if (hitInfoRight.collider.tag == "Player") {
-				print("hitRight");
-				doDamageMini();
+				GameObject hitPlayer = hitInfoRight.collider.gameObject;
+				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
+				hitPlayerScript.Damage(damage,gameObject.transform.forward);
 				pool.Deactivate(gameObject);
 			}
 		}
@@ -86,17 +87,5 @@ public class TracerRoundScript : MonoBehaviour {
 
 	void OnEnable(){
 		life = 5f;
-	}
-
-	void doDamageMini(){
-		pool.Deactivate(gameObject);
-		/*objectHealth h = go.GetComponent<objectHealth>();
-
-					if(h != null)
-					{
-					h.ReciveDamage(damage);
-					}*/
-		
-		// applies bullet spark to location fo impact
-	}
+	}	
 }
