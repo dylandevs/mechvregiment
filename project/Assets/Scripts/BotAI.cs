@@ -456,7 +456,7 @@ public class BotAI : MonoBehaviour {
 
 	// TESTING: sets surface colour of model
 	void setSurfaceColour(Color newCol){
-		renderer.material.color = newCol;
+		//renderer.material.color = newCol;
 	}
 
 	// Determines whether any allies in view are in alarmed state
