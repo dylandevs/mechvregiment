@@ -43,11 +43,11 @@ public class mechMovement : MonoBehaviour {
 		currMechHealth = 1000;
 		mechShield = 200;
 		shieldActive = true;
-		moveSpeedY = 15 * Time.deltaTime;
-		rotSpeedY = Time.deltaTime * 80;
+		moveSpeedY = 10;
+		rotSpeedY = 1.5f;
 
-		moveSpeedX = 15 * Time.deltaTime;
-		rotSpeedX = Time.deltaTime * 100;
+		moveSpeedX = 7.5f;
+		rotSpeedX = 2f;
 	}
 	
 	// Update is called once per frame
@@ -65,9 +65,29 @@ public class mechMovement : MonoBehaviour {
 
 		if(mechHealth >=1){
 
+			Vector3 currVel = bottomHalf.rigidbody.velocity;
+			currVel.x = 0;
+			currVel.z = 0;
+
+			if (lStickY != 0){
+				Vector3 velMod = bottomHalf.transform.forward * moveSpeedY * lStickY;
+				currVel += velMod;
+			}
+
+			if (lStickX != 0){
+				Vector3 velMod = bottomHalf.transform.right * moveSpeedX * lStickX;
+				currVel += velMod;
+			}
+
+			rigidbody.velocity = currVel;
+
 			//Hydra Movement
-			bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
-			bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
+			//bottomHalf.rigidbody.MovePosition(bottomHalf.rigidbody.position + bottomHalf.transform.forward * moveSpeedY * lStickY);
+
+			//bottomHalf.rigidbody.MovePosition(bottomHalf.rigidbody.position + bottomHalf.transform.right * moveSpeedY * lStickX);
+
+			//bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
+			//bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 
 			if(lStickX >= 0.05f){
 				isMoving = true;

@@ -63,6 +63,8 @@ public class MechShoot : MonoBehaviour {
 	public GameObject leftArm;
 	public GameObject rightArm;
 
+	public Animator pilotAnimator;
+
 	float missleRetTimer;
 	bool inRangeMiniX;
 	bool inRangeCannonX;
@@ -70,6 +72,13 @@ public class MechShoot : MonoBehaviour {
 	bool inRangeCannonY;
 	bool ableToShoot;
 	bool ableToShootM;
+
+	int miniIdle = Animator.StringToHash("miniGunIdle");
+	int miniFire = Animator.StringToHash("miniGunFire");
+	int missleIdle = Animator.StringToHash("missleIdle");
+	int missleFire = Animator.StringToHash("missleFire");
+
+
 	// Use this for initialization
 	void Start () {
 		flagCarried.SetActive(false);
@@ -142,6 +151,7 @@ public class MechShoot : MonoBehaviour {
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
 		if (miniGunMode == true) {
+
 			//aiming the minigun and placing the reticle in the right place
 			if(inRangeMiniX == true && inRangeMiniY == true){
 				ableToShootM = true;
@@ -212,12 +222,18 @@ public class MechShoot : MonoBehaviour {
 				miniGunFirer.cannonShoot = true;
 			}
 			if(rTrig > 0.8f && ableToShootM == true){
+				pilotAnimator.SetBool(miniIdle,false);
+				pilotAnimator.SetBool(miniFire,true);
+
 				miniGunFirer.fire = true;
 			}
 			if(lTrig < 0.8f && ableToShoot == true){
+
 				miniGunFirer.cannonShoot = false;
 			}
 			if(rTrig < 0.8f && ableToShootM == true){
+				pilotAnimator.SetBool(miniFire,false);
+				pilotAnimator.SetBool(miniIdle,true);
 				miniGunFirer.fire = false;
 			}
 
@@ -244,7 +260,10 @@ public class MechShoot : MonoBehaviour {
 
 		//the rocket mode is on
 		if (rocketMode == true) {
-				
+			//set animations	
+			pilotAnimator.SetBool(miniFire,false);
+			pilotAnimator.SetBool(missleIdle,true);
+
 			//turn on the aiming device
 			missleReticle.SetActive(true);
 			rangeIndicator.SetActive(true);
@@ -429,8 +448,12 @@ public class MechShoot : MonoBehaviour {
 		}else inRangeCannonX = false;
 
 		//the change in the pilot arm to match aiming
-		rightArm.transform.localEulerAngles = miniGunArm.transform.localEulerAngles;
-		leftArm.transform.localEulerAngles = cannonArm.transform.localEulerAngles;
+
+		Vector3 adjustedRotP = -miniGunAimer.transform.localEulerAngles + new Vector3(0,50,20);
+		rightArm.transform.localEulerAngles = adjustedRotP;
+
+		Vector3 adjustedRotPL = cannonAimer.transform.localEulerAngles + new Vector3(0,50,20);
+		leftArm.transform.localEulerAngles = adjustedRotPL;
 
 		//print("pilot" + rightArm.transform.localEulerAngles);
 		//print("miniGun" + miniGunArm.transform.localEulerAngles);
