@@ -1,0 +1,159 @@
+fileFormatVersion: 2
+guid: 30e4ff42cd2a2ae4eb243568163e8605
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Base
+    100004: Body
+    100006: Bottom_CTRL
+    100008: Eyes
+    100010: Gem
+    100012: GlassBox
+    100014: Hips_CTRL
+    100016: jnt_Hip
+    100018: jnt_L_Ankle
+    100020: jnt_L_Ball
+    100022: jnt_L_Elbow
+    100024: jnt_L_GunBarrel
+    100026: jnt_L_GunBase
+    100028: jnt_L_Hand
+    100030: jnt_L_Hip
+    100032: jnt_L_Knee
+    100034: jnt_L_Shoulder
+    100036: jnt_L_Toe
+    100038: jnt_L_Wrist
+    100040: jnt_R_Ankle
+    100042: jnt_R_Ball
+    100044: jnt_R_Elbow
+    100046: jnt_R_Hand
+    100048: jnt_R_Hip
+    100050: jnt_R_Knee
+    100052: jnt_R_Shoulder
+    100054: jnt_R_Toe
+    100056: jnt_Root_Bottom
+    100058: jnt_Root_Top
+    100060: jnt_Spine
+    100062: LeftArm
+    100064: LeftArm 1
+    100066: LeftKnee_CTRL
+    100068: LefttBoot
+    100070: Mech
+    100072: RightArm
+    100074: RightBoot
+    100076: RightKnee_CTRL
+    100078: Torso
+    400000: //RootNode
+    400002: Base
+    400004: Body
+    400006: Bottom_CTRL
+    400008: Eyes
+    400010: Gem
+    400012: GlassBox
+    400014: Hips_CTRL
+    400016: jnt_Hip
+    400018: jnt_L_Ankle
+    400020: jnt_L_Ball
+    400022: jnt_L_Elbow
+    400024: jnt_L_GunBarrel
+    400026: jnt_L_GunBase
+    400028: jnt_L_Hand
+    400030: jnt_L_Hip
+    400032: jnt_L_Knee
+    400034: jnt_L_Shoulder
+    400036: jnt_L_Toe
+    400038: jnt_L_Wrist
+    400040: jnt_R_Ankle
+    400042: jnt_R_Ball
+    400044: jnt_R_Elbow
+    400046: jnt_R_Hand
+    400048: jnt_R_Hip
+    400050: jnt_R_Knee
+    400052: jnt_R_Shoulder
+    400054: jnt_R_Toe
+    400056: jnt_Root_Bottom
+    400058: jnt_Root_Top
+    400060: jnt_Spine
+    400062: LeftArm
+    400064: LeftArm 1
+    400066: LeftKnee_CTRL
+    400068: LefttBoot
+    400070: Mech
+    400072: RightArm
+    400074: RightBoot
+    400076: RightKnee_CTRL
+    400078: Torso
+    4300000: Body
+    4300002: Eyes
+    4300004: Base
+    4300006: RightBoot
+    4300008: LefttBoot
+    4300010: LeftArm
+    4300012: Gem
+    4300014: GlassBox
+    4300016: RightArm
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Base
+    13700002: Body
+    13700004: Eyes
+    13700006: Gem
+    13700008: GlassBox
+    13700010: LeftArm 1
+    13700012: LefttBoot
+    13700014: RightArm
+    13700016: RightBoot
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
