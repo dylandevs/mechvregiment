@@ -5,7 +5,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	private string roomName = "GoliathConnection_083";
 	//private PhotonView photonView;
-	private float sendTimer = 0.05f;	
+	private float sendTimer = 0;
+	private float SendInterval = 0.05f;
 
 	public GameObject GoliathTop;
 	public GameObject GoliathBottom;
@@ -39,9 +40,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
         	if(sendTimer <= 0){
                 //Here's where the RPC calls go so they happen once properly joined.
 
-        		SendGoliathTransforms(GoliathTop.transform, GoliathBottom.transform);
-
-                sendTimer = 0.05f;
+	
+				sendTimer = SendInterval;
 			}
         }
         else {
@@ -63,16 +63,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
-
-//RPC CALLS
-
-    public void SendGoliathTransforms(Transform Top, Transform Bottom){
-    	photonView.RPC("ExchangeGoliathPositioning", PhotonTargets.All, Top.position, Top.rotation, Bottom.position, Bottom.rotation);
-    }
-    [RPC]
-    public void ExchangeGoliathPositioning(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
-    	//print("I'm sending the position over");
-    }
+	[RPC]
+	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	// Player RPC
 	[RPC]

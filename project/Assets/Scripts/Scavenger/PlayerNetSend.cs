@@ -64,17 +64,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
-    private void DecerealizeTransform(GameObject giveMeTransform, Vector3 position, Quaternion rotation){
-    	giveMeTransform.transform.position = position;
-    	giveMeTransform.transform.rotation = rotation;
-    }
-
-//RPC CALLS
 	[RPC]
-	public void ExchangeGoliathPositioning(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot){
-		DecerealizeTransform(goliathTop, topPos, topRot);
-		DecerealizeTransform(goliathBot, botPos, botRot);
-	}
+	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
@@ -100,6 +91,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void PlayerForceFire(int playerNum){}
+
+	[RPC]
+	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){
+		if (playerNum >= 0 && playerNum < players.Length){
+			players[playerNum].Damage(damage, direction);
+		}
+	}
 
 	// Minion RPC
 	[RPC]
