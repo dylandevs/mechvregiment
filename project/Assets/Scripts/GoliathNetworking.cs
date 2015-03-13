@@ -14,7 +14,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public GameObject goliathShoulderR;
 	public GameObject goliathShoulderL;
 
-	public PlayerAvatar[] playerAvatars;
+	public GameObject playerAvatarWrapper;
+	private PlayerAvatar[] playerAvatars;
 
 	public PoolManager playerMineManager;
 	public PoolManager playerBulletManager;
@@ -27,6 +28,11 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
 		//photonView = PhotonView.Get (this);
+
+		playerAvatars = new PlayerAvatar[playerAvatarWrapper.transform.childCount];
+		for (int i = 0; i < playerAvatarWrapper.transform.childCount; i++){
+			playerAvatars[i] = playerAvatarWrapper.transform.GetChild(i).GetComponent<PlayerAvatar>();
+		}
 	}
 	
 //UPDATE
@@ -69,8 +75,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     }
 
 	// Goliath RPC
-	//[RPC]
-	//void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
+	[RPC]
+	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	[RPC]
 	void DamageGoliath(float damage, Vector3 direction){
@@ -135,8 +141,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		}
 	}
 
-	//[RPC]
-	//public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
+	[RPC]
+	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
 
 	// Minion RPC
 	[RPC]
@@ -149,8 +155,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		}
 	}
 	
-	//[RPC]
-	//public void ApplyMinionDamage(int minionNum, float damage){}
+	[RPC]
+	public void ApplyMinionDamage(int minionNum, float damage){}
 	
 	// Projectile RPC
 	[RPC]
