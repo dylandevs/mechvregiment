@@ -152,6 +152,7 @@ ModelImporter:
     100292: Root
     100294: SpineClusterGRP
     100296: Weapons3
+    100298: WEAPONS
     400000: Ar_Body
     400002: AR_Weapon
     400004: Body
@@ -301,6 +302,7 @@ ModelImporter:
     400292: Root
     400294: SpineClusterGRP
     400296: Weapons3
+    400298: WEAPONS
     2300000: Ar_Body
     2300002: crystal
     2300004: Mag

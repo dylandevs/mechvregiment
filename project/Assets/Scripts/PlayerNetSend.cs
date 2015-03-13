@@ -10,7 +10,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject goliathTop;
 	public GameObject goliathBot;
 
-	public Player[] players;
+	public GameObject playerWrapper;
+	private Player[] players;
 	public PoolManager playerMineManager;
 	public PoolManager playerBulletManager;
 
@@ -23,6 +24,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
 		//photonView = PhotonView.Get (this);
+
+		players = new Player[playerWrapper.transform.childCount];
+		for (int i = 0; i < playerWrapper.transform.childCount; i++){
+			players[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
+		}
 	}
 	void MakeRoom(){
         RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 2 };
@@ -80,30 +86,30 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		goliath.SetNextTargetTransform(topPos, topRot, botPos, botRot, botVel, spineRot, shoulderLRot, shoulderLRot);
 	}
 
-	//[RPC]
-	//void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
+	[RPC]
+	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	// Player RPC
-	//[RPC]
-	//void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
+	[RPC]
+	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
 
-	//[RPC]
-	//public void PlayerCycleWeapon(int playerNum, int newWeapon){}
+	[RPC]
+	public void PlayerCycleWeapon(int playerNum, int newWeapon){}
 	
-	//[RPC]
-	//public void PlayerJump(int playerNum){}
+	[RPC]
+	public void PlayerJump(int playerNum){}
 	
-	//[RPC]
-	//public void PlayerDeath(int playerNum, bool forward){}
+	[RPC]
+	public void PlayerDeath(int playerNum, bool forward){}
 	
-	//[RPC]
-	//public void PlayerRespawn(int playerNum){}
+	[RPC]
+	public void PlayerRespawn(int playerNum){}
 	
-	//[RPC]
-	//public void PlayerReload(int playerNum){}
+	[RPC]
+	public void PlayerReload(int playerNum){}
 
-	//[RPC]
-	//public void PlayerForceFire(int playerNum){}
+	[RPC]
+	public void PlayerForceFire(int playerNum){}
 
 	[RPC]
 	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){
@@ -113,8 +119,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	// Minion RPC
-	//[RPC]
-	//void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
+	[RPC]
+	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	[RPC]
 	public void ApplyMinionDamage(int minionNum, float damage){
@@ -125,19 +131,19 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	// Projectile RPC
-	//[RPC]
-	//public void CreateMine(){}
+	[RPC]
+	public void CreateMine(){}
 
-	//[RPC]
-	//public void CreateMinionBullet(){}
+	[RPC]
+	public void CreateMinionBullet(){}
 
 	[RPC]
 	public void DestroyMinionBullet(){
 
 	}
 
-	//[RPC]
-	//public void CreatePlayerBullet(){}
+	[RPC]
+	public void CreatePlayerBullet(){}
 
 	[RPC]
 	public void DestroyPlayerBullet(){
