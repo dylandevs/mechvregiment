@@ -55,6 +55,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				Transform minionWrapper = minionManager.transform;
 				for(int i = 0; i < minionWrapper.childCount; i++){
 					Transform minionTransform = minionWrapper.GetChild(i);
+
+
 				}
 	        	        
 				sendTimer = SendInterval;
