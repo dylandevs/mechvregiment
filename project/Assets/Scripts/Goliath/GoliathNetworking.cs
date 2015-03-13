@@ -6,10 +6,13 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	private string roomName = "GoliathConnection_083";
 	//private PhotonView photonView;
 	private float sendTimer = 0;
-	private float SendInterval = 0.05f;
+	private float SendInterval = 0.15f;
 
-	public GameObject GoliathTop;
-	public GameObject GoliathBottom;
+	public GameObject goliathTop;
+	public GameObject goliathBot;
+	public GameObject goliathSpine;
+	public GameObject goliathShoulderR;
+	public GameObject goliathShoulderL;
 
 	public PlayerAvatar[] playerAvatars;
 
@@ -39,7 +42,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
         else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
         	if(sendTimer <= 0){
                 //Here's where the RPC calls go so they happen once properly joined.
-
+				photonView.RPC ("SetGoliathJoints", PhotonTargets.All, goliathTop.transform.position, goliathTop.transform.rotation,
+				                goliathBot.transform.position, goliathBot.transform.rotation, goliathBot.rigidbody.velocity,
+				                goliathSpine.transform.rotation, goliathShoulderR.transform.rotation, goliathShoulderL.transform.rotation);
 	
 				sendTimer = SendInterval;
 			}
@@ -63,8 +68,15 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
+	// Goliath RPC
+	//[RPC]
+	//void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
+
 	[RPC]
-	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
+	void DamageGoliath(float damage, Vector3 direction){
+		// Apply damage to Goliath
+
+	}
 
 	// Player RPC
 	[RPC]
@@ -123,25 +135,36 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		}
 	}
 
-	[RPC]
-	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
+	//[RPC]
+	//public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
 
 	// Minion RPC
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
+		Transform minionWrapper = minionManager.transform;
+
+		if (minionNum >= 0 && minionNum < minionWrapper.childCount){
+			MinionAvatar avatar = minionManager.transform.GetChild(minionNum).GetComponent<MinionAvatar>();
+			// TODO: minion props
+		}
+	}
+	
+	//[RPC]
+	//public void ApplyMinionDamage(int minionNum, float damage){}
+	
+	// Projectile RPC
+	[RPC]
+	public void CreateMine(){
 
 	}
 	
 	[RPC]
-	public void ApplyMinionDamage(int minionNum, float damage){}
-	
-	// Projectile RPC
-	[RPC]
-	public void CreateMine(){}
+	public void CreateMinionBullet(){
+
+	}
 	
 	[RPC]
-	public void CreateMinionBullet(){}
-	
-	[RPC]
-	public void CreatePlayerBullet(){}
+	public void CreatePlayerBullet(){
+
+	}
 }

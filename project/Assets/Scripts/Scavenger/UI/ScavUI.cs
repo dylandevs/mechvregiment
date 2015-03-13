@@ -45,9 +45,6 @@ public class ScavUI : MonoBehaviour {
 	// Time trackers
 	float weaponFlashProgress = 0;
 
-	// Render area holder
-	private float[] renderWindow = new float[]{0, 0, 1, 1};
-
 	// Use this for initialization
 	void Start () {
 		// Getting graphics of different weapons

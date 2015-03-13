@@ -16,8 +16,7 @@ public class PlayerAvatar : MonoBehaviour {
 
 	private Quaternion lastSyncRot;
 	private Quaternion nextSyncRot;
-	private Vector3 facing;
-	
+
 	// Input
 	public Animator anim;
 	public GameObject shotCollider;
@@ -109,7 +108,7 @@ public class PlayerAvatar : MonoBehaviour {
 	}
 
 	public void Damage(float damage, Vector3 direction){
-		networkManager.ApplyPlayerDamage(PlayerNum, damage, direction);
+		networkManager.photonView.RPC ("ApplyPlayerDamage", PhotonTargets.All, PlayerNum, damage, direction);
 	}
 
 	public void TriggerJump(){

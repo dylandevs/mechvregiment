@@ -545,7 +545,6 @@ public class ControllerScript : MonoBehaviour {
 
 	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
-		player.SetCrouching(isCrouching);
 	}
 
 	// Sets facing according to input
@@ -557,7 +556,6 @@ public class ControllerScript : MonoBehaviour {
 
 		if (!player.isDead){
 			// Sets spine angle by determining angle of elevation of facing
-			Vector3 spineAngles = spineJoint.transform.localRotation.eulerAngles;
 			Quaternion recoveryRotation = Quaternion.FromToRotation(transform.forward, Vector3.forward);
 			Vector3 straightenedFacing = recoveryRotation * facing;
 

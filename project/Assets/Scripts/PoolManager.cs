@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PoolManager : MonoBehaviour {
-
-	private int poolCounter = 0;
-
 	public int startingPool = 1;
 	public bool loopable = false;
 	public bool retainLocal = false;

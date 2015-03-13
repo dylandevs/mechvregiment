@@ -4,7 +4,6 @@ using System.Collections;
 public class Bullet : MonoBehaviour {
 
 	float damage = 0;
-	string originator = "Default";
 	public Vector3 velocity = Vector3.zero;
 	Vector3 lastPos = Vector3.zero;
 	float life = 3.0f;
@@ -20,9 +19,8 @@ public class Bullet : MonoBehaviour {
 		pool = transform.parent.GetComponent<PoolManager>();
 	}
 
-	public void setProperties(float baseDamage, string firer, Vector3 direction, float speed, PoolManager markPool){
+	public void setProperties(float baseDamage, Vector3 direction, float speed, PoolManager markPool){
 		damage = baseDamage;
-		originator = firer;
 		velocity = direction.normalized * speed;
 		rigidbody.velocity = direction.normalized * speed;
 		life = 3;

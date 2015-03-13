@@ -17,6 +17,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public PoolManager minionManager;
 	public PoolManager minionBulletManager;
 
+	public GoliathAvatar goliath;
+
 	// Use this for initialization
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
@@ -38,6 +40,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
         	if(sendTimer <= 0){
                 //Here's where the RPC calls go so they happen once properly joined.
 
+				// Update player positions
 				for(int i = 0; i < players.Length; i++){
 					Player player = players[i];
 					ControllerScript control = player.playerController;
@@ -46,6 +49,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
 						photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching, control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring);
 					}
+				}
+
+				// Update minion positions
+				Transform minionWrapper = minionManager.transform;
+				for(int i = 0; i < minionWrapper.childCount; i++){
+					Transform minionTransform = minionWrapper.GetChild(i);
 				}
 	        	        
 				sendTimer = SendInterval;
@@ -65,32 +74,34 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     }
 
 	[RPC]
-	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
+	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){
+		goliath.SetNextTargetTransform(topPos, topRot, botPos, botRot, botVel, spineRot, shoulderLRot, shoulderLRot);
+	}
 
-	[RPC]
-	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
+	//[RPC]
+	//void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	// Player RPC
-	[RPC]
-	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
+	//[RPC]
+	//void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
 
-	[RPC]
-	public void PlayerCycleWeapon(int playerNum, int newWeapon){}
+	//[RPC]
+	//public void PlayerCycleWeapon(int playerNum, int newWeapon){}
 	
-	[RPC]
-	public void PlayerJump(int playerNum){}
+	//[RPC]
+	//public void PlayerJump(int playerNum){}
 	
-	[RPC]
-	public void PlayerDeath(int playerNum, bool forward){}
+	//[RPC]
+	//public void PlayerDeath(int playerNum, bool forward){}
 	
-	[RPC]
-	public void PlayerRespawn(int playerNum){}
+	//[RPC]
+	//public void PlayerRespawn(int playerNum){}
 	
-	[RPC]
-	public void PlayerReload(int playerNum){}
+	//[RPC]
+	//public void PlayerReload(int playerNum){}
 
-	[RPC]
-	public void PlayerForceFire(int playerNum){}
+	//[RPC]
+	//public void PlayerForceFire(int playerNum){}
 
 	[RPC]
 	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){
@@ -100,25 +111,34 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	// Minion RPC
-	[RPC]
-	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
+	//[RPC]
+	//void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	[RPC]
-	public void ApplyMinionDamage(int minionNum, float damage){}
+	public void ApplyMinionDamage(int minionNum, float damage){
+		if (minionNum >= 0 && minionNum < minionManager.transform.childCount){
+			BotAI minion = minionManager.transform.GetChild(minionNum).GetComponent<BotAI>();
+			minion.Damage (damage);
+		}
+	}
 
 	// Projectile RPC
-	[RPC]
-	public void CreateMine(){}
+	//[RPC]
+	//public void CreateMine(){}
+
+	//[RPC]
+	//public void CreateMinionBullet(){}
 
 	[RPC]
-	public void CreateMinionBullet(){}
+	public void DestroyMinionBullet(){
+
+	}
+
+	//[RPC]
+	//public void CreatePlayerBullet(){}
 
 	[RPC]
-	public void DestroyMinionBullet(){}
+	public void DestroyPlayerBullet(){
 
-	[RPC]
-	public void CreatePlayerBullet(){}
-
-	[RPC]
-	public void DestroyPlayerBullet(){}
+	}
 }

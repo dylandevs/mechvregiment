@@ -427,7 +427,7 @@ public class BotAI : MonoBehaviour {
 	
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(BulletDamage, gameObject.tag, direction, BulletSpeed, impactPool);
+		bulletScript.setProperties(BulletDamage, direction, BulletSpeed, impactPool);
 		bulletScript.shootableLayer = shootableLayer;
 	}
 
@@ -438,7 +438,7 @@ public class BotAI : MonoBehaviour {
 
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
 		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(BulletDamage, gameObject.tag, direction, BulletSpeed, impactPool);
+		bulletScript.setProperties(BulletDamage, direction, BulletSpeed, impactPool);
 		bulletScript.shootableLayer = shootableLayer;
 	}
 

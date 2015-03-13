@@ -32,7 +32,6 @@ public class Player : MonoBehaviour {
 	private float healTimer = 0;
 	private float respawnTimer = 0;
 	private bool isAimingDownSights = false;
-	private bool isCrouching = false;
 	public bool isDead = true;
 
 	public GameObject weaponWrapper;
@@ -165,10 +164,6 @@ public class Player : MonoBehaviour {
 		return isAimingDownSights;
 	}
 
-	public void SetCrouching(bool crouchState){
-		isCrouching = crouchState;
-	}
-
 	// Changes currently selected weapon
 	public void CycleWeapons(int adjustment){
 		int prevWeaponIndex = currentWeaponIndex;
@@ -196,6 +191,8 @@ public class Player : MonoBehaviour {
 
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage, Vector3 direction){
+		print (health);
+
 		if (!isDead){
 			health -= damage;
 			healTimer = HealWait;

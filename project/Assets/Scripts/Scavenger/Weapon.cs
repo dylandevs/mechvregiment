@@ -283,7 +283,7 @@ public class Weapon : MonoBehaviour {
 			Mine mineScript;
 			if (bulletScript = projectile.GetComponent<Bullet>()){
 				// Setting bullet properties
-				bulletScript.setProperties(Damage, player.tag, bulletDirection, BulletSpeed, impactPool);
+				bulletScript.setProperties(Damage, bulletDirection, BulletSpeed, impactPool);
 				bulletScript.playerSource = player;
 				bulletScript.shootableLayer = player.shootableLayer;
 			}
