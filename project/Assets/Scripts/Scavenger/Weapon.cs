@@ -303,6 +303,9 @@ public class Weapon : MonoBehaviour {
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
 					GameObject mark = impactPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
+
+					// Create explosion/spark
+					explosionPool.Retrieve(rayHit.point, hitRotation);
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
@@ -313,6 +316,18 @@ public class Weapon : MonoBehaviour {
 					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 					botHit.Damage(Damage, player);
 					player.TriggerHitMarker();
+
+					// Create explosion/spark
+					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					explosionPool.Retrieve(rayHit.point, hitRotation);
+				}
+				else if (rayHit.collider.gameObject.tag == "Goliath"){
+					// TODO: Damage Goliath
+
+
+					// Create explosion/spark
+					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					explosionPool.Retrieve(rayHit.point, hitRotation);
 				}
 
 				// Fire tracer at hit point

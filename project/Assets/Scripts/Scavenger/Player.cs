@@ -191,8 +191,6 @@ public class Player : MonoBehaviour {
 
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage, Vector3 direction){
-		print (health);
-
 		if (!isDead){
 			health -= damage;
 			healTimer = HealWait;

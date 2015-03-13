@@ -7,9 +7,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	private float SendInterval = 0.15f;
 	private float sendTimer = 0;
 
-	public GameObject goliathTop;
-	public GameObject goliathBot;
-
 	public GameObject playerWrapper;
 	private Player[] players;
 	public PoolManager playerMineManager;
