@@ -43,6 +43,8 @@ public class MinigunFirer : MonoBehaviour {
 	//shooting audio stuff
 	public AudioSource cannonSoundEmitter;
 	public AudioSource cannonRechargeEmitter;
+	public AudioSource minigunWhirEmitter;
+	public AudioSource minigunBulletEmitter;
 
 	// Use this for initialization
 	void Start () {
@@ -126,16 +128,20 @@ public class MinigunFirer : MonoBehaviour {
 		if(fire == false){
 			warmUpTimer = 1.5f;
 		}
-
+		minigunWhirEmitter.Play();
 		//counts down untill switches cooldown rates
-		warmUpTimer -= Time.deltaTime * 0.75f;
 		
 		//turning the warmUpTimer Update warmUpTimer ona nd off
 		if(warmUpTimer <= 0){
 			warmedUp = true;
+			minigunWhirEmitter.pitch = 2f;
+			minigunWhirEmitter.volume = 1f;
 		}
-		if(warmUpTimer >= 0){
+		else if(warmUpTimer > 0){
 			warmedUp = false;
+			minigunWhirEmitter.pitch = 1f + (warmUpTimer/1.5f);
+			minigunWhirEmitter.volume = 1f - (warmUpTimer/1.5f);
+			warmUpTimer -= Time.deltaTime * 0.75f;
 		}
 		//when hitting overheated can't fire
 		if(overHeat > 150){
@@ -177,13 +183,16 @@ public class MinigunFirer : MonoBehaviour {
 				//still needs to be warmed up
 				if(warmedUp == true){
 					cooldownRemaining = coolDown;
-					
 				}
 				//been warmed up
 				else if(warmedUp == false){
 					cooldownRemaining = coolDownWarmUp;
 					
 				}
+
+			//play bullet noise
+			minigunBulletEmitter.pitch = 1f - (Random.value * 0.1);
+			minigunBulletEmitter.PlayScheduled(AudioSettings.dspTime);
 		}
 
 		Ray rayCannon = new Ray(cannonShotStart.transform.position, cannonShotStart.transform.forward);
