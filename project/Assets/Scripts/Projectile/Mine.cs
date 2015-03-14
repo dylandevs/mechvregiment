@@ -72,7 +72,10 @@ public class Mine : MonoBehaviour {
 				playerHit.DamagePlayer(Damage * hitDistance * invExplosionRadius, direction);
 			}
 			else if (hitObject.tag == "Goliath"){
-
+				Vector3 direction = hitObject.transform.position - transform.position;
+				
+				GoliathDamager damager = hitObject.GetComponent<GoliathDamager>();
+				damager.DamageGoliath(Damage * hitDistance * invExplosionRadius, direction);
 			}
 			else if (hitObject.tag == "Mine"){
 				Mine mine = hitObject.GetComponent<Mine>();

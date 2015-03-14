@@ -83,6 +83,10 @@ public class Bullet : MonoBehaviour {
 						botHit.Damage(damage);
 					}
 				}
+				else if (rayHit.collider.gameObject.tag == "Goliath"){
+					GoliathDamager damager = rayHit.transform.GetComponent<GoliathDamager>();
+					damager.DamageGoliath(damage, velocity);
+				}
 				return true;
 			}
 			return false;
