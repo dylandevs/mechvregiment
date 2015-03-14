@@ -241,8 +241,6 @@ public class MechShoot : MonoBehaviour {
 				miniGunFirer.cannonShoot = true;
 				pilotAnimator.SetBool(cannonIdle,false);
 				pilotAnimator.SetBool(cannonFire,true);
-				//play cannon fire audio
-				cannonSoundEmitter.PlayScheduled(AudioSettings.dspTime);
 			}
 			if(rTrig > 0.8f && ableToShootM == true){
 				pilotAnimator.SetBool(miniIdle,false);
@@ -274,8 +272,11 @@ public class MechShoot : MonoBehaviour {
 					miniGunFirer.fire = true;
 				}
 				*/
-				if(Input.GetKeyDown(KeyCode.LeftControl)){
+				if(Input.GetKeyDown("g")){
+					shootTimer = 1f;
 					miniGunFirer.cannonShoot = true;
+					pilotAnimator.SetBool(cannonIdle,false);
+					pilotAnimator.SetBool(cannonFire,true);
 					//play cannon fire audio
 					cannonSoundEmitter.PlayScheduled(AudioSettings.dspTime);
 				}/*

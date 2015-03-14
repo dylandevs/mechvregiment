@@ -40,6 +40,10 @@ public class MinigunFirer : MonoBehaviour {
 	bool warmedUp;
 
 
+	//shooting audio stuff
+	public AudioSource cannonSoundEmitter;
+	public AudioSource cannonRechargeEmitter;
+
 	// Use this for initialization
 	void Start () {
 		overHeat = 0;
@@ -240,6 +244,10 @@ public class MinigunFirer : MonoBehaviour {
 
 
 				cannonCDR = cannonCD;
+
+				//play cannon fire audio
+				cannonSoundEmitter.PlayScheduled(AudioSettings.dspTime);
+				cannonRechargeEmitter.PlayScheduled(AudioSettings.dspTime+0.5f);
 			}
 		}
 	}// end of update//
