@@ -16,9 +16,11 @@ public class cannonShot : MonoBehaviour {
 	public Vector3 remainsLocation;
 
 	int layerMask = 1 << 3;
+
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
+	float damage = 50;
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -72,14 +74,15 @@ public class cannonShot : MonoBehaviour {
 				foreach (Collider c in colliders) 
 				{
 
-					/*objectHealth hp = c.GetComponent<objectHealth>();
+					float dist = Vector3.Distance(transform.position, c.transform.position);
+					float damageRatio = 1f - (dist / explosionRadius);
+					float damageAmnt = damage * damageRatio;
+					// a bit iffy on this direction calculation
+					Vector3 direction = transform.position - c.transform.position;
 
-					if(hp != null)
-					{
-						float dist = Vector3.Distance(transform.position, c.transform.position);
-						float damageRatio = 1f - (dist / explosionRadius);
-						hp.ReciveDamage(damage * damageRatio);
-					}*/
+					GameObject hitPlayer = c.collider.gameObject;
+					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+					hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
 
 				}
 			}

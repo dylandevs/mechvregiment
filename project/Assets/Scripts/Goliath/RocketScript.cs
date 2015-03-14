@@ -103,21 +103,19 @@ public class RocketScript : MonoBehaviour {
 		{
 
 			if(c.gameObject.collider.tag == "Player"){
-				print("hit player");
-			}
 
-			/*objectHealth hp = c.GetComponent<objectHealth>();
-
-			if(hp != null)
-			{
 				float dist = Vector3.Distance(transform.position, c.transform.position);
 				float damageRatio = 1f - (dist / explosionRadius);
-				hp.ReciveDamage(damage * damageRatio);
-			}*/
-			
-			
-			//turns it off nd rests rotation
-			//reset the object
+				float damageAmnt = damage * damageRatio;
+				// a bit iffy on this direction calculation
+				Vector3 direction = transform.position - c.transform.position;
+				
+				GameObject hitPlayer = c.collider.gameObject;
+				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+				hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
+			}
+
+
 		}
 	}
 }

@@ -14,6 +14,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public GameObject goliathShoulderR;
 	public GameObject goliathShoulderL;
 
+	public mechMovement mechHealth;
+
 	public GameObject playerAvatarWrapper;
 	private PlayerAvatar[] playerAvatars;
 
@@ -81,7 +83,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	[RPC]
 	void DamageGoliath(float damage, Vector3 direction){
 		// Apply damage to Goliath
-
+		mechHealth.takeDamage(damage,direction);
 	}
 
 	// Player RPC

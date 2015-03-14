@@ -6,7 +6,7 @@ public class TracerRoundScript : MonoBehaviour {
 	PoolManager pool;
 	float life = 5f;
 	float speed = 300;
-	float damage = 50f;
+	float damage = 10;
 
 	public LayerMask mask;
 
@@ -30,12 +30,14 @@ public class TracerRoundScript : MonoBehaviour {
 		}
 
 		float rayAmnt = 300*Time.deltaTime;
-		
 		//fire a raycast ahead to ensure you wont miss and go through a collider
 		Ray ray = new Ray(transform.position,transform.up);
 		RaycastHit hitInfoFire;
 		Debug.DrawRay(transform.position,transform.up * rayAmnt , Color.red);
-		if (Physics.Raycast (ray,out hitInfoFire, rayAmnt,mask)) 
+
+		//turn into a sphere cast
+
+		if (Physics.SphereCast (transform.position,1.5f,transform.forward, out hitInfoFire, 1, mask)) 
 		{
 			Vector3 hitInfoFirePoint = hitInfoFire.point;
 			//if graphic is there apply a bullet decal
@@ -49,24 +51,25 @@ public class TracerRoundScript : MonoBehaviour {
 			
 			if(hitInfoFire.collider.tag == "Player"){
 				GameObject hitPlayer = hitInfoFire.collider.gameObject;
-				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
-				hitPlayerScript.Damage(damage,gameObject.transform.forward);
+				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+				hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);
 				//add a hit graphic.
 			}
 			//turn off the bullet prefab
 			pool.Deactivate(gameObject);
 		}
 		
-		
+		/*
 		Ray rayLeft = new Ray(transform.position,transform.forward * -0.5f);
 		RaycastHit hitInfoLeft;
 		Debug.DrawRay(transform.position,transform.forward * -0.5f, Color.red);
 		if (Physics.Raycast (rayLeft,out hitInfoLeft, 0.5f,mask)) 
 		{
 			if (hitInfoLeft.collider.tag == "Player") {
-				GameObject hitPlayer = hitInfoLeft.collider.gameObject;
-				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
-				hitPlayerScript.Damage(damage,gameObject.transform.forward);
+				GameObject hitPlayer = hitInfoFire.collider.gameObject;
+				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+
+				hitPlayerScript.DamagePlayer(damage,gameObject.transform.forward);
 				pool.Deactivate(gameObject);
 			}
 		}
@@ -77,12 +80,13 @@ public class TracerRoundScript : MonoBehaviour {
 		if (Physics.Raycast (rayRight,out hitInfoRight, 0.5f,mask)) 
 		{
 			if (hitInfoRight.collider.tag == "Player") {
-				GameObject hitPlayer = hitInfoRight.collider.gameObject;
-				PlayerAvatar hitPlayerScript = hitPlayer.GetComponent<PlayerAvatar>();
-				hitPlayerScript.Damage(damage,gameObject.transform.forward);
+				GameObject hitPlayer = hitInfoFire.collider.gameObject;
+				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+				hitPlayerScript.DamagePlayer(damage,gameObject.transform.forward);
 				pool.Deactivate(gameObject);
 			}
 		}
+		*/
 	}
 
 	void OnEnable(){

@@ -8,7 +8,14 @@ public class mechMovement : MonoBehaviour {
 	public GameObject topHalfX;
 	public GameObject topHalfY;
 	public GameObject miniMapCam;
+
+	//for taking damage
+	public GameObject damageIndicatorLeft;
+	public GameObject damageIndicatorRight;
+
+
 	public MechShoot triggerFlagDropThing;
+
 	public Vector3 topDir;
 	public Vector3 bottomDir;
 
@@ -36,7 +43,7 @@ public class mechMovement : MonoBehaviour {
 	float lStickY;
 	float rStickX;
 	float rStickY;
-
+	float damageTurnOff;
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -52,6 +59,17 @@ public class mechMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		print (mechHealth);
+
+		if(damageTurnOff > 0){
+			damageTurnOff -= Time.fixedDeltaTime;
+		}
+
+		if(damageTurnOff <= 0){
+			damageIndicatorLeft.SetActive(false);
+			damageIndicatorRight.SetActive(false);
+		}
 
 		//Updating the joystick input
 		lStickX = SixenseInput.Controllers[left].JoystickX;
@@ -197,7 +215,9 @@ public class mechMovement : MonoBehaviour {
 		if(currMechHealth > 0 && currMechHealth < 1000 && shieldActive == false && damagedTime > 15){
 			currMechHealth += Time.deltaTime;
 		}
-
+		if(mechShield<= 0){
+			shieldActive = false;
+		}
 		//match the top half to the bottom half when not moving
 		topDir = topHalfX.transform.eulerAngles;
 		bottomDir = bottomHalf.transform.eulerAngles;
@@ -212,8 +232,12 @@ public class mechMovement : MonoBehaviour {
 
 	}// End of update
 
-	void takeDamage(float amount){
+	public void takeDamage(float amount,Vector3 direction){
+		print(amount);
+		print("health" + currMechHealth);
+		print("shield" + mechShield);
 
+		damageTurnOff = 2;
 		damagedTime = 0;
 
 		if(shieldActive == false){
@@ -222,6 +246,10 @@ public class mechMovement : MonoBehaviour {
 		else{
 			mechShield -= amount;
 		}
+
+		damageIndicatorLeft.SetActive(true);
+		damageIndicatorRight.SetActive(true);
+
 	}
 
 	void FixedUpdate(){

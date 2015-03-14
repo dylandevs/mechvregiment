@@ -123,8 +123,8 @@ public class cockpitUI : MonoBehaviour {
 
 		}
 		else{
-			float lerpAmnt = currMechHealth / 100;
-			mechHolagram.renderer.material.color = Color.Lerp(Color.green, Color.red, lerpAmnt);
+			float lerpAmnt = currMechHealth / 1000;
+			mechHolagram.renderer.material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
 			Color tempColour = mechHolagram.renderer.material.color;
 			tempColour.a = 0.5f;
 			mechHolagram.renderer.material.color = tempColour;
