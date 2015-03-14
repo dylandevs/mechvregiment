@@ -10,6 +10,12 @@ public class cockpitUI : MonoBehaviour {
 
 	public GameObject mechHolagram;
 	public GameObject templeShield;
+	
+	//Goliath minimap stuffs
+	public GameObject Player1;
+	public GameObject Player2;
+	public GameObject Player3;
+	public GameObject Player4;
 
 	public Image miniGunImage;
 	public Image overHeatedImage;
@@ -40,6 +46,16 @@ public class cockpitUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//mode checks
+		/*
+		if(minimapIcon.SetActive = true){
+			turnOffTimer = 1;
+			turnOffTimer -=Time.deltaTime;
+		}
+		if(turnOffTimer <=0){
+			minimapIcon.SetActive(false);
+		}*/
+
+
 		minigunMode = mechShoot.miniGunMode;
 		missleMode = mechShoot.rocketMode;
 		minionMode = mechShoot.minionMode;

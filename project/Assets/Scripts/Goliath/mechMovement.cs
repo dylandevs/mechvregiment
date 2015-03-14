@@ -44,6 +44,7 @@ public class mechMovement : MonoBehaviour {
 	float rStickX;
 	float rStickY;
 	float damageTurnOff;
+
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -60,13 +61,11 @@ public class mechMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		print (mechHealth);
-
 		if(damageTurnOff > 0){
 			damageTurnOff -= Time.fixedDeltaTime;
 		}
 
-		if(damageTurnOff <= 0){
+		if(damageTurnOff <=0){
 			damageIndicatorLeft.SetActive(false);
 			damageIndicatorRight.SetActive(false);
 		}
@@ -80,9 +79,22 @@ public class mechMovement : MonoBehaviour {
 
 
 		bool isMoving = false;
+		Quaternion currRot = topHalfY.transform.localRotation;
+		Vector3 nextRot = currRot.eulerAngles;
+
+		//rotations tuffs
+		if (nextRot.x >= 180){
+			nextRot.x = nextRot.x - 360;
+		}
+		
+		float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
+		if (nextRotX <= 30 && nextRotX >= -30) {
+			topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
+			//print ("I am turning around by " + -1*lStickY);
+		}
+		topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
 
 		if(mechHealth >=1){
-
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
 			currVel.x = 0;
 			currVel.z = 0;
@@ -122,32 +134,6 @@ public class mechMovement : MonoBehaviour {
 			if(lStickY <= -0.05f){
 				isMoving = true;
 			}
-
-			Quaternion currRot = topHalfY.transform.localRotation;
-			Vector3 nextRot = currRot.eulerAngles;
-
-			if (nextRot.x >= 180){
-				nextRot.x = nextRot.x - 360;
-			}
-
-			float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
-			if (nextRotX <= 30 && nextRotX >= -30) {
-				topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
-				//print ("I am turning around by " + -1*lStickY);
-			}
-			
-			/*Quaternion currRotY = topHalfX.transform.localRotation;
-			Vector3 nextRotY = currRot.eulerAngles;
-			float nextRotYY = nextRotY.y + (rotSpeedX * rStickX);
-				
-			print(nextRotYY);
-
-			topHalfX.transform.localRotation = Quaternion.Euler(nextRotY.x,nextRotYY,0);*/
-
-			topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
-
-			//print ("I am looking updown by " + -1*lStickX);
-
 
 		}
 		/*
@@ -233,11 +219,8 @@ public class mechMovement : MonoBehaviour {
 	}// End of update
 
 	public void takeDamage(float amount,Vector3 direction){
-		print(amount);
-		print("health" + currMechHealth);
-		print("shield" + mechShield);
 
-		damageTurnOff = 2;
+		damageTurnOff = 0.5f;
 		damagedTime = 0;
 
 		if(shieldActive == false){
@@ -247,8 +230,23 @@ public class mechMovement : MonoBehaviour {
 			mechShield -= amount;
 		}
 
-		damageIndicatorLeft.SetActive(true);
-		damageIndicatorRight.SetActive(true);
+		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
+		float amountFromRight = Vector3.Angle(direction,topHalfX.transform.right);
+		float amountFromLeft = Vector3.Angle(direction,topHalfX.transform.right * -1);
+
+		print(amountFromForward);
+
+		if(amountFromRight < amountFromLeft){
+			// its on the left side
+			damageIndicatorLeft.SetActive(true);
+		}
+		else if(amountFromForward > 155f && amountFromForward < 175f){
+			//shownon of them
+		}
+		else{
+			//its ont he right side
+			damageIndicatorRight.SetActive(true);
+		}
 
 	}
 

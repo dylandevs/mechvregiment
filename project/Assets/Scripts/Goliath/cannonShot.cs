@@ -4,7 +4,7 @@ using System.Collections;
 public class cannonShot : MonoBehaviour {
 
 	public Vector3 constantSpeed;
-	public float explosionRadius = 8f;
+	public float explosionRadius = 10f;
 
 	public PoolManager plasmaExplodePool;
 	public PoolManager pool;
@@ -20,7 +20,8 @@ public class cannonShot : MonoBehaviour {
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
-	float damage = 50;
+	float damage = 25;
+	float damageDirect = 75;
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -60,7 +61,9 @@ public class cannonShot : MonoBehaviour {
 		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime ,layerMask)) 
 		{
 			if(hit.collider.tag == "Player"){
-				doDamageCannon();
+				GameObject hitPlayer = hit.collider.gameObject;
+				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+				hitPlayerScript.DamagePlayer(damageDirect,gameObject.transform.up);
 			}
 			else{
 				GameObject plasmaExplosion = plasmaExplodePool.Retrieve(hit.point);
@@ -73,20 +76,29 @@ public class cannonShot : MonoBehaviour {
 				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 				foreach (Collider c in colliders) 
 				{
+					if(c.gameObject.collider.tag == "Player"){
+						float dist = Vector3.Distance(transform.position, c.transform.position);
+						float damageRatio = 1f - (dist / explosionRadius);
+						float damageAmnt = damage * damageRatio;
+						// a bit iffy on this direction calculation
+						Vector3 direction = transform.position - c.transform.position;
 
-					float dist = Vector3.Distance(transform.position, c.transform.position);
-					float damageRatio = 1f - (dist / explosionRadius);
-					float damageAmnt = damage * damageRatio;
-					// a bit iffy on this direction calculation
-					Vector3 direction = transform.position - c.transform.position;
+						GameObject hitPlayer = c.collider.gameObject;
+						if (hitPlayer){
+							PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 
-					GameObject hitPlayer = c.collider.gameObject;
-					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
-					hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
+							if (hitPlayerScript){
+								hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.forward);
+							}
+							else{
+							}
+						}
+						else{
+						}
 
+					}
 				}
 			}
-
 		}
 	}
 

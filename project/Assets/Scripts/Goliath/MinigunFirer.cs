@@ -139,7 +139,7 @@ public class MinigunFirer : MonoBehaviour {
 		}
 		else if(warmUpTimer > 0){
 			warmedUp = false;
-			minigunWhirEmitter.pitch = 1f + (warmUpTimer/1.5f);
+			minigunWhirEmitter.pitch = 1f - (warmUpTimer/1.5f);
 			minigunWhirEmitter.volume = 1f - (warmUpTimer/1.5f);
 			warmUpTimer -= Time.deltaTime * 0.75f;
 		}
@@ -191,7 +191,7 @@ public class MinigunFirer : MonoBehaviour {
 				}
 
 			//play bullet noise
-			minigunBulletEmitter.pitch = 1f - (Random.value * 0.1);
+			minigunBulletEmitter.pitch = 1f - (Random.value * 0.1f);
 			minigunBulletEmitter.PlayScheduled(AudioSettings.dspTime);
 		}
 

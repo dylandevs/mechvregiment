@@ -36,7 +36,8 @@ public class PlayerAvatar : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 	private int reloadHash = Animator.StringToHash("Reload");
-	
+
+	float turnOffTimer;
 	// Use this for initialization
 	void Start () {
 		lastSyncPos = transform.position;
@@ -139,5 +140,6 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
+		//send location and turn on miniMapIcon
 	}
 }
