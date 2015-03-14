@@ -42,7 +42,7 @@ public class ControllerScript : MonoBehaviour {
 	public GameObject playerCam;
 	public Player player;
 	private Animator anim;
-	private Animator weaponAnim;
+	private Animator fpsAnim;
 	public Animator cameraAnim;
 	public Animator gunCamAnim;
 	public GameObject spineJoint;
@@ -121,6 +121,7 @@ public class ControllerScript : MonoBehaviour {
 		initialSpineAngles = spineJoint.transform.localRotation.eulerAngles;
 
 		anim = player.anim;
+		fpsAnim = player.fpsAnim;
 	}
 	
 	// Update is called once per frame
@@ -143,8 +144,6 @@ public class ControllerScript : MonoBehaviour {
 		}
 		
 		Weapon currentWeapon = player.GetCurrentWeapon ();
-		weaponAnim = player.GetCurrentWeapon().animator;
-
 
 		if (!isKeyboard){
 
@@ -220,15 +219,17 @@ public class ControllerScript : MonoBehaviour {
 			}*/
 			if (DPad_Next){
 				player.CycleWeapons(1);
-				weaponAnim = player.GetCurrentWeapon().animator;
 				anim.SetTrigger(changeWeapHash);
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
+				fpsAnim.SetTrigger(changeWeapHash);
+				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 			else if (DPad_Prev){
 				player.CycleWeapons(-1);
-				weaponAnim = player.GetCurrentWeapon().animator;
 				anim.SetTrigger(changeWeapHash);
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
+				fpsAnim.SetTrigger(changeWeapHash);
+				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
 			}
 
 			// Reloading
@@ -243,6 +244,7 @@ public class ControllerScript : MonoBehaviour {
 					newVel.y += JumpSpeed;
 
 					anim.SetTrigger(jumpHash);
+					fpsAnim.SetTrigger(jumpHash);
 
 					// Cancel crouch
 					SetCrouching(false);
@@ -297,10 +299,10 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Toggle ADS
-			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading()) {
+			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting) {
 				player.ToggleADS(true);
 				//anim.SetBool(fireHash, true);
-				weaponAnim.SetBool(adsHash, true);
+				fpsAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
 				gunCamAnim.SetBool(adsHash, true);
 				anim.SetBool(adsHash, true);
@@ -311,7 +313,7 @@ public class ControllerScript : MonoBehaviour {
 			else{
 				player.ToggleADS(false);
 				//anim.SetBool(fireHash, false);
-				weaponAnim.SetBool(adsHash, false);
+				fpsAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
 				gunCamAnim.SetBool(adsHash, false);
 				anim.SetBool(adsHash, false);
@@ -447,7 +449,7 @@ public class ControllerScript : MonoBehaviour {
 			if (Mouse_Right && currentlyGrounded && !currentWeapon.IsReloading()) {
 				player.ToggleADS(true);
 				//anim.SetBool(fireHash, true);
-				weaponAnim.SetBool(adsHash, true);
+				fpsAnim.SetBool(adsHash, true);
 				cameraAnim.SetBool(adsHash, true);
 				gunCamAnim.SetBool(adsHash, true);
 				anim.SetBool(adsHash, true);
@@ -458,7 +460,7 @@ public class ControllerScript : MonoBehaviour {
 			else{
 				player.ToggleADS(false);
 				//anim.SetBool(fireHash, false);
-				weaponAnim.SetBool(adsHash, false);
+				fpsAnim.SetBool(adsHash, false);
 				cameraAnim.SetBool(adsHash, false);
 				gunCamAnim.SetBool(adsHash, false);
 				anim.SetBool(adsHash, false);
@@ -504,10 +506,12 @@ public class ControllerScript : MonoBehaviour {
 				//player.tryFire();
 				player.SetFiringState(true);
 				anim.SetBool(fireHash, true);
+				fpsAnim.SetBool(fireHash, true);
 			}
 			else{
 				player.SetFiringState(false);
 				anim.SetBool(fireHash, false);
+				fpsAnim.SetBool(fireHash, true);
 			}
 		}
 
@@ -536,6 +540,12 @@ public class ControllerScript : MonoBehaviour {
 		anim.SetFloat(speedHash, speed);
 		anim.SetBool (crouchHash, isCrouching);
 		anim.SetBool(sprintHash, isSprinting);
+
+		fpsAnim.SetFloat(fwdSpeedHash, forwardSpeed);
+		fpsAnim.SetFloat(rgtSpeedHash, rightSpeed);
+		fpsAnim.SetFloat(speedHash, speed);
+		fpsAnim.SetBool (crouchHash, isCrouching);
+		fpsAnim.SetBool(sprintHash, isSprinting);
 
 		// Snap spine back to initial rotations
 		if (player.isDead){

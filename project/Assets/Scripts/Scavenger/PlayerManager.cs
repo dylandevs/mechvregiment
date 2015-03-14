@@ -7,12 +7,18 @@ public class PlayerManager : MonoBehaviour {
 	public bool force4Split = false;
 
 	const int NumControllers = 4;
-	
-	public Player[] playerScripts = new Player[NumControllers];
+
+	public GameObject playerWrapper;
+	private Player[] playerScripts;
 	private bool[] controllersUsed = {false, false, false, false};
 
 	// Use this for initialization
 	void Start () {
+		playerScripts = new Player[playerWrapper.transform.childCount];
+		for (int i = 0; i < playerWrapper.transform.childCount; i++){
+			playerScripts[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
+		}
+
 		assignControllers(countConnectedControllers());
 	}
 	

@@ -51,7 +51,6 @@ public class Weapon : MonoBehaviour {
 	public PoolManager impactPool;
 	public PoolManager tracerPool;
 	public PoolManager explosionPool;
-	public Animator animator;
 	public GameObject flash;
 	public ParticleSystem smoke;
 	public ParticleEmitter flash3;
@@ -102,6 +101,7 @@ public class Weapon : MonoBehaviour {
 	// Cached references
 	private Player player;
 	private Animator playerAnim;
+	private Animator fpsAnim;
 	private ControllerScript controller;
 	private int fireHash = Animator.StringToHash("Firing");
 	private int reloadHash = Animator.StringToHash("Reload");
@@ -236,6 +236,7 @@ public class Weapon : MonoBehaviour {
 	public void SetPlayerReference(Player player){
 		this.player = player;
 		playerAnim = player.anim;
+		fpsAnim = player.fpsAnim;
 	}
 	
 	public void SetControllerReference(ControllerScript controller){
@@ -536,6 +537,7 @@ public class Weapon : MonoBehaviour {
 		}
 
 		playerAnim.SetBool (fireHash, (isFiring && !isReloading && !isAllAmmoDepleted));
+		fpsAnim.SetBool (fireHash, (isFiring && !isReloading && !isAllAmmoDepleted));
 	}
 	
 	private void StartFireInterval(){
@@ -564,6 +566,7 @@ public class Weapon : MonoBehaviour {
 		isReloading = true;
 		isFiring = false;
 		playerAnim.SetTrigger(reloadHash);
+		fpsAnim.SetTrigger(reloadHash);
 		player.networkManager.photonView.RPC("PlayerReload", PhotonTargets.All, player.initializer.Layer - 1);
 	}
 	

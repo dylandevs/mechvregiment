@@ -25,6 +25,7 @@ public class Player : MonoBehaviour {
 	public ScavUI display;
 	public LayerMask shootableLayer;
 	public Animator anim;
+	public Animator fpsAnim;
 	public ScavLayer initializer;
 
 	// Status variables
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour {
 	private float healTimer = 0;
 	private float respawnTimer = 0;
 	private bool isAimingDownSights = false;
-	public bool isDead = true;
+	public bool isDead = false;
 
 	public GameObject weaponWrapper;
 	public GameObject weaponWrapper3;
@@ -126,11 +127,14 @@ public class Player : MonoBehaviour {
 		// Enable firing layer
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
+		fpsAnim.SetTrigger(resetHash);
 
 		networkManager.photonView.RPC ("PlayerRespawn", PhotonTargets.All, initializer.Layer - 1);
 
 		foreach (Weapon weapon in weapons){
-			weapon.ReplenishWeapon();
+			if (weapon){
+				weapon.ReplenishWeapon();
+			}
 		}
 	}
 
@@ -209,10 +213,12 @@ public class Player : MonoBehaviour {
 
 				if (Vector3.Angle(direction, transform.forward) < 90){
 					anim.SetTrigger(fwdDeadHash);
+					fpsAnim.SetTrigger(fwdDeadHash);
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
 				}
 				else{
 					anim.SetTrigger(bckDeadHash);
+					fpsAnim.SetTrigger(bckDeadHash);
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
 				}
 			}
