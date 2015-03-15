@@ -23,16 +23,20 @@ public class Mine : MonoBehaviour {
 	public Player playerSource;
 	public bool isAvatar = false;
 	public GoliathNetworking goliathNetworker;
+
+	[HideInInspector]
 	public Pooled pooled;
 
 	[HideInInspector]
 	public int remoteId = -1;
+	[HideInInspector]
 	private bool transmitPosition = false;
 
 	// Use this for initializations
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
 		invExplosionRadius = 1 / ExplosionRadius;
+		pooled = transform.GetComponent<Pooled>();
 	}
 	
 	// Update is called once per frame
