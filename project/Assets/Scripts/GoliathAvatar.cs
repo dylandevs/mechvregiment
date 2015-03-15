@@ -89,6 +89,5 @@ public class GoliathAvatar : MonoBehaviour {
 
 	public void Damage(float damage, Vector3 direction){
 		networkManager.photonView.RPC ("DamageGoliath", PhotonTargets.All, damage, direction);
-		print (damage);
 	}
 }

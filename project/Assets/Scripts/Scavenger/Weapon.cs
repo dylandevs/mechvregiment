@@ -338,12 +338,17 @@ public class Weapon : MonoBehaviour {
 				// Fire tracer at hit point
 				if (TracerInterval > 0 && tracerPool){
 					if (untilNextTracer == 0){
+						Vector3 tracerDirection = rayHit.point - generatorPos.transform.position;
+						Vector3 tracerPos = generatorPos.transform.position;
+
 						untilNextTracer = TracerInterval;
-						GameObject tracer = tracerPool.Retrieve(generatorPos.transform.position);
-						tracer.transform.forward = rayHit.point - generatorPos.transform.position;
+						GameObject tracer = tracerPool.Retrieve(tracerPos);
+						tracer.transform.forward = tracerDirection;
 						tracer.layer = generatorPos.layer;
 
 						untilNextTracer = TracerInterval;
+
+						player.networkManager.photonView.RPC("CreatePlayerTracer", PhotonTargets.All, tracerPos, tracerDirection);
 					}
 				}
 				untilNextTracer--;

@@ -103,6 +103,10 @@ public class Mine : MonoBehaviour {
 					}
 				}
 			}
+
+			if (remoteId != -1){
+				playerSource.networkManager.photonView.RPC("DetonateMine", PhotonTargets.All, remoteId);
+			}
 		}
 
 		pool.Deactivate(gameObject);

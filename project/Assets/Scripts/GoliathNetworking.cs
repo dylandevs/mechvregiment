@@ -19,6 +19,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public GameObject playerAvatarWrapper;
 	private PlayerAvatar[] playerAvatars;
 
+	public PoolManager playerTracerManager;
 	public PoolManager playerMineManager;
 	public PoolManager playerBulletManager;
 	public PoolManager playerMineExplosionManager;
@@ -219,5 +220,11 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			bulletScript.shootableLayer = shootableLayer;
 			bulletScript.isAvatar = true;
 		}
+	}
+
+	[RPC]
+	public void CreatePlayerTracer(Vector3 tracerPos, Vector3 tracerDir){
+		GameObject tracer = playerTracerManager.Retrieve (tracerPos);
+		tracer.transform.forward = tracerDir;
 	}
 }
