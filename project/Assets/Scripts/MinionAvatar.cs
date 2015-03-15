@@ -3,9 +3,6 @@ using System.Collections;
 
 public class MinionAvatar : MonoBehaviour {
 
-	public GoliathNetworking networkManager;
-	public float index = 0;
-
 	private float syncProg = 0;
 	private float syncDelay = 0;
 	private float invSyncDelay = 1;
@@ -17,13 +14,21 @@ public class MinionAvatar : MonoBehaviour {
 	private Quaternion lastSyncRot;
 	private Quaternion nextSyncRot;
 	private Vector3 facing;
+
+	PoolManager pool;
+	public Pooled pooled;
+
+	[HideInInspector]
+	public int remoteId = -1;
 	
 	// Use this for initialization
 	void Start () {
+		pool = transform.parent.GetComponent<PoolManager>();
 		lastSyncPos = transform.position;
 		nextSyncPos = transform.position;
 		lastSyncRot = transform.rotation;
 		nextSyncRot = transform.rotation;
+		lastSync = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -54,6 +59,22 @@ public class MinionAvatar : MonoBehaviour {
 	}
 
 	public void Damage(float damage){
-		networkManager.photonView.RPC ("ApplyMinionDamage", PhotonTargets.All, index, damage);
+		pooled.goliathNetworker.photonView.RPC ("ApplyMinionDamage", PhotonTargets.All, remoteId, damage);
+	}
+
+	void OnEnable(){
+		if (!pooled){
+			pooled = GetComponent<Pooled>();
+		}
+
+		lastSyncPos = transform.position;
+		nextSyncPos = transform.position;
+		lastSyncRot = transform.rotation;
+		nextSyncRot = transform.rotation;
+		lastSync = Time.time;
+	}
+
+	public void Kill(){
+		pool.Deactivate (gameObject);
 	}
 }

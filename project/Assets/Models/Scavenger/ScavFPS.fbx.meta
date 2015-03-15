@@ -559,8 +559,8 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Walk_AR
       takeName: Take 001
-      firstFrame: 132
-      lastFrame: 146
+      firstFrame: 134
+      lastFrame: 148
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

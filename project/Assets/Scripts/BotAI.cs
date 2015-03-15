@@ -88,7 +88,10 @@ public class BotAI : MonoBehaviour {
 	public PoolManager impactPool;
 	private PoolManager pool;
 
-	private int networkedId = 0;
+	[HideInInspector]
+	public int remoteId = -1;
+	[HideInInspector]
+	public Pooled pooled;
 
 	// Use this for initialization
 	void Start () {
@@ -103,6 +106,10 @@ public class BotAI : MonoBehaviour {
 		players = new Player[playerGroup.transform.childCount];
 		for (int i = 0; i < playerGroup.transform.childCount; i++){
 			players[i] = playerGroup.transform.GetChild(i).GetComponent<Player>();
+		}
+
+		if (!pooled){
+			pooled = GetComponent<Pooled>();
 		}
 	}
 	
@@ -203,6 +210,7 @@ public class BotAI : MonoBehaviour {
 		}
 		else{
 			pool.Deactivate(gameObject);
+			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 		}
 	}
 
@@ -555,7 +563,6 @@ public class BotAI : MonoBehaviour {
 
 		// Schedule bot for death
 		if (health <= 0){
-			//Destroy (gameObject);
 			isDead = true;
 		}
 

@@ -23,10 +23,13 @@ public class Mine : MonoBehaviour {
 	public Player playerSource;
 	public bool isAvatar = false;
 	public GoliathNetworking goliathNetworker;
+
+	[HideInInspector]
 	public Pooled pooled;
 
 	[HideInInspector]
 	public int remoteId = -1;
+	[HideInInspector]
 	private bool transmitPosition = false;
 
 	// Use this for initializations
@@ -100,6 +103,10 @@ public class Mine : MonoBehaviour {
 					}
 				}
 			}
+
+			if (remoteId != -1){
+				playerSource.networkManager.photonView.RPC("DetonateMine", PhotonTargets.All, remoteId);
+			}
 		}
 
 		pool.Deactivate(gameObject);
@@ -135,6 +142,9 @@ public class Mine : MonoBehaviour {
 
 		remoteId = -1;
 		transmitPosition = false;
+		if (!pooled){
+			pooled = GetComponent<Pooled>();
+		}
 	}
 
 	public void SetAffixedPosition(Vector3 position){

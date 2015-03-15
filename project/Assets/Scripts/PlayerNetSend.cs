@@ -13,6 +13,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public PoolManager playerBulletManager;
 
 	public PoolManager minionManager;
+	private BotAI[] minions;
+	private bool minionScriptsRetrieved = false;
 	public PoolManager minionBulletManager;
 
 	public GoliathAvatar goliath;
@@ -34,6 +36,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (!minionScriptsRetrieved){
+			minions = new BotAI[minionManager.transform.childCount];
+			for (int i = 0; i < minionManager.transform.childCount; i++){
+				minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
+				if (minions[i].gameObject.GetActive()){
+					minions[i].remoteId = i;
+				}
+			}
+			
+			minionScriptsRetrieved = true;
+		}
+
 		sendTimer -= Time.deltaTime;
         if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
             Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
@@ -55,11 +69,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				}
 
 				// Update minion positions
-				Transform minionWrapper = minionManager.transform;
-				for(int i = 0; i < minionWrapper.childCount; i++){
-					Transform minionTransform = minionWrapper.GetChild(i);
-
-
+				for(int i = 0; i < minions.Length; i++){
+					Transform minionTransform = minions[i].transform;
+					NavMeshAgent minionAgent = minions[i].GetComponent<NavMeshAgent>();
+					photonView.RPC ("SetMinionTransform", PhotonTargets.All, minions[i].remoteId, minionTransform.position, minionTransform.rotation, minionAgent.velocity);
 				}
 	        	        
 				sendTimer = SendInterval;
@@ -124,11 +137,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void ApplyMinionDamage(int minionNum, float damage){
-		if (minionNum >= 0 && minionNum < minionManager.transform.childCount){
-			BotAI minion = minionManager.transform.GetChild(minionNum).GetComponent<BotAI>();
-			minion.Damage (damage);
+		if (minionNum >= 0 && minionNum < minions.Length){
+			minions[minionNum].Damage (damage);
 		}
 	}
+
+	[RPC]
+	public void DestroyMinion(int networkId){}
 
 	// Projectile RPC
 	[RPC]
@@ -165,7 +180,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void CreatePlayerBullet(float damage, Vector3 position, int speed, Vector3 direction){}
 
 	[RPC]
-	public void DestroyPlayerBullet(){
+	public void CreatePlayerTracer(Vector3 tracerPos, Vector3 tracerDir){}
 
-	}
+	[RPC]
+	public void CreateBulletHole(){}
+
+	[RPC]
+	public void CreateSpark(){}
 }

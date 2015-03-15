@@ -21,6 +21,8 @@ public class PlayerAvatar : MonoBehaviour {
 	public Animator anim;
 	public GameObject shotCollider;
 
+	private bool isDead = false;
+
 	// Cached values
 	private int fwdSpeedHash = Animator.StringToHash("FwdSpeed");
 	private int rgtSpeedHash = Animator.StringToHash("RgtSpeed");
@@ -86,11 +88,13 @@ public class PlayerAvatar : MonoBehaviour {
 		invSyncDelay = 1 / syncDelay;
 		lastSync = Time.time;
 
-		lastSyncPos = transform.position;
-		nextSyncPos = nextPos + currVelocity * syncDelay;
+		if (!isDead){
+			lastSyncPos = transform.position;
+			nextSyncPos = nextPos + currVelocity * syncDelay;
 
-		lastSyncRot = transform.rotation;
-		nextSyncRot = nextRot;
+			lastSyncRot = transform.rotation;
+			nextSyncRot = nextRot;
+		}
 	}
 
 	public void UpdateAnimValues(float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){
@@ -126,12 +130,16 @@ public class PlayerAvatar : MonoBehaviour {
 		else{
 			anim.SetTrigger(bckDeadHash);
 		}
+
+		isDead = true;
 	}
 
 	public void TriggerRespawn(){
 		// Enable firing layer
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
+
+		isDead = false;
 	}
 
 	public void TriggerReload(){
