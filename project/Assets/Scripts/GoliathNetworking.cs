@@ -169,7 +169,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	// Projectile RPC
 	[RPC]
 	public void CreateMine(int creatorId, Vector3 position, Vector3 direction){
-		GameObject projectile = playerBulletManager.Retrieve(position);
+		GameObject projectile = playerMineManager.Retrieve(position);
 		
 		Mine mineScript;
 		if (mineScript = projectile.GetComponent<Mine>()){
@@ -180,9 +180,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			projectile.rigidbody.AddForce(direction * 1000);
 
 			mineScript.isAvatar = true;
+			photonView.RPC ("SetMineID", PhotonTargets.All, creatorId, mineScript.pooled.index);
 		}
-
-		photonView.RPC ("SetMineID", PhotonTargets.All, creatorId, mineScript.pooled.index);
 	}
 
 	[RPC]

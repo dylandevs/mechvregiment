@@ -296,7 +296,7 @@ public class Weapon : MonoBehaviour {
 				projectile.transform.position += bulletDirection * 2;
 				projectile.rigidbody.AddForce(bulletDirection * 1000);
 
-				player.networkManager.photonView.RPC("CreateMine", PhotonTargets.All, mineScript.pooled.index, bulletDirection);
+				player.networkManager.photonView.RPC("CreateMine", PhotonTargets.All, mineScript.pooled.index, bulletOrigin, bulletDirection);
 			}
 		}
 		else{
