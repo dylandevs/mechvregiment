@@ -140,7 +140,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void CreatePlayerBullet(float damage, Vector3 position, float speed, Vector3 direction){}
+	public void CreatePlayerBullet(float damage, Vector3 position, int speed, Vector3 direction){}
 
 	[RPC]
 	public void DestroyPlayerBullet(){
