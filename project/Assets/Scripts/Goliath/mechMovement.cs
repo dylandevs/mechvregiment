@@ -82,15 +82,31 @@ public class mechMovement : MonoBehaviour {
 		Quaternion currRot = topHalfY.transform.localRotation;
 		Vector3 nextRot = currRot.eulerAngles;
 
+		//is moving calcs
+		if(lStickX >= 0.05f){
+			isMoving = true;
+		}
+		
+		if(lStickY >= 0.05f){
+			isMoving = true;
+		}
+		
+		if(lStickX <= -0.05f){
+			isMoving = true;
+		}
+		
+		if(lStickY <= -0.05f){
+			isMoving = true;
+		}
 		//rotations tuffs
 		if (nextRot.x >= 180){
 			nextRot.x = nextRot.x - 360;
 		}
-		
+
+		//rotations
 		float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
-		if (nextRotX <= 30 && nextRotX >= -30) {
+		if (nextRotX <= 4 && nextRotX >= -30) {
 			topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
-			//print ("I am turning around by " + -1*lStickY);
 		}
 		topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
 
@@ -118,24 +134,8 @@ public class mechMovement : MonoBehaviour {
 
 			//bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
 			//bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
-
-			if(lStickX >= 0.05f){
-				isMoving = true;
-			}
-
-			if(lStickY >= 0.05f){
-				isMoving = true;
-			}
-
-			if(lStickX <= -0.05f){
-				isMoving = true;
-			}
-			
-			if(lStickY <= -0.05f){
-				isMoving = true;
-			}
-
 		}
+
 		/*
 		if(mechHealth >=1){
 			//if a key is pushed move the location of the mech
@@ -233,14 +233,11 @@ public class mechMovement : MonoBehaviour {
 		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
 		float amountFromRight = Vector3.Angle(direction,topHalfX.transform.right);
 		float amountFromLeft = Vector3.Angle(direction,topHalfX.transform.right * -1);
-
-		print(amountFromForward);
-
 		if(amountFromRight < amountFromLeft){
 			// its on the left side
 			damageIndicatorLeft.SetActive(true);
 		}
-		else if(amountFromForward > 155f && amountFromForward < 175f){
+		else if(amountFromForward > 150f && amountFromForward < 180f){
 			//shownon of them
 		}
 		else{

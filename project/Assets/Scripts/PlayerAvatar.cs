@@ -5,6 +5,7 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public GoliathNetworking networkManager;
 	public int PlayerNum = 1;
+	public cockpitUI miniMapIndication;
 
 	private float syncProg = 0;
 	private float syncDelay = 0;
@@ -149,5 +150,7 @@ public class PlayerAvatar : MonoBehaviour {
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
 		//send location and turn on miniMapIcon
+		miniMapIndication.GetComponent<cockpitUI>();
+		miniMapIndication.miniMapIndicators(PlayerNum);
 	}
 }

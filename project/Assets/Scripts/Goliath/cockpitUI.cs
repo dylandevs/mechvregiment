@@ -12,15 +12,16 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject templeShield;
 	
 	//Goliath minimap stuffs
-	public GameObject Player1;
-	public GameObject Player2;
-	public GameObject Player3;
-	public GameObject Player4;
+	//100% amke sure they are in the right order
+	public GameObject [] miniMapIndicatorsList;
 
 	public Image miniGunImage;
+	public Image miniGunImageOutline;
 	public Image overHeatedImage;
 	public Image cannonReload;
-	public Image missleImage;	
+	public Image cannonReloadOutline;
+	public Image missleImageOutline;
+	public Image missleImage;
 	public Image minionModeImage;
 
 	float coolDown;
@@ -45,16 +46,6 @@ public class cockpitUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//mode checks
-		/*
-		if(minimapIcon.SetActive = true){
-			turnOffTimer = 1;
-			turnOffTimer -=Time.deltaTime;
-		}
-		if(turnOffTimer <=0){
-			minimapIcon.SetActive(false);
-		}*/
-
 
 		minigunMode = mechShoot.miniGunMode;
 		missleMode = mechShoot.rocketMode;
@@ -64,8 +55,10 @@ public class cockpitUI : MonoBehaviour {
 			resetImages();
 
 			miniGunImage.gameObject.SetActive(true);
+			miniGunImageOutline.gameObject.SetActive(true);
 			overHeatedImage.gameObject.SetActive(true);
 			cannonReload.gameObject.SetActive(true);
+			cannonReloadOutline.gameObject.SetActive(true);
 
 			//update the vars from the other script
 			overHeated = minigun.overHeated;
@@ -106,6 +99,7 @@ public class cockpitUI : MonoBehaviour {
 			resetImages();
 
 			missleImage.gameObject.SetActive(true);
+			missleImageOutline.gameObject.SetActive(true);
 			coolDownRocket = mechShoot.cooldownRemainingRocket;
 			float fillAmountMissle = 1 - (coolDownRocket/10);
 
@@ -146,17 +140,49 @@ public class cockpitUI : MonoBehaviour {
 			mechHolagram.renderer.material.color = tempColour;
 
 		}
-
-
-
-
-	}
+	}//end of update
 
 	void resetImages(){
+		//fills
 		miniGunImage.gameObject.SetActive(false);
 		overHeatedImage.gameObject.SetActive(false);
 		cannonReload.gameObject.SetActive(false);
 		missleImage.gameObject.SetActive(false);
 		minionModeImage.gameObject.SetActive(false);
+		//outlines
+		miniGunImageOutline.gameObject.SetActive(false);
+		cannonReloadOutline.gameObject.SetActive(false);
+		missleImageOutline.gameObject.SetActive(false);
+	}
+
+	public void miniMapIndicators(int indicatorNum){
+		float dist = Vector3.Distance(transform.position,miniMapIndicatorsList[indicatorNum].transform.position);
+
+		print(dist);
+
+		if(dist < 50){
+			if(miniMapIndicatorsList[indicatorNum].GetActive() != true){
+				miniMapIndicatorsList[indicatorNum].SetActive(true);
+			}
+			else{
+				miniMapIconScript miniMap = miniMapIndicatorsList[indicatorNum].GetComponent<miniMapIconScript>();
+				miniMap.life = 3;
+			}
+
+		}
+		//check distance between to see if he is ont he minimap.
+		else{
+			placeDirectionIndicator(miniMapIndicatorsList[indicatorNum]);
+		}
+	}
+
+	void placeDirectionIndicator(GameObject direction){
+
+		float amountFromForward = Vector3.Angle(direction.transform.position,transform.forward);
+
+	}
+
+	public void turnOffIndicator(){
+
 	}
 }

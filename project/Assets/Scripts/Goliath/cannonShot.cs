@@ -62,8 +62,17 @@ public class cannonShot : MonoBehaviour {
 		{
 			if(hit.collider.tag == "Player"){
 				GameObject hitPlayer = hit.collider.gameObject;
-				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
-				hitPlayerScript.DamagePlayer(damageDirect,gameObject.transform.up);
+				if (hitPlayer){
+					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+					
+					if (hitPlayerScript){
+						hitPlayerScript.DamagePlayer(damageDirect,gameObject.transform.forward);
+					}
+					else{
+					}
+				}
+				else{
+				}
 			}
 			else{
 				GameObject plasmaExplosion = plasmaExplodePool.Retrieve(hit.point);

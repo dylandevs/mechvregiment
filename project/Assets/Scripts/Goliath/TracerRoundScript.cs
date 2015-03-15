@@ -37,7 +37,7 @@ public class TracerRoundScript : MonoBehaviour {
 
 		//turn into a sphere cast
 
-		if (Physics.SphereCast (transform.position,1.5f,transform.forward, out hitInfoFire, 1, mask)) 
+		if (Physics.SphereCast (transform.position,1.5f,transform.forward, out hitInfoFire, 1.5f, mask)) 
 		{
 			Vector3 hitInfoFirePoint = hitInfoFire.point;
 			//if graphic is there apply a bullet decal
