@@ -19,6 +19,9 @@ public class RocketScript : MonoBehaviour {
 	private float speed = 100f;
 	private Vector3 mustHit;
 
+	//audio for explosion
+	public AudioSource explosionEmitter;
+
 	PoolManager pool;
 	public PoolManager explosionPool;
 
@@ -93,6 +96,9 @@ public class RocketScript : MonoBehaviour {
 
 	void Detonate()
 	{
+		//stop the audio woosh and play the explosion
+		this.GetComponent<AudioSource>().Stop();
+		explosionEmitter.Play();
 
 		destroyDelay = 5f;
 
