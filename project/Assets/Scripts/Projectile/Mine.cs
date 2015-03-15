@@ -36,7 +36,6 @@ public class Mine : MonoBehaviour {
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
 		invExplosionRadius = 1 / ExplosionRadius;
-		pooled = transform.GetComponent<Pooled>();
 	}
 	
 	// Update is called once per frame
@@ -139,6 +138,9 @@ public class Mine : MonoBehaviour {
 
 		remoteId = -1;
 		transmitPosition = false;
+		if (!pooled){
+			pooled = GetComponent<Pooled>();
+		}
 	}
 
 	public void SetAffixedPosition(Vector3 position){
