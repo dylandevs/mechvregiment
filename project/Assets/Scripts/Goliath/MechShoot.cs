@@ -68,6 +68,7 @@ public class MechShoot : MonoBehaviour {
 
 	//shooting audio stuff
 	public AudioSource cannonSoundEmitter;
+	public AudioSource aiDirectorEmitter;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -414,13 +415,15 @@ public class MechShoot : MonoBehaviour {
 						//do something with minions
 					//}
 
+					//plays the ai direction sound
+					aiDirectorEmitter.PlayScheduled(AudioSettings.dspTime);
 				}
 			}
 
 			if(Physics.Raycast (minMode, out minHit,range,mask)){
 				if(minHit.collider.tag != "Terrain"){
-						lightBeam.SetActive(false);
-						notLightBeam.SetActive(true);
+					lightBeam.SetActive(false);
+					notLightBeam.SetActive(true);
 					Vector3 placeHitRock = minHit.point;
 					notLightBeam.transform.position = placeHitRock;
 				}

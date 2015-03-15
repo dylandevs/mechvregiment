@@ -186,6 +186,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			// Setting bullet properties
 			bulletScript.setProperties(damage, direction, speed, bulletHoleManager);
 			bulletScript.shootableLayer = shootableLayer;
+			bulletScript.isAvatar = true;
 		}
 	}
 }
