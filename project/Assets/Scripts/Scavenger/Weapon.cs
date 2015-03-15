@@ -295,6 +295,8 @@ public class Weapon : MonoBehaviour {
 				mineScript.explosionPool = explosionPool;
 				projectile.transform.position += bulletDirection * 2;
 				projectile.rigidbody.AddForce(bulletDirection * 1000);
+
+				player.networkManager.photonView.RPC("CreateMine", PhotonTargets.All, mineScript.pooled.index, bulletDirection);
 			}
 		}
 		else{

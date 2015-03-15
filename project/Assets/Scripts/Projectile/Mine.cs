@@ -21,8 +21,15 @@ public class Mine : MonoBehaviour {
 	public bool isDetonated = false;
 
 	public Player playerSource;
+	public bool isAvatar = false;
+	public GoliathNetworking goliathNetworker;
+	public Pooled pooled;
 
-	// Use this for initialization
+	[HideInInspector]
+	public int remoteId = -1;
+	private bool transmitPosition = false;
+
+	// Use this for initializations
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
 		invExplosionRadius = 1 / ExplosionRadius;
@@ -30,6 +37,11 @@ public class Mine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (transmitPosition && remoteId != -1){
+			playerSource.networkManager.photonView.RPC("AffixMine", PhotonTargets.All, remoteId, transform.position);
+			transmitPosition = false;
+		}
+
 		if (countdownTimer > 0){
 			countdownTimer -= Time.deltaTime;
 
@@ -38,7 +50,9 @@ public class Mine : MonoBehaviour {
 			}
 		}
 		else if (isFixed){
-			CheckProximity();
+			if (!isAvatar){
+				CheckProximity();
+			}
 		}
 		else{
 			RaycastHit rayHit;
@@ -55,32 +69,35 @@ public class Mine : MonoBehaviour {
 		isDetonated = true;
 
 		explosionPool.Retrieve (transform.position);
-		Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius, damageableMask);
 
-		foreach(Collider hitObject in colliders){
-			float hitDistance = Vector3.Distance(hitObject.transform.position, transform.position);
+		if (!isAvatar){
+			Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius, damageableMask);
 
-			if (hitObject.tag == "Enemy"){
-				BotAI enemyhit = hitObject.GetComponent<BotAI>();
-				enemyhit.Damage(Damage * hitDistance * invExplosionRadius);
-			}
-			// Only hit player once
-			else if (hitObject.tag == "Player" && hitObject.name == "jnt_Hip"){
-				Vector3 direction = hitObject.transform.position - transform.position;
+			foreach(Collider hitObject in colliders){
+				float hitDistance = Vector3.Distance(hitObject.transform.position, transform.position);
 
-				PlayerDamager playerHit = hitObject.GetComponent<PlayerDamager>();
-				playerHit.DamagePlayer(Damage * hitDistance * invExplosionRadius, direction);
-			}
-			else if (hitObject.tag == "Goliath"){
-				Vector3 direction = hitObject.transform.position - transform.position;
-				
-				GoliathDamager damager = hitObject.GetComponent<GoliathDamager>();
-				damager.DamageGoliath(Damage * hitDistance * invExplosionRadius, direction);
-			}
-			else if (hitObject.tag == "Mine"){
-				Mine mine = hitObject.GetComponent<Mine>();
-				if (!mine.isDetonated){
-					mine.Detonate();
+				if (hitObject.tag == "Enemy"){
+					BotAI enemyhit = hitObject.GetComponent<BotAI>();
+					enemyhit.Damage(Damage * hitDistance * invExplosionRadius);
+				}
+				// Only hit player once
+				else if (hitObject.tag == "Player" && hitObject.name == "jnt_Hip"){
+					Vector3 direction = hitObject.transform.position - transform.position;
+
+					PlayerDamager playerHit = hitObject.GetComponent<PlayerDamager>();
+					playerHit.DamagePlayer(Damage * hitDistance * invExplosionRadius, direction);
+				}
+				else if (hitObject.tag == "Goliath"){
+					Vector3 direction = hitObject.transform.position - transform.position;
+					
+					GoliathDamager damager = hitObject.GetComponent<GoliathDamager>();
+					damager.DamageGoliath(Damage * hitDistance * invExplosionRadius, direction);
+				}
+				else if (hitObject.tag == "Mine"){
+					Mine mine = hitObject.GetComponent<Mine>();
+					if (!mine.isDetonated){
+						mine.Detonate();
+					}
 				}
 			}
 		}
@@ -107,7 +124,6 @@ public class Mine : MonoBehaviour {
 	void AffixToTerrain(Vector3 position){
 		transform.position = position;
 		rigidbody.isKinematic = true;
-		//rigidbody.velocity = Vector3.zero;
 		isFixed = true;
 	}
 
@@ -116,5 +132,14 @@ public class Mine : MonoBehaviour {
 		isFixed = false;
 		countdownTimer = 0;
 		isDetonated = false;
+
+		remoteId = -1;
+		transmitPosition = false;
+	}
+
+	public void SetAffixedPosition(Vector3 position){
+		transform.position = position;
+		rigidbody.isKinematic = true;
+		isFixed = true;
 	}
 }

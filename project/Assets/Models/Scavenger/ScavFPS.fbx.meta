@@ -299,8 +299,8 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Run_AR
       takeName: Take 001
-      firstFrame: 1
-      lastFrame: 15
+      firstFrame: 5
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -559,8 +559,8 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Walk_AR
       takeName: Take 001
-      firstFrame: 16
-      lastFrame: 30
+      firstFrame: 132
+      lastFrame: 146
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

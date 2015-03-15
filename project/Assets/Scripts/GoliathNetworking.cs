@@ -21,6 +21,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	public PoolManager playerMineManager;
 	public PoolManager playerBulletManager;
+	public PoolManager playerMineExplosionManager;
 	
 	public PoolManager minionManager;
 	public PoolManager minionBulletManager;
@@ -167,9 +168,41 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	
 	// Projectile RPC
 	[RPC]
-	public void CreateMine(){
+	public void CreateMine(int creatorId, Vector3 position, Vector3 direction){
+		GameObject projectile = playerBulletManager.Retrieve(position);
+		
+		Mine mineScript;
+		if (mineScript = projectile.GetComponent<Mine>()){
+			mineScript.explosionPool = playerMineExplosionManager;
+			mineScript.goliathNetworker = this;
+			mineScript.remoteId = creatorId;
+			projectile.transform.position += direction * 2;
+			projectile.rigidbody.AddForce(direction * 1000);
 
+			mineScript.isAvatar = true;
+		}
+
+		photonView.RPC ("SetMineID", PhotonTargets.All, creatorId, mineScript.pooled.index);
 	}
+
+	[RPC]
+	public void AffixMine(int networkId, Vector3 position){
+		if (networkId >= 0 && networkId < playerMineManager.transform.childCount){
+			Mine mineScript = playerMineManager.transform.GetChild(networkId).GetComponent<Mine>();
+			mineScript.SetAffixedPosition(position);
+		}
+	}
+
+	[RPC]
+	public void DetonateMine(int networkId){
+		if (networkId >= 0 && networkId < playerMineManager.transform.childCount){
+			Mine mineScript = playerMineManager.transform.GetChild(networkId).GetComponent<Mine>();
+			mineScript.Detonate();
+		}
+	}
+
+	[RPC]
+	public void SetMineID(int creatorId, int networkId){}
 	
 	[RPC]
 	public void CreateMinionBullet(){
@@ -181,7 +214,6 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		GameObject projectile = playerBulletManager.Retrieve(position);
 
 		Bullet bulletScript;
-		Mine mineScript;
 		if (bulletScript = projectile.GetComponent<Bullet>()){
 			// Setting bullet properties
 			bulletScript.setProperties(damage, direction, speed, bulletHoleManager);

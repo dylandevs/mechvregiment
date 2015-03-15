@@ -84,6 +84,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
+	void DamageGoliath(float damage, Vector3 direction){}
+
+	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	// Player RPC
@@ -129,7 +132,26 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	// Projectile RPC
 	[RPC]
-	public void CreateMine(){}
+	public void CreateMine(int creatorId, Vector3 position, Vector3 direction){}
+
+	[RPC]
+	public void AffixMine(int networkId, Vector3 position){}
+
+	[RPC]
+	public void DetonateMine(int networkId){}
+
+	[RPC]
+	public void SetMineID(int creatorId, int networkId){
+		if (creatorId >= 0 && creatorId < playerMineManager.transform.childCount){
+			Mine mineScript = playerMineManager.transform.GetChild(networkId).GetComponent<Mine>();
+			mineScript.remoteId = networkId;
+
+			// Fix position
+			if (!mineScript.gameObject.GetActive() || mineScript.isDetonated){
+				photonView.RPC ("DetonateMine", PhotonTargets.All, networkId);
+			}
+		}
+	}
 
 	[RPC]
 	public void CreateMinionBullet(){}
