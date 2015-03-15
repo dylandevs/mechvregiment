@@ -23,6 +23,7 @@ public class MinionAvatar : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		pool = transform.parent.GetComponent<PoolManager>();
 		lastSyncPos = transform.position;
 		nextSyncPos = transform.position;
 		lastSyncRot = transform.rotation;
