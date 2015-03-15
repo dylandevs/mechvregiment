@@ -210,8 +210,7 @@ public class BotAI : MonoBehaviour {
 		}
 		else{
 			pool.Deactivate(gameObject);
-
-
+			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 		}
 	}
 
@@ -333,7 +332,6 @@ public class BotAI : MonoBehaviour {
 		}
 
 		state = newState;
-		pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 	}
 
 	bool IsSightUnobstructed(GameObject subject){
@@ -565,7 +563,6 @@ public class BotAI : MonoBehaviour {
 
 		// Schedule bot for death
 		if (health <= 0){
-			//Destroy (gameObject);
 			isDead = true;
 		}
 
