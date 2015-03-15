@@ -341,14 +341,12 @@ public class Weapon : MonoBehaviour {
 						Vector3 tracerDirection = rayHit.point - generatorPos.transform.position;
 						Vector3 tracerPos = generatorPos.transform.position;
 
-						untilNextTracer = TracerInterval;
 						GameObject tracer = tracerPool.Retrieve(tracerPos);
 						tracer.transform.forward = tracerDirection;
 						tracer.layer = generatorPos.layer;
+						player.networkManager.photonView.RPC("CreatePlayerTracer", PhotonTargets.All, tracerPos, tracerDirection);
 
 						untilNextTracer = TracerInterval;
-
-						player.networkManager.photonView.RPC("CreatePlayerTracer", PhotonTargets.All, tracerPos, tracerDirection);
 					}
 				}
 				untilNextTracer--;
@@ -357,10 +355,13 @@ public class Weapon : MonoBehaviour {
 			else{
 				if (TracerInterval > 0 && tracerPool){
 					if (untilNextTracer == 0){
-						untilNextTracer = TracerInterval;
-						GameObject tracer = tracerPool.Retrieve(generatorPos.transform.position);
-						tracer.transform.forward = (controller.facing * 100 + player.playerCam.transform.position) - generatorPos.transform.position;
+						Vector3 tracerDirection = (controller.facing * 100 + player.playerCam.transform.position) - generatorPos.transform.position;
+						Vector3 tracerPos = generatorPos.transform.position;
+
+						GameObject tracer = tracerPool.Retrieve(tracerPos);
+						tracer.transform.forward = tracerDirection;
 						tracer.layer = generatorPos.layer;
+						player.networkManager.photonView.RPC("CreatePlayerTracer", PhotonTargets.All, tracerPos, tracerDirection);
 
 						untilNextTracer = TracerInterval;
 					}

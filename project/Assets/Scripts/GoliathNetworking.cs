@@ -25,6 +25,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public PoolManager playerMineExplosionManager;
 	
 	public PoolManager minionManager;
+	private MinionAvatar[] minionAvatars;
+	private bool minionScriptsRetrieved = false;
 	public PoolManager minionBulletManager;
 
 	public PoolManager bulletHoleManager;
@@ -47,6 +49,18 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 //UPDATE
 
 	void Update () {
+		if (!minionScriptsRetrieved){
+			minionAvatars = new MinionAvatar[minionManager.transform.childCount];
+			for (int i = 0; i < minionManager.transform.childCount; i++){
+				minionAvatars[i] = minionManager.transform.GetChild(i).GetComponent<MinionAvatar>();
+				if (minionAvatars[i].gameObject.GetActive()){
+					minionAvatars[i].remoteId = i;
+				}
+			}
+
+			minionScriptsRetrieved = true;
+		}
+
 		sendTimer -= Time.deltaTime;
 
 		if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
@@ -156,16 +170,22 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	// Minion RPC
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
-		Transform minionWrapper = minionManager.transform;
-
-		if (minionNum >= 0 && minionNum < minionWrapper.childCount){
-			MinionAvatar avatar = minionManager.transform.GetChild(minionNum).GetComponent<MinionAvatar>();
-			// TODO: minion props
+		if (minionNum >= 0 && minionNum < minionAvatars.Length){
+			minionAvatars[minionNum].SetNextTargetTransform(newPos, newRot, currVelocity);
 		}
 	}
 	
 	[RPC]
 	public void ApplyMinionDamage(int minionNum, float damage){}
+
+	[RPC]
+	public void DestroyMinion(int networkId){
+		if (networkId >= 0 && networkId < minionAvatars.Length){
+			if (minionAvatars[networkId].gameObject.GetActive()){
+				minionAvatars[networkId].Kill();
+			}
+		}
+	}
 	
 	// Projectile RPC
 	[RPC]

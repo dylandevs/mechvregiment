@@ -8,6 +8,10 @@ public class PoolManager : MonoBehaviour {
 	public bool retainLocal = false;
 	public GameObject prefabObject;
 
+	// Networking
+	public PlayerNetSend scavNetworker = null;
+	public GoliathNetworking goliathNetworker = null;
+
 	private List<GameObject> inactiveObjectPool = new List<GameObject>();
 	private List<GameObject> activeObjectPool = new List<GameObject>();
 	private List<GameObject> temporaryObjectPool = new List<GameObject>();
@@ -29,6 +33,13 @@ public class PoolManager : MonoBehaviour {
 			if (pooledScript = child.GetComponent<Pooled>() as Pooled){
 				pooledScript.index = poolCounter;
 				poolCounter++;
+
+				if (scavNetworker){
+					pooledScript.scavNetworker = scavNetworker;
+				}
+				if (goliathNetworker){
+					pooledScript.goliathNetworker = goliathNetworker;
+				}
 			}
 		}
 
