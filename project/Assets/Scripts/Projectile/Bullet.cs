@@ -7,12 +7,16 @@ public class Bullet : MonoBehaviour {
 	public Vector3 velocity = Vector3.zero;
 	Vector3 lastPos = Vector3.zero;
 	float life = 3.0f;
+	public float LifeSpan = 3;
 
 	public Player playerSource = null;
 	public LayerMask shootableLayer;
 
 	PoolManager pool;
 	PoolManager bulletMarkPool;
+
+	// For networked object behaviour
+	public bool isAvatar = false;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +27,7 @@ public class Bullet : MonoBehaviour {
 		damage = baseDamage;
 		velocity = direction.normalized * speed;
 		rigidbody.velocity = direction.normalized * speed;
-		life = 3;
+		life = LifeSpan;
 		bulletMarkPool = markPool;
 		lastPos = transform.position;
 	}
@@ -64,28 +68,34 @@ public class Bullet : MonoBehaviour {
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
-					PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
-					playerHit.DamagePlayer(damage, velocity);
-					if (playerSource){
-						playerSource.TriggerHitMarker();
-						playerSource = null;
+					if (!isAvatar){
+						PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
+						playerHit.DamagePlayer(damage, velocity);
+						if (playerSource){
+							playerSource.TriggerHitMarker();
+							playerSource = null;
+						}
 					}
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){
-					BotAI botHit = rayHit.collider.GetComponent<BotAI>();
+					if (!isAvatar){
+						BotAI botHit = rayHit.collider.GetComponent<BotAI>();
 
-					if (playerSource){
-						botHit.Damage(damage, playerSource);
-						playerSource.TriggerHitMarker();
-						playerSource = null;
-					}
-					else{
-						botHit.Damage(damage);
+						if (playerSource){
+							botHit.Damage(damage, playerSource);
+							playerSource.TriggerHitMarker();
+							playerSource = null;
+						}
+						else{
+							botHit.Damage(damage);
+						}
 					}
 				}
 				else if (rayHit.collider.gameObject.tag == "Goliath"){
-					GoliathDamager damager = rayHit.transform.GetComponent<GoliathDamager>();
-					damager.DamageGoliath(damage, velocity);
+					if (!isAvatar){
+						GoliathDamager damager = rayHit.transform.GetComponent<GoliathDamager>();
+						damager.DamageGoliath(damage, velocity);
+					}
 				}
 				return true;
 			}

@@ -278,7 +278,7 @@ public class Weapon : MonoBehaviour {
 		
 		// Either generate physical bullet or just have raycast
 		if (PhysicalAmmo){
-			GameObject projectile = projectilePool.Retrieve(bulletOrigin, Quaternion.identity);
+			GameObject projectile = projectilePool.Retrieve(bulletOrigin);
 
 			Bullet bulletScript;
 			Mine mineScript;
@@ -287,6 +287,8 @@ public class Weapon : MonoBehaviour {
 				bulletScript.setProperties(Damage, bulletDirection, BulletSpeed, impactPool);
 				bulletScript.playerSource = player;
 				bulletScript.shootableLayer = player.shootableLayer;
+
+				player.networkManager.photonView.RPC("CreatePlayerBullet", PhotonTargets.All, Damage, bulletOrigin, BulletSpeed, bulletDirection);
 			}
 			else if (mineScript = projectile.GetComponent<Mine>()){
 				mineScript.playerSource = player;
