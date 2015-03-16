@@ -39,7 +39,7 @@ public class ControllerScript : MonoBehaviour {
 	private GamePadState prevState;
 
 	// Inputs
-	public GameObject playerCam;
+	private GameObject playerCam;
 	public Player player;
 	private Animator anim;
 	private Animator fpsAnim;
@@ -112,6 +112,8 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		playerCam = cameraAnim.gameObject;
+
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
@@ -562,6 +564,7 @@ public class ControllerScript : MonoBehaviour {
 
 	// Sets facing according to input
 	public void SetFacing(Vector3 newFacing){
+		cameraOffset = playerCam.transform.localPosition;
 		facing = newFacing;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 		transform.LookAt(transform.position + facing2D);

@@ -13,6 +13,7 @@ public class TracerRoundScript : MonoBehaviour {
 	public PoolManager sparkPool;
 
 	public GameObject spark;
+	public bool isAvatar = false;
 
 	// Use this for initialization
 	void Start () {
@@ -41,7 +42,7 @@ public class TracerRoundScript : MonoBehaviour {
 		{
 			Vector3 hitInfoFirePoint = hitInfoFire.point;
 			//if graphic is there apply a bullet decal
-			
+
 			if (hitInfoFire.collider.tag != "Player") {
 				//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
 				//and add a remaining bullet hole
@@ -49,7 +50,7 @@ public class TracerRoundScript : MonoBehaviour {
 				spark.transform.up = hitInfoFire.transform.up;
 			}
 			
-			if(hitInfoFire.collider.tag == "Player"){
+			if(hitInfoFire.collider.tag == "Player" && !isAvatar){
 				GameObject hitPlayer = hitInfoFire.collider.gameObject;
 				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 				hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);

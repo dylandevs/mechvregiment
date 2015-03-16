@@ -18,6 +18,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public PoolManager minionBulletManager;
 
 	public GoliathAvatar goliath;
+	public PoolManager goliathTracerManager;
+	public PoolManager goliathSparksManager;
+	public PoolManager goliathMuzzleFlashManager;
+	public PoolManager goliathPlasmaManager;
+	public PoolManager PlasmaExplosionManager;
+	public PoolManager goliathMeteorManager;
+	public PoolManager goliathMeteorExplosionManager;
 
 	// Use this for initialization
 	void Start () {
@@ -98,6 +105,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	void DamageGoliath(float damage, Vector3 direction){}
+
+	[RPC]
+	public void CreateGoliathTracer(Vector3 position, Vector3 direction){
+		GameObject tracer = goliathTracerManager.Retrieve(position);
+		tracer.transform.up = direction;
+
+		TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
+		tracerRound.sparkPool = goliathSparksManager;
+
+		GameObject flash = goliathMuzzleFlashManager.Retrieve(position);
+		flash.transform.up = direction;
+	}
 
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}

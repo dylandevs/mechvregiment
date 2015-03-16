@@ -46,6 +46,8 @@ public class MinigunFirer : MonoBehaviour {
 	public AudioSource minigunWhirEmitter;
 	public AudioSource minigunBulletEmitter;
 
+	public GoliathNetworking networkManager;
+
 	// Use this for initialization
 	void Start () {
 		overHeat = 0;
@@ -193,6 +195,8 @@ public class MinigunFirer : MonoBehaviour {
 			//play bullet noise
 			minigunBulletEmitter.pitch = 1f - (Random.value * 0.1f);
 			minigunBulletEmitter.PlayScheduled(AudioSettings.dspTime);
+
+			networkManager.photonView.RPC ("CreateGoliathTracer", PhotonTargets.All, tracerStart.transform.position, tempStart);
 		}
 
 		Ray rayCannon = new Ray(cannonShotStart.transform.position, cannonShotStart.transform.forward);

@@ -107,6 +107,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		mechHealth.takeDamage(damage,direction);
 	}
 
+	[RPC]
+	public void CreateGoliathTracer(Vector3 position, Vector3 direction){}
+
 	// Player RPC
 	[RPC]
 	public void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
