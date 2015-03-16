@@ -159,7 +159,7 @@ public class mechMovement : MonoBehaviour {
 			//bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
 			//bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 		}
-		else print("disabled");
+		else
 		/*
 		if(mechHealth >=1){
 			//if a key is pushed move the location of the mech

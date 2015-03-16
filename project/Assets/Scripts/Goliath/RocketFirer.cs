@@ -5,7 +5,7 @@ public class RocketFirer : MonoBehaviour {
 	public GameObject rocketStart;
 	public GameObject target;
 
-	const int RocketNumber = 6;
+	const int RocketNumber = 35;
 
 	public const float RocketDelay = 0.5f;
 	public float rocketDelayTimer = 0;
@@ -20,14 +20,7 @@ public class RocketFirer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (rocketDelayTimer > 0){
-			rocketDelayTimer -= Time.deltaTime;
-
-			if (rocketDelayTimer <= 0){
 				firingMyRockets();
-			}
-		}
-
 	}
 
 	public void firingMyRockets(){
@@ -38,7 +31,7 @@ public class RocketFirer : MonoBehaviour {
 			Quaternion startRot = Quaternion.Euler (90, 0, 0);
 
 			//spawn them a little off center
-			Vector3 rocketLaunch = rocketStart.transform.position += new Vector3 (Random.Range (-10F, 10F), Random.Range (1F, 50F), Random.Range (-10F, 10F));
+			Vector3 rocketLaunch = rocketStart.transform.position + new Vector3 (Random.Range (-20F, 20F), Random.Range (50F, 1000F), Random.Range (-20F, 20F));
 			GameObject currentRocket = rocketPool.Retrieve(rocketLaunch, startRot);
 
 			RocketScript rocketScript = currentRocket.GetComponent<RocketScript>();

@@ -93,7 +93,7 @@ public class RocketScript : MonoBehaviour {
 	}
 
 	public void SetTarget(Vector3 newTarget){
-		mustHit = newTarget + new Vector3 (Random.Range (-10F, 10F), 0, Random.Range (-10F, 10F));
+		mustHit = newTarget + new Vector3 (Random.Range (-35F, 35F), 0, Random.Range (-35F, 35F));
 	}
 
 	void Detonate()
@@ -102,7 +102,7 @@ public class RocketScript : MonoBehaviour {
 		this.GetComponent<AudioSource>().Stop();
 		explosionEmitter.Play();
 
-		destroyDelay = 5f;
+		destroyDelay = 7f;
 
 
 		//hurts whats near the boom depending on a overlap sphere function
