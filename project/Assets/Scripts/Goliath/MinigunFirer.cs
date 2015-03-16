@@ -261,6 +261,8 @@ public class MinigunFirer : MonoBehaviour {
 				//play cannon fire audio
 				cannonSoundEmitter.PlayScheduled(AudioSettings.dspTime);
 				cannonRechargeEmitter.PlayScheduled(AudioSettings.dspTime+0.5f);
+
+				networkManager.photonView.RPC ("CreateGoliathPlasma", PhotonTargets.All, cannonShotStart.transform.position, shotDir);
 			}
 		}
 	}// end of update//

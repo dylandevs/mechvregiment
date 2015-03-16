@@ -15,6 +15,8 @@ public class cannonShot : MonoBehaviour {
 	public Vector3 explosionLocation;
 	public Vector3 remainsLocation;
 
+	public bool isAvatar = false;
+
 	int layerMask = 1 << 3;
 
 	float timer;
@@ -81,30 +83,29 @@ public class cannonShot : MonoBehaviour {
 				explode2.emit = false;
 				waitOutTimer = 4;
 
-				//hurts whats near the boom depending on a overlap sphere function
-				Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
-				foreach (Collider c in colliders) 
-				{
-					if(c.gameObject.collider.tag == "Player"){
-						float dist = Vector3.Distance(transform.position, c.transform.position);
-						float damageRatio = 1f - (dist / explosionRadius);
-						float damageAmnt = damage * damageRatio;
-						// a bit iffy on this direction calculation
-						Vector3 direction = transform.position - c.transform.position;
+				if (!isAvatar){
+					//hurts whats near the boom depending on a overlap sphere function
+					Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
+					foreach (Collider c in colliders) 
+					{
+						if(c.gameObject.collider.tag == "Player"){
+							float dist = Vector3.Distance(transform.position, c.transform.position);
+							float damageRatio = 1f - (dist / explosionRadius);
+							float damageAmnt = damage * damageRatio;
+							// a bit iffy on this direction calculation
+							Vector3 direction = transform.position - c.transform.position;
 
-						GameObject hitPlayer = c.collider.gameObject;
-						if (hitPlayer){
-							PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+							GameObject hitPlayer = c.collider.gameObject;
+							if (hitPlayer){
+								PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 
-							if (hitPlayerScript){
-								hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.forward);
+								if (hitPlayerScript){
+									hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.forward);
+								}
+								else{}
 							}
-							else{
-							}
+							else{}
 						}
-						else{
-						}
-
 					}
 				}
 			}

@@ -110,6 +110,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	[RPC]
 	public void CreateGoliathTracer(Vector3 position, Vector3 direction){}
 
+	[RPC]
+	public void CreateGoliathPlasma(Vector3 position, Quaternion rotation){}
+
 	// Player RPC
 	[RPC]
 	public void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){

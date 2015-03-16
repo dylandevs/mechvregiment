@@ -22,7 +22,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public PoolManager goliathSparksManager;
 	public PoolManager goliathMuzzleFlashManager;
 	public PoolManager goliathPlasmaManager;
-	public PoolManager PlasmaExplosionManager;
+	public PoolManager goliathPlasmaExplosionManager;
 	public PoolManager goliathMeteorManager;
 	public PoolManager goliathMeteorExplosionManager;
 
@@ -113,9 +113,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 		TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
 		tracerRound.sparkPool = goliathSparksManager;
+		tracerRound.isAvatar = true;
 
 		GameObject flash = goliathMuzzleFlashManager.Retrieve(position);
 		flash.transform.up = direction;
+	}
+
+	[RPC]
+	public void CreateGoliathPlasma(Vector3 position, Quaternion rotation){
+		GameObject plasma = goliathPlasmaManager.Retrieve(position, rotation);
+
+		cannonShot plasmaScript = plasma.GetComponent<cannonShot>();
+		plasmaScript.plasmaExplodePool = goliathPlasmaExplosionManager;
 	}
 
 	[RPC]
