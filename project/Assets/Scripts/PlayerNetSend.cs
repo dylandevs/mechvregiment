@@ -128,6 +128,15 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
+	public void CreateGoliathMeteor(Vector3 position, Vector3 target){
+		GameObject meteor = goliathMeteorManager.Retrieve(position);
+		
+		RocketScript meteorScript = meteor.GetComponent<RocketScript>();
+		meteorScript.SetTarget(target);
+		meteorScript.explosionPool = goliathMeteorExplosionManager;
+	}
+	
+	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
 	// Player RPC

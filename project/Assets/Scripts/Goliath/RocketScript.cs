@@ -32,6 +32,8 @@ public class RocketScript : MonoBehaviour {
 	float turnTimer;
 	bool hitGround;
 
+	public bool isAvatar = false;
+
 	void Start(){
 		pool = transform.parent.GetComponent<PoolManager>();
 	}
@@ -104,26 +106,26 @@ public class RocketScript : MonoBehaviour {
 
 		destroyDelay = 7f;
 
+		if (!isAvatar){
 
-		//hurts whats near the boom depending on a overlap sphere function
-		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
-		foreach (Collider c in colliders) 
-		{
+			//hurts whats near the boom depending on a overlap sphere function
+			Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
+			foreach (Collider c in colliders) 
+			{
 
-			if(c.gameObject.collider.tag == "Player"){
+				if(c.gameObject.collider.tag == "Player"){
 
-				float dist = Vector3.Distance(transform.position, c.transform.position);
-				float damageRatio = 1f - (dist / explosionRadius);
-				float damageAmnt = damage * damageRatio;
-				// a bit iffy on this direction calculation
-				Vector3 direction = transform.position - c.transform.position;
-				
-				GameObject hitPlayer = c.collider.gameObject;
-				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
-				hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
+					float dist = Vector3.Distance(transform.position, c.transform.position);
+					float damageRatio = 1f - (dist / explosionRadius);
+					float damageAmnt = damage * damageRatio;
+					// a bit iffy on this direction calculation
+					Vector3 direction = transform.position - c.transform.position;
+					
+					GameObject hitPlayer = c.collider.gameObject;
+					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+					hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
+				}
 			}
-
-
 		}
 	}
 }

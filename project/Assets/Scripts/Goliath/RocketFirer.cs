@@ -12,6 +12,7 @@ public class RocketFirer : MonoBehaviour {
 
 	public PoolManager rocketPool;
 	public PoolManager explosionPool;
+	public GoliathNetworking networkManager;
 	
 
 	// Use this for initialization
@@ -38,7 +39,7 @@ public class RocketFirer : MonoBehaviour {
 			rocketScript.SetTarget(target.transform.position);
 			rocketScript.explosionPool = explosionPool;
 
+			networkManager.photonView.RPC ("CreateGoliathMeteor", PhotonTargets.All, rocketLaunch, target.transform.position);
 		}
-
 	}
 }
