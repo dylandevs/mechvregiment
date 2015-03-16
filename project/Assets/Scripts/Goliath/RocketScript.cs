@@ -22,6 +22,8 @@ public class RocketScript : MonoBehaviour {
 	//audio for explosion
 	public AudioSource explosionEmitter;
 
+	public LayerMask mask;
+
 	PoolManager pool;
 	public PoolManager explosionPool;
 
@@ -104,7 +106,7 @@ public class RocketScript : MonoBehaviour {
 
 
 		//hurts whats near the boom depending on a overlap sphere function
-		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
+		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
 		foreach (Collider c in colliders) 
 		{
 
