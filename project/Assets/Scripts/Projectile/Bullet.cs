@@ -15,6 +15,8 @@ public class Bullet : MonoBehaviour {
 	PoolManager pool;
 	PoolManager bulletMarkPool;
 
+	private bool toDeactivate = false;
+
 	// For networked object behaviour
 	public bool isAvatar = false;
 
@@ -27,28 +29,37 @@ public class Bullet : MonoBehaviour {
 		damage = baseDamage;
 		velocity = direction.normalized * speed;
 		rigidbody.velocity = direction.normalized * speed;
-		life = LifeSpan;
 		bulletMarkPool = markPool;
-		lastPos = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (!toDeactivate){
+			// Decrease life
+			life -= Time.deltaTime;
+			if (life <= 0){
+				rigidbody.velocity = Vector3.zero;
+				toDeactivate = true;
+				particleEmitter.emit = false;
+			}
 
-		// Decrease life
-		life -= Time.deltaTime;
-		if (life <= 0){
-			pool.Deactivate(gameObject);
+			// Check for collisions
+			bool collisionFound = checkForwardCollision();
+
+			// Move forward (remember position)
+			lastPos = transform.position;
+
+			if (collisionFound) {
+				rigidbody.velocity = Vector3.zero;
+				toDeactivate = true;
+				particleEmitter.emit = false;
+			}
 		}
-
-		// Check for collisions
-		bool collisionFound = checkForwardCollision();
-
-		// Move forward (remember position)
-		lastPos = transform.position;
-
-		if (collisionFound) {
-			pool.Deactivate(gameObject);
+		else{
+			// Allow trail to fade out
+			if (particleEmitter.particleCount == 0){
+				pool.Deactivate(gameObject);
+			}
 		}
 	}
 
@@ -66,6 +77,7 @@ public class Bullet : MonoBehaviour {
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
 					GameObject mark = bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
 					mark.GetComponent<BulletHoleBehaviour>().Initialize();
+					mark.transform.localScale = mark.transform.localScale * 2;
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					if (!isAvatar){
@@ -110,6 +122,9 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		playerSource = null;
+		life = LifeSpan;
+		lastPos = transform.position;
+		toDeactivate = false;
+		particleEmitter.emit = true;
 	}
 }
