@@ -286,6 +286,7 @@ public class Weapon : MonoBehaviour {
 				// Setting bullet properties
 				bulletScript.setProperties(Damage, bulletDirection, BulletSpeed, impactPool);
 				bulletScript.playerSource = player;
+				projectile.transform.position += bulletDirection * 2;
 				bulletScript.shootableLayer = player.shootableLayer;
 
 				player.networkManager.photonView.RPC("CreatePlayerBullet", PhotonTargets.All, Damage, bulletOrigin, BulletSpeed, bulletDirection);

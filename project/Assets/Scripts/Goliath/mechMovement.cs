@@ -70,13 +70,37 @@ public class mechMovement : MonoBehaviour {
 			damageIndicatorRight.SetActive(false);
 		}
 
-		//Updating the joystick input
-		lStickX = SixenseInput.Controllers[left].JoystickX;
-		lStickY = SixenseInput.Controllers[left].JoystickY;
-		
-		rStickX = SixenseInput.Controllers[right].JoystickX;
-		rStickY = SixenseInput.Controllers[right].JoystickY;
-
+		if (SixenseInput.Controllers[left] != null){
+			//Updating the joystick input
+			lStickX = SixenseInput.Controllers[left].JoystickX;
+			lStickY = SixenseInput.Controllers[left].JoystickY;
+			
+			rStickX = SixenseInput.Controllers[right].JoystickX;
+			rStickY = SixenseInput.Controllers[right].JoystickY;
+		}
+		else{
+			rStickX = 0;
+			lStickY = 0;
+			rStickY = 0;
+			if (Input.GetKey(KeyCode.W)){
+				lStickY = 1;
+			}
+			if (Input.GetKey(KeyCode.S)){
+				lStickY = -1;
+			}
+			if (Input.GetKey(KeyCode.A)){
+				rStickX = -1;
+			}
+			if (Input.GetKey(KeyCode.D)){
+				rStickX = 1;
+			}
+			if (Input.GetKey(KeyCode.Q)){
+				rStickY = -1;
+			}
+			if (Input.GetKey(KeyCode.E)){
+				rStickY = 1;
+			}
+		}
 
 		bool isMoving = false;
 		Quaternion currRot = topHalfY.transform.localRotation;

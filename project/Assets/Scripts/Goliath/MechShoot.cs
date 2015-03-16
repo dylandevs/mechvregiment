@@ -70,6 +70,8 @@ public class MechShoot : MonoBehaviour {
 	public AudioSource cannonSoundEmitter;
 	public AudioSource aiDirectorEmitter;
 
+	public GoliathNetworking networkManager;
+
 	float shootTimer;
 	float missleRetTimer;
 
@@ -117,32 +119,36 @@ public class MechShoot : MonoBehaviour {
 
 		}
 
+		float lTrig = 0;
+		float rTrig = 0;
 
-		//All hydra butons and uses
-		float lTrig = SixenseInput.Controllers[left].Trigger;
-		float rTrig = SixenseInput.Controllers[right].Trigger;
+		if (SixenseInput.Controllers[left] != null){
+			//All hydra butons and uses
+			lTrig = SixenseInput.Controllers[left].Trigger;
+			rTrig = SixenseInput.Controllers[right].Trigger;
 
-		//hydra mode handling
-		if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE)){
-			resetModes();
-			rocketMode = true;
+			//hydra mode handling
+			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE)){
+				resetModes();
+				rocketMode = true;
+			}
+			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE)){
+				resetModes();
+				minionMode = true;
+			}
+			if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE)){
+				resetModes();
+				miniGunMode = true;
+			}
+			if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE)){
+				resetModes();
+				miniGunMode = true;
+			}
 		}
-		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE)){
-			resetModes();
-			minionMode = true;
-		}
-		if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE)){
-			resetModes();
-			miniGunMode = true;
-		}
-		if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE)){
-			resetModes();
-			miniGunMode = true;
-		}
+		else {
 
 		//MODE HANDLING for keyboard************************
-		/*
-		if(keyboard == true){
+
 			if (Input.GetKeyDown ("1")) {
 				resetModes();
 				rocketMode = true;
@@ -159,9 +165,16 @@ public class MechShoot : MonoBehaviour {
 				resetModes();
 				miniGunMode = true;
 			}
-		}
-		*/
+
+			if (Input.GetKey(KeyCode.Mouse0)){
+				lTrig = 1;
+			}
+			if (Input.GetKey(KeyCode.Mouse1)){
+				rTrig = 1;
+			}
+
 		//END OF KEYBOARD CONTROLS
+		}
 
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
@@ -273,14 +286,16 @@ public class MechShoot : MonoBehaviour {
 					miniGunFirer.fire = true;
 				}
 				*/
-				if(Input.GetKeyDown("g")){
+				/*if(Input.GetKeyDown("g")){
 					shootTimer = 1f;
 					miniGunFirer.cannonShoot = true;
 					pilotAnimator.SetBool(cannonIdle,false);
 					pilotAnimator.SetBool(cannonFire,true);
 					//play cannon fire audio
 					cannonSoundEmitter.PlayScheduled(AudioSettings.dspTime);
-				}/*
+				}*/
+
+			/*
 				if(Input.GetKeyUp(KeyCode.LeftControl)){
 					miniGunFirer.cannonShoot = false;
 				}
