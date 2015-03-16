@@ -4,6 +4,7 @@ using System.Collections;
 public class miniMapIconScript : MonoBehaviour {
 
 	public float life;
+	public SpriteRenderer sprite;
 	// Use this for initialization
 	void Start () {
 	
@@ -18,9 +19,9 @@ public class miniMapIconScript : MonoBehaviour {
 		if(life < 0){
 			gameObject.SetActive(false);
 		}
-		Color tempColour = gameObject.renderer.material.color;
+		Color tempColour =sprite.color ;
 		tempColour.a = life/2f;
-		gameObject.renderer.material.color = tempColour;
+		sprite.color = tempColour;
 
 	}
 
