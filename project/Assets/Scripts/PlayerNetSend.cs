@@ -93,7 +93,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){
-		goliath.SetNextTargetTransform(topPos, topRot, botPos, botRot, botVel, spineRot, shoulderLRot, shoulderLRot);
+		goliath.SetNextTargetTransform(topPos, topRot, botPos, botRot, botVel, spineRot, shoulderRRot, shoulderLRot);
 	}
 
 	[RPC]
