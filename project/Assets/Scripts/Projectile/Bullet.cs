@@ -95,6 +95,11 @@ public class Bullet : MonoBehaviour {
 					if (!isAvatar){
 						GoliathDamager damager = rayHit.transform.GetComponent<GoliathDamager>();
 						damager.DamageGoliath(damage, velocity);
+
+						if (playerSource){
+							playerSource.TriggerHitMarker();
+							playerSource = null;
+						}
 					}
 				}
 				return true;

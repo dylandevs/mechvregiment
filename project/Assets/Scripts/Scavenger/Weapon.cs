@@ -330,6 +330,7 @@ public class Weapon : MonoBehaviour {
 				else if (rayHit.collider.gameObject.tag == "Goliath"){
 					GoliathDamager damager = rayHit.transform.GetComponent<GoliathDamager>();
 					damager.DamageGoliath(Damage, bulletDirection);
+					player.TriggerHitMarker();
 
 					// Create explosion/spark
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);

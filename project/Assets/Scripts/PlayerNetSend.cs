@@ -134,6 +134,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		RocketScript meteorScript = meteor.GetComponent<RocketScript>();
 		meteorScript.SetTarget(target);
 		meteorScript.explosionPool = goliathMeteorExplosionManager;
+		meteorScript.isAvatar = true;
 	}
 	
 	[RPC]
