@@ -58,7 +58,7 @@ public class ControllerScript : MonoBehaviour {
 	int crouchHash = Animator.StringToHash ("Crouching");
 	int weaponHash = Animator.StringToHash ("WeaponNum");
 	int changeWeapHash = Animator.StringToHash ("ChangeWeapon");
-	
+
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
 
@@ -555,6 +555,9 @@ public class ControllerScript : MonoBehaviour {
 
 	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
+
+		cameraAnim.SetBool(crouchHash, isCrouching);
+		gunCamAnim.SetBool(crouchHash, isCrouching);
 	}
 
 	// Sets facing according to input

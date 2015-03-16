@@ -201,6 +201,8 @@ public class Player : MonoBehaviour {
 
 			health = Mathf.Max (health, 0);
 
+			print (initializer.Layer + " " + damage + ":" + health);
+
 			display.IndicateDamageDirection (direction);
 			display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 
