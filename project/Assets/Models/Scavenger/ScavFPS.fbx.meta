@@ -119,6 +119,13 @@ ModelImporter:
     100226: //RootNode
     100228: SpineClusterGRP
     100230: WEAPONS
+    100232: AR
+    100234: AR_Body
+    100236: AR_Mag
+    100238: Artifact
+    100240: bullet
+    100242: Handle
+    100244: MAG_LH
     400000: Ar_Body
     400002: AR_Weapon
     400004: Body
@@ -235,6 +242,13 @@ ModelImporter:
     400226: //RootNode
     400228: SpineClusterGRP
     400230: WEAPONS
+    400232: AR
+    400234: AR_Body
+    400236: AR_Mag
+    400238: Artifact
+    400240: bullet
+    400242: Handle
+    400244: MAG_LH
     2300000: Ar_Body
     2300002: bullet:bullet
     2300004: crystal
@@ -246,6 +260,11 @@ ModelImporter:
     2300016: pistolMag
     2300018: pistolMag 1
     2300020: pTorus2
+    2300022: AR_Body
+    2300024: Artifact
+    2300026: bullet
+    2300028: Handle
+    2300030: MAG_LH
     3300000: Ar_Body
     3300002: bullet:bullet
     3300004: crystal
@@ -257,6 +276,11 @@ ModelImporter:
     3300016: pistolMag
     3300018: pistolMag 1
     3300020: pTorus2
+    3300022: AR_Body
+    3300024: Artifact
+    3300026: bullet
+    3300028: Handle
+    3300030: MAG_LH
     4300000: pistolMag
     4300002: Mag_LH
     4300004: bullet:bullet
@@ -269,6 +293,11 @@ ModelImporter:
     4300018: Body
     4300020: crystal
     4300022: pTorus2
+    4300024: Artifact
+    4300026: Handle
+    4300028: MAG_LH
+    4300030: bullet
+    4300032: AR_Body
     7400000: FP_Run_AR
     7400002: Take 0010
     7400004: FP_Walk_AR
