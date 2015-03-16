@@ -17,17 +17,14 @@ public class cannonShot : MonoBehaviour {
 
 	public bool isAvatar = false;
 
-	int layerMask = 1 << 3;
-
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
-	float damage = 25;
+	float damage = 40;
 	float damageDirect = 75;
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
-		layerMask = ~layerMask;
 	}
 	
 	// Update is called once per frame
@@ -60,13 +57,12 @@ public class cannonShot : MonoBehaviour {
 			}
 		}
 
-		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime ,layerMask)) 
+		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime)) 
 		{
 			if(hit.collider.tag == "Player"){
 				GameObject hitPlayer = hit.collider.gameObject;
 				if (hitPlayer){
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
-					
 					if (hitPlayerScript){
 						hitPlayerScript.DamagePlayer(damageDirect,gameObject.transform.forward);
 					}
@@ -105,8 +101,7 @@ public class cannonShot : MonoBehaviour {
 								else{}
 							}
 							else{}
-						}
-					}
+						}					}
 				}
 			}
 		}

@@ -8,7 +8,7 @@ public class RocketFirer : MonoBehaviour {
 	const int RocketNumber = 35;
 
 	public const float RocketDelay = 0.5f;
-	public float rocketDelayTimer = 0;
+	public float rocketDelayTimer = 0f;
 
 	public PoolManager rocketPool;
 	public PoolManager explosionPool;
@@ -21,7 +21,14 @@ public class RocketFirer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(rocketDelayTimer > 0){
+			rocketDelayTimer -= Time.deltaTime;
+
+			if(rocketDelayTimer <= 0){
 				firingMyRockets();
+			}
+		}
+
 	}
 
 	public void firingMyRockets(){

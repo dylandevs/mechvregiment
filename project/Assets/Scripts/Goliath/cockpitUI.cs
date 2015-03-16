@@ -7,13 +7,13 @@ public class cockpitUI : MonoBehaviour {
 	public MinigunFirer minigun;
 	public mechMovement holoVars;
 	public MechShoot mechShoot;
-
+	
 	public GameObject mechHolagram;
 	public GameObject templeShield;
 	public GameObject screens;
 	//Goliath minimap stuffs
-	//100% amke sure they are in the right order
 	public GameObject [] miniMapIndicatorsList;
+	public GameObject[] disabledSparks;
 
 	public Image miniGunImage;
 	public Image miniGunImageOutline;
@@ -154,11 +154,14 @@ public class cockpitUI : MonoBehaviour {
 			mechHolagram.renderer.material.color = tempColour2;
 
 			//add the disabled schtuff and change window texture
-
 			screens.renderer.material.color = Color.grey;
 			Color screenTemp = screens.renderer.material.color;
 			screenTemp.a = 0.5f;
 			screens.renderer.material.color = screenTemp;
+
+			//turn on sparks and shit then off and whatnot
+			int i = Random.Range(0,3);
+			disabledSparks[i].SetActive(true);
 		}
 	}//end of update
 
@@ -177,8 +180,6 @@ public class cockpitUI : MonoBehaviour {
 
 	public void miniMapIndicators(int indicatorNum){
 		float dist = Vector3.Distance(transform.position,miniMapIndicatorsList[indicatorNum].transform.position);
-
-		print(dist);
 
 		if(dist < 50){
 			if(miniMapIndicatorsList[indicatorNum].GetActive() != true){

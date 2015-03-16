@@ -6,8 +6,8 @@ public class RocketScript : MonoBehaviour {
 	public Vector3 target;
 
 	//stuff fr detonation
-	public float damage = 200f;  //damage at center
-	public float explosionRadius = 3f;
+	public float damage = 50f;  //damage at center
+	public float explosionRadius = 10f;
 
 	//public GameObject missleRemains;
 	public ParticleEmitter smokeParticles;
@@ -45,23 +45,11 @@ public class RocketScript : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		//must only do once seems to add consistantly
-		if (destroyDelay > 0){
-			destroyDelay -= Time.deltaTime;
-			if(destroyDelay < 4){
-				smokeParticles.emit = false;
-			}
-			if (destroyDelay <= 0){
-				pool.Deactivate(gameObject);
-			}
-		}
-
 		if(turnTimer > 0){
 			turnTimer -= Time.deltaTime;
 			Vector3 targetDir = mustHit - transform.position;
 			float step = speed * Time.deltaTime;
 			Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
-			Debug.DrawRay(transform.position, newDir, Color.red);
 			transform.rotation = Quaternion.LookRotation(newDir);
 		}
 
@@ -80,8 +68,8 @@ public class RocketScript : MonoBehaviour {
 				hitGround = true;
 				Vector3 explosionPlace = explosionLocation.point;
 				//spawns the Boom
-				explosionPool.Retrieve(explosionPlace);
-				Detonate();
+				GameObject explosion = explosionPool.Retrieve(explosionPlace);
+				Detonate(explosionPlace);
 			}
 		}
 
@@ -98,21 +86,18 @@ public class RocketScript : MonoBehaviour {
 		mustHit = newTarget + new Vector3 (Random.Range (-35F, 35F), 0, Random.Range (-35F, 35F));
 	}
 
-	void Detonate()
+	void Detonate(Vector3 pos)
 	{
 		//stop the audio woosh and play the explosion
 		this.GetComponent<AudioSource>().Stop();
 		explosionEmitter.Play();
 
-		destroyDelay = 7f;
-
 		if (!isAvatar){
 
 			//hurts whats near the boom depending on a overlap sphere function
-			Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
+			Collider[] colliders = Physics.OverlapSphere (pos, explosionRadius,mask);
 			foreach (Collider c in colliders) 
 			{
-
 				if(c.gameObject.collider.tag == "Player"){
 
 					float dist = Vector3.Distance(transform.position, c.transform.position);
