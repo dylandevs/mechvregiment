@@ -133,6 +133,7 @@ public class PlayerAvatar : MonoBehaviour {
 		}
 
 		isDead = true;
+		rigidbody.isKinematic = true;
 	}
 
 	public void TriggerRespawn(){
@@ -141,6 +142,7 @@ public class PlayerAvatar : MonoBehaviour {
 		anim.SetTrigger(resetHash);
 
 		isDead = false;
+		rigidbody.isKinematic = false;
 	}
 
 	public void TriggerReload(){
