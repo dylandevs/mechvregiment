@@ -10,7 +10,7 @@ public class cockpitUI : MonoBehaviour {
 
 	public GameObject mechHolagram;
 	public GameObject templeShield;
-	
+	public GameObject screens;
 	//Goliath minimap stuffs
 	//100% amke sure they are in the right order
 	public GameObject [] miniMapIndicatorsList;
@@ -51,9 +51,10 @@ public class cockpitUI : MonoBehaviour {
 		missleMode = mechShoot.rocketMode;
 		minionMode = mechShoot.minionMode;
 		mechHolagram.transform.Rotate(Vector3.up * Time.deltaTime * 8);
+
+		//minigun mode graphics for weapons
 		if(minigunMode == true){
 			resetImages();
-
 			miniGunImage.gameObject.SetActive(true);
 			miniGunImageOutline.gameObject.SetActive(true);
 			overHeatedImage.gameObject.SetActive(true);
@@ -95,6 +96,7 @@ public class cockpitUI : MonoBehaviour {
 			shieldActive = holoVars.shieldActive;
 		}
 
+		//missle reload effect graphic
 		if(missleMode == true){
 			resetImages();
 
@@ -114,6 +116,7 @@ public class cockpitUI : MonoBehaviour {
 			}
 		}
 
+		//minion mode graphic
 		if(minionMode == true){
 			resetImages();
 			minionModeImage.gameObject.SetActive(true);
@@ -132,13 +135,30 @@ public class cockpitUI : MonoBehaviour {
 			mechHolagram.renderer.material.color = tempColour;
 
 		}
-		else{
+		else if(currMechHealth > 0){
 			float lerpAmnt = currMechHealth / 1000;
 			mechHolagram.renderer.material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
 			Color tempColour = mechHolagram.renderer.material.color;
 			tempColour.a = 0.5f;
 			mechHolagram.renderer.material.color = tempColour;
 
+			screens.renderer.material.color = Color.green;
+			Color screenTemp = screens.renderer.material.color;
+			screenTemp.a = 0f;
+			screens.renderer.material.color = screenTemp;
+		}
+		else if(currMechHealth <= 0){
+			mechHolagram.renderer.material.color = Color.black;
+			Color tempColour2 = mechHolagram.renderer.material.color;
+			tempColour2.a = 0.5f;
+			mechHolagram.renderer.material.color = tempColour2;
+
+			//add the disabled schtuff and change window texture
+
+			screens.renderer.material.color = Color.grey;
+			Color screenTemp = screens.renderer.material.color;
+			screenTemp.a = 0.5f;
+			screens.renderer.material.color = screenTemp;
 		}
 	}//end of update
 

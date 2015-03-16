@@ -134,7 +134,7 @@ public class mechMovement : MonoBehaviour {
 		}
 		topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
 
-		if(mechHealth >=1){
+		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
 			currVel.x = 0;
 			currVel.z = 0;
@@ -159,7 +159,7 @@ public class mechMovement : MonoBehaviour {
 			//bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
 			//bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 		}
-
+		else print("disabled");
 		/*
 		if(mechHealth >=1){
 			//if a key is pushed move the location of the mech
@@ -219,12 +219,14 @@ public class mechMovement : MonoBehaviour {
 			currMechHealth = mechHealth;
 			restartTimer = 0;
 		}
+		if(damagedTime > 0){
+			damagedTime += Time.deltaTime;
+		}
 
-		damagedTime += Time.deltaTime;
-
-		if(currMechHealth > 0 && currMechHealth < 1000 && shieldActive == false && damagedTime > 15){
+		if(currMechHealth > 0 && currMechHealth < 1000 && shieldActive == false && damagedTime <= 0){
 			currMechHealth += Time.deltaTime;
 		}
+
 		if(mechShield<= 0){
 			shieldActive = false;
 		}
@@ -245,7 +247,7 @@ public class mechMovement : MonoBehaviour {
 	public void takeDamage(float amount,Vector3 direction){
 
 		damageTurnOff = 0.5f;
-		damagedTime = 0;
+		damagedTime = 10;
 
 		if(shieldActive == false){
 			currMechHealth -= amount;
