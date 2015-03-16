@@ -11,6 +11,8 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject mechHolagram;
 	public GameObject templeShield;
 	public GameObject screens;
+	public Light cockPitLight;
+
 	//Goliath minimap stuffs
 	public GameObject [] miniMapIndicatorsList;
 	public GameObject[] disabledSparks;
@@ -134,6 +136,8 @@ public class cockpitUI : MonoBehaviour {
 			tempColour.a = 0.5f;
 			mechHolagram.renderer.material.color = tempColour;
 
+			cockPitLight.color = Color.white;
+
 		}
 		else if(currMechHealth > 0){
 			float lerpAmnt = currMechHealth / 1000;
@@ -146,6 +150,8 @@ public class cockpitUI : MonoBehaviour {
 			Color screenTemp = screens.renderer.material.color;
 			screenTemp.a = 0f;
 			screens.renderer.material.color = screenTemp;
+
+			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth <= 0){
 			mechHolagram.renderer.material.color = Color.black;
@@ -160,8 +166,9 @@ public class cockpitUI : MonoBehaviour {
 			screens.renderer.material.color = screenTemp;
 
 			//turn on sparks and shit then off and whatnot
-			int i = Random.Range(0,3);
+			int i = Random.Range(0,4);
 			disabledSparks[i].SetActive(true);
+			cockPitLight.color = Color.red;
 		}
 	}//end of update
 

@@ -101,7 +101,8 @@ public class cannonShot : MonoBehaviour {
 								else{}
 							}
 							else{}
-						}					}
+						}
+					}
 				}
 			}
 		}
