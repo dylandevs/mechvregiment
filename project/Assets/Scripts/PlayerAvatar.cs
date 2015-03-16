@@ -83,13 +83,13 @@ public class PlayerAvatar : MonoBehaviour {
 	}
 
 	public void SetNextTargetTransform(Vector3 nextPos, Quaternion nextRot, Vector3 currVelocity){
-		syncProg = 0;
-
-		syncDelay = Time.time - lastSync;
-		invSyncDelay = 1 / syncDelay;
-		lastSync = Time.time;
-
 		if (!isDead){
+			syncProg = 0;
+
+			syncDelay = Time.time - lastSync;
+			invSyncDelay = 1 / syncDelay;
+			lastSync = Time.time;
+		
 			lastSyncPos = transform.position;
 			nextSyncPos = nextPos + currVelocity * syncDelay;
 
