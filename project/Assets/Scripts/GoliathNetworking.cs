@@ -29,6 +29,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	private bool minionScriptsRetrieved = false;
 	public PoolManager minionBulletManager;
 
+	public PoolManager scorchMarkManager;
 	public PoolManager bulletHoleManager;
 	public PoolManager sparkManager;
 
@@ -234,8 +235,13 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void SetMineID(int creatorId, int networkId){}
 	
 	[RPC]
-	public void CreateMinionBullet(){
-
+	public void CreateMinionBullet(Vector3 position, Vector3 facing){
+		GameObject bullet = minionBulletManager.Retrieve(position);
+		bullet.transform.forward = facing;
+		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
+		bulletScript.shootableLayer = shootableLayer;
+		bulletScript.bulletMarkPool = scorchMarkManager;
+		bulletScript.isAvatar = true;
 	}
 	
 	[RPC]
@@ -255,5 +261,11 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void CreatePlayerTracer(Vector3 tracerPos, Vector3 tracerDir){
 		GameObject tracer = playerTracerManager.Retrieve (tracerPos);
 		tracer.transform.forward = tracerDir;
+	}
+
+	[RPC]
+	public void CreatePlayerBulletHit(Vector3 position, Vector3 normal, Quaternion rotation){
+		sparkManager.Retrieve(position, rotation);
+		bulletHoleManager.Retrieve(position + normal * 0.01f, rotation);
 	}
 }

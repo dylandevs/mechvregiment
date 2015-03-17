@@ -207,7 +207,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void CreateMinionBullet(){}
+	public void CreateMinionBullet(Vector3 position, Vector3 facing){}
 
 	[RPC]
 	public void DestroyMinionBullet(){
@@ -221,8 +221,5 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void CreatePlayerTracer(Vector3 tracerPos, Vector3 tracerDir){}
 
 	[RPC]
-	public void CreateBulletHole(){}
-
-	[RPC]
-	public void CreateSpark(){}
+	public void CreatePlayerBulletHit(Vector3 position, Vector3 normal, Quaternion rotation){}
 }

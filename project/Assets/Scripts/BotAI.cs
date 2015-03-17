@@ -57,8 +57,6 @@ public class BotAI : MonoBehaviour {
 	public const float FireAngle = 60 / 2;
 	public const float MaxHealth = 100;
 	public const float ResightRate = 0.25f;
-	public const float BulletSpeed = 50f;
-	public const float BulletDamage = 5.5f;
 	public LayerMask shootableLayer;
 
 	// Storage variables
@@ -67,14 +65,17 @@ public class BotAI : MonoBehaviour {
 	public GameObject playerGroup;
 	private Player[] players;
 	NavMeshAgent navMeshAgent;
+	[HideInInspector]
 	public Player currentTarget = null;
 
 	// Bot stats
+	[HideInInspector]
 	public State state = State.AllClear;
 	private State prevState = State.AllClear;
 	TargetComponent targetVisible = TargetComponent.None;
 	//byte state = 0;
 	float health = MaxHealth;
+	[HideInInspector]
 	public float reloadProg = FireRate;
 	bool isDead = false;
 	float resightProg = ResightRate;
@@ -423,20 +424,22 @@ public class BotAI : MonoBehaviour {
 	// Fires bullet predictively at target based on velocity
 	void FireAtPredictively(GameObject target){
 		Vector3 bulletGenPos = transform.position + facing;
-		//Vector3 direction = new Vector3(target.transform.position.x, target.transform.position.y + target.collider.bounds.extents.y, target.transform.position.z) - bulletGenPos;
+		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
+		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		float timeDelay = 0;
 
 		float distanceSquare = Vector3.SqrMagnitude(target.transform.position - bulletGenPos);
 		float targetVelSquare = target.rigidbody.velocity.sqrMagnitude;
-		float bulletVelSquare = BulletSpeed * BulletSpeed;
+		float bulletVelSquare = bulletScript.speed * bulletScript.speed;
 
 		timeDelay = Mathf.Sqrt(distanceSquare / (Mathf.Abs(bulletVelSquare - targetVelSquare)));
 		Vector3 direction = new Vector3(target.transform.position.x + target.rigidbody.velocity.x * timeDelay, target.transform.position.y + target.collider.bounds.extents.y + target.rigidbody.velocity.y * timeDelay, target.transform.position.z + target.rigidbody.velocity.z * timeDelay) - bulletGenPos;
 	
-		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
-		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(BulletDamage, direction, BulletSpeed, impactPool);
+		bullet.transform.forward = direction;
 		bulletScript.shootableLayer = shootableLayer;
+		bulletScript.bulletMarkPool = impactPool;
+
+		pooled.scavNetworker.photonView.RPC ("CreateMinionBullet", PhotonTargets.All, bulletGenPos, direction);
 	}
 
 	// Fires bullet in direction provided
@@ -444,10 +447,11 @@ public class BotAI : MonoBehaviour {
 		Vector3 bulletGenPos = transform.position + facing;
 		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - bulletGenPos;
 
-		GameObject bullet = projectilePool.Retrieve(bulletGenPos, Quaternion.identity);
-		Bullet bulletScript = bullet.GetComponent<Bullet>();
-		bulletScript.setProperties(BulletDamage, direction, BulletSpeed, impactPool);
+		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
+		bullet.transform.forward = direction;
+		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		bulletScript.shootableLayer = shootableLayer;
+		bulletScript.bulletMarkPool = impactPool;
 	}
 
 	// Gradually turns to face given target

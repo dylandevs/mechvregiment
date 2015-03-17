@@ -12,11 +12,14 @@ public class PlayerManager : MonoBehaviour {
 	private Player[] playerScripts;
 	private bool[] controllersUsed = {false, false, false, false};
 
+	public RuntimeAnimatorController fpsAnim;
+
 	// Use this for initialization
 	void Start () {
 		playerScripts = new Player[playerWrapper.transform.childCount];
 		for (int i = 0; i < playerWrapper.transform.childCount; i++){
 			playerScripts[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
+			playerScripts[i].fpsAnim.runtimeAnimatorController = fpsAnim;
 		}
 
 		assignControllers(countConnectedControllers());

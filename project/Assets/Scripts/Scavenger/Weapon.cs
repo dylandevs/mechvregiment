@@ -306,12 +306,13 @@ public class Weapon : MonoBehaviour {
 
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the terrain, make mark
-					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
-					GameObject mark = impactPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
-					mark.GetComponent<BulletHoleBehaviour>().Initialize();
+					Quaternion hitRotation = Quaternion.AngleAxis(Random.Range(0, 360), rayHit.normal) * Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					impactPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
 
 					// Create explosion/spark
 					explosionPool.Retrieve(rayHit.point, hitRotation);
+
+					player.networkManager.photonView.RPC("CreatePlayerBulletHit", PhotonTargets.All, rayHit.point, rayHit.normal, hitRotation);
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();

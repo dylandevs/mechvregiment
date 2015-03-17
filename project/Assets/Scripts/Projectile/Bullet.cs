@@ -3,11 +3,11 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
-	float damage = 0;
-	public Vector3 velocity = Vector3.zero;
-	Vector3 lastPos = Vector3.zero;
-	float life = 3.0f;
-	public float LifeSpan = 3;
+	private float damage = 0;
+	private Vector3 velocity = Vector3.zero;
+	private Vector3 lastPos = Vector3.zero;
+	private float life = 3.0f;
+	private float LifeSpan = 3;
 
 	public Player playerSource = null;
 	public LayerMask shootableLayer;
@@ -74,10 +74,8 @@ public class Bullet : MonoBehaviour {
 
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the terrain, make mark
-					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
-					GameObject mark = bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
-					mark.GetComponent<BulletHoleBehaviour>().Initialize();
-					mark.transform.localScale = mark.transform.localScale * 2;
+					Quaternion hitRotation = Quaternion.AngleAxis(Random.Range(0, 360), rayHit.normal) * Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					if (!isAvatar){

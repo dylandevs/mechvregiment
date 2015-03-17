@@ -3,17 +3,17 @@ using System.Collections;
 
 public class MinionBullet : MonoBehaviour {
 
-	float damage = 0;
-	public Vector3 velocity = Vector3.zero;
+	public float damage = 5.5f;
+	public float speed = 50;
+
 	Vector3 lastPos = Vector3.zero;
-	float life = 3.0f;
-	public float LifeSpan = 3;
+	private float life = 3.0f;
+	private float LifeSpan = 3;
 	
-	public Player playerSource = null;
 	public LayerMask shootableLayer;
 	
 	PoolManager pool;
-	PoolManager bulletMarkPool;
+	public PoolManager bulletMarkPool;
 	
 	private bool toDeactivate = false;
 	
@@ -23,13 +23,6 @@ public class MinionBullet : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
-	}
-	
-	public void setProperties(float baseDamage, Vector3 direction, float speed, PoolManager markPool){
-		damage = baseDamage;
-		velocity = direction.normalized * speed;
-		rigidbody.velocity = direction.normalized * speed;
-		bulletMarkPool = markPool;
 	}
 	
 	// Update is called once per frame
@@ -42,12 +35,13 @@ public class MinionBullet : MonoBehaviour {
 				toDeactivate = true;
 				particleEmitter.emit = false;
 			}
-			
-			// Check for collisions
-			bool collisionFound = checkForwardCollision();
-			
+
 			// Move forward (remember position)
 			lastPos = transform.position;
+			transform.position += transform.forward * speed * Time.deltaTime;
+
+			// Check for collisions
+			bool collisionFound = checkForwardCollision();
 			
 			if (collisionFound) {
 				rigidbody.velocity = Vector3.zero;
@@ -69,23 +63,18 @@ public class MinionBullet : MonoBehaviour {
 		float travelDist = Vector3.Distance (lastPos, transform.position);
 		if (travelDist > 0){
 			
-			if (Physics.Raycast(lastPos, velocity, out rayHit, travelDist, shootableLayer)){
+			if (Physics.Raycast(lastPos, transform.forward, out rayHit, travelDist, shootableLayer)){
 				//print (travelDist);
 				
 				if (rayHit.collider.gameObject.tag == "Terrain"){
 					// Hit the terrain, make mark
-					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
-					GameObject mark = bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
-					mark.GetComponent<BulletHoleBehaviour>().Initialize();
+					Quaternion hitRotation = Quaternion.AngleAxis(Random.Range(0, 360), rayHit.normal) * Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+					bulletMarkPool.Retrieve(rayHit.point + rayHit.normal * 0.01f, hitRotation);
 				}
 				else if (rayHit.collider.gameObject.tag == "Player"){
 					if (!isAvatar){
 						PlayerDamager playerHit = rayHit.collider.GetComponent<PlayerDamager>();
-						playerHit.DamagePlayer(damage, velocity);
-						if (playerSource){
-							playerSource.TriggerHitMarker();
-							playerSource = null;
-						}
+						playerHit.DamagePlayer(damage, transform.forward);
 					}
 				}
 				else if (rayHit.collider.gameObject.tag == "Enemy"){

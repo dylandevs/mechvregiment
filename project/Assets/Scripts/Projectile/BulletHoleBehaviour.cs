@@ -19,7 +19,7 @@ public class BulletHoleBehaviour : MonoBehaviour {
 		}
 	}
 
-	public void Initialize(){
+	void OnEnable(){
 		life = 10;
 	}
 }
