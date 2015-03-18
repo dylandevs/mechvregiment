@@ -23,6 +23,7 @@ public class PlayerAvatar : MonoBehaviour {
 	public GameObject shotCollider;
 	public Transform spineJoint;
 	public GameObject[] muzzleFlashes;
+	private GameObject[] weapons;
 
 	public float AutoFireRate = 0.1f;
 	private float autoFireProg = 0;
@@ -58,6 +59,11 @@ public class PlayerAvatar : MonoBehaviour {
 		// Set all children to Player tag
 		SetTagRecursively(gameObject, "Player");
 		SetLayerRecursively(shotCollider, LayerMask.NameToLayer("PlayerCollider1"));
+
+		weapons = new GameObject[muzzleFlashes.Length];
+		for (int i = 0; i < weapons.Length; i++){
+			weapons[i] = muzzleFlashes[i].transform.parent.gameObject;
+		}
 	}
 	
 	// Update is called once per frame
@@ -67,9 +73,8 @@ public class PlayerAvatar : MonoBehaviour {
 		if (isFiring){
 			autoFireProg += Time.deltaTime;
 			if (autoFireProg >= AutoFireRate){
-				if (weaponNum < muzzleFlashes.Length){
-					muzzleFlashes[weaponNum].particleEmitter.Emit();
-				}
+				muzzleFlashes[weaponNum].particleEmitter.Emit();
+				autoFireProg = 0;
 			}
 		}
 	}
@@ -129,7 +134,10 @@ public class PlayerAvatar : MonoBehaviour {
 	public void CycleNewWeapon(int newWeapon){
 		anim.SetTrigger(changeWeapHash);
 		anim.SetInteger(weaponHash, newWeapon);
+
+		weapons [weaponNum].SetActive (false);
 		weaponNum = newWeapon;
+		weapons [weaponNum].SetActive (true);
 	}
 
 	public void Damage(float damage, Vector3 direction){
@@ -174,8 +182,6 @@ public class PlayerAvatar : MonoBehaviour {
 		miniMapIndication.GetComponent<cockpitUI>();
 		miniMapIndication.miniMapIndicators(PlayerNum);
 
-		if (weaponNum < muzzleFlashes.Length){
-			muzzleFlashes[weaponNum].particleEmitter.Emit();
-		}
+		muzzleFlashes[weaponNum].particleEmitter.Emit();
 	}
 }
