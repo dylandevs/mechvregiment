@@ -45,6 +45,8 @@ public class mechMovement : MonoBehaviour {
 	float rStickY;
 	float damageTurnOff;
 
+	public bool forceKeyboard = false;
+
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -70,7 +72,7 @@ public class mechMovement : MonoBehaviour {
 			damageIndicatorRight.SetActive(false);
 		}
 
-		if (SixenseInput.Controllers[left] != null){
+		if (SixenseInput.Controllers[left] != null && !forceKeyboard){
 			//Updating the joystick input
 			lStickX = SixenseInput.Controllers[left].JoystickX;
 			lStickY = SixenseInput.Controllers[left].JoystickY;

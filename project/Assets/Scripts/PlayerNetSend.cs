@@ -71,7 +71,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 					if (players[i].gameObject.GetActive() && !players[i].isDead){
 						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
-						photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching, control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring);
+						photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching,
+						                control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring, control.spineJoint.transform.localRotation);
 					}
 				}
 
@@ -142,7 +143,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	// Player RPC
 	[RPC]
-	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){}
+	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing, Quaternion spineRot){}
 
 	[RPC]
 	public void PlayerCycleWeapon(int playerNum, int newWeapon){}

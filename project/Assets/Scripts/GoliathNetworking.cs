@@ -126,9 +126,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){
+	public void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing, Quaternion spineRot){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			playerAvatars[playerNum].UpdateAnimValues(fwdSpeed, rgtSpeed, speed, crouching, sprinting, ads, firing);
+			playerAvatars[playerNum].UpdateAnimValues(fwdSpeed, rgtSpeed, speed, crouching, sprinting, ads, firing, spineRot);
 		}
 	}
 	

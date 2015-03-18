@@ -595,27 +595,27 @@ public class ControllerScript : MonoBehaviour {
 		RaycastHit rayHit;
 
 		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y)){
-			if (rayHit.collider.tag == "Terrain"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
-			if (rayHit.collider.tag == "Terrain"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
-			if (rayHit.collider.tag == "Terrain"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
-			if (rayHit.collider.tag == "Terrain"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
-			if (rayHit.collider.tag == "Terrain"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}

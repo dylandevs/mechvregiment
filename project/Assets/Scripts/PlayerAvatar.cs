@@ -21,6 +21,13 @@ public class PlayerAvatar : MonoBehaviour {
 	// Input
 	public Animator anim;
 	public GameObject shotCollider;
+	public Transform spineJoint;
+	public GameObject[] muzzleFlashes;
+
+	public float AutoFireRate = 0.1f;
+	private float autoFireProg = 0;
+	private bool isFiring = false;
+	private int weaponNum = 0;
 
 	private bool isDead = false;
 
@@ -56,6 +63,15 @@ public class PlayerAvatar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		InterpolateTransform ();
+
+		if (isFiring){
+			autoFireProg += Time.deltaTime;
+			if (autoFireProg >= AutoFireRate){
+				if (weaponNum < muzzleFlashes.Length){
+					muzzleFlashes[weaponNum].particleEmitter.Emit();
+				}
+			}
+		}
 	}
 
 	void SetTagRecursively(GameObject baseObj, string tag){
@@ -98,7 +114,7 @@ public class PlayerAvatar : MonoBehaviour {
 		}
 	}
 
-	public void UpdateAnimValues(float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing){
+	public void UpdateAnimValues(float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing, Quaternion spineRot){
 		anim.SetFloat(fwdSpeedHash, fwdSpeed);
 		anim.SetFloat(rgtSpeedHash, rgtSpeed);
 		anim.SetFloat(speedHash, speed);
@@ -106,11 +122,14 @@ public class PlayerAvatar : MonoBehaviour {
 		anim.SetBool(sprintHash, sprinting);
 		anim.SetBool(adsHash, ads);
 		anim.SetBool(fireHash, firing);
+		isFiring = firing;
+		spineJoint.localRotation = spineRot;
 	}
 
 	public void CycleNewWeapon(int newWeapon){
 		anim.SetTrigger(changeWeapHash);
 		anim.SetInteger(weaponHash, newWeapon);
+		weaponNum = newWeapon;
 	}
 
 	public void Damage(float damage, Vector3 direction){
@@ -154,5 +173,9 @@ public class PlayerAvatar : MonoBehaviour {
 		//send location and turn on miniMapIcon
 		miniMapIndication.GetComponent<cockpitUI>();
 		miniMapIndication.miniMapIndicators(PlayerNum);
+
+		if (weaponNum < muzzleFlashes.Length){
+			muzzleFlashes[weaponNum].particleEmitter.Emit();
+		}
 	}
 }

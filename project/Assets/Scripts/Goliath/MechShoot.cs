@@ -71,6 +71,7 @@ public class MechShoot : MonoBehaviour {
 	public AudioSource aiDirectorEmitter;
 
 	public GoliathNetworking networkManager;
+	public bool forceKeyboard = false;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -122,7 +123,7 @@ public class MechShoot : MonoBehaviour {
 		float lTrig = 0;
 		float rTrig = 0;
 
-		if (SixenseInput.Controllers[left] != null){
+		if (SixenseInput.Controllers[left] != null && !forceKeyboard){
 			//All hydra butons and uses
 			lTrig = SixenseInput.Controllers[left].Trigger;
 			rTrig = SixenseInput.Controllers[right].Trigger;
