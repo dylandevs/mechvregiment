@@ -109,6 +109,11 @@ public class ControllerScript : MonoBehaviour {
 	public float rightSpeed = 0;
 	[HideInInspector]
 	public float speed = 0;
+
+	// Weapon swap variables
+	private float halfSwapTime = 0;
+	private float swapTime = 0;
+	private bool isSwapping = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -225,6 +230,11 @@ public class ControllerScript : MonoBehaviour {
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 				fpsAnim.SetTrigger(changeWeapHash);
 				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
+
+				if (swapTime == 0){
+					//print (fpsAnim.GetCurrentAnimatorStateInfo(0).length);
+				}
+				isSwapping = true;
 			}
 			else if (DPad_Prev){
 				player.CycleWeapons(-1);
@@ -232,6 +242,11 @@ public class ControllerScript : MonoBehaviour {
 				anim.SetInteger(weaponHash, player.currentWeaponIndex);
 				fpsAnim.SetTrigger(changeWeapHash);
 				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
+
+				isSwapping = true;
+				if (swapTime == 0){
+					
+				}
 			}
 
 			// Reloading

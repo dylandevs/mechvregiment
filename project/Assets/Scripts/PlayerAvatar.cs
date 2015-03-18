@@ -160,6 +160,7 @@ public class PlayerAvatar : MonoBehaviour {
 		}
 
 		isDead = true;
+		isFiring = false;
 		rigidbody.isKinematic = true;
 	}
 
