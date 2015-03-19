@@ -111,9 +111,8 @@ public class ControllerScript : MonoBehaviour {
 	public float speed = 0;
 
 	// Weapon swap variables
-	private float halfSwapTime = 0;
-	private float swapTime = 0;
 	private bool isSwapping = false;
+	private int swapAdjustment = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -220,32 +219,28 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Trigger change weapon
-			/*if (X_Press){
-				player.cycleWeapons();
-				weaponAnim = player.getCurrentWeapon().animator;
-			}*/
-			if (DPad_Next){
-				player.CycleWeapons(1);
-				anim.SetTrigger(changeWeapHash);
-				anim.SetInteger(weaponHash, player.currentWeaponIndex);
-				fpsAnim.SetTrigger(changeWeapHash);
-				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
+			if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
+				if (DPad_Next){
+					swapAdjustment = 1;
+					int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
 
-				if (swapTime == 0){
-					//print (fpsAnim.GetCurrentAnimatorStateInfo(0).length);
+					anim.SetTrigger(changeWeapHash);
+					anim.SetInteger(weaponHash, nextWeaponIndex);
+					fpsAnim.SetTrigger(changeWeapHash);
+					fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+
+					isSwapping = true;
 				}
-				isSwapping = true;
-			}
-			else if (DPad_Prev){
-				player.CycleWeapons(-1);
-				anim.SetTrigger(changeWeapHash);
-				anim.SetInteger(weaponHash, player.currentWeaponIndex);
-				fpsAnim.SetTrigger(changeWeapHash);
-				fpsAnim.SetInteger(weaponHash, player.currentWeaponIndex);
+				else if (DPad_Prev){
+					swapAdjustment = -1;
+					int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
 
-				isSwapping = true;
-				if (swapTime == 0){
-					
+					anim.SetTrigger(changeWeapHash);
+					anim.SetInteger(weaponHash, nextWeaponIndex);
+					fpsAnim.SetTrigger(changeWeapHash);
+					fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+
+					isSwapping = true;
 				}
 			}
 
@@ -316,7 +311,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Toggle ADS
-			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting) {
+			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting && !isSwapping) {
 				player.ToggleADS(true);
 				//anim.SetBool(fireHash, true);
 				fpsAnim.SetBool(adsHash, true);
@@ -376,7 +371,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 			
 			// Firing script
-			if (TriggersR != 0){
+			if (TriggersR != 0 && !isSwapping){
 				player.SetFiringState(true);
 				//anim.SetBool(fireHash, true);
 			}
@@ -652,5 +647,14 @@ public class ControllerScript : MonoBehaviour {
 			return -1;
 		}
 		return 1;
+	}
+
+	public void ShowNewWeapon(){
+		player.CycleWeapons(swapAdjustment);
+	}
+
+	public void EndWeaponSwap(){
+		isSwapping = false;
+		print ("ended " + player.currentWeaponIndex);
 	}
 }

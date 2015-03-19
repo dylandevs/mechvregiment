@@ -54,6 +54,20 @@ public class Weapon : MonoBehaviour {
 	public GameObject flash;
 	public ParticleSystem smoke;
 	public ParticleEmitter flash3;
+
+	// Animation paramters
+	public GameObject magazineStatic1;
+	public GameObject magazineStatic3;
+	public GameObject magazineDynamic1;
+	public GameObject magazineDynamic3;
+	public GameObject magazineDrop1;
+	public GameObject magazineDrop3;
+	private Vector3 initMagStatic1Pos;
+	private Vector3 initMagStatic3Pos;
+	private float dropStopProg = 0;
+	private const float DropStopTime = 3;
+	//Quaternion Vector3 initMagStatic1Rot;
+	//Quaternion Vector3 initMagStatic3Rot;
 	
 	// Ammo trackers
 	private int reserveAmmo;
@@ -115,6 +129,11 @@ public class Weapon : MonoBehaviour {
 		reserveAmmo = ReserveSize;
 		magAmmo = MagSize;
 		InvReloadTime = 1 / ReloadTime;
+
+		if (magazineDrop1){
+			initMagStatic1Pos = magazineStatic1.transform.localPosition;
+			initMagStatic3Pos = magazineStatic3.transform.localPosition;
+		}
 	}
 	
 	// Update is called once per frame
@@ -230,6 +249,15 @@ public class Weapon : MonoBehaviour {
 		// Detectable firing sound
 		if (fireNoiseProgress > 0){
 			fireNoiseProgress -= Time.deltaTime;
+		}
+
+		// Stopping dropping magazines
+		if (dropStopProg > 0){
+			dropStopProg -= Time.deltaTime;
+
+			if (dropStopProg <= 0){
+				StopDrop();
+			}
 		}
 	}
 	
@@ -656,5 +684,57 @@ public class Weapon : MonoBehaviour {
 
 	public bool IsFiringAudibly(){
 		return (Audible && fireNoiseProgress > 0);
+	}
+
+	public void SwapInDynamic(){
+		magazineStatic1.SetActive(false);
+		magazineStatic3.SetActive(false);
+		magazineDynamic1.SetActive(true);
+		magazineDynamic3.SetActive(true);
+	}
+	
+	public void SwapOutDynamic(){
+		magazineStatic1.SetActive(true);
+		magazineStatic3.SetActive(true);
+		magazineDynamic1.SetActive(false);
+		magazineDynamic3.SetActive(false);
+	}
+	
+	public void PlaceInDynamic(){
+		magazineDynamic1.SetActive(true);
+		magazineDynamic3.SetActive(true);
+	}
+	
+	public void TakeOutDynamic(){
+		magazineDynamic1.SetActive(false);
+		magazineDynamic3.SetActive(false);
+	}
+
+	public void ReleaseStatic(){
+		StopDrop();
+		magazineStatic1.SetActive(false);
+		magazineStatic3.SetActive(false);
+
+		magazineDrop1.SetActive(true);
+		magazineDrop3.SetActive(true);
+		magazineDrop1.rigidbody.isKinematic = false;
+		magazineDrop3.rigidbody.isKinematic = false;
+		dropStopProg = DropStopTime;
+	}
+
+	public void ResetStatic(){
+		magazineStatic1.SetActive(true);
+		magazineStatic3.SetActive(true);
+	}
+
+	public void StopDrop(){
+		magazineDrop1.rigidbody.velocity = Vector3.zero;
+		magazineDrop3.rigidbody.velocity = Vector3.zero;
+		magazineDrop1.rigidbody.isKinematic = true;
+		magazineDrop3.rigidbody.isKinematic = true;
+		magazineDrop1.SetActive(false);
+		magazineDrop3.SetActive(false);
+		magazineDrop1.transform.localPosition = initMagStatic1Pos;
+		magazineDrop3.transform.localPosition = initMagStatic3Pos;
 	}
 }
