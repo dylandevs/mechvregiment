@@ -256,6 +256,12 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		bulletScript.bulletMarkPool = scorchMarkManager;
 		bulletScript.isAvatar = true;
 	}
+
+	[RPC]
+	public void DamageMinion(int minionNum, float damage){}
+
+	[RPC]
+	public void PlaceMinionWaypoint(Vector3 position){}
 	
 	[RPC]
 	public void CreatePlayerBullet(float damage, Vector3 position, int speed, Vector3 direction){

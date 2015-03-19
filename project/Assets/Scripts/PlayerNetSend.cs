@@ -26,6 +26,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public PoolManager goliathMeteorManager;
 	public PoolManager goliathMeteorExplosionManager;
 
+	public GameObject goliathShield;
+	public GameObject templeShield;
+
 	// Use this for initialization
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
@@ -136,6 +139,15 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		meteorScript.SetTarget(target);
 		meteorScript.explosionPool = goliathMeteorExplosionManager;
 		meteorScript.isAvatar = true;
+	}
+
+	[RPC]
+	public void DamageGoliathShielded(float damage, Vector3 direction,Vector3 pos){}
+	
+	[RPC]
+	public void BrokenShield(){
+		templeShield.SetActive(false);
+		goliathShield.SetActive(false);
 	}
 	
 	[RPC]
