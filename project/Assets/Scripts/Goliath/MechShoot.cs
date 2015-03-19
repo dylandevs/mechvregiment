@@ -83,6 +83,7 @@ public class MechShoot : MonoBehaviour {
 	bool inRangeCannonY;
 	bool ableToShoot;
 	bool ableToShootM;
+	bool flagDown;
 
 	int miniIdle = Animator.StringToHash("miniGunIdle");
 	int miniFire = Animator.StringToHash("miniGunFire");
@@ -418,18 +419,24 @@ public class MechShoot : MonoBehaviour {
 					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
 
-					if(lTrig > 0.8f){
+					if(lTrig > 0.9f){
 						pilotAnimator.SetBool(minionPlace,true);
 						pilotAnimator.SetBool(minionIdle,false);
+						
+						flagDown = true;
+					}
+
+					if(lTrig < 0.2f && flagDown == true){
+						
 						minionFlag.transform.position = placeHitRock;
 						minionFlag.SetActive(true);
-
-					}
-
-					if(lTrig < 0.1f){
+						
 						pilotAnimator.SetBool(minionPlace,false);
 						pilotAnimator.SetBool(minionIdle,true);
+
+						flagDown = false;
 					}
+
 
 
 					//fire the rocket function in rocket arm script
