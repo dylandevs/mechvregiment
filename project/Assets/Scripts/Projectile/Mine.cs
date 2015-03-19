@@ -59,7 +59,7 @@ public class Mine : MonoBehaviour {
 		}
 		else{
 			RaycastHit rayHit;
-			if (Physics.Raycast(transform.position, Vector3.down, out rayHit, Mathf.Max(rigidbody.velocity.magnitude * Time.deltaTime, 0.16f))){
+			if (Physics.Raycast(transform.position, rigidbody.velocity.normalized, out rayHit, Mathf.Max(rigidbody.velocity.magnitude * Time.deltaTime, 0.16f))){
 				if (rayHit.collider.tag == "Terrain"){
 					AffixToTerrain(rayHit.point);
 				}

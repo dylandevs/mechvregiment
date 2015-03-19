@@ -335,6 +335,7 @@ public class ControllerScript : MonoBehaviour {
 			// Apply speed factor for crouching
 			if (isCrouching){
 				speedFactor *= CrouchSpeedFactor;
+				spread += currentWeapon.CrouchSpreadAdjust;
 			}
 
 			// Rotation about Y axis
@@ -604,27 +605,27 @@ public class ControllerScript : MonoBehaviour {
 	bool IsGrounded(){
 		RaycastHit rayHit;
 
-		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y)){
+		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
-		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
+		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
-		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y)){
+		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
-		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
+		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
 		}
-		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y)){
+		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player"){
 				return true;
 			}
