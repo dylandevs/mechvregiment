@@ -112,6 +112,15 @@ public class Bullet : MonoBehaviour {
 						}
 					}
 				}
+				else if (rayHit.collider.gameObject.tag == "Shield"){
+					Shield shield = rayHit.transform.GetComponent<Shield>();
+					shield.DamageGoliath(damage, velocity, rayHit.point);
+
+					if (playerSource){
+						playerSource.TriggerHitMarker();
+						playerSource = null;
+					}
+				}
 				return true;
 			}
 			return false;

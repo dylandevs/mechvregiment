@@ -365,6 +365,11 @@ public class Weapon : MonoBehaviour {
 					Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
 					explosionPool.Retrieve(rayHit.point, hitRotation);
 				}
+				else if (rayHit.collider.gameObject.tag == "Shield"){
+					Shield shield = rayHit.transform.GetComponent<Shield>();
+					shield.DamageGoliath(Damage, bulletDirection, rayHit.point);
+					player.TriggerHitMarker();
+				}
 
 				// Fire tracer at hit point
 				if (TracerInterval > 0 && tracerPool){
