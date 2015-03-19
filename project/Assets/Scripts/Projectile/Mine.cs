@@ -40,7 +40,7 @@ public class Mine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (transmitPosition && remoteId != -1){
+		if (transmitPosition && remoteId != -1 && !isAvatar){
 			playerSource.networkManager.photonView.RPC("AffixMine", PhotonTargets.All, remoteId, transform.position);
 			transmitPosition = false;
 		}
