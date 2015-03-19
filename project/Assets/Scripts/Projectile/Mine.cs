@@ -132,6 +132,7 @@ public class Mine : MonoBehaviour {
 		transform.position = position;
 		rigidbody.isKinematic = true;
 		isFixed = true;
+		transmitPosition = true;
 	}
 
 	void OnEnable(){
