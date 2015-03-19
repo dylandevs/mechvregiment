@@ -32,6 +32,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public PoolManager scorchMarkManager;
 	public PoolManager bulletHoleManager;
 	public PoolManager sparkManager;
+	public PoolManager shieldHitPool;
 
 	public LayerMask shootableLayer;
 
@@ -103,10 +104,22 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	[RPC]
-	void DamageGoliath(float damage, Vector3 direction,Vector3 pos){
+	void DamageGoliath(float damage, Vector3 direction){
 		// Apply damage to Goliath
-		mechHealth.takeDamage(damage,direction,pos);
+		mechHealth.takeDamage(damage,direction);
 	}
+
+	[RPC]
+	void DamageGoliathShielded(float damage, Vector3 direction,Vector3 pos){
+		// Apply damage to Goliath
+		mechHealth.takeDamage(damage,direction);
+		GameObject shieldHit = shieldHitPool.Retrieve(pos);
+		shieldHit.transform.up = -direction;
+	}
+
+
+	[RPC]
+	public void BrokenShield(){}
 
 	[RPC]
 	public void CreateGoliathTracer(Vector3 position, Vector3 direction){}
