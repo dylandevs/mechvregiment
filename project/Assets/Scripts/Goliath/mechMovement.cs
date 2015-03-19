@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class mechMovement : MonoBehaviour {
 
@@ -13,6 +14,10 @@ public class mechMovement : MonoBehaviour {
 	public GameObject damageIndicatorLeft;
 	public GameObject damageIndicatorRight;
 
+	//images for getting hit when the shield is active
+	public Image shieldHit1;
+	public Image shieldHit2;
+	public Image shieldHit3;
 
 	public MechShoot triggerFlagDropThing;
 
@@ -46,6 +51,8 @@ public class mechMovement : MonoBehaviour {
 	float damageTurnOff;
 
 	public bool forceKeyboard = false;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -246,7 +253,7 @@ public class mechMovement : MonoBehaviour {
 
 	}// End of update
 
-	public void takeDamage(float amount,Vector3 direction){
+	public void takeDamage(float amount,Vector3 direction,Vector3 hitPos){
 
 		damageTurnOff = 0.5f;
 		damagedTime = 10;
@@ -256,6 +263,32 @@ public class mechMovement : MonoBehaviour {
 		}
 		else{
 			mechShield -= amount;
+			
+			// when the shield is active show hit marker cool thingy
+			shieldHit1.transform.position = hitPos;
+			shieldHit2.transform.position = hitPos;
+			shieldHit3.transform.position = hitPos;
+
+			Vector3 newDir = Vector3.RotateTowards(shieldHit1.transform.forward, direction, 10, 0);
+			shieldHit1.transform.rotation = Quaternion.LookRotation(newDir);
+
+			Vector3 newDir2 = Vector3.RotateTowards(shieldHit2.transform.forward, direction, 10, 0);
+			shieldHit2.transform.rotation = Quaternion.LookRotation(newDir2);
+
+			Vector3 newDir3 = Vector3.RotateTowards(shieldHit3.transform.forward, direction, 10, 0);
+			shieldHit3.transform.rotation = Quaternion.LookRotation(newDir3);
+
+			Color tempColour = shieldHit1.color;
+			tempColour.a =Mathf.Lerp(1f,0.5f,Time.time);
+			shieldHit1.color = tempColour;
+
+			Color tempColour2 = shieldHit2.color;
+			tempColour2.a =Mathf.Lerp(1f,0.5f,Time.time);
+			shieldHit2.color = tempColour2;
+
+			Color tempColour3 = shieldHit3.color;
+			tempColour3.a =Mathf.Lerp(1f,0.5f,Time.time);
+			shieldHit3.color = tempColour3;
 		}
 
 		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);

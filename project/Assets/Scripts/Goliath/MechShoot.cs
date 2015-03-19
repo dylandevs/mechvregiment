@@ -42,7 +42,7 @@ public class MechShoot : MonoBehaviour {
 	public GameObject rangeIndicator;
 	public GameObject outOfRange;
 	public GameObject minionFlag;
-
+	public GameObject cannonShotStart;
 	//masks
 	public LayerMask mask;
 	public LayerMask maskForRet;
@@ -71,6 +71,7 @@ public class MechShoot : MonoBehaviour {
 	public AudioSource aiDirectorEmitter;
 
 	public GoliathNetworking networkManager;
+
 	public bool forceKeyboard = false;
 
 	float shootTimer;
@@ -263,7 +264,7 @@ public class MechShoot : MonoBehaviour {
 
 				miniGunFirer.fire = true;
 			}
-			if(lTrig < 0.8f && ableToShoot == true){
+			if(lTrig < 0.8f){
 				if(shootTimer >=0){
 					shootTimer-= Time.deltaTime;
 				}
@@ -273,7 +274,7 @@ public class MechShoot : MonoBehaviour {
 				}
 				miniGunFirer.cannonShoot = false;
 			}
-			if(rTrig < 0.8f && ableToShootM == true){
+			if(rTrig < 0.8f){
 				pilotAnimator.SetBool(miniFire,false);
 				pilotAnimator.SetBool(miniIdle,true);
 				miniGunFirer.fire = false;
@@ -402,11 +403,15 @@ public class MechShoot : MonoBehaviour {
 			cannonArm.transform.localEulerAngles = adjustedRotV;
 
 			//makes the ray
-			Ray minMode = new Ray(cannonAimer.transform.position,cannonAimer.transform.forward);
+			Ray minMode = new Ray(cannonShotStart.transform.position,cannonShotStart.transform.forward);
+
+			Debug.DrawRay(cannonShotStart.transform.position,cannonShotStart.transform.forward * 1000,Color.red);
+
 			RaycastHit minHit;
+
+
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
-			if(Physics.Raycast (minMode, out minHit,range,mask)){
-				print(minHit.collider.name);
+			if(Physics.Raycast (minMode, out minHit,75,mask)){
 				if(minHit.collider.tag == "Terrain"){
 					lightBeam.SetActive(true);
 					notLightBeam.SetActive(false);
@@ -416,8 +421,9 @@ public class MechShoot : MonoBehaviour {
 					if(lTrig > 0.8f){
 						pilotAnimator.SetBool(minionPlace,true);
 						pilotAnimator.SetBool(minionIdle,false);
+						minionFlag.transform.position = placeHitRock;
 						minionFlag.SetActive(true);
-						minionFlag.transform.position = minHit.transform.position;
+
 					}
 
 					if(lTrig < 0.1f){

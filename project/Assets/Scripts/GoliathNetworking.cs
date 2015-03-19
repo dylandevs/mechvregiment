@@ -103,9 +103,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	[RPC]
-	void DamageGoliath(float damage, Vector3 direction){
+	void DamageGoliath(float damage, Vector3 direction,Vector3 pos){
 		// Apply damage to Goliath
-		mechHealth.takeDamage(damage,direction);
+		mechHealth.takeDamage(damage,direction,pos);
 	}
 
 	[RPC]

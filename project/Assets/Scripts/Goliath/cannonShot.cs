@@ -17,6 +17,7 @@ public class cannonShot : MonoBehaviour {
 
 	public bool isAvatar = false;
 
+	public GameObject cannonHit;
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
@@ -61,6 +62,7 @@ public class cannonShot : MonoBehaviour {
 		{
 			if(hit.collider.tag == "Player"){
 				GameObject hitPlayer = hit.collider.gameObject;
+				cannonHit.SetActive(true);
 				if (hitPlayer){
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 					if (hitPlayerScript){
@@ -85,6 +87,7 @@ public class cannonShot : MonoBehaviour {
 					foreach (Collider c in colliders) 
 					{
 						if(c.gameObject.collider.tag == "Player"){
+							cannonHit.SetActive(true);
 							float dist = Vector3.Distance(transform.position, c.transform.position);
 							float damageRatio = 1f - (dist / explosionRadius);
 							float damageAmnt = damage * damageRatio;

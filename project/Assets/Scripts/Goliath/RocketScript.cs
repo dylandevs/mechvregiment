@@ -65,6 +65,7 @@ public class RocketScript : MonoBehaviour {
 			if (Physics.Raycast (ray,out explosionLocation, 2f)) 
 			{
 				missleMesh.SetActive(false);
+				smokeParticles.emit = false;
 				hitGround = true;
 				Vector3 explosionPlace = explosionLocation.point;
 				//spawns the Boom

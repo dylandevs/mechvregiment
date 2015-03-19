@@ -15,6 +15,8 @@ public class TracerRoundScript : MonoBehaviour {
 	public GameObject spark;
 	public bool isAvatar = false;
 
+	public GameObject miniGunHit;
+
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -55,6 +57,8 @@ public class TracerRoundScript : MonoBehaviour {
 				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 				hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);
 				//add a hit graphic.
+
+				miniGunHit.SetActive(true);
 			}
 			//turn off the bullet prefab
 			pool.Deactivate(gameObject);
