@@ -171,15 +171,7 @@ public class Player : MonoBehaviour {
 	// Changes currently selected weapon
 	public void CycleWeapons(int adjustment){
 		int prevWeaponIndex = currentWeaponIndex;
-		currentWeaponIndex += adjustment;
-		if (currentWeaponIndex >= weapons.Length){
-			currentWeaponIndex = 0;
-		}
-		else if (currentWeaponIndex < 0){
-			currentWeaponIndex = weapons.Length - 1;
-		}
-
-		// TODO: Play weapon change animation
+		currentWeaponIndex = GetExpectedWeaponIndex(adjustment);
 
 		// Activate new weapon
 		if (prevWeaponIndex != currentWeaponIndex){
@@ -244,5 +236,18 @@ public class Player : MonoBehaviour {
 
 	public void TriggerHitMarker(){
 		display.TriggerHitMarker();
+	}
+
+	public int GetExpectedWeaponIndex(int adjustment){
+		int newWeaponIndex = currentWeaponIndex;
+		newWeaponIndex += adjustment;
+		if (newWeaponIndex >= weapons.Length){
+			newWeaponIndex = 0;
+		}
+		else if (newWeaponIndex < 0){
+			newWeaponIndex = weapons.Length - 1;
+		}
+
+		return newWeaponIndex;
 	}
 }

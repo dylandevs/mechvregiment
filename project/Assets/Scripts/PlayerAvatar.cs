@@ -31,6 +31,7 @@ public class PlayerAvatar : MonoBehaviour {
 	private int weaponNum = 0;
 
 	private bool isDead = false;
+	private int nextWeapon = 0;
 
 	// Cached values
 	private int fwdSpeedHash = Animator.StringToHash("FwdSpeed");
@@ -134,10 +135,7 @@ public class PlayerAvatar : MonoBehaviour {
 	public void CycleNewWeapon(int newWeapon){
 		anim.SetTrigger(changeWeapHash);
 		anim.SetInteger(weaponHash, newWeapon);
-
-		weapons [weaponNum].SetActive (false);
-		weaponNum = newWeapon;
-		weapons [weaponNum].SetActive (true);
+		nextWeapon = newWeapon;
 	}
 
 	public void Damage(float damage, Vector3 direction){
@@ -184,5 +182,11 @@ public class PlayerAvatar : MonoBehaviour {
 		miniMapIndication.miniMapIndicators(PlayerNum);
 
 		muzzleFlashes[weaponNum].particleEmitter.Emit();
+	}
+
+	public void ShowNewWeapon(){
+		weapons [weaponNum].SetActive (false);
+		weaponNum = nextWeapon;
+		weapons [weaponNum].SetActive (true);
 	}
 }

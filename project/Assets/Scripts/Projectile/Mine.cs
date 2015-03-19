@@ -40,7 +40,7 @@ public class Mine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (transmitPosition && remoteId != -1){
+		if (transmitPosition && remoteId != -1 && !isAvatar){
 			playerSource.networkManager.photonView.RPC("AffixMine", PhotonTargets.All, remoteId, transform.position);
 			transmitPosition = false;
 		}
@@ -59,7 +59,7 @@ public class Mine : MonoBehaviour {
 		}
 		else{
 			RaycastHit rayHit;
-			if (Physics.Raycast(transform.position, Vector3.down, out rayHit, Mathf.Max(rigidbody.velocity.magnitude * Time.deltaTime, 0.16f))){
+			if (Physics.Raycast(transform.position, rigidbody.velocity.normalized, out rayHit, Mathf.Max(rigidbody.velocity.magnitude * Time.deltaTime, 0.16f))){
 				if (rayHit.collider.tag == "Terrain"){
 					AffixToTerrain(rayHit.point);
 				}
@@ -132,6 +132,7 @@ public class Mine : MonoBehaviour {
 		transform.position = position;
 		rigidbody.isKinematic = true;
 		isFixed = true;
+		transmitPosition = true;
 	}
 
 	void OnEnable(){
