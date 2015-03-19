@@ -14,11 +14,6 @@ public class mechMovement : MonoBehaviour {
 	public GameObject damageIndicatorLeft;
 	public GameObject damageIndicatorRight;
 
-	//images for getting hit when the shield is active
-	public Image shieldHit1;
-	public Image shieldHit2;
-	public Image shieldHit3;
-
 	public MechShoot triggerFlagDropThing;
 
 	public Vector3 topDir;
@@ -52,8 +47,9 @@ public class mechMovement : MonoBehaviour {
 
 	public bool forceKeyboard = false;
 
+	public PoolManager shieldHit;
 
-
+	public GoliathNetworking networker;
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -235,10 +231,7 @@ public class mechMovement : MonoBehaviour {
 		if(currMechHealth > 0 && currMechHealth < 1000 && shieldActive == false && damagedTime <= 0){
 			currMechHealth += Time.deltaTime;
 		}
-
-		if(mechShield<= 0){
-			shieldActive = false;
-		}
+	
 		//match the top half to the bottom half when not moving
 		topDir = topHalfX.transform.eulerAngles;
 		bottomDir = bottomHalf.transform.eulerAngles;
@@ -253,42 +246,21 @@ public class mechMovement : MonoBehaviour {
 
 	}// End of update
 
-	public void takeDamage(float amount,Vector3 direction,Vector3 hitPos){
+	public void takeDamage(float amount,Vector3 direction){
 
 		damageTurnOff = 0.5f;
 		damagedTime = 10;
-
+		if(shieldActive == true){
+			if(mechShield <= 0){
+				networker.BrokenShield();
+				shieldActive = false;
+			}
+		}
 		if(shieldActive == false){
 			currMechHealth -= amount;
 		}
 		else{
 			mechShield -= amount;
-			
-			// when the shield is active show hit marker cool thingy
-			shieldHit1.transform.position = hitPos;
-			shieldHit2.transform.position = hitPos;
-			shieldHit3.transform.position = hitPos;
-
-			Vector3 newDir = Vector3.RotateTowards(shieldHit1.transform.forward, direction, 10, 0);
-			shieldHit1.transform.rotation = Quaternion.LookRotation(newDir);
-
-			Vector3 newDir2 = Vector3.RotateTowards(shieldHit2.transform.forward, direction, 10, 0);
-			shieldHit2.transform.rotation = Quaternion.LookRotation(newDir2);
-
-			Vector3 newDir3 = Vector3.RotateTowards(shieldHit3.transform.forward, direction, 10, 0);
-			shieldHit3.transform.rotation = Quaternion.LookRotation(newDir3);
-
-			Color tempColour = shieldHit1.color;
-			tempColour.a =Mathf.Lerp(1f,0.5f,Time.time);
-			shieldHit1.color = tempColour;
-
-			Color tempColour2 = shieldHit2.color;
-			tempColour2.a =Mathf.Lerp(1f,0.5f,Time.time);
-			shieldHit2.color = tempColour2;
-
-			Color tempColour3 = shieldHit3.color;
-			tempColour3.a =Mathf.Lerp(1f,0.5f,Time.time);
-			shieldHit3.color = tempColour3;
 		}
 
 		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
