@@ -9,7 +9,6 @@ public class cockpitUI : MonoBehaviour {
 	public MechShoot mechShoot;
 	
 	public GameObject mechHolagram;
-	public GameObject templeShield;
 	public GameObject screens;
 	public Light cockPitLight;
 
@@ -127,7 +126,6 @@ public class cockpitUI : MonoBehaviour {
 		//update the mech health hologram
 		if(mechShield <=0){
 			shieldActive = false;
-			templeShield.SetActive(false);
 		}
 		
 		if(shieldActive == true){

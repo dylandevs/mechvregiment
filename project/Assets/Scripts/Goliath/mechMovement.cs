@@ -47,14 +47,12 @@ public class mechMovement : MonoBehaviour {
 
 	public bool forceKeyboard = false;
 
-	public PoolManager shieldHit;
-
 	public GoliathNetworking networker;
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
 		currMechHealth = 1000;
-		mechShield = 200;
+		mechShield = 500;
 		shieldActive = true;
 		moveSpeedY = 10;
 		rotSpeedY = 1.5f;
