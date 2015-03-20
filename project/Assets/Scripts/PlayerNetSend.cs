@@ -28,6 +28,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	public GameObject goliathShield;
 	public GameObject templeShield;
+	public GameObject minionWaypoint;
 
 	// Use this for initialization
 	void Start () {
@@ -223,8 +224,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void CreateMinionBullet(Vector3 position, Vector3 facing){}
 
 	[RPC]
-	public void DestroyMinionBullet(){
+	public void PlaceMinionWaypoint(Vector3 position){
+		minionWaypoint.transform.position = position;
 
+		foreach(BotAI minion in minions){
+			minion.SetNewWaypoint();
+		}
 	}
 
 	[RPC]

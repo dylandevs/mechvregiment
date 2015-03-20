@@ -258,9 +258,6 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void DamageMinion(int minionNum, float damage){}
-
-	[RPC]
 	public void PlaceMinionWaypoint(Vector3 position){}
 	
 	[RPC]
