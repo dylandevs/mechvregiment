@@ -435,6 +435,8 @@ public class MechShoot : MonoBehaviour {
 						pilotAnimator.SetBool(minionIdle,true);
 
 						flagDown = false;
+						networkManager.photonView.RPC("PlaceMinionWaypoint",PhotonTargets.All,minionFlag.transform.position);
+
 					}
 
 

@@ -250,7 +250,7 @@ public class mechMovement : MonoBehaviour {
 		damagedTime = 10;
 		if(shieldActive == true){
 			if(mechShield <= 0){
-				networker.BrokenShield();
+				networker.photonView.RPC("BrokenShield",PhotonTargets.All);
 				shieldActive = false;
 			}
 		}

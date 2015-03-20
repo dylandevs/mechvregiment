@@ -36,7 +36,6 @@ public class TracerRoundScript : MonoBehaviour {
 		//fire a raycast ahead to ensure you wont miss and go through a collider
 		Ray ray = new Ray(transform.position,transform.up);
 		RaycastHit hitInfoFire;
-		Debug.DrawRay(transform.position,transform.up * rayAmnt , Color.red);
 
 		//turn into a sphere cast
 
@@ -51,18 +50,26 @@ public class TracerRoundScript : MonoBehaviour {
 				GameObject spark = sparkPool.Retrieve(hitInfoFirePoint);
 				spark.transform.up = hitInfoFire.transform.up;
 			}
-			
+
+			if(hitInfoFire.collider.tag == "Enemy" && !isAvatar){
+				GameObject hitMinion = hitInfoFire.collider.gameObject;
+				MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
+				minionScript.Damage(damage);
+			}
+
 			if(hitInfoFire.collider.tag == "Player" && !isAvatar){
 				GameObject hitPlayer = hitInfoFire.collider.gameObject;
 				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 				hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);
 				//add a hit graphic.
 
-				miniGunHit.SetActive(true);
+				//miniGunHit.SetActive(true);
 			}
 			//turn off the bullet prefab
 			pool.Deactivate(gameObject);
 		}
+
+
 		
 		/*
 		Ray rayLeft = new Ray(transform.position,transform.forward * -0.5f);

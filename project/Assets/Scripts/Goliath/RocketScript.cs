@@ -111,6 +111,16 @@ public class RocketScript : MonoBehaviour {
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 					hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
 				}
+
+				if(c.gameObject.collider.tag == "Enemy"){
+					float dist = Vector3.Distance(transform.position, c.transform.position);
+					float damageRatio = 1f - (dist / explosionRadius);
+					float damageAmnt = damage * damageRatio;
+
+					GameObject hitMinion = c.collider.gameObject;
+					MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
+					minionScript.Damage(damageAmnt);
+				}
 			}
 		}
 	}

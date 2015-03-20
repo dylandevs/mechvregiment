@@ -87,7 +87,7 @@ public class cannonShot : MonoBehaviour {
 					foreach (Collider c in colliders) 
 					{
 						if(c.gameObject.collider.tag == "Player"){
-							cannonHit.SetActive(true);
+							//cannonHit.SetActive(true);
 							float dist = Vector3.Distance(transform.position, c.transform.position);
 							float damageRatio = 1f - (dist / explosionRadius);
 							float damageAmnt = damage * damageRatio;
@@ -104,6 +104,15 @@ public class cannonShot : MonoBehaviour {
 								else{}
 							}
 							else{}
+						}
+						if(c.gameObject.collider.tag == "Enemy"){
+							float dist = Vector3.Distance(transform.position, c.transform.position);
+							float damageRatio = 1f - (dist / explosionRadius);
+							float damageAmnt = damage * damageRatio;
+							
+							GameObject hitMinion = c.collider.gameObject;
+							MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
+							minionScript.Damage(damageAmnt);
 						}
 					}
 				}
