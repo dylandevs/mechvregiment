@@ -287,7 +287,7 @@ public class mechMovement : MonoBehaviour {
 		//update minimap
 		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,30,0);
 		miniMapCam.transform.position = newPosCam;
-		Quaternion camRot = Quaternion.Euler(90,topHalfX.transform.localEulerAngles.y,0);
+		Quaternion camRot = Quaternion.Euler(90,0,0);
 		miniMapCam.transform.rotation = camRot;
 	}
 }

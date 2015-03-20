@@ -18,9 +18,6 @@ public class FlagTrig : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other){
-		print(other.tag);
-		print(other.name);
-
 		if(other.tag == "Player"){
 			flagActive = true;
 		}

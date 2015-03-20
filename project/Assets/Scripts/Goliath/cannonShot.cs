@@ -62,7 +62,7 @@ public class cannonShot : MonoBehaviour {
 		{
 			if(hit.collider.tag == "Player"){
 				GameObject hitPlayer = hit.collider.gameObject;
-				cannonHit.SetActive(true);
+				//cannonHit.SetActive(true);
 				if (hitPlayer){
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 					if (hitPlayerScript){
