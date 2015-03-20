@@ -10,12 +10,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject playerWrapper;
 	private Player[] players;
 	public PoolManager playerMineManager;
-	public PoolManager playerBulletManager;
+	//public PoolManager playerBulletManager;
 
 	public PoolManager minionManager;
 	private BotAI[] minions;
 	private bool minionScriptsRetrieved = false;
-	public PoolManager minionBulletManager;
+	//public PoolManager minionBulletManager;
 
 	public GoliathAvatar goliath;
 	public PoolManager goliathTracerManager;
