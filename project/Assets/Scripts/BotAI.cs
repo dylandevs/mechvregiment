@@ -9,7 +9,7 @@ public class BotAI : MonoBehaviour {
 	const byte Sighted = 2;
 	const byte Firing = 3;*/
 
-	public enum State{AllClear, Searching, Approaching, VeryClose};
+	public enum State{AllClear, Traveling, Searching, Approaching, VeryClose};
 	enum TargetComponent{Head, Torso, Feet, None};
 
 	// Distance thresholds
@@ -52,12 +52,14 @@ public class BotAI : MonoBehaviour {
 	public const float ViewAngle = 120 / 2;
 	public const float WalkSpeed = 1.5f;
 	public const float MoveSpeed = 7f;
+	public const float RunSpeed = 10f;
 	public const float FireRate = 1.2f;
 	public const float TurnStep = 0.02f;
 	public const float FireAngle = 60 / 2;
 	public const float MaxHealth = 100;
 	public const float ResightRate = 0.25f;
 	public LayerMask shootableLayer;
+	public bool controllable = true;
 
 	// Storage variables
 	public GameObject allyGroup;
@@ -88,6 +90,7 @@ public class BotAI : MonoBehaviour {
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
 	private PoolManager pool;
+	public GameObject waypoint;
 
 	[HideInInspector]
 	public int remoteId = -1;
@@ -169,6 +172,11 @@ public class BotAI : MonoBehaviour {
 				setSurfaceColour(safeCol);
 				Idle();
 			}
+			else if (state == State.Traveling){
+				if (HasAgentArrivedAtDest()){
+					state = State.AllClear;
+				}
+			}
 			else if (state == State.Searching){
 				// If is newly searching
 				if (prevState != state){
@@ -215,6 +223,14 @@ public class BotAI : MonoBehaviour {
 		}
 	}
 
+	public void SetNewWaypoint(){
+		if (controllable){
+			state = State.Traveling;
+			navMeshAgent.speed = RunSpeed;
+			navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
+		}
+	}
+
 	// Tries to find viable target from existing list
 	void AttemptAcquireTarget(){
 		float closestDistance = 0;
@@ -232,7 +248,7 @@ public class BotAI : MonoBehaviour {
 				}
 
 				// When searching, more sensitive to players
-				else if (distance < ThreshSearch && state == State.Searching){
+				else if (distance < ThreshSearch && (state == State.Searching || state == State.Traveling)){
 					currentTarget = player;
 					closestDistance = distance;
 					alertTime = AlertDuration;
