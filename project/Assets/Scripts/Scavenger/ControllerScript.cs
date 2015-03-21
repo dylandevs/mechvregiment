@@ -245,7 +245,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Reloading
-			if (Y_Press){
+			if (Y_Press && !isSwapping){
 				player.TriggerReload();
 			}
 
