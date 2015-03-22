@@ -340,7 +340,7 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
@@ -5598,8 +5598,8 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Walk_Pistol
       takeName: Take 001
-      firstFrame: 385
-      lastFrame: 399
+      firstFrame: 375
+      lastFrame: 389
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

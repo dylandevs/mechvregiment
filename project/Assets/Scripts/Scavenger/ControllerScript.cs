@@ -656,6 +656,5 @@ public class ControllerScript : MonoBehaviour {
 
 	public void EndWeaponSwap(){
 		isSwapping = false;
-		print ("ended " + player.currentWeaponIndex);
 	}
 }
