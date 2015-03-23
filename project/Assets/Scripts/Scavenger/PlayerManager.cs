@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject playerWrapper;
 	private Player[] playerScripts;
 	private bool[] controllersUsed = {false, false, false, false};
+	public GameObject[] playerCams;
 
 	public RuntimeAnimatorController fpsAnim;
 
@@ -49,6 +50,7 @@ public class PlayerManager : MonoBehaviour {
 							controllersUsed[j] = true;
 							playerScripts[i].Initialize(j + 1, getWindowCoords(i + 1, connectedControllers), GetUIReferenceScale(connectedControllers));
 							playerScripts[i].gameObject.SetActive(true);
+							playerCams[i].SetActive(true);
 							break;
 						}
 					}
