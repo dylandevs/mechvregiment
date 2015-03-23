@@ -27,6 +27,7 @@ public class Player : MonoBehaviour {
 	public Animator anim;
 	public Animator fpsAnim;
 	public ScavLayer initializer;
+	public ScavGame game;
 
 	// Status variables
 	private float health = 0;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour {
 	private GameObject[] weaponModels;
 	private GameObject[] weaponModels3;
 	private Weapon[] weapons;
+	public GameObject crystal;
 
 	[HideInInspector]
 	public int currentWeaponIndex = 0;
@@ -102,10 +104,6 @@ public class Player : MonoBehaviour {
 
 		// Setting controller
 		playerController.SetController(id);
-	}
-
-	public void OnTriggerEnter(Collider collider){
-		print (collider.name);
 	}
 
 	public void SetToKeyboard(){
@@ -189,6 +187,22 @@ public class Player : MonoBehaviour {
 		networkManager.photonView.RPC ("PlayerCycleWeapon", PhotonTargets.All, initializer.Layer - 1, currentWeaponIndex);
 	}
 
+	public void FlagRetrieved(){
+		weapons[currentWeaponIndex].gameObject.SetActive(false);
+		weaponModels3[currentWeaponIndex].SetActive(false);
+		crystal.SetActive(true);
+
+		game.FlagRetrieved(gameObject);
+	}
+
+	public void FlagDropped(){
+		weapons[currentWeaponIndex].gameObject.SetActive(true);
+		weaponModels3[currentWeaponIndex].SetActive(true);
+		crystal.SetActive(false);
+
+		game.FlagDropped(transform.position, playerController.facing);
+	}
+	
 	// Deals damage to player and resets healing timer
 	public void Damage(float damage, Vector3 direction){
 		if (!isDead){

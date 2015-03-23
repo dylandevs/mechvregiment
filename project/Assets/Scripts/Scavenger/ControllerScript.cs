@@ -58,6 +58,7 @@ public class ControllerScript : MonoBehaviour {
 	int crouchHash = Animator.StringToHash ("Crouching");
 	int weaponHash = Animator.StringToHash ("WeaponNum");
 	int changeWeapHash = Animator.StringToHash ("ChangeWeapon");
+	int flagCarryHash = Animator.StringToHash ("CarryFlag");
 
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -113,6 +114,10 @@ public class ControllerScript : MonoBehaviour {
 	// Weapon swap variables
 	private bool isSwapping = false;
 	private int swapAdjustment = 0;
+
+	// Flag pickup variables
+	private bool flagInRange = false;
+	private bool flagPickedUp = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -213,54 +218,23 @@ public class ControllerScript : MonoBehaviour {
 				
 			}
 
-			// Toggle crouching
-			if (B_Press && currentlyGrounded){
-				SetCrouching(!isCrouching);
-			}
-
-			// Trigger change weapon
-			if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
-				if (DPad_Next){
-					swapAdjustment = 1;
-					int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
-
-					anim.SetTrigger(changeWeapHash);
-					anim.SetInteger(weaponHash, nextWeaponIndex);
-					fpsAnim.SetTrigger(changeWeapHash);
-					fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
-
-					isSwapping = true;
-				}
-				else if (DPad_Prev){
-					swapAdjustment = -1;
-					int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
-
-					anim.SetTrigger(changeWeapHash);
-					anim.SetInteger(weaponHash, nextWeaponIndex);
-					fpsAnim.SetTrigger(changeWeapHash);
-					fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
-
-					isSwapping = true;
-				}
-			}
-
-			// Reloading
-			if (X_Press && !isSwapping){
-				player.TriggerReload();
-			}
-
 			if (currentlyGrounded){
+
+				// Toggle crouching
+				if (B_Press){
+					SetCrouching(!isCrouching);
+				}
 				
 				// Jumping
-				if (A_Press){
+				if (A_Press && !flagPickedUp){
 					newVel.y += JumpSpeed;
-
+					
 					anim.SetTrigger(jumpHash);
 					fpsAnim.SetTrigger(jumpHash);
-
+					
 					// Cancel crouch
 					SetCrouching(false);
-
+					
 					player.networkManager.photonView.RPC ("PlayerJump", PhotonTargets.All, player.initializer.Layer - 1);
 				}
 				
@@ -278,13 +252,13 @@ public class ControllerScript : MonoBehaviour {
 				
 				// Longitudinal movement
 				if (L_YAxis != 0){
-
+					
 					// Sprint
 					if (LS_Held && L_YAxis < RunThresh){
 						newVel += SprintSpeed * facing2D;
 						spread += currentWeapon.SprintSpreadAdjust;
 						isSprinting = true;
-
+						
 						// Cancel crouch
 						SetCrouching(false);
 					}
@@ -310,26 +284,86 @@ public class ControllerScript : MonoBehaviour {
 				spread += currentWeapon.JumpSpreadAdjust;
 			}
 
-			// Toggle ADS
-			if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting && !isSwapping) {
-				player.ToggleADS(true);
-				//anim.SetBool(fireHash, true);
-				fpsAnim.SetBool(adsHash, true);
-				cameraAnim.SetBool(adsHash, true);
-				gunCamAnim.SetBool(adsHash, true);
-				anim.SetBool(adsHash, true);
-				aimingDownSight = true;
-				spread += currentWeapon.AdsSpreadAdjust;
-				speedFactor *= ADSSpeedFactor;
+			if (!flagPickedUp){
+
+				// Trigger change weapon
+				if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
+					if (DPad_Next || Y_Press){
+						swapAdjustment = 1;
+						int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
+
+						anim.SetTrigger(changeWeapHash);
+						anim.SetInteger(weaponHash, nextWeaponIndex);
+						fpsAnim.SetTrigger(changeWeapHash);
+						fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+
+						isSwapping = true;
+					}
+					else if (DPad_Prev){
+						swapAdjustment = -1;
+						int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
+
+						anim.SetTrigger(changeWeapHash);
+						anim.SetInteger(weaponHash, nextWeaponIndex);
+						fpsAnim.SetTrigger(changeWeapHash);
+						fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+
+						isSwapping = true;
+					}
+				}
+
+				// Reloading
+				if (X_Press && !isSwapping){
+					player.TriggerReload();
+				}
+
+				// Toggle ADS
+				if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting && !isSwapping) {
+					player.ToggleADS(true);
+					fpsAnim.SetBool(adsHash, true);
+					cameraAnim.SetBool(adsHash, true);
+					gunCamAnim.SetBool(adsHash, true);
+					anim.SetBool(adsHash, true);
+					aimingDownSight = true;
+					spread += currentWeapon.AdsSpreadAdjust;
+					speedFactor *= ADSSpeedFactor;
+				}
+				else{
+					player.ToggleADS(false);
+					fpsAnim.SetBool(adsHash, false);
+					cameraAnim.SetBool(adsHash, false);
+					gunCamAnim.SetBool(adsHash, false);
+					anim.SetBool(adsHash, false);
+					aimingDownSight = false;
+				}
+
+				// Firing script
+				if (TriggersR != 0 && !isSwapping){
+					player.SetFiringState(true);
+				}
+				else{
+					player.SetFiringState(false);
+				}
+
+				// Picking up flag
+				if (X_Press && flagInRange && !isSwapping && !currentWeapon.IsReloading()){
+					flagPickedUp = true;
+					anim.SetBool(flagCarryHash, true);
+					fpsAnim.SetBool(flagCarryHash, true);
+
+					player.FlagRetrieved();
+				}
 			}
 			else{
-				player.ToggleADS(false);
-				//anim.SetBool(fireHash, false);
-				fpsAnim.SetBool(adsHash, false);
-				cameraAnim.SetBool(adsHash, false);
-				gunCamAnim.SetBool(adsHash, false);
-				anim.SetBool(adsHash, false);
-				aimingDownSight = false;
+				// Picking up flag
+				if (X_Press){
+					flagPickedUp = false;
+					anim.SetBool(flagCarryHash, false);
+					fpsAnim.SetBool(flagCarryHash, false);
+					fpsAnim.SetTrigger(changeWeapHash);
+					
+					player.FlagDropped();
+				}
 			}
 
 			// Apply speed factor for crouching
@@ -369,16 +403,6 @@ public class ControllerScript : MonoBehaviour {
 				else{
 					// Do nothing
 				}
-			}
-			
-			// Firing script
-			if (TriggersR != 0 && !isSwapping){
-				player.SetFiringState(true);
-				//anim.SetBool(fireHash, true);
-			}
-			else{
-				player.SetFiringState(false);
-				//anim.SetBool(fireHash, false);
 			}
 		}
 
@@ -566,6 +590,17 @@ public class ControllerScript : MonoBehaviour {
 		}
 	}
 
+	public void OnTriggerEnter(Collider collider){
+		if (collider.name == "flag"){
+			flagInRange = true;
+		}
+	}
+
+	public void OnTriggerExit(Collider collider){
+		if (collider.name == "flag"){
+			flagInRange = false;
+		}
+	}
 	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
 

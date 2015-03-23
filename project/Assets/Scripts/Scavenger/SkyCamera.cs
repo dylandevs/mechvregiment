@@ -13,6 +13,5 @@ public class SkyCamera : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		this.transform.LookAt(transform.position + playerController.facing);
-		print(transform.eulerAngles);
 	}
 }
