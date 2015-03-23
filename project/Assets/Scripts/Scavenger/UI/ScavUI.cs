@@ -8,6 +8,7 @@ public class ScavUI : MonoBehaviour {
 	public Camera playerCam;
 	public Camera uiCam;
 	public Camera gunCam;
+	public Camera skyCam;
 	public PoolManager damageDirPool;
 	public Player player;
 	public CanvasScaler scaler;
@@ -106,6 +107,7 @@ public class ScavUI : MonoBehaviour {
 		uiCam.camera.rect = new Rect(x, y, width, height);
 		playerCam.camera.rect = new Rect(x, y, width, height);
 		gunCam.camera.rect = new Rect(x, y, width, height);
+		skyCam.camera.rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
 	}
 
