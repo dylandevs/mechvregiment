@@ -104,6 +104,10 @@ public class Player : MonoBehaviour {
 		playerController.SetController(id);
 	}
 
+	public void OnTriggerEnter(Collider collider){
+		print (collider.name);
+	}
+
 	public void SetToKeyboard(){
 		playerController.isKeyboard = true;
 	}

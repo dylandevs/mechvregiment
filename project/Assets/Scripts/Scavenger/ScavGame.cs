@@ -20,20 +20,25 @@ public class ScavGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (GameRunning){
-			remainingTime -= Time.deltaTime;
+			remainingTime = Mathf.Max(0, remainingTime - Time.deltaTime);
 
 			//print (inv60);
 
 			print (remainingTime * inv60);
 
 			string minutes = Mathf.Floor(remainingTime / 60).ToString();
-			string seconds = Mathf.Round(remainingTime % 60).ToString();
+			string seconds = Mathf.Floor(remainingTime % 60).ToString();
 
 			if (seconds.Length == 1){
 				seconds = "0" + seconds;
 			}
 
 			timerText.text = minutes + ":" + seconds;
+
+			if (remainingTime <= 0){
+				// Round over
+
+			}
 		}
 	}
 
