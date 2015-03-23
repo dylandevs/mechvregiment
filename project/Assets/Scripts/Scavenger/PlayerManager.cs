@@ -21,7 +21,6 @@ public class PlayerManager : MonoBehaviour {
 		for (int i = 0; i < playerWrapper.transform.childCount; i++){
 			playerScripts[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
 			playerScripts[i].fpsAnim.runtimeAnimatorController = fpsAnim;
-			playerScripts[i].initializer.Layer = i + 1;
 		}
 
 		assignControllers(countConnectedControllers());

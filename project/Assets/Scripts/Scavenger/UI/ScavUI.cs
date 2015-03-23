@@ -12,7 +12,6 @@ public class ScavUI : MonoBehaviour {
 	public PoolManager damageDirPool;
 	public Player player;
 	public CanvasScaler scaler;
-	public Minimap minimap;
 
 	public Image reloadGraphic;
 	public Image damageGraphic;
