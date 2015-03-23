@@ -17,6 +17,10 @@ public class MechShoot : MonoBehaviour {
 	public bool miniGunMode = true;
 	public bool carrying = false;
 
+	//particle emitters for flag carry
+	public GameObject leftEmitter;
+	public GameObject rightEmitter;
+
 	//flag stuff
 	public GameObject flag;
 	public GameObject flagCarried;
@@ -469,6 +473,9 @@ public class MechShoot : MonoBehaviour {
 			//turns off world flag and replaces it with carried version
 			flag.SetActive(false);
 			flagCarried.SetActive(true);
+			
+			leftEmitter.SetActive(true);
+			rightEmitter.SetActive(true);
 			//play animation for mech carrying flag thingy; 
 			
 			//drops the flag
@@ -476,8 +483,10 @@ public class MechShoot : MonoBehaviour {
 				carrying = false;
 				releaseFlag();
 				miniGunMode = true;
+				
+				leftEmitter.SetActive(false);
+				rightEmitter.SetActive(false);
 			}
-			
 		}
 	}//this is end of update
 	//function to reset the modes

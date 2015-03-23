@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class mechMovement : MonoBehaviour {
+	//cameras
+	public GameObject oculus;
+	public GameObject tvCam;
 
 	//game objects and positions
 	public GameObject bottomHalf;
@@ -46,6 +49,7 @@ public class mechMovement : MonoBehaviour {
 	float damageTurnOff;
 
 	public bool forceKeyboard = false;
+	public bool allowedToMove;
 
 	public GoliathNetworking networker;
 	// Use this for initialization
@@ -75,11 +79,19 @@ public class mechMovement : MonoBehaviour {
 
 		if (SixenseInput.Controllers[left] != null && !forceKeyboard){
 			//Updating the joystick input
-			lStickX = SixenseInput.Controllers[left].JoystickX;
-			lStickY = SixenseInput.Controllers[left].JoystickY;
-			
-			rStickX = SixenseInput.Controllers[right].JoystickX;
-			rStickY = SixenseInput.Controllers[right].JoystickY;
+			if(allowedToMove == true){
+				lStickX = SixenseInput.Controllers[left].JoystickX;
+				lStickY = SixenseInput.Controllers[left].JoystickY;
+				
+				rStickX = SixenseInput.Controllers[right].JoystickX;
+				rStickY = SixenseInput.Controllers[right].JoystickY;
+			}
+			else{
+				lStickX = 0;
+				rStickX = 0;
+				lStickY = 0;
+				rStickY = 0;
+			}
 		}
 		else{
 			rStickX = 0;
