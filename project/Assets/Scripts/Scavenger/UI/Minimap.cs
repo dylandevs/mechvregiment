@@ -100,6 +100,15 @@ public class Minimap : MonoBehaviour {
 		return icon;
 	}
 
+	public void UpdateObjective(GameObject newObj){
+		foreach (MinimapIcon icon in icons){
+			if (icon.type == MinimapIcon.MMIconType.Objective){
+				icon.GetComponent<MinimapIcon> ().associatedObject = newObj;
+			}
+		}
+		objective = newObj;
+	}
+
 	void PopulateMapIcons(){
 		GameObject icon;
 		MinimapIcon iconScript;
