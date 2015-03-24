@@ -34,7 +34,7 @@ public class FlagTrig : MonoBehaviour {
 
 	void pickedUp(){
 		mechShooty.carrying = true;
-		network.MechPickedUpFlag();
+		network.photonView.RPC("GoliathPickedUpFlag",PhotonTargets.All);
 		flagActive = false;
 	}
 }
