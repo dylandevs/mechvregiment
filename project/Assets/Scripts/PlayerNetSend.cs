@@ -30,6 +30,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject templeShield;
 	public GameObject minionWaypoint;
 
+	private bool connectionSent = false;
+	private bool connectionReceived = false;
+
 	// Use this for initialization
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings("v4.2");
@@ -47,52 +50,62 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!minionScriptsRetrieved){
-			minions = new BotAI[minionManager.transform.childCount];
-			for (int i = 0; i < minionManager.transform.childCount; i++){
-				minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
-				if (minions[i].gameObject.GetActive()){
-					minions[i].remoteId = i;
-				}
-			}
-			
-			minionScriptsRetrieved = true;
-		}
-
 		sendTimer -= Time.deltaTime;
-        if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
-            Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
-            MakeRoom();
-        }
-        else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
-        	if(sendTimer <= 0){
-                //Here's where the RPC calls go so they happen once properly joined.
 
-				// Update player positions
-				for(int i = 0; i < players.Length; i++){
-					Player player = players[i];
-					ControllerScript control = player.playerController;
-
-					if (players[i].gameObject.GetActive() && !players[i].isDead){
-						photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
-						photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching,
-						                control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring, control.spineJoint.transform.localRotation);
+		if (connectionSent){
+			if (!minionScriptsRetrieved){
+				minions = new BotAI[minionManager.transform.childCount];
+				for (int i = 0; i < minionManager.transform.childCount; i++){
+					minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
+					if (minions[i].gameObject.GetActive()){
+						minions[i].remoteId = i;
 					}
 				}
-
-				// Update minion positions
-				for(int i = 0; i < minions.Length; i++){
-					Transform minionTransform = minions[i].transform;
-					NavMeshAgent minionAgent = minions[i].GetComponent<NavMeshAgent>();
-					photonView.RPC ("SetMinionTransform", PhotonTargets.All, minions[i].remoteId, minionTransform.position, minionTransform.rotation, minionAgent.velocity);
-				}
-	        	        
-				sendTimer = SendInterval;
+				
+				minionScriptsRetrieved = true;
 			}
-        }
-        else {
-        	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
-        }
+
+	        if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
+	            Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
+	            MakeRoom();
+	        }
+	        else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
+	        	if(sendTimer <= 0){
+	                //Here's where the RPC calls go so they happen once properly joined.
+
+					// Update player positions
+					for(int i = 0; i < players.Length; i++){
+						Player player = players[i];
+						ControllerScript control = player.playerController;
+
+						if (players[i].gameObject.GetActive() && !players[i].isDead){
+							photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
+							photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching,
+							                control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring, control.spineJoint.transform.localRotation);
+						}
+					}
+
+					// Update minion positions
+					for(int i = 0; i < minions.Length; i++){
+						Transform minionTransform = minions[i].transform;
+						NavMeshAgent minionAgent = minions[i].GetComponent<NavMeshAgent>();
+						photonView.RPC ("SetMinionTransform", PhotonTargets.All, minions[i].remoteId, minionTransform.position, minionTransform.rotation, minionAgent.velocity);
+					}
+		        	        
+					sendTimer = SendInterval;
+				}
+	        }
+	        else {
+	        	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
+	        }
+		}
+		else{
+			if(sendTimer <= 0){
+				photonView.RPC("ScavengerConnected", PhotonTargets.All);
+				sendTimer = SendInterval;
+				connectionSent = true;
+			}
+		}
 	}
 	private void OnPhotonJoinRoomFailed (){
         Debug.Log("Photon failed to join room.");
@@ -102,6 +115,15 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     	Room currentRoom = PhotonNetwork.room;
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
+
+	[RPC]
+	public void ScavengerConnected(){}
+
+	[RPC]
+	public void GoliathConnected(){
+		print ("Goliath online");
+		connectionReceived = true;
+	}
 
 	[RPC]
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){

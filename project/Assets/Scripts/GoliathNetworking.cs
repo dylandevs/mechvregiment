@@ -100,7 +100,8 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
-	public void ScavangerConected(){
+	[RPC]
+	public void ScavangerConnected(){
 		goliathGame.netWorkReady = true;
 	}
 
@@ -109,7 +110,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
 
 	[RPC]
-	void GoliathConected(){}
+	void GoliathConnected(){}
 
 	[RPC]
 	void DamageGoliath(float damage, Vector3 direction){
