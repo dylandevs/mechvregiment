@@ -16,7 +16,7 @@ public class mechMovement : MonoBehaviour {
 	//for taking damage
 	public GameObject damageIndicatorLeft;
 	public GameObject damageIndicatorRight;
-
+	public GameObject templeShield;
 	public MechShoot triggerFlagDropThing;
 
 	public Vector3 topDir;
@@ -267,6 +267,7 @@ public class mechMovement : MonoBehaviour {
 			}
 		}
 		if(shieldActive == false){
+			templeShield.SetActive(false);
 			currMechHealth -= amount;
 		}
 		else{

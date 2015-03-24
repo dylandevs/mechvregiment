@@ -10,7 +10,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu1;
 	public GameObject menu2;
 	public GameObject menu3;
-
+	public GameObject templeShield;
 	public GameObject minimap;
 	public GameObject goliathUI;
 
@@ -56,7 +56,6 @@ public class GoliathGameScript : MonoBehaviour {
 		//turn the mech off so he can't move
 		mechMesh.SetActive(false);
 		goliathUI.SetActive(false);
-
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
 		mechMesh.transform.position = spawnPoint.transform.position;
@@ -112,6 +111,7 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	void OnEnable(){
+		templeShield.SetActive(true);
 		restartMatch = true;
 		menu1B = true;
 	}
