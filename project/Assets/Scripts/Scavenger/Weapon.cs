@@ -735,7 +735,6 @@ public class Weapon : MonoBehaviour {
 	public void StopDrop(){
 		magazineDrop1.rigidbody.velocity = Vector3.zero;
 		magazineDrop3.rigidbody.velocity = Vector3.zero;
-		print (magazineDrop1.rigidbody.velocity);
 		magazineDrop1.rigidbody.isKinematic = true;
 		magazineDrop3.rigidbody.isKinematic = true;
 		magazineDrop1.SetActive(false);

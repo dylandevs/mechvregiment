@@ -11,8 +11,9 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject playerWrapper;
 	private Player[] playerScripts;
 	private bool[] controllersUsed = {false, false, false, false};
-	public GameObject[] playerCams;
-
+	public GameObject skyCameraWrapper;
+	private GameObject[] playerCams;
+	
 	public RuntimeAnimatorController fpsAnim;
 
 	// Use this for initialization
@@ -22,6 +23,12 @@ public class PlayerManager : MonoBehaviour {
 			playerScripts[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
 			playerScripts[i].fpsAnim.runtimeAnimatorController = fpsAnim;
 			playerScripts[i].initializer.Layer = i + 1;
+		}
+
+		playerCams = new GameObject[skyCameraWrapper.transform.childCount];
+		for (int i = 0; i < skyCameraWrapper.transform.childCount; i++){
+			playerCams[i] = skyCameraWrapper.transform.GetChild(i).gameObject;
+			playerCams[i].GetComponent<SkyCamera>().playerController = playerScripts[i].playerController;
 		}
 
 		assignControllers(countConnectedControllers());

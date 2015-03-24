@@ -117,7 +117,8 @@ public class ControllerScript : MonoBehaviour {
 
 	// Flag pickup variables
 	private bool flagInRange = false;
-	private bool flagPickedUp = false;
+	[HideInInspector]
+	public bool flagPickedUp = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -357,12 +358,7 @@ public class ControllerScript : MonoBehaviour {
 			else{
 				// Picking up flag
 				if (X_Press){
-					flagPickedUp = false;
-					anim.SetBool(flagCarryHash, false);
-					fpsAnim.SetBool(flagCarryHash, false);
-					fpsAnim.SetTrigger(changeWeapHash);
-					
-					player.FlagDropped();
+					DropFlag();
 				}
 			}
 
@@ -601,6 +597,16 @@ public class ControllerScript : MonoBehaviour {
 			flagInRange = false;
 		}
 	}
+
+	public void DropFlag(){
+		flagPickedUp = false;
+		anim.SetBool(flagCarryHash, false);
+		fpsAnim.SetBool(flagCarryHash, false);
+		fpsAnim.SetTrigger(changeWeapHash);
+		
+		player.FlagDropped();
+	}
+	
 	void SetCrouching(bool crouchState){
 		isCrouching = crouchState;
 
