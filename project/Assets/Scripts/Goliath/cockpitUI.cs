@@ -204,7 +204,6 @@ public class cockpitUI : MonoBehaviour {
 			mechHolagram.renderer.material.color = tempColour;
 
 			cockPitLight.color = Color.white;
-
 		}
 		else if(currMechHealth > 0){
 			float lerpAmnt = currMechHealth / 1000;

@@ -174,7 +174,6 @@ public class mechMovement : MonoBehaviour {
 			//bottomHalf.transform.Translate(Vector3.forward* moveSpeedY * lStickY,Space.Self);
 			//bottomHalf.transform.Translate(Vector3.right * moveSpeedX * lStickX,Space.Self);
 		}
-		else
 		/*
 		if(mechHealth >=1){
 			//if a key is pushed move the location of the mech
@@ -260,23 +259,26 @@ public class mechMovement : MonoBehaviour {
 
 		damageTurnOff = 0.5f;
 		damagedTime = 10;
+
 		if(shieldActive == true){
 			if(mechShield <= 0){
 				networker.photonView.RPC("BrokenShield",PhotonTargets.All);
+				templeShield.SetActive(false);
 				shieldActive = false;
 			}
 		}
 		if(shieldActive == false){
-			templeShield.SetActive(false);
 			currMechHealth -= amount;
 		}
 		else{
 			mechShield -= amount;
 		}
 
+		//damage direction indicators calculations
 		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
 		float amountFromRight = Vector3.Angle(direction,topHalfX.transform.right);
 		float amountFromLeft = Vector3.Angle(direction,topHalfX.transform.right * -1);
+
 		if(amountFromRight < amountFromLeft){
 			// its on the left side
 			damageIndicatorLeft.SetActive(true);

@@ -256,8 +256,6 @@ public class MechShoot : MonoBehaviour {
 			miniGunArm.transform.localEulerAngles = adjustedRotM;
 			cannonArm.transform.localEulerAngles = adjustedRotV;
 
-	
-			
 			if(lTrig > 0.8f && ableToShoot == true){
 				shootTimer = 1f;
 				miniGunFirer.cannonShoot = true;
@@ -410,9 +408,6 @@ public class MechShoot : MonoBehaviour {
 
 			//makes the ray
 			Ray minMode = new Ray(cannonShotStart.transform.position,cannonShotStart.transform.forward);
-
-			Debug.DrawRay(cannonShotStart.transform.position,cannonShotStart.transform.forward * 1000,Color.red);
-
 			RaycastHit minHit;
 
 
@@ -489,6 +484,7 @@ public class MechShoot : MonoBehaviour {
 				rightEmitter.SetActive(false);
 			}
 		}
+
 	}//this is end of update
 	//function to reset the modes
 	void resetModes(){
@@ -513,6 +509,8 @@ public class MechShoot : MonoBehaviour {
 		networkManager.photonView.RPC ("GoliathDroppedFlag",PhotonTargets.All,flag.transform.position);
 		flag.SetActive(true);
 		flagCarried.SetActive(false);
+		carrying = false;
+		resetModes();
 	}
 
 	public void updateAimerPos(){
