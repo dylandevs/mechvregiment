@@ -200,7 +200,7 @@ public class Player : MonoBehaviour {
 		weaponModels3[currentWeaponIndex].SetActive(true);
 		crystal.SetActive(false);
 
-		game.FlagDropped(transform.position, playerController.facing);
+		game.FlagDropped(transform.position);
 	}
 	
 	// Deals damage to player and resets healing timer

@@ -59,13 +59,13 @@ public class ScavGame : MonoBehaviour {
 		}
 	}
 
-	public void FlagDropped(Vector3 flagPos, Vector3 direction){
+	public void FlagDropped(Vector3 flagPos){
 		foreach (Player player in players){
-			flag.transform.position = flagPos + Vector3.up * 2;
+			flag.transform.position = flagPos + Vector3.up;
 			player.display.minimap.UpdateObjective (flag);
 			flag.SetActive(true);
 
-			flag.rigidbody.AddForce(direction * 10);
+			//flag.rigidbody.AddForce(direction * 10);
 		}
 	}
 }

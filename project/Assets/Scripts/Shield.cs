@@ -5,6 +5,7 @@ public class Shield : MonoBehaviour {
 
 	public PlayerNetSend networkManager;
 	public PoolManager hitPool;
+	public bool goliathShield = true;
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +18,9 @@ public class Shield : MonoBehaviour {
 	}
 
 	public void DamageGoliath(float damage, Vector3 direction, Vector3 position){
-		networkManager.photonView.RPC ("DamageGoliathShielded", PhotonTargets.All, damage, direction, position);
+		if (goliathShield) {
+			networkManager.photonView.RPC ("DamageGoliathShielded", PhotonTargets.All, damage, direction, position);
+		}
 		GameObject shieldHit = hitPool.Retrieve(position);
 		shieldHit.transform.forward = -direction;
 	}

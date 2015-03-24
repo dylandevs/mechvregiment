@@ -591,13 +591,13 @@ public class ControllerScript : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter(Collider collider){
-		if (collider.name == "flag"){
+		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = true;
 		}
 	}
 
 	public void OnTriggerExit(Collider collider){
-		if (collider.name == "flag"){
+		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = false;
 		}
 	}
