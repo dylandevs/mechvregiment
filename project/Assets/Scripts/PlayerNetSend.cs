@@ -7,6 +7,8 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	private float SendInterval = 0.15f;
 	private float sendTimer = 0;
 
+	public ScavGame game;
+
 	public GameObject playerWrapper;
 	private Player[] players;
 	public PoolManager playerMineManager;
@@ -29,6 +31,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject goliathShield;
 	public GameObject templeShield;
 	public GameObject minionWaypoint;
+	public GameObject crystal;
 
 	private bool connectionSent = false;
 	private bool connectionReceived = false;
@@ -50,26 +53,29 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		sendTimer -= Time.deltaTime;
 
-		if (connectionSent){
-			if (!minionScriptsRetrieved){
-				minions = new BotAI[minionManager.transform.childCount];
-				for (int i = 0; i < minionManager.transform.childCount; i++){
-					minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
-					if (minions[i].gameObject.GetActive()){
-						minions[i].remoteId = i;
-					}
+		if (!minionScriptsRetrieved){
+			minions = new BotAI[minionManager.transform.childCount];
+			for (int i = 0; i < minionManager.transform.childCount; i++){
+				minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
+				if (minions[i].gameObject.GetActive()){
+					minions[i].remoteId = i;
 				}
-				
-				minionScriptsRetrieved = true;
 			}
+			
+			minionScriptsRetrieved = true;
+		}
 
-	        if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
-	            Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
-	            MakeRoom();
-	        }
-	        else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
+        if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
+            Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
+            MakeRoom();
+        }
+        else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
+			sendTimer -= Time.deltaTime;
+
+			if (connectionReceived){
+
+
 	        	if(sendTimer <= 0){
 	                //Here's where the RPC calls go so they happen once properly joined.
 
@@ -94,18 +100,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		        	        
 					sendTimer = SendInterval;
 				}
-	        }
-	        else {
-	        	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
-	        }
-		}
-		else{
-			if(sendTimer <= 0){
-				photonView.RPC("ScavengerConnected", PhotonTargets.All);
-				sendTimer = SendInterval;
-				connectionSent = true;
 			}
+			else{
+				if(sendTimer <= 0){
+					photonView.RPC("ScavengerConnected", PhotonTargets.All);
+					sendTimer = SendInterval;
+				}
+			}
+        }
+        else {
+        	Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
 		}
+
 	}
 	private void OnPhotonJoinRoomFailed (){
         Debug.Log("Photon failed to join room.");
@@ -116,6 +122,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
+	// Connection RPC
 	[RPC]
 	public void ScavengerConnected(){}
 
@@ -125,6 +132,27 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		connectionReceived = true;
 	}
 
+	// Flag RPC
+	[RPC]
+	public void ScavengerDroppedFlag(Vector3 flagPos, int Player){}
+	
+	[RPC]
+	public void ScavengerPickedUpFlag(int Player){}
+
+	[RPC]
+	public void GoliathDroppedFlag(Vector3 flagPos){
+		game.flag.transform.position = flagPos;
+		game.flag.rigidbody.velocity = Vector3.zero;
+		game.flag.SetActive(true);
+	}
+	
+	[RPC] 
+	public void GoliathPickedUpFlag(){
+		game.flag.SetActive(false);
+		game.FlagRetrieved(goliath.botJoint);
+	}
+
+	// Goliath RPC
 	[RPC]
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){
 		goliath.SetNextTargetTransform(topPos, topRot, botPos, botRot, botVel, spineRot, shoulderRRot, shoulderLRot);
@@ -172,11 +200,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		templeShield.SetActive(false);
 		goliathShield.SetActive(false);
 	}
-	
+
+	// Player RPC	
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
-
-	// Player RPC
+	
 	[RPC]
 	void UpdatePlayerAnim(int playerNum, float fwdSpeed, float rgtSpeed, float speed, bool crouching, bool sprinting, bool ads, bool firing, Quaternion spineRot){}
 

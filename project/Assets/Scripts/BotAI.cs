@@ -97,6 +97,8 @@ public class BotAI : MonoBehaviour {
 	[HideInInspector]
 	public Pooled pooled;
 
+	private bool navigating = false;
+
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
@@ -119,107 +121,131 @@ public class BotAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		facing = transform.rotation * baseFacing;
+		if (navigating){
+			facing = transform.rotation * baseFacing;
 
-		// Living behaviour
-		if (!isDead){
+			// Living behaviour
+			if (!isDead){
 
-			// Check first to see if target is alive
-			if (currentTarget){
-				if (currentTarget.isDead){
-					currentTarget = null;
-					state = State.Searching;
-					searchTime = SearchDuration;
-				}
-			}
-
-			if (!currentTarget) {
-				AttemptAcquireTarget();
-			}
-
-			if (currentTarget){
-				// Calculating useful values
-				Vector3 diffVec = currentTarget.transform.position - transform.position;
-				float angle = Vector3.Angle(facing, diffVec);
-
-				CalculateCurrentState();
-
-				// Determine if firing is appropriate
-				if (diffVec.magnitude < ThreshFire && currentTarget && state > State.Searching){
-					if (reloadProg >= FireRate && angle < ViewAngle){
-						//fireInDirection(currentTarget.transform);
-						FireAtPredictively(currentTarget.gameObject);
-						reloadProg = 0;
+				// Check first to see if target is alive
+				if (currentTarget){
+					if (currentTarget.isDead){
+						currentTarget = null;
+						state = State.Searching;
+						searchTime = SearchDuration;
 					}
 				}
-			}
 
-			// If all else fails, see where ally is looking
-			else {
-				AttemptAcquireAllyTarget();
-			}
-
-			// If still unable to visually spot target, listen
-			if (state < State.Approaching){
-				ListenForGunshots();
-			}
-
-			// Act based on state
-			if (state == State.AllClear){
-				if (prevState != state){
-					currentTarget = null;
-				}
-				setSurfaceColour(safeCol);
-				Idle();
-			}
-			else if (state == State.Traveling){
-				if (HasAgentArrivedAtDest()){
-					state = State.AllClear;
-				}
-			}
-			else if (state == State.Searching){
-				// If is newly searching
-				if (prevState != state){
-					currentTarget = null;
-					navMeshAgent.speed = MoveSpeed;
+				if (!currentTarget) {
+					AttemptAcquireTarget();
 				}
 
-				setSurfaceColour(srchCol);
-				Search();
-			}
-			else if (state == State.Approaching){
-				// If newly approaching
-				if (prevState != state){
-					//alertTime = AlertDuration;
-					navMeshAgent.speed = MoveSpeed;
+				if (currentTarget){
+					// Calculating useful values
+					Vector3 diffVec = currentTarget.transform.position - transform.position;
+					float angle = Vector3.Angle(facing, diffVec);
+
+					CalculateCurrentState();
+
+					// Determine if firing is appropriate
+					if (diffVec.magnitude < ThreshFire && currentTarget && state > State.Searching){
+						if (reloadProg >= FireRate && angle < ViewAngle){
+							//fireInDirection(currentTarget.transform);
+							FireAtPredictively(currentTarget.gameObject);
+							reloadProg = 0;
+						}
+					}
 				}
 
-				navMeshAgent.destination = lastSighted;
-				setSurfaceColour(warnCol);
-			}
-			else if (state == State.VeryClose){
-				alertTime = AlertDuration;
+				// If all else fails, see where ally is looking
+				else {
+					AttemptAcquireAllyTarget();
+				}
 
-				FaceTarget(currentTarget.gameObject);
-				setSurfaceColour(dngrCol);
-				navMeshAgent.velocity = Vector3.zero;
-			}
+				// If still unable to visually spot target, listen
+				if (state < State.Approaching){
+					ListenForGunshots();
+				}
 
-			if (reloadProg < FireRate){
-				reloadProg += Time.deltaTime;
-			}
-			if (alertTime > 0){
-				alertTime -= Time.deltaTime;
-			}
-			if (searchTime > 0){
-				searchTime -= Time.deltaTime;
-			}
-			prevState = state;
+				// Act based on state
+				if (state == State.AllClear){
+					if (prevState != state){
+						currentTarget = null;
+					}
+					setSurfaceColour(safeCol);
+					Idle();
+				}
+				else if (state == State.Traveling){
+					if (HasAgentArrivedAtDest()){
+						state = State.AllClear;
+					}
+				}
+				else if (state == State.Searching){
+					// If is newly searching
+					if (prevState != state){
+						currentTarget = null;
+						navMeshAgent.speed = MoveSpeed;
+					}
 
+					setSurfaceColour(srchCol);
+					Search();
+				}
+				else if (state == State.Approaching){
+					// If newly approaching
+					if (prevState != state){
+						//alertTime = AlertDuration;
+						navMeshAgent.speed = MoveSpeed;
+					}
+
+					navMeshAgent.destination = lastSighted;
+					setSurfaceColour(warnCol);
+				}
+				else if (state == State.VeryClose){
+					alertTime = AlertDuration;
+
+					FaceTarget(currentTarget.gameObject);
+					setSurfaceColour(dngrCol);
+					navMeshAgent.velocity = Vector3.zero;
+				}
+
+				if (state > State.Searching){
+					navMeshAgent.stoppingDistance = 10;
+				}
+				else{
+					navMeshAgent.stoppingDistance = 0;
+				}
+
+				if (reloadProg < FireRate){
+					reloadProg += Time.deltaTime;
+				}
+				if (alertTime > 0){
+					alertTime -= Time.deltaTime;
+				}
+				if (searchTime > 0){
+					searchTime -= Time.deltaTime;
+				}
+				prevState = state;
+
+			}
+			else{
+				pool.Deactivate(gameObject);
+				pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
+			}
 		}
-		else{
-			pool.Deactivate(gameObject);
-			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
+	}
+
+	void OnEnable(){
+		navigating = false;
+		navMeshAgent.enabled = false;
+		rigidbody.isKinematic = false;
+		rigidbody.velocity = Vector3.zero;
+	}
+
+	void OnCollisionEnter(){
+		if (!navigating){
+			navigating = true;
+			navMeshAgent.enabled = true;
+			rigidbody.isKinematic = true;
 		}
 	}
 
@@ -517,7 +543,6 @@ public class BotAI : MonoBehaviour {
 		actionTime += Time.deltaTime;
 
 		if (actionTime > idleDelay && idleState != IdleMoving){
-			navMeshAgent.stoppingDistance = 0;
 			navMeshAgent.speed = WalkSpeed;
 			idleState = IdleMoving;
 			actionTime = 0;

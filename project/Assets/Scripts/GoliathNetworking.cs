@@ -121,13 +121,15 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void FlagDrop(Vector3 flagPos,int Player){
+	public void ScavengerDroppedFlag(Vector3 flagPos,int Player){
 		flag.transform.position = flagPos;
+		flag.SetActive(true);
 		cockpit.droppedFlag(Player);
 	}
 
 	[RPC]
-	public void ScavengerPickedUp(int Player){
+	public void ScavengerPickedUpFlag(int Player){
+		flag.SetActive(false);
 		cockpit.switchToFlag(Player);
 	}
 
@@ -144,10 +146,10 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void BrokenShield(){}
 
 	[RPC]
-	public void MechDroppedFlag(Vector3 flagPos){}
+	public void GoliathDroppedFlag(Vector3 flagPos){}
 
 	[RPC] 
-	public void MechPickedUpFlag(){}
+	public void GoliathPickedUpFlag(){}
 
 	[RPC]
 	public void CreateGoliathTracer(Vector3 position, Vector3 direction){}

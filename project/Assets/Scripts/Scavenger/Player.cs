@@ -193,6 +193,10 @@ public class Player : MonoBehaviour {
 		crystal.SetActive(true);
 
 		game.FlagRetrieved(gameObject);
+		display.minimap.UpdateObjective(game.exitPoint);
+		game.exitPoint.SetActive(true);
+
+		networkManager.photonView.RPC ("ScavengerPickedUpFlag", PhotonTargets.All, initializer.Layer - 1);
 	}
 
 	public void FlagDropped(){
@@ -201,6 +205,9 @@ public class Player : MonoBehaviour {
 		crystal.SetActive(false);
 
 		game.FlagDropped(transform.position);
+		game.exitPoint.SetActive(false);
+
+		networkManager.photonView.RPC ("ScavengerDroppedFlag", PhotonTargets.All, transform.position + Vector3.up, initializer.Layer - 1);
 	}
 	
 	// Deals damage to player and resets healing timer

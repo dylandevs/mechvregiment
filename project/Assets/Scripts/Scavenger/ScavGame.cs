@@ -12,6 +12,7 @@ public class ScavGame : MonoBehaviour {
 	public GameObject flag;
 	public GameObject playerWrapper;
 	private Player[] players;
+	public GameObject exitPoint;
 
 	bool GameRunning = false;
 
