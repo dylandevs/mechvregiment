@@ -218,7 +218,7 @@ public class Player : MonoBehaviour {
 
 			health = Mathf.Max (health, 0);
 
-			print (initializer.Layer + " " + damage + ":" + health);
+			//print (initializer.Layer + " " + damage + ":" + health);
 
 			display.IndicateDamageDirection (direction);
 			display.UpdateDamageOverlay (1 - health * InvMaxHealth);
@@ -226,6 +226,9 @@ public class Player : MonoBehaviour {
 			if (health <= 0){
 				isDead = true;
 				respawnTimer = RespawnWait;
+				if (playerController.flagPickedUp){
+					playerController.DropFlag();
+				}
 
 				// Disable firing layer
 				anim.SetLayerWeight(1, 0);

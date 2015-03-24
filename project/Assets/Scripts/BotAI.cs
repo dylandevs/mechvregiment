@@ -236,7 +236,9 @@ public class BotAI : MonoBehaviour {
 
 	void OnEnable(){
 		navigating = false;
-		navMeshAgent.enabled = false;
+		if (navMeshAgent){
+			navMeshAgent.enabled = false;
+		}
 		rigidbody.isKinematic = false;
 		rigidbody.velocity = Vector3.zero;
 	}
@@ -244,7 +246,9 @@ public class BotAI : MonoBehaviour {
 	void OnCollisionEnter(){
 		if (!navigating){
 			navigating = true;
-			navMeshAgent.enabled = true;
+			if (navMeshAgent){
+				navMeshAgent.enabled = true;
+			}
 			rigidbody.isKinematic = true;
 		}
 	}
