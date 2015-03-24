@@ -81,6 +81,7 @@ public class RocketScript : MonoBehaviour {
 		turnTimer = 1;
 		hitGround = false;
 		missleMesh.SetActive(true);
+		hitAPlayer = false;
 	}
 
 	public void SetTarget(Vector3 newTarget){
@@ -125,7 +126,4 @@ public class RocketScript : MonoBehaviour {
 		}
 	}
 
-	void OnEnable(){
-		hitAPlayer = false;
-	}
 }
