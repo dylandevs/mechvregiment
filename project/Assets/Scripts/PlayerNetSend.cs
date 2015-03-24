@@ -149,7 +149,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	[RPC] 
 	public void GoliathPickedUpFlag(){
 		game.flag.SetActive(false);
-		game.FlagRetrieved(goliath.botJoint);
+		game.FlagRetrieved(goliath.botJoint.gameObject);
 	}
 
 	// Goliath RPC
