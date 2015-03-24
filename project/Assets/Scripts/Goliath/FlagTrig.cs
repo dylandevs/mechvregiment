@@ -4,6 +4,8 @@ using System.Collections;
 public class FlagTrig : MonoBehaviour {
 
 	public MechShoot mechShooty;
+	public GoliathNetworking network;
+
 	public bool flagActive;
 	// Use this for initialization
 	void Start () {
@@ -24,8 +26,15 @@ public class FlagTrig : MonoBehaviour {
 		//display Right bumper to pick up UI
 	}
 
+	void OnTriggerExit(Collider other){
+		if(other.tag == "Player"){
+			flagActive = false;
+		}
+	}
+
 	void pickedUp(){
 		mechShooty.carrying = true;
+		network.MechPickedUpFlag();
 		flagActive = false;
 	}
 }

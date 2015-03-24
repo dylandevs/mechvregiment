@@ -13,9 +13,11 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public GameObject goliathSpine;
 	public GameObject goliathShoulderR;
 	public GameObject goliathShoulderL;
+	public GameObject flag;
 
 	public mechMovement mechHealth;
 	public GoliathGameScript goliathGame;
+	public cockpitUI cockpit;
 
 	public GameObject playerAvatarWrapper;
 	private PlayerAvatar[] playerAvatars;
@@ -100,11 +102,6 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
-	[RPC]
-	public void ScavengerConnected(){
-		goliathGame.netWorkReady = true;
-	}
-
 	// Goliath RPC
 	[RPC]
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
@@ -119,6 +116,22 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
+	public void ScavengerConnected(){
+		goliathGame.netWorkReady = true;
+	}
+
+	[RPC]
+	public void FlagDrop(Vector3 flagPos,int Player){
+		flag.transform.position = flagPos;
+		cockpit.droppedFlag(Player);
+	}
+
+	[RPC]
+	public void ScavengerPickedUp(int Player){
+		cockpit.switchToFlag(Player);
+	}
+
+	[RPC]
 	void DamageGoliathShielded(float damage, Vector3 direction,Vector3 pos){
 		// Apply damage to Goliath
 		mechHealth.takeDamage(damage,direction);
@@ -129,6 +142,12 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	[RPC]
 	public void BrokenShield(){}
+
+	[RPC]
+	public void MechDroppedFlag(Vector3 flagPos){}
+
+	[RPC] 
+	public void MechPickedUpFlag(){}
 
 	[RPC]
 	public void CreateGoliathTracer(Vector3 position, Vector3 direction){}

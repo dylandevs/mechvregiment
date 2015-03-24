@@ -77,6 +77,7 @@ public class MechShoot : MonoBehaviour {
 	public GoliathNetworking networkManager;
 
 	public bool forceKeyboard = false;
+	public bool allowedToShoot;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -182,7 +183,7 @@ public class MechShoot : MonoBehaviour {
 
 		//END OF KEYBOARD CONTROLS
 		}
-
+		if(allowedToShoot == true){
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
 		if (miniGunMode == true) {
@@ -464,7 +465,7 @@ public class MechShoot : MonoBehaviour {
 				}
 			}
 
-
+		}
 	}
 
 		if(carrying == true){
@@ -508,10 +509,9 @@ public class MechShoot : MonoBehaviour {
 
 	public void releaseFlag(){
 		//moves the realflag to the fake flags position and adds a force to it so it flies away
-		flag.transform.position = flagCarried.transform.position + new Vector3 (0,25,0);
+		flag.transform.position = flagCarried.transform.position + new Vector3 (0,-5,0);
+		networkManager.MechDroppedFlag(flag.transform.position);
 		flag.SetActive(true);
-		flag.rigidbody.AddForce(Vector3.up * 500);
-		flag.rigidbody.AddForce(Vector3.right * Random.Range (-200F, 200F));
 		flagCarried.SetActive(false);
 	}
 

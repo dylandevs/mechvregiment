@@ -10,11 +10,12 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu1;
 	public GameObject menu2;
 	public GameObject menu3;
-	public GameObject templeShield;
 	public GameObject minimap;
 	public GameObject goliathUI;
+	public GameObject flag;
 
 	public mechMovement movement;
+	public MechShoot mechShoot;
 	public GoliathNetworking network;
 
 	public bool allConditions; 
@@ -97,6 +98,7 @@ public class GoliathGameScript : MonoBehaviour {
 			blackOut.SetActive(false);
 			waitingForPlayers.SetActive(false);
 
+			mechShoot.allowedToShoot = true;
 			goliathUI.SetActive(true);
 			minimap.SetActive(true);
 			mechMesh.SetActive(true);
@@ -111,7 +113,6 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		templeShield.SetActive(true);
 		restartMatch = true;
 		menu1B = true;
 	}

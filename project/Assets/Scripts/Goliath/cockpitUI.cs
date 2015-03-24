@@ -18,6 +18,7 @@ public class cockpitUI : MonoBehaviour {
 
 	//Goliath minimap stuffs
 	public GameObject [] miniMapIndicatorsList;
+	public GameObject [] miniMapFlag;
 	public GameObject[] disabledSparks;
 
 	public Image miniGunImage;
@@ -74,8 +75,6 @@ public class cockpitUI : MonoBehaviour {
 				if(dist <= 100){
 					Ray ray = new Ray(camPos.transform.position,direction);
 					RaycastHit[] hitInfoFire;
-					
-					Debug.DrawRay(camPos.transform.position,direction,Color.red);
 
 					hitInfoFire = Physics.RaycastAll(ray, dist);
 					int j = 0;
@@ -281,7 +280,12 @@ public class cockpitUI : MonoBehaviour {
 
 	}
 
-	public void turnOffIndicator(){
+	public void switchToFlag(int playerNum){
+		miniMapIndicatorsList[playerNum].SetActive(false);
+		miniMapFlag[playerNum].SetActive(true);
+	}
 
+	public void droppedFlag(int playerNum){
+		miniMapFlag[playerNum].SetActive(false);
 	}
 }
