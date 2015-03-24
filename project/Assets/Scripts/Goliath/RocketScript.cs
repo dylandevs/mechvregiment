@@ -31,7 +31,7 @@ public class RocketScript : MonoBehaviour {
 	float timer = 0;
 	float turnTimer;
 	bool hitGround;
-
+	bool hitAPlayer;
 	public bool isAvatar = false;
 
 	void Start(){
@@ -99,8 +99,8 @@ public class RocketScript : MonoBehaviour {
 			Collider[] colliders = Physics.OverlapSphere (pos, explosionRadius,mask);
 			foreach (Collider c in colliders) 
 			{
-				if(c.gameObject.collider.tag == "Player"){
-
+				if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
+					hitAPlayer = true;
 					float dist = Vector3.Distance(transform.position, c.transform.position);
 					float damageRatio = 1f - (dist / explosionRadius);
 					float damageAmnt = damage * damageRatio;
@@ -123,5 +123,9 @@ public class RocketScript : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void OnEnable(){
+		hitAPlayer = false;
 	}
 }

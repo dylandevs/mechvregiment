@@ -11,6 +11,9 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu2;
 	public GameObject menu3;
 
+	public GameObject minimap;
+	public GameObject goliathUI;
+
 	public mechMovement movement;
 	public GoliathNetworking network;
 
@@ -23,7 +26,7 @@ public class GoliathGameScript : MonoBehaviour {
 	bool readyToGo;
 	// Use this for initialization
 	void Start () {
-	
+		 minimap.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -52,33 +55,35 @@ public class GoliathGameScript : MonoBehaviour {
 
 		//turn the mech off so he can't move
 		mechMesh.SetActive(false);
+		goliathUI.SetActive(false);
 
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
 		mechMesh.transform.position = spawnPoint.transform.position;
-		if(menu1B == true){
-			menu1.SetActive(true);
+		if(readyToGo == false){
+			if(menu1B == true){
+				menu1.SetActive(true);
+			}
+			//turn on mech menues and wait to see if they go through
+			if(lTrig >= 0.8){
+				menu1B = false;
+				menu1.SetActive(false);
+				menu1.SetActive(false);
+				menu2.SetActive(true);
+			}
+			if(rTrig >= 0.8){
+				menu1.SetActive(false);
+				menu2.SetActive(false);
+				menu3.SetActive(true);
+			}
+			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
+				menu3.SetActive(false);
+				readyToGo = true;
+			}
 		}
-		//turn on mech menues and wait to see if they go through
-		if(lTrig >= 0.8){
-			menu1B = false;
-			menu1.SetActive(false);
-			menu1.SetActive(false);
-			menu2.SetActive(true);
-		}
-		if(rTrig >= 0.8){
-			menu1.SetActive(false);
-			menu2.SetActive(false);
-			menu3.SetActive(true);
-		}
-		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
-			menu3.SetActive(false);
-			readyToGo = true;
-		}
-
 		if(readyToGo == true && netWorkReady == true){
 			allConditions = true;
-			network.photonView.RPC("GoliathConected",PhotonTargets.All);
+			network.photonView.RPC("GoliathConnected",PhotonTargets.All);
 		}
 		//check is they have clicked left fire then right fire then start
 	}
@@ -91,10 +96,14 @@ public class GoliathGameScript : MonoBehaviour {
 			menu2.SetActive(false);
 			menu3.SetActive(false);
 			blackOut.SetActive(false);
-			restartMatch = true;
 			waitingForPlayers.SetActive(false);
+
+			goliathUI.SetActive(true);
+			minimap.SetActive(true);
 			mechMesh.SetActive(true);
 			movement.allowedToMove = true;
+
+			restartMatch = false;
 		}
 	}
 

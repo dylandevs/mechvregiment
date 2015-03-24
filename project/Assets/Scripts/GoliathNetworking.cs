@@ -101,7 +101,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     }
 
 	[RPC]
-	public void ScavangerConnected(){
+	public void ScavengerConnected(){
 		goliathGame.netWorkReady = true;
 	}
 

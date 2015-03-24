@@ -21,8 +21,10 @@ public class cannonShot : MonoBehaviour {
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
-	float damage = 40;
-	float damageDirect = 75;
+	float damage = 100;
+	float damageDirect = 100;
+
+	bool hitAPlayer;
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -86,7 +88,8 @@ public class cannonShot : MonoBehaviour {
 					Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 					foreach (Collider c in colliders) 
 					{
-						if(c.gameObject.collider.tag == "Player"){
+						if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
+							hitAPlayer = true;
 							//cannonHit.SetActive(true);
 							float dist = Vector3.Distance(transform.position, c.transform.position);
 							float damageRatio = 1f - (dist / explosionRadius);
@@ -125,6 +128,7 @@ public class cannonShot : MonoBehaviour {
 		timer = 5;
 		explode1.emit = true;
 		explode2.emit = true;
+		hitAPlayer = false;
 	}
 
 	void doDamageCannon(){

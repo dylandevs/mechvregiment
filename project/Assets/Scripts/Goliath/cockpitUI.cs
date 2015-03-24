@@ -61,62 +61,63 @@ public class cockpitUI : MonoBehaviour {
 	void Update () {
 
 			for(int i = 0;i < playerAvatars.Length;i++){
-				print("in the for loop");
-				//turn the diamon to look at the camera in the mech
-				Vector3 diamondLook = sightedImage[i].transform.position - camPos.transform.position;
-				Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
-				sightedImage[i].transform.rotation =  Quaternion.LookRotation(newDir);
+					//turn the diamon to look at the camera in the mech
+					Vector3 diamondLook = sightedImage[i].transform.position - camPos.transform.position;
+					Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
+					sightedImage[i].transform.rotation =  Quaternion.LookRotation(newDir);
 
-			Vector3 direction = (playerAvatars[i].position + Vector3.up) - camPos.transform.position ;
-				float dist = direction.magnitude;
-				
-			sightedImage[i].transform.position = camPos.transform.position + direction.normalized * 5;
-				
+					Vector3 direction = (playerAvatars[i].position + Vector3.up) - camPos.transform.position ;
+					float dist = direction.magnitude;
+					
+					sightedImage[i].transform.position = camPos.transform.position + direction.normalized * 5;
+					
+				if(dist <= 100){
+					Ray ray = new Ray(camPos.transform.position,direction);
+					RaycastHit[] hitInfoFire;
+					
+					Debug.DrawRay(camPos.transform.position,direction,Color.red);
 
-				Ray ray = new Ray(camPos.transform.position,direction);
-				RaycastHit[] hitInfoFire;
-				
-				Debug.DrawRay(camPos.transform.position,direction,Color.red);
+					hitInfoFire = Physics.RaycastAll(ray, dist);
+					int j = 0;
 
-				hitInfoFire = Physics.RaycastAll(ray, dist);
-				int j = 0;
+					bool hitRet = false;
+					bool hitTerrain = false;
 
-				bool hitRet = false;
-				bool hitTerrain = false;
+					while (j < hitInfoFire.Length) {
+						if(hitInfoFire[j].collider.tag == "Reticle"){
+							hitRet = true;
+						}
 
-				while (j < hitInfoFire.Length) {
-					if(hitInfoFire[j].collider.tag == "Reticle"){
-						hitRet = true;
+						if(hitInfoFire[j].collider.tag == "Terrain"){
+							hitTerrain = true;
+						}
+							j++;
+						}	
+
+						if(hitTerrain == true && hitRet == true){
+							Color tempColour = sightedImage[i].renderer.material.color;
+							tempColour.a = 0.5f;
+							sightedImage[i].renderer.material.color = tempColour;
+						}
+						
+						if(hitRet == true && hitTerrain == false){
+							Color tempColour = sightedImage[i].renderer.material.color;
+							tempColour.a = 1f;
+							sightedImage[i].renderer.material.color = tempColour;
+						}
+
+						else if(hitRet == false){
+							Color tempColour = sightedImage[i].renderer.material.color;
+							tempColour.a = 0f;
+							sightedImage[i].renderer.material.color = tempColour;
+						}
+				}
+					else if(dist > 100){
+						Color tempColour = sightedImage[i].renderer.material.color;
+						tempColour.a = 0f;
+						sightedImage[i].renderer.material.color = tempColour;
 					}
-
-					if(hitInfoFire[j].collider.tag == "Terrain"){
-						hitTerrain = true;
-					}
-					j++;
-				}	
-
-				if(hitTerrain == true && hitRet == true){
-					print("ret state");
-					Color tempColour = sightedImage[i].renderer.material.color;
-					tempColour.a = 0.5f;
-					sightedImage[i].renderer.material.color = tempColour;
-				}
-				
-				if(hitRet == true && hitTerrain == false){
-					print("terrain state");
-					Color tempColour = sightedImage[i].renderer.material.color;
-					tempColour.a = 1f;
-					sightedImage[i].renderer.material.color = tempColour;
-				}
-				
-				else if(hitRet == false){
-					print("none of the above");
-					Color tempColour = sightedImage[i].renderer.material.color;
-					tempColour.a = 0f;
-					sightedImage[i].renderer.material.color = tempColour;
-				}
 		    }
-
 		minigunMode = mechShoot.miniGunMode;
 		missleMode = mechShoot.rocketMode;
 		minionMode = mechShoot.minionMode;
