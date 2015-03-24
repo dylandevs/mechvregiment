@@ -12,6 +12,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu3;
 
 	public mechMovement movement;
+	public GoliathNetworking network;
 
 	public bool allConditions; 
 	public bool netWorkReady;
@@ -73,6 +74,11 @@ public class GoliathGameScript : MonoBehaviour {
 		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
 			menu3.SetActive(false);
 			readyToGo = true;
+		}
+
+		if(readyToGo == true && netWorkReady == true){
+			allConditions = true;
+			network.photonView.RPC("GoliathConected",PhotonTargets.All);
 		}
 		//check is they have clicked left fire then right fire then start
 	}
