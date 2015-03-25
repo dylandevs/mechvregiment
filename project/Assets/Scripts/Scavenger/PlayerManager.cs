@@ -29,6 +29,7 @@ public class PlayerManager : MonoBehaviour {
 		for (int i = 0; i < skyCameraWrapper.transform.childCount; i++){
 			playerCams[i] = skyCameraWrapper.transform.GetChild(i).gameObject;
 			playerCams[i].GetComponent<SkyCamera>().playerController = playerScripts[i].playerController;
+			playerScripts[i].display.skyCam = playerCams[i].camera;
 		}
 
 		assignControllers(countConnectedControllers());

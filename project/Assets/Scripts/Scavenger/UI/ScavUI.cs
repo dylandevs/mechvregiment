@@ -8,7 +8,6 @@ public class ScavUI : MonoBehaviour {
 	public Camera playerCam;
 	public Camera uiCam;
 	public Camera gunCam;
-	public Camera skyCam;
 	public PoolManager damageDirPool;
 	public Player player;
 	public CanvasScaler scaler;
@@ -43,6 +42,9 @@ public class ScavUI : MonoBehaviour {
 	public float HitMarkerFadeTime = 0.3f;
 	private float hitMarkerFadeRate = 1;
 	public CanvasGroup hitMarker;
+
+	[HideInInspector]
+	public Camera skyCam;
 
 	// Time trackers
 	float weaponFlashProgress = 0;

@@ -128,6 +128,8 @@ ModelImporter:
     100244: MAG_LH
     100246: Gnd
     100248: sunDirection
+    100250: clothWrapping
+    100252: curve1
     400000: Ar_Body
     400002: AR_Weapon
     400004: Body
@@ -253,6 +255,8 @@ ModelImporter:
     400244: MAG_LH
     400246: Gnd
     400248: sunDirection
+    400250: clothWrapping
+    400252: curve1
     2300000: Ar_Body
     2300002: bullet:bullet
     2300004: crystal
@@ -270,6 +274,7 @@ ModelImporter:
     2300028: Handle
     2300030: MAG_LH
     2300032: Gnd
+    2300034: clothWrapping
     3300000: Ar_Body
     3300002: bullet:bullet
     3300004: crystal
@@ -287,6 +292,7 @@ ModelImporter:
     3300028: Handle
     3300030: MAG_LH
     3300032: Gnd
+    3300034: clothWrapping
     4300000: pistolMag
     4300002: Mag_LH
     4300004: bullet:bullet
@@ -305,6 +311,7 @@ ModelImporter:
     4300030: bullet
     4300032: AR_Body
     4300034: Gnd
+    4300036: clothWrapping
     7400000: FP_Run_AR
     7400002: Take 0010
     7400004: FP_Walk_AR
@@ -329,7 +336,8 @@ ModelImporter:
     7400042: FP_Reload_Pistol
     7400044: FP_Walk_Pistol
     7400046: FP_ADS_Pistol
-    7400048: FP_Artifact
+    7400048: FP_Run_Artifact
+    7400050: FP_Idle_Artifact
     9500000: //RootNode
     13700000: Body
   materials:
@@ -6125,10 +6133,10 @@ ModelImporter:
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
-      name: FP_Artifact
+      name: FP_Run_Artifact
       takeName: Take 001
       firstFrame: 560
-      lastFrame: 580
+      lastFrame: 574
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -6348,6 +6356,274 @@ ModelImporter:
       - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR
         weight: 1
       - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR/AR_Body
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR/Mag
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/mineLauncher
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/mineLauncher/mL_Body
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/Pistoll
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/Pistoll/pistol_Body
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/Pistoll/pistolMag
+          1
+        weight: 1
+      - path: GRP_Skeleton/Root/SpineClusterGRP
+        weight: 1
+      - path: GRP_Skeleton/Root/SpineClusterGRP/clusterAbs
+        weight: 1
+      - path: GRP_Skeleton/Root/SpineClusterGRP/clusterChest
+        weight: 1
+      - path: GRP_Skeleton/Root/SpineClusterGRP/clusterHips
+        weight: 1
+      - path: GRP_Skeleton/Root/SpineClusterGRP/clusterNeck
+        weight: 1
+      - path: IKHandles
+        weight: 1
+      - path: IKHandles/ikHandle_L_Arm
+        weight: 1
+      - path: IKHandles/ikHandle_R_Arm
+        weight: 1
+      - path: IKHandles/ikHandle_Spine
+        weight: 1
+      - path: MAIN
+        weight: 1
+      - path: MAIN/Body
+        weight: 1
+      - path: sunDirection
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: FP_Idle_Artifact
+      takeName: Take 001
+      firstFrame: 577
+      lastFrame: 595
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Controls
+        weight: 1
+      - path: Controls/crtl_Hips
+        weight: 1
+      - path: Controls/crtl_Hips/crtl_Chest
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_Abs
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_Back
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_HipSway
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_L_Calvicle
+        weight: 1
+      - path: Controls/crtl_Hips/ctrl_R_Calvicle
+        weight: 1
+      - path: Controls/ctrl_L_Arm
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Index
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Mid
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Pinky
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Ring
+        weight: 1
+      - path: Controls/ctrl_L_Arm/ctrl_L_Thumb
+        weight: 1
+      - path: Controls/ctrl_L_Elbow
+        weight: 1
+      - path: Controls/ctrl_R_Arm
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Index
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Mid
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Pinky
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Ring
+        weight: 1
+      - path: Controls/ctrl_R_Arm/ctrl_R_Thumb
+        weight: 1
+      - path: Controls/ctrl_R_Elbow
+        weight: 1
+      - path: curve1
+        weight: 1
+      - path: Gnd
+        weight: 1
+      - path: GRP_Skeleton
+        weight: 1
+      - path: GRP_Skeleton/Root
+        weight: 1
+      - path: GRP_Skeleton/Root/curve_Spine
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/AR_Mag
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/AR_Mag/bullet
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/AR_Mag/MAG_LH
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/Crystal
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/Crystal/Artifact
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/Crystal/Handle
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Index1/jnt_L_Index2/jnt_L_Index3/jnt_L_Index4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Mid1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Mid1/jnt_L_Mid2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Mid1/jnt_L_Mid2/jnt_L_Mid3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Mid1/jnt_L_Mid2/jnt_L_Mid3/jnt_L_Mid4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Pinky1/jnt_L_Pinky2/jnt_L_Pinky3/jnt_L_Pinky4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Ring1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Ring1/jnt_L_Ring2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Ring1/jnt_L_Ring2/jnt_L_Ring3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Ring1/jnt_L_Ring2/jnt_L_Ring3/jnt_L_Ring4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/jnt_L_Thumb1/jnt_L_Thumb2/jnt_L_Thumb3/jnt_L_Thumb4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/mineMag
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/mineMag/mineMag
+          1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_L_Clavicle/jnt_L_Shoulder/jnt_L_ShoulderTwist/jnt_L_Elbow/jnt_L_Forearm/jnt_L_Wrist/pistolMag
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_NeckBase
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_NeckBase/jnt_Head
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_NeckBase/jnt_Head/FPV_Camera
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_NeckBase/jnt_Head/headTop
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Index1/jnt_R_Index2/jnt_R_Index3/jnt_R_Index4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Mid1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Mid1/jnt_R_Mid2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Mid1/jnt_R_Mid2/jnt_R_Mid3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Mid1/jnt_R_Mid2/jnt_R_Mid3/jnt_R_Mid4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Pinky1/jnt_R_Pinky2/jnt_R_Pinky3/jnt_R_Pinky4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Ring1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Ring1/jnt_R_Ring2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Ring1/jnt_R_Ring2/jnt_R_Ring3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Ring1/jnt_R_Ring2/jnt_R_Ring3/jnt_R_Ring4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/jnt_R_Thumb1/jnt_R_Thumb2/jnt_R_Thumb3/jnt_R_Thumb4
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR/AR_Body
+        weight: 1
+      - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR/clothWrapping
         weight: 1
       - path: GRP_Skeleton/Root/jnt_Hip/jnt_Spine_Nathan/jnt_Spine/jnt_Spine2/jnt_Spine3/jnt_R_Clavicle/jnt_R_Shoulder/jnt_R_ShoulderTwist/jnt_R_Elbow/jnt_R_Forearm/jnt_R_Wrist/WEAPONS/AR/Mag
         weight: 1

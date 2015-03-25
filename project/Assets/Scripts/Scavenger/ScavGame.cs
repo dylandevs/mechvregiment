@@ -14,7 +14,8 @@ public class ScavGame : MonoBehaviour {
 	private Player[] players;
 	public GameObject exitPoint;
 
-	bool GameRunning = false;
+	[HideInInspector]
+	public bool GameRunning = false;
 
 	// Use this for initialization
 	void Start () {
@@ -42,8 +43,7 @@ public class ScavGame : MonoBehaviour {
 			timerText.text = minutes + ":" + seconds;
 
 			if (remainingTime <= 0){
-				// Round over
-
+				GameLost();
 			}
 		}
 	}
@@ -68,5 +68,15 @@ public class ScavGame : MonoBehaviour {
 
 			//flag.rigidbody.AddForce(direction * 10);
 		}
+	}
+
+	void GameLost(){
+		// Endgame UI
+		print ("defeat");
+	}
+
+	public void GameWon(){
+		// Endgame UI
+		print ("victory");
 	}
 }

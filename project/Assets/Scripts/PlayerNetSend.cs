@@ -33,7 +33,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject minionWaypoint;
 	public GameObject crystal;
 
-	private bool connectionSent = false;
 	private bool connectionReceived = false;
 
 	// Use this for initialization

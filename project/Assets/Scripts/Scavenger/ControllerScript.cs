@@ -173,7 +173,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			// Ignore all input if dead
-			if (player.isDead){
+			if (player.isDead || !player.game.GameRunning){
 				A_Press = false;
 				B_Press = false;
 				X_Press = false;
@@ -286,6 +286,15 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			if (!flagPickedUp){
+				
+				// Picking up flag
+				if (X_Press && flagInRange && !isSwapping && !currentWeapon.IsReloading()){
+					flagPickedUp = true;
+					anim.SetBool(flagCarryHash, true);
+					fpsAnim.SetBool(flagCarryHash, true);
+					
+					player.FlagRetrieved();
+				}
 
 				// Trigger change weapon
 				if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
@@ -344,15 +353,6 @@ public class ControllerScript : MonoBehaviour {
 				}
 				else{
 					player.SetFiringState(false);
-				}
-
-				// Picking up flag
-				if (X_Press && flagInRange && !isSwapping && !currentWeapon.IsReloading()){
-					flagPickedUp = true;
-					anim.SetBool(flagCarryHash, true);
-					fpsAnim.SetBool(flagCarryHash, true);
-
-					player.FlagRetrieved();
 				}
 			}
 			else{
@@ -589,6 +589,9 @@ public class ControllerScript : MonoBehaviour {
 	public void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = true;
+		}
+		else if (collider.gameObject.tag == "ExitGoal" && flagPickedUp){
+			player.game.GameWon();
 		}
 	}
 
