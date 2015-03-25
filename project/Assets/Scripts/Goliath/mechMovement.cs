@@ -48,9 +48,12 @@ public class mechMovement : MonoBehaviour {
 	float rStickY;
 	float damageTurnOffRight;
 	float damageTurnOffLeft;
+	float dashSpeed;
 
 	public bool forceKeyboard = false;
 	public bool allowedToMove;
+
+	bool dash;
 
 	public GoliathNetworking networker;
 	// Use this for initialization
@@ -61,7 +64,7 @@ public class mechMovement : MonoBehaviour {
 		shieldActive = true;
 		moveSpeedY = 10;
 		rotSpeedY = 1.5f;
-
+		dashSpeed = 20;
 		moveSpeedX = 7.5f;
 		rotSpeedX = 2f;
 	}
@@ -129,6 +132,18 @@ public class mechMovement : MonoBehaviour {
 		Quaternion currRot = topHalfY.transform.localRotation;
 		Vector3 nextRot = currRot.eulerAngles;
 
+		//dashing stuff
+		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.JOYSTICK)){
+			dash = true;
+			triggerFlagDropThing.dash = true;
+		}
+
+		if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.JOYSTICK)){
+			dash = false;
+			triggerFlagDropThing.dash = false;
+		}
+
+
 		//is moving calcs
 		if(lStickX >= 0.05f){
 			isMoving = true;
@@ -152,18 +167,27 @@ public class mechMovement : MonoBehaviour {
 
 		//rotations
 		float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
-		if (nextRotX <= 4 && nextRotX >= -30) {
+		if (nextRotX <= 4 && nextRotX >= -30 && dash == false) {
 			topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
 		}
-		topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
+
+		//not able to turn when dashing
+		if(dash == false){
+			topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
+		}
 
 		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
 			currVel.x = 0;
 			currVel.z = 0;
 
-			if (lStickY != 0){
+			if (lStickY != 0 && dash == false){
 				Vector3 velMod = bottomHalf.transform.forward * moveSpeedY * lStickY;
+				currVel += velMod;
+			}
+
+			if (lStickY != 0 && dash == true){
+				Vector3 velMod = bottomHalf.transform.forward * dashSpeed * lStickY;
 				currVel += velMod;
 			}
 
@@ -231,9 +255,9 @@ public class mechMovement : MonoBehaviour {
 		
 		// when mech is disabled start timer to restart
 		if(currMechHealth <=0){
-			print ("dropped the flag");
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
+				triggerFlagDropThing.carrying = false;
 			}
 			restartTimer += Time.deltaTime;
 		}

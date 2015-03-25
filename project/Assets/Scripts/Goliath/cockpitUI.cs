@@ -11,6 +11,8 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject mechHolagram;
 	public GameObject screens;
 	public GameObject camPos;
+	public GameObject objectivePointer;
+	public GameObject flag;
 
 	private Transform[] playerAvatars;
 
@@ -39,10 +41,12 @@ public class cockpitUI : MonoBehaviour {
 	float cannonCDR;
 	float coolDownRocket;
 
+	int playerNumber;
 	//bools
 	bool overHeated;
 	bool shieldActive;
-
+	bool flagTaken;
+	bool mechHasFlag;
 	//modes
 	bool minigunMode;
 	bool missleMode;
@@ -69,8 +73,9 @@ public class cockpitUI : MonoBehaviour {
 		currMechHealth = holoVars.currMechHealth;
 		mechShield = holoVars.mechShield;
 		shieldActive = holoVars.shieldActive;
+		mechHasFlag = mechShoot.carrying;
 
-		print(currMechHealth);
+		updateObjectiveLocator();
 
 			for(int i = 0;i < playerAvatars.Length;i++){
 					//turn the diamon to look at the camera in the mech
@@ -209,7 +214,6 @@ public class cockpitUI : MonoBehaviour {
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth > 0){
-			print("chaning minimech health");
 			float lerpAmnt = currMechHealth / 1000;
 			mechHolagram.renderer.material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
 			Color tempColour = mechHolagram.renderer.material.color;
@@ -223,7 +227,6 @@ public class cockpitUI : MonoBehaviour {
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth <= 0){
-			print("disabled now");
 			mechHolagram.renderer.material.color = Color.black;
 			Color tempColour2 = mechHolagram.renderer.material.color;
 			tempColour2.a = 0.5f;
@@ -284,11 +287,41 @@ public class cockpitUI : MonoBehaviour {
 	}
 
 	public void switchToFlag(int playerNum){
+		flagTaken = true;
+		playerNumber = playerNum;
 		miniMapIndicatorsList[playerNum].SetActive(false);
 		miniMapFlag[playerNum].SetActive(true);
 	}
 
 	public void droppedFlag(int playerNum){
+		flagTaken = false;
 		miniMapFlag[playerNum].SetActive(false);
+	}
+
+	void updateObjectiveLocator(){
+		if(flagTaken == true){
+
+			if(objectivePointer.GetActive() == false){
+				objectivePointer.SetActive(true);
+			}
+			Vector3 playerPoint = miniMapIndicatorsList[playerNumber].transform.position;
+			playerPoint.y = objectivePointer.transform.position.y;
+			Vector3 targetDir = playerPoint - objectivePointer.transform.position;
+
+			objectivePointer.transform.forward = targetDir;
+		}
+		else if(mechHasFlag == true){
+			objectivePointer.SetActive(false);
+		}
+		else{
+
+			if(objectivePointer.GetActive() == false){
+				objectivePointer.SetActive(true);
+			}
+			Vector3 flagPoint = flag.transform.position;
+			flagPoint.y = objectivePointer.transform.position.y;
+			Vector3 targetDir = flagPoint - objectivePointer.transform.position;
+			objectivePointer.transform.forward = targetDir;
+		}
 	}
 }

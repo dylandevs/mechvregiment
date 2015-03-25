@@ -162,18 +162,31 @@ public class MinigunFirer : MonoBehaviour {
 			overHeat ++;
 			//gets the starting aimer angle
 			Vector3 tempStart = tracerStart.transform.forward;
-			//for spread if we wish to turn it back on
-			//ads a randoma mount of spread to the angle
-			//Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			//Ray rayFire = new Ray (tracerStart.transform.position, tempStart);;
-
-			//handles effects of bullet
 
 			GameObject tracer = tracerPool.Retrieve(tracerStart.transform.position);
 			tracer.transform.up = tempStart;
-
+			
 			TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
 			tracerRound.sparkPool = sparks;
+			//for spread if we wish to turn it back on
+			//ads a randoma mount of spread to the angle
+			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
+			Ray rayFire = new Ray (tracerStart.transform.position, tempStart);
+			//handles effects of bullet
+
+			GameObject tracer1 = tracerPool.Retrieve(tracerStart.transform.position);
+			tracer1.transform.up = endShot;
+			
+			TracerRoundScript tracerRound1 = tracer1.GetComponent<TracerRoundScript>();
+			tracerRound1.sparkPool = sparks;
+
+			GameObject tracer2 = tracerPool.Retrieve(tracerStart.transform.position);
+			tracer2.transform.up = endShot;
+			
+			TracerRoundScript tracerRound2 = tracer2.GetComponent<TracerRoundScript>();
+			tracerRound2.sparkPool = sparks;
+
+
 			//flash
 			GameObject flash = flashPool.Retrieve(tracerStart.transform.position);
 			flash.transform.up = tempStart;

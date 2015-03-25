@@ -78,6 +78,7 @@ public class MechShoot : MonoBehaviour {
 
 	public bool forceKeyboard = false;
 	public bool allowedToShoot;
+	public bool dash;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -183,6 +184,10 @@ public class MechShoot : MonoBehaviour {
 
 		//END OF KEYBOARD CONTROLS
 		}
+		if(dash == true){
+			allowedToShoot = false;
+		}else allowedToShoot = true;
+
 		if(allowedToShoot == true){
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
