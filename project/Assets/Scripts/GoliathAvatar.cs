@@ -12,6 +12,12 @@ public class GoliathAvatar : MonoBehaviour {
 	public Transform shoulderRJoint;
 	public Transform shoulderLJoint;
 
+	public float MinionSpawnRate = 5;
+	private float minionSpawnProg = 0;
+	public Transform minionSpawn;
+	public PoolManager minionManager;
+	private int minionsToSpawn = 0;
+
 	private float syncProg = 0;
 	private float syncDelay = 0;
 	private float invSyncDelay = 1;
@@ -44,6 +50,24 @@ public class GoliathAvatar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		InterpolateTransform();
+
+		// Minion respawning
+		if (minionSpawnProg > 0){
+			minionSpawnProg -= Time.deltaTime;
+
+			if (minionSpawnProg <= 0){
+				GameObject newMinion = minionManager.Retrieve(minionSpawn.transform.position);
+				BotAI minionScript = newMinion.GetComponent<BotAI>();
+				minionScript.controllable = true;
+
+				minionScript.SetNewWaypoint();
+				minionsToSpawn--;
+
+				if (minionsToSpawn > 0){
+					minionSpawnProg = MinionSpawnRate;
+				}
+			}
+		}
 	}
 
 	private void InterpolateTransform(){
@@ -89,5 +113,12 @@ public class GoliathAvatar : MonoBehaviour {
 
 	public void Damage(float damage, Vector3 direction){
 		networkManager.photonView.RPC ("DamageGoliath", PhotonTargets.All, damage, direction);
+	}
+
+	public void AddRespawningMinion(){
+		if (minionSpawnProg <= 0){
+			minionSpawnProg = MinionSpawnRate;
+		}
+		minionsToSpawn++;
 	}
 }

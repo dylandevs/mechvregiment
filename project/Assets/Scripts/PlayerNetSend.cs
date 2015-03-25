@@ -140,9 +140,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void GoliathDroppedFlag(Vector3 flagPos){
-		game.flag.transform.position = flagPos;
-		game.flag.rigidbody.velocity = Vector3.zero;
-		game.flag.SetActive(true);
+		game.FlagDropped(flagPos);
 	}
 	
 	[RPC] 
@@ -179,6 +177,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 		cannonShot plasmaScript = plasma.GetComponent<cannonShot>();
 		plasmaScript.plasmaExplodePool = goliathPlasmaExplosionManager;
+		plasmaScript.isAvatar = true;
 	}
 
 	[RPC]

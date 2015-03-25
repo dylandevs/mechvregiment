@@ -3,28 +3,16 @@ using System.Collections;
 
 public class BotAI : MonoBehaviour {
 
-	// State values
-	/*const byte AllClear = 0;
-	const byte Searching = 1;
-	const byte Sighted = 2;
-	const byte Firing = 3;*/
-
 	public enum State{AllClear, Traveling, Searching, Approaching, VeryClose};
 	enum TargetComponent{Head, Torso, Feet, None};
 
 	// Distance thresholds
-	const int ThreshFire = 18;
-	const int ThreshApproach = 20;
+	const int ThreshFire = 24;
+	const int ThreshApproach = 30;
 	const int ThreshClose = 12;
-	const int ThreshDangerClose = 6;
-	const int ThreshSearch = 32;
-	const int ThreshHearing = 42;
-
-	// Predefined state colours
-	Color safeCol = new Color32(0, 255, 0, 1);
-	Color warnCol = new Color32(255, 255, 0, 1);
-	Color dngrCol = new Color32(255, 0, 0, 1);
-	Color srchCol = new Color32(255, 0, 255, 1);
+	const int ThreshDangerClose = 8;
+	const int ThreshSearch = 38;
+	const int ThreshHearing = 44;
 
 	// Idle behaviour attributes
 	float actionTime = 0;
@@ -50,9 +38,9 @@ public class BotAI : MonoBehaviour {
 
 	// Bot attributes
 	public const float ViewAngle = 120 / 2;
-	public const float WalkSpeed = 1.5f;
-	public const float MoveSpeed = 7f;
-	public const float RunSpeed = 10f;
+	public const float WalkSpeed = 2.5f;
+	public const float MoveSpeed = 10f;
+	public const float RunSpeed = 12f;
 	public const float FireRate = 1.2f;
 	public const float TurnStep = 0.02f;
 	public const float FireAngle = 60 / 2;
@@ -75,7 +63,6 @@ public class BotAI : MonoBehaviour {
 	public State state = State.AllClear;
 	private State prevState = State.AllClear;
 	TargetComponent targetVisible = TargetComponent.None;
-	//byte state = 0;
 	float health = MaxHealth;
 	[HideInInspector]
 	public float reloadProg = FireRate;
@@ -83,14 +70,13 @@ public class BotAI : MonoBehaviour {
 	float resightProg = ResightRate;
 	
 	public Vector3 lastSighted;
-	Vector3 baseFacing = new Vector3(0, 0, 1);
-	Vector3 facing = new Vector3(0, 0, 1);
 
 	// Inputs
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
 	private PoolManager pool;
 	public GameObject waypoint;
+	public GoliathAvatar goliath;
 
 	[HideInInspector]
 	public int remoteId = -1;
@@ -98,6 +84,7 @@ public class BotAI : MonoBehaviour {
 	public Pooled pooled;
 
 	private bool navigating = false;
+	private bool waypointQueued = false;
 
 	// Use this for initialization
 	void Start () {
@@ -121,11 +108,9 @@ public class BotAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (navigating){
-			facing = transform.rotation * baseFacing;
-
-			// Living behaviour
-			if (!isDead){
+		// Living behaviour
+		if (!isDead){
+			if (navigating){
 
 				// Check first to see if target is alive
 				if (currentTarget){
@@ -143,7 +128,7 @@ public class BotAI : MonoBehaviour {
 				if (currentTarget){
 					// Calculating useful values
 					Vector3 diffVec = currentTarget.transform.position - transform.position;
-					float angle = Vector3.Angle(facing, diffVec);
+					float angle = Vector3.Angle(transform.forward, diffVec);
 
 					CalculateCurrentState();
 
@@ -172,7 +157,6 @@ public class BotAI : MonoBehaviour {
 					if (prevState != state){
 						currentTarget = null;
 					}
-					setSurfaceColour(safeCol);
 					Idle();
 				}
 				else if (state == State.Traveling){
@@ -187,7 +171,6 @@ public class BotAI : MonoBehaviour {
 						navMeshAgent.speed = MoveSpeed;
 					}
 
-					setSurfaceColour(srchCol);
 					Search();
 				}
 				else if (state == State.Approaching){
@@ -198,13 +181,11 @@ public class BotAI : MonoBehaviour {
 					}
 
 					navMeshAgent.destination = lastSighted;
-					setSurfaceColour(warnCol);
 				}
 				else if (state == State.VeryClose){
 					alertTime = AlertDuration;
 
 					FaceTarget(currentTarget.gameObject);
-					setSurfaceColour(dngrCol);
 					navMeshAgent.velocity = Vector3.zero;
 				}
 
@@ -227,37 +208,51 @@ public class BotAI : MonoBehaviour {
 				prevState = state;
 
 			}
-			else{
-				pool.Deactivate(gameObject);
-				pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
-			}
+		}
+		else{
+			pool.Deactivate(gameObject);
+			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 		}
 	}
 
 	void OnEnable(){
-		navigating = false;
-		if (navMeshAgent){
-			navMeshAgent.enabled = false;
-		}
 		rigidbody.isKinematic = false;
 		rigidbody.velocity = Vector3.zero;
+
+		health = MaxHealth;
+
+		alertTime = 0;
+		searchTime = 0;
+		searchDelay = 0;
+
+		state = State.AllClear;
+		isDead = false;
 	}
 
-	void OnCollisionEnter(){
-		if (!navigating){
+	void OnCollisionEnter(Collision collision){
+		if (!navigating && collision.gameObject.tag == "Terrain"){
 			navigating = true;
 			if (navMeshAgent){
 				navMeshAgent.enabled = true;
 			}
 			rigidbody.isKinematic = true;
+
+			if (waypointQueued){
+				SetNewWaypoint();
+			}
 		}
 	}
 
 	public void SetNewWaypoint(){
 		if (controllable){
-			state = State.Traveling;
-			navMeshAgent.speed = RunSpeed;
-			navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
+			if (navMeshAgent.enabled){
+				state = State.Traveling;
+				navMeshAgent.speed = RunSpeed;
+				navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
+			}
+			else{
+				waypointQueued = true;
+			}
 		}
 	}
 
@@ -392,20 +387,20 @@ public class BotAI : MonoBehaviour {
 		// Check head
 		if (Physics.Raycast(transform.position, headVec, out rayHit)){
 			// If hit target, no obstruction
-			if (rayHit.collider.transform == subject.transform){	
+			if (rayHit.collider.tag == subject.tag){	
 				return true;
 			}
 		}
 		else if (Physics.Raycast(transform.position, diffVec, out rayHit)){
 			// If hit target, no obstruction
-			if (rayHit.collider.transform == subject.transform){
+			if (rayHit.collider.tag == subject.tag){
 				return true;
 			}
 		}
 		// Check feet
 		else if (Physics.Raycast(transform.position, feetVec, out rayHit)){	
 			// If hit target, no obstruction
-			if (rayHit.collider.transform == subject.transform){
+			if (rayHit.collider.tag == subject.tag){
 				return true;
 			}
 		}
@@ -418,7 +413,7 @@ public class BotAI : MonoBehaviour {
 		Vector3 diffVec = subject.transform.position - transform.position;
 		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
 		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
-		float angle = Vector3.Angle(facing, diffVec);
+		float angle = Vector3.Angle(transform.forward, diffVec);
 
 		// Check if within FoV
 		if (angle <= ViewAngle){
@@ -429,20 +424,20 @@ public class BotAI : MonoBehaviour {
 			// Check head
 			if (Physics.Raycast(transform.position, headVec, out rayHit)){
 				// If hit target, no obstruction
-				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){	
+				if (rayHit.collider.tag == subject.tag && rayHit.distance < ThreshApproach){	
 					return true;
 				}
 			}
 			else if (Physics.Raycast(transform.position, diffVec, out rayHit)){
 				// If hit target, no obstruction
-				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){
+				if (rayHit.collider.tag == subject.tag && rayHit.distance < ThreshApproach){
 					return true;
 				}
 			}
 			// Check feet
 			else if (Physics.Raycast(transform.position, feetVec, out rayHit)){	
 				// If hit target, no obstruction
-				if (rayHit.collider.transform == subject.transform && rayHit.distance < ThreshApproach){
+				if (rayHit.collider.tag == subject.tag && rayHit.distance < ThreshApproach){
 					return true;
 				}
 			}
@@ -469,7 +464,7 @@ public class BotAI : MonoBehaviour {
 
 	// Fires bullet predictively at target based on velocity
 	void FireAtPredictively(GameObject target){
-		Vector3 bulletGenPos = transform.position + facing;
+		Vector3 bulletGenPos = transform.position + transform.forward;
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
 		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		float timeDelay = 0;
@@ -490,7 +485,7 @@ public class BotAI : MonoBehaviour {
 
 	// Fires bullet in direction provided
 	void fireInDirection(Transform target){
-		Vector3 bulletGenPos = transform.position + facing;
+		Vector3 bulletGenPos = transform.position + transform.forward;
 		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - bulletGenPos;
 
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
@@ -512,11 +507,6 @@ public class BotAI : MonoBehaviour {
 		// Calculating and applying rotation
 		Quaternion targRot = Quaternion.LookRotation(newDiffVec);
 		transform.rotation = Quaternion.Lerp(transform.rotation, targRot, Time.time * TurnStep);
-	}
-
-	// TESTING: sets surface colour of model
-	void setSurfaceColour(Color newCol){
-		//renderer.material.color = newCol;
 	}
 
 	// Determines whether any allies in view are in alarmed state
@@ -608,17 +598,30 @@ public class BotAI : MonoBehaviour {
 
 	// Deals damage to bot
 	public void Damage(float damage, Player playerSource = null){
-		health -= damage;
+		if (!isDead){
+			health -= damage;
 
-		// Schedule bot for death
-		if (health <= 0){
-			isDead = true;
-		}
+			// Schedule bot for death
+			if (health <= 0){
+				isDead = true;
 
-		if (playerSource){
-			currentTarget = playerSource;
-			lastSighted = currentTarget.transform.position;
-			alertTime = AlertDuration;
+				if (controllable){
+					// Schedule for respawn
+					controllable = false;
+					goliath.AddRespawningMinion();
+				}
+
+				// Resetting some attributes
+				navigating = false;
+				navMeshAgent.enabled = false;
+				navMeshAgent.speed = WalkSpeed;
+			}
+
+			if (playerSource){
+				currentTarget = playerSource;
+				lastSighted = currentTarget.transform.position;
+				alertTime = AlertDuration;
+			}
 		}
 	}
 }

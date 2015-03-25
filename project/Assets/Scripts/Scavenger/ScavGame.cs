@@ -65,6 +65,7 @@ public class ScavGame : MonoBehaviour {
 			flag.transform.position = flagPos + Vector3.up;
 			player.display.minimap.UpdateObjective (flag);
 			flag.SetActive(true);
+			flag.rigidbody.velocity = Vector3.zero;
 
 			//flag.rigidbody.AddForce(direction * 10);
 		}

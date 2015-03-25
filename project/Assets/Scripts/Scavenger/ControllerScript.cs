@@ -11,8 +11,8 @@ using XInputDotNetPure;
 
 public class ControllerScript : MonoBehaviour {
 	
-	const float SprintSpeed = 12f;
-	const float RunSpeed = 6f;
+	const float SprintSpeed = 15f;
+	const float RunSpeed = 8f;
 	const float CrouchSpeed = 1.5f;
 	const float RunThresh = 0.5f;
 	const float JumpSpeed = 6f;
@@ -59,6 +59,8 @@ public class ControllerScript : MonoBehaviour {
 	int weaponHash = Animator.StringToHash ("WeaponNum");
 	int changeWeapHash = Animator.StringToHash ("ChangeWeapon");
 	int flagCarryHash = Animator.StringToHash ("CarryFlag");
+	int resetHash = Animator.StringToHash("Reset");
+
 
 	// Keyboard trackers
 	Vector2 deltaMousePos = Vector2.zero;
@@ -255,7 +257,7 @@ public class ControllerScript : MonoBehaviour {
 				if (L_YAxis != 0){
 					
 					// Sprint
-					if (LS_Held && L_YAxis < RunThresh){
+					if (LS_Held && L_YAxis < RunThresh && !flagPickedUp){
 						newVel += SprintSpeed * facing2D;
 						spread += currentWeapon.SprintSpreadAdjust;
 						isSprinting = true;
@@ -605,7 +607,8 @@ public class ControllerScript : MonoBehaviour {
 		flagPickedUp = false;
 		anim.SetBool(flagCarryHash, false);
 		fpsAnim.SetBool(flagCarryHash, false);
-		fpsAnim.SetTrigger(changeWeapHash);
+		anim.SetTrigger(resetHash);
+		fpsAnim.SetTrigger(resetHash);
 		
 		player.FlagDropped();
 	}
