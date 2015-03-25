@@ -196,7 +196,7 @@ public class RoomInfo
         // fetch the "well known" properties of the room, if available
         if (propertiesToCache.ContainsKey(GameProperties.MaxPlayers))
         {
-			this.maxPlayersField = (byte)(int)propertiesToCache[GameProperties.MaxPlayers];
+			this.maxPlayersField = (byte)propertiesToCache[GameProperties.MaxPlayers];
         }
 
         if (propertiesToCache.ContainsKey(GameProperties.IsOpen))
