@@ -60,6 +60,17 @@ public class cockpitUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//updating things from other scripts for cockpit ui
+		minigunMode = mechShoot.miniGunMode;
+		missleMode = mechShoot.rocketMode;
+		minionMode = mechShoot.minionMode;
+		mechHolagram.transform.Rotate(Vector3.up * Time.deltaTime * 8);	
+		//change this to the same as the minigun filling thingy
+		currMechHealth = holoVars.currMechHealth;
+		mechShield = holoVars.mechShield;
+		shieldActive = holoVars.shieldActive;
+
+		print(currMechHealth);
 
 			for(int i = 0;i < playerAvatars.Length;i++){
 					//turn the diamon to look at the camera in the mech
@@ -117,10 +128,6 @@ public class cockpitUI : MonoBehaviour {
 						sightedImage[i].renderer.material.color = tempColour;
 					}
 		    }
-		minigunMode = mechShoot.miniGunMode;
-		missleMode = mechShoot.rocketMode;
-		minionMode = mechShoot.minionMode;
-		mechHolagram.transform.Rotate(Vector3.up * Time.deltaTime * 8);
 
 		//minigun mode graphics for weapons
 		if(minigunMode == true){
@@ -160,10 +167,6 @@ public class cockpitUI : MonoBehaviour {
 				cannonReload.fillAmount = 1;
 			}
 			else cannonReload.fillAmount = fillAmountCannon;
-			//change this to the same as the minigun filling thingy
-			currMechHealth = holoVars.currMechHealth;
-			mechShield = holoVars.mechShield;
-			shieldActive = holoVars.shieldActive;
 		}
 
 		//missle reload effect graphic
@@ -206,6 +209,7 @@ public class cockpitUI : MonoBehaviour {
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth > 0){
+			print("chaning minimech health");
 			float lerpAmnt = currMechHealth / 1000;
 			mechHolagram.renderer.material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
 			Color tempColour = mechHolagram.renderer.material.color;
@@ -216,10 +220,10 @@ public class cockpitUI : MonoBehaviour {
 			Color screenTemp = screens.renderer.material.color;
 			screenTemp.a = 0f;
 			screens.renderer.material.color = screenTemp;
-
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth <= 0){
+			print("disabled now");
 			mechHolagram.renderer.material.color = Color.black;
 			Color tempColour2 = mechHolagram.renderer.material.color;
 			tempColour2.a = 0.5f;

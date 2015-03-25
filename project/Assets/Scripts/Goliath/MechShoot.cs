@@ -479,9 +479,6 @@ public class MechShoot : MonoBehaviour {
 				carrying = false;
 				releaseFlag();
 				miniGunMode = true;
-				
-				leftEmitter.SetActive(false);
-				rightEmitter.SetActive(false);
 			}
 		}
 
@@ -509,6 +506,8 @@ public class MechShoot : MonoBehaviour {
 		networkManager.photonView.RPC ("GoliathDroppedFlag",PhotonTargets.All,flag.transform.position);
 		flag.SetActive(true);
 		flagCarried.SetActive(false);
+		leftEmitter.SetActive(false);
+		rightEmitter.SetActive(false);
 		carrying = false;
 		resetModes();
 	}

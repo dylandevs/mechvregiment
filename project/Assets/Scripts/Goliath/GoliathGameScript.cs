@@ -12,7 +12,6 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu3;
 	public GameObject minimap;
 	public GameObject goliathUI;
-	public GameObject flag;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;

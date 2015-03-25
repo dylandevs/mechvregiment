@@ -46,7 +46,8 @@ public class mechMovement : MonoBehaviour {
 	float lStickY;
 	float rStickX;
 	float rStickY;
-	float damageTurnOff;
+	float damageTurnOffRight;
+	float damageTurnOffLeft;
 
 	public bool forceKeyboard = false;
 	public bool allowedToMove;
@@ -68,13 +69,20 @@ public class mechMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(damageTurnOff > 0){
-			damageTurnOff -= Time.fixedDeltaTime;
+		if(damageTurnOffLeft > 0){
+			damageTurnOffLeft -= Time.fixedDeltaTime;
+		}
+		if(damageTurnOffRight > 0){
+			damageTurnOffRight -= Time.fixedDeltaTime;
 		}
 
-		if(damageTurnOff <=0){
-			damageIndicatorLeft.SetActive(false);
+		if(damageTurnOffRight <= 0){
+
 			damageIndicatorRight.SetActive(false);
+		}
+
+		if(damageTurnOffLeft <= 0){
+			damageIndicatorLeft.SetActive(false);
 		}
 
 		if (SixenseInput.Controllers[left] != null && !forceKeyboard){
@@ -223,6 +231,7 @@ public class mechMovement : MonoBehaviour {
 		
 		// when mech is disabled start timer to restart
 		if(currMechHealth <=0){
+			print ("dropped the flag");
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
 			}
@@ -257,7 +266,6 @@ public class mechMovement : MonoBehaviour {
 
 	public void takeDamage(float amount,Vector3 direction){
 
-		damageTurnOff = 0.5f;
 		damagedTime = 10;
 
 		if(shieldActive == true){
@@ -282,6 +290,7 @@ public class mechMovement : MonoBehaviour {
 		if(amountFromRight < amountFromLeft){
 			// its on the left side
 			damageIndicatorLeft.SetActive(true);
+			damageTurnOffLeft = 0.5f;
 		}
 		else if(amountFromForward > 150f && amountFromForward < 180f){
 			//shownon of them
@@ -289,6 +298,7 @@ public class mechMovement : MonoBehaviour {
 		else{
 			//its ont he right side
 			damageIndicatorRight.SetActive(true);
+			damageTurnOffRight= 0.5f;
 		}
 
 	}
