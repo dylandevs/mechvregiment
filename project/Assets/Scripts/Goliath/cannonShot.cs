@@ -18,6 +18,7 @@ public class cannonShot : MonoBehaviour {
 	public bool isAvatar = false;
 
 	public GameObject cannonHit;
+
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
@@ -90,7 +91,11 @@ public class cannonShot : MonoBehaviour {
 					{
 						if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
 							hitAPlayer = true;
-							//cannonHit.SetActive(true);
+
+							if(cannonHit.GetActive() == false){
+								cannonHit.SetActive(true);
+							}
+
 							float dist = Vector3.Distance(transform.position, c.transform.position);
 							float damageRatio = 1f - (dist / explosionRadius);
 							float damageAmnt = damage * damageRatio;
@@ -109,6 +114,11 @@ public class cannonShot : MonoBehaviour {
 							else{}
 						}
 						if(c.gameObject.collider.tag == "Enemy"){
+
+							if(cannonHit.GetActive() == false){
+								cannonHit.SetActive(true);
+							}
+
 							float dist = Vector3.Distance(transform.position, c.transform.position);
 							float damageRatio = 1f - (dist / explosionRadius);
 							float damageAmnt = damage * damageRatio;
@@ -129,9 +139,5 @@ public class cannonShot : MonoBehaviour {
 		explode1.emit = true;
 		explode2.emit = true;
 		hitAPlayer = false;
-	}
-
-	void doDamageCannon(){
-		//do damgy thingys
 	}
 }

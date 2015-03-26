@@ -12,6 +12,8 @@ public class MinigunFirer : MonoBehaviour {
 	public GameObject cameraPlace;
 	public GameObject miniGunReticle;
 	public GameObject cannonReticle;
+	public GameObject hitMarkerMini;
+	public GameObject hitMarkerCannon;
 
 	public PoolManager sparks;
 	public PoolManager tracerPool;
@@ -153,7 +155,7 @@ public class MinigunFirer : MonoBehaviour {
 		}
 
 		else if(overHeat >=0 && fire == false){
-			overHeat -= Time.deltaTime * 4; 
+			overHeat -= Time.deltaTime * 10; 
 		}
 
 		//fires the minigun based on  if there's ammo firing allowed and no cooldown left
@@ -165,27 +167,28 @@ public class MinigunFirer : MonoBehaviour {
 
 			GameObject tracer = tracerPool.Retrieve(tracerStart.transform.position);
 			tracer.transform.up = tempStart;
-			
+
+
 			TracerRoundScript tracerRound = tracer.GetComponent<TracerRoundScript>();
 			tracerRound.sparkPool = sparks;
+			tracerRound.miniGunHit = hitMarkerMini;
 			//for spread if we wish to turn it back on
 			//ads a randoma mount of spread to the angle
 			Vector3 endShot =  tempStart + new Vector3 (Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F), Random.Range (-0.02F, 0.02F));
-			Ray rayFire = new Ray (tracerStart.transform.position, tempStart);
-			//handles effects of bullet
 
 			GameObject tracer1 = tracerPool.Retrieve(tracerStart.transform.position);
 			tracer1.transform.up = endShot;
 			
 			TracerRoundScript tracerRound1 = tracer1.GetComponent<TracerRoundScript>();
 			tracerRound1.sparkPool = sparks;
+			tracerRound1.miniGunHit = hitMarkerMini;
 
 			GameObject tracer2 = tracerPool.Retrieve(tracerStart.transform.position);
 			tracer2.transform.up = endShot;
 			
 			TracerRoundScript tracerRound2 = tracer2.GetComponent<TracerRoundScript>();
 			tracerRound2.sparkPool = sparks;
-
+			tracerRound2.miniGunHit = hitMarkerMini;
 
 			//flash
 			GameObject flash = flashPool.Retrieve(tracerStart.transform.position);
@@ -262,6 +265,7 @@ public class MinigunFirer : MonoBehaviour {
 
 				cannonShot plasmaShotscript = plasmaShotCurr.GetComponent<cannonShot>();
 				plasmaShotscript.plasmaExplodePool = plasmaExplosion;
+				plasmaShotscript.cannonHit = hitMarkerCannon;
 
 
 				cannonCDR = cannonCD;

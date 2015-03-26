@@ -124,6 +124,8 @@ public class RocketScript : MonoBehaviour {
 				}
 			}
 		}
+
+		pool.Deactivate(gameObject);
 	}
 
 }
