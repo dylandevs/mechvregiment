@@ -67,7 +67,7 @@ public class GoliathAvatar : MonoBehaviour {
 					minionSpawnProg = MinionSpawnRate;
 				}
 
-				networkManager.photonView.RPC ("SpawnMinion", PhotonTargets.All, minionScript.pooled.index, minionSpawn.transform.position);
+				networkManager.photonView.RPC ("LinkMinions", PhotonTargets.All, minionScript.pooled.index, minionSpawn.transform.position);
 			}
 		}
 	}

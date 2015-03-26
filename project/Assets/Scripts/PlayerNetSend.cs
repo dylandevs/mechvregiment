@@ -249,10 +249,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void DestroyMinion(int networkId){}
 
 	[RPC]
-	public void SpawnMinion(int networkId, Vector3 startPos){}
+	public void SpawnNetworkedMinion(int networkId, Vector3 startPos){}
 
 	[RPC]
-	public void LinkMinionAvatar(int masterNum, int avatarNum){
+	public void LinkMinions(int masterNum, int avatarNum){
 		if (masterNum >= 0 && masterNum < minions.Length){
 			minions[masterNum].remoteId = avatarNum;
 		}

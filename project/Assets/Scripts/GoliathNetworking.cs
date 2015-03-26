@@ -241,14 +241,14 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void SpawnMinion(int networkId, Vector3 startPos){
+	public void SpawnNetworkedMinion(int networkId, Vector3 startPos){
 		GameObject spawnedMinion = minionManager.Retrieve(startPos);
 		MinionAvatar avatarScript = spawnedMinion.GetComponent<MinionAvatar>();
 		photonView.RPC ("LinkMinionAvatar", PhotonTargets.All, networkId, avatarScript.pooled.index);
 	}
 
 	[RPC]
-	public void LinkMinionAvatar(int masterNum, int avatarNum){}
+	public void LinkMinions(int masterNum, int avatarNum){}
 	
 	// Projectile RPC
 	[RPC]
