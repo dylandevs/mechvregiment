@@ -282,7 +282,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void CreateMinionBullet(Vector3 position, Vector3 facing){}
+	public void CreateMinionBullet(Vector3 position, Vector3 facing, int minionNum){}
 
 	[RPC]
 	public void PlaceMinionWaypoint(Vector3 position){

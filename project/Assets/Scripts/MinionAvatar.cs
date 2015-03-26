@@ -15,6 +15,8 @@ public class MinionAvatar : MonoBehaviour {
 	private Quaternion nextSyncRot;
 	private Vector3 facing;
 
+	public ParticleEmitter flash;
+
 	PoolManager pool;
 	public Pooled pooled;
 
@@ -76,5 +78,9 @@ public class MinionAvatar : MonoBehaviour {
 
 	public void Kill(){
 		pool.Deactivate (gameObject);
+	}
+
+	public void TriggerFlash(){
+		flash.Emit();
 	}
 }

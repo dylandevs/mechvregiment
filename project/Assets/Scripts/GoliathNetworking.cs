@@ -288,13 +288,17 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void SetMineID(int creatorId, int networkId){}
 	
 	[RPC]
-	public void CreateMinionBullet(Vector3 position, Vector3 facing){
+	public void CreateMinionBullet(Vector3 position, Vector3 facing, int minionNum){
 		GameObject bullet = minionBulletManager.Retrieve(position);
 		bullet.transform.forward = facing;
 		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		bulletScript.shootableLayer = shootableLayer;
 		bulletScript.bulletMarkPool = scorchMarkManager;
 		bulletScript.isAvatar = true;
+
+		if (minionNum >= 0 && minionNum < minionAvatars.Length){
+			minionAvatars[minionNum].TriggerFlash();
+		}
 	}
 
 	[RPC]
