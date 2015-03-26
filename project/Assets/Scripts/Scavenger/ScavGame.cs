@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using XInputDotNetPure;
 
 public class ScavGame : MonoBehaviour {
 
 	public float StartMatchTime = 300;
 	private float remainingTime = 0;
-	private float inv60 = 1;
 	public UnityEngine.UI.Text timerText;
 
 	public GameObject flag;
@@ -14,14 +14,18 @@ public class ScavGame : MonoBehaviour {
 	private Player[] players;
 	public GameObject exitPoint;
 
+	public GameObject transitionMenu;
+
 	[HideInInspector]
 	public bool GameRunning = false;
+	private bool goliathReady = false;
+
+	// XInput variables
+	private GamePadState state;
+	private GamePadState prevState;
 
 	// Use this for initialization
 	void Start () {
-		BeginRound ();
-		inv60 = 1 / 60;
-
 		players = new Player[playerWrapper.transform.childCount];
 		for (int i = 0; i < playerWrapper.transform.childCount; i++){
 			players[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
@@ -46,11 +50,31 @@ public class ScavGame : MonoBehaviour {
 				GameLost();
 			}
 		}
+		else{
+			// Wait for X press
+			state = GamePad.GetState((PlayerIndex)0);
+			if (!state.IsConnected){
+				return;
+			}
+
+			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+		
+			if (X_Press){// && goliathReady){
+				BeginRound();
+			}
+
+			prevState = state;
+		}
+	}
+
+	public void GoliathOnline(){
+		goliathReady = true;
 	}
 
 	public void BeginRound(){
 		remainingTime = StartMatchTime;
 		GameRunning = true;
+		transitionMenu.SetActive(false);
 	}
 
 	public void FlagRetrieved(GameObject retriever){

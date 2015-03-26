@@ -129,6 +129,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void GoliathConnected(){
 		print ("Goliath online");
 		connectionReceived = true;
+		game.GoliathOnline();
 	}
 
 	// Flag RPC
