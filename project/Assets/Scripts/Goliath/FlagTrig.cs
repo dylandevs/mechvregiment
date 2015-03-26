@@ -20,19 +20,22 @@ public class FlagTrig : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other){
-		if(other.tag == "Player"){
+		if(other.tag == "Goliath"){
 			flagActive = true;
+			mechShooty.pressToPick = true;
 		}
-		//display Right bumper to pick up UI
 	}
 
 	void OnTriggerExit(Collider other){
-		if(other.tag == "Player"){
+		if(other.tag == "Goliath"){
 			flagActive = false;
+			mechShooty.pressToPick = false;
 		}
+
 	}
 
 	void pickedUp(){
+		mechShooty.pressToPick = false;
 		mechShooty.carrying = true;
 		network.photonView.RPC("GoliathPickedUpFlag",PhotonTargets.All);
 		flagActive = false;

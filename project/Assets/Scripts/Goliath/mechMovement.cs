@@ -31,7 +31,7 @@ public class mechMovement : MonoBehaviour {
 	//shield things
 	public float mechShield;
 	public bool shieldActive;
-
+	public GameObject chargeEffects;
 	//move speed stuff
 	private float moveSpeedY;
 	private float rotSpeedY;
@@ -49,10 +49,12 @@ public class mechMovement : MonoBehaviour {
 	float damageTurnOffRight;
 	float damageTurnOffLeft;
 	float dashSpeed;
+	float dashTimer;
 
 	public bool forceKeyboard = false;
 	public bool allowedToMove;
 
+	bool allowedToMoveRay;
 	bool dash;
 
 	public GoliathNetworking networker;
@@ -72,6 +74,10 @@ public class mechMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
+
+		groundingCast();
+
 		if(damageTurnOffLeft > 0){
 			damageTurnOffLeft -= Time.fixedDeltaTime;
 		}
@@ -90,7 +96,7 @@ public class mechMovement : MonoBehaviour {
 
 		if (SixenseInput.Controllers[left] != null && !forceKeyboard){
 			//Updating the joystick input
-			if(allowedToMove == true){
+			if(allowedToMove == true && allowedToMoveRay == true){
 				lStickX = SixenseInput.Controllers[left].JoystickX;
 				lStickY = SixenseInput.Controllers[left].JoystickY;
 				
@@ -132,13 +138,24 @@ public class mechMovement : MonoBehaviour {
 		Quaternion currRot = topHalfY.transform.localRotation;
 		Vector3 nextRot = currRot.eulerAngles;
 
+		//coutns down until next dash
+		if(dashTimer >=0){
+			dashTimer -= Time.deltaTime;
+		}
 		//dashing stuff
 		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.JOYSTICK)){
-			dash = true;
-			triggerFlagDropThing.dash = true;
+			if(dashTimer <= 0){
+				dash = true;
+				triggerFlagDropThing.dash = true;
+				chargeEffects.SetActive(true);
+			}
 		}
 
 		if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.JOYSTICK)){
+			if(dashTimer <=0){
+				dashTimer = 5f;
+			}
+			chargeEffects.SetActive(false);
 			dash = false;
 			triggerFlagDropThing.dash = false;
 		}
@@ -173,31 +190,45 @@ public class mechMovement : MonoBehaviour {
 
 		//not able to turn when dashing
 		if(dash == false){
+
 			topHalfX.transform.RotateAround(topHalfX.transform.position, Vector3.up, (rotSpeedX * rStickX));
 		}
 
 		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
-			currVel.x = 0;
-			currVel.z = 0;
+
+			if(allowedToMoveRay == true){
+				currVel.x = 0;
+				currVel.z = 0;
+			}
 
 			if (lStickY != 0 && dash == false){
 				Vector3 velMod = bottomHalf.transform.forward * moveSpeedY * lStickY;
 				currVel += velMod;
 			}
 
-			if (lStickY != 0 && dash == true){
-				Vector3 velMod = bottomHalf.transform.forward * dashSpeed * lStickY;
+			if (dash == true){
+				//should set the rotation to math where your looking
+				float topDirY = topDir.y;
+				float bottomDirY = bottomDir.y;
+				float q = topDirY - bottomDirY;
+				bottomHalf.transform.Rotate(0,q,0);
+
+				Vector3 velMod = bottomHalf.transform.forward * dashSpeed;
 				currVel += velMod;
 			}
 
-			if (lStickX != 0){
+			if (lStickX != 0 && dash == false){
 				Vector3 velMod = bottomHalf.transform.right * moveSpeedX * lStickX;
 				currVel += velMod;
 			}
-
-			rigidbody.velocity = currVel;
-
+			if (lStickX != 0 && dash == true){
+				Vector3 velMod = bottomHalf.transform.right * 0 * lStickX;
+				currVel += velMod;
+			}
+			if(allowedToMoveRay == true){
+				rigidbody.velocity = currVel;
+			}
 			//Hydra Movement
 			//bottomHalf.rigidbody.MovePosition(bottomHalf.rigidbody.position + bottomHalf.transform.forward * moveSpeedY * lStickY);
 
@@ -334,9 +365,83 @@ public class mechMovement : MonoBehaviour {
 		topHalfX.transform.position = newPos;
 
 		//update minimap
-		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,30,0);
+		Vector3 newPosCam = bottomHalf.transform.position + new Vector3(0,150,0);
 		miniMapCam.transform.position = newPosCam;
 		Quaternion camRot = Quaternion.Euler(90,0,0);
 		miniMapCam.transform.rotation = camRot;
+	}
+
+	void groundingCast(){
+
+		Vector3 colliderBounds = collider.bounds.extents;
+
+		//add half on x and negative half on x then half on z and negative half on z
+		Vector3 xPosPos = bottomHalf.transform.position + new Vector3 (colliderBounds.x * 0.5f,0,0);
+		Vector3 xPosNeg = bottomHalf.transform.position + new Vector3 (colliderBounds.x * -0.5f,0,0);
+		Vector3 zPosPos = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * 0.5f);
+		Vector3 zPosNeg = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * -0.5f);
+
+		Ray downRayX1 = new Ray(xPosPos,bottomHalf.transform.up * -1);
+		RaycastHit rayHitX1;
+
+		if(Physics.Raycast (downRayX1, out rayHitX1,4f)){
+			if(rayHitX1.collider.gameObject.tag == "Terrain"){
+				allowedToMoveRay = true;
+			}
+		}
+		else{
+			allowedToMoveRay = false;
+		}
+
+		Ray downRayX2 = new Ray(xPosNeg,bottomHalf.transform.up * -1);
+		RaycastHit rayHitX2;
+
+		if(Physics.Raycast (downRayX2, out rayHitX2,4f)){
+			if(rayHitX2.collider.gameObject.tag == "Terrain"){
+				allowedToMoveRay = true;
+			}
+		}
+		else{
+			allowedToMoveRay = false;
+		}
+
+		Ray downRayZ1 = new Ray(zPosPos,bottomHalf.transform.up * -1);
+		RaycastHit rayHitZ1;
+		
+		if(Physics.Raycast (downRayZ1, out rayHitZ1,4f)){
+			if(rayHitZ1.collider.gameObject.tag == "Terrain"){
+				allowedToMoveRay = true;
+			}
+		}
+		else{
+			allowedToMoveRay = false;
+		}
+		
+		Ray downRayZ2 = new Ray(zPosNeg,bottomHalf.transform.up * -1);
+		RaycastHit rayHitZ2;
+
+		if(Physics.Raycast (downRayZ2, out rayHitZ2,4f)){
+			if(rayHitZ2.collider.gameObject.tag == "Terrain"){
+				allowedToMoveRay = true;
+			}
+		}
+		else{
+			allowedToMoveRay = false;
+		}
+
+
+		//straightDownCast
+		Ray downRay = new Ray(bottomHalf.transform.position,bottomHalf.transform.up * -1);
+		RaycastHit rayHit;
+
+		if(Physics.Raycast (downRay, out rayHit,4f)){
+			if(rayHit.collider.gameObject.tag == "Terrain"){
+				allowedToMoveRay = true;
+			}
+		}
+		else{
+			allowedToMoveRay = false;
+		}
+
 	}
 }

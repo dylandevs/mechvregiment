@@ -42,7 +42,6 @@ public class TracerRoundScript : MonoBehaviour {
 		if (Physics.SphereCast (transform.position,1f,transform.forward, out hitInfoFire, 1f, mask)) 
 		{
 			Vector3 hitInfoFirePoint = hitInfoFire.point;
-			//if graphic is there apply a bullet decal
 
 			if (hitInfoFire.collider.tag != "Player") {
 				//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
@@ -52,6 +51,9 @@ public class TracerRoundScript : MonoBehaviour {
 			}
 
 			if(hitInfoFire.collider.tag == "Enemy" && !isAvatar){
+				if(miniGunHit.GetActive() == false){
+					miniGunHit.SetActive(true);
+				}
 				GameObject hitMinion = hitInfoFire.collider.gameObject;
 				MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
 				minionScript.Damage(damage);
@@ -62,8 +64,9 @@ public class TracerRoundScript : MonoBehaviour {
 				PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 				hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);
 				//add a hit graphic.
-
-				//miniGunHit.SetActive(true);
+				if(miniGunHit.GetActive() == false){
+					miniGunHit.SetActive(true);
+				}
 			}
 			//turn off the bullet prefab
 			pool.Deactivate(gameObject);
