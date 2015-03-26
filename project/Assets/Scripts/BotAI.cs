@@ -212,6 +212,7 @@ public class BotAI : MonoBehaviour {
 		else{
 			pool.Deactivate(gameObject);
 			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
+			remoteId = -1;
 		}
 	}
 
@@ -227,6 +228,8 @@ public class BotAI : MonoBehaviour {
 
 		state = State.AllClear;
 		isDead = false;
+		reloadProg = FireRate;
+		resightProg = ResightRate;
 	}
 
 	void OnCollisionEnter(Collision collision){

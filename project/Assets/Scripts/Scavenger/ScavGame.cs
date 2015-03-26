@@ -30,6 +30,8 @@ public class ScavGame : MonoBehaviour {
 		for (int i = 0; i < playerWrapper.transform.childCount; i++){
 			players[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
 		}
+
+		BeginRound();
 	}
 	
 	// Update is called once per frame
@@ -59,7 +61,7 @@ public class ScavGame : MonoBehaviour {
 
 			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
 		
-			if (X_Press){// && goliathReady){
+			if (X_Press && goliathReady){
 				BeginRound();
 			}
 
