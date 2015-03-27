@@ -554,8 +554,10 @@ public class ControllerScript : MonoBehaviour {
 		newVel.z *= speedFactor;
 
 		// Apply velocity and force
-		rigidbody.velocity = newVel;
-		
+		if (!rigidbody.isKinematic){
+			rigidbody.velocity = newVel;
+		}
+
 		// Apply spread to weapon based on actions
 		currentWeapon.SetTargetSpread (spread);
 
@@ -649,7 +651,7 @@ public class ControllerScript : MonoBehaviour {
 	}
 	
 	// Testing for ground directly beneath and at edges of collider
-	bool IsGrounded(){
+	public bool IsGrounded(){
 		RaycastHit rayHit;
 
 		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){

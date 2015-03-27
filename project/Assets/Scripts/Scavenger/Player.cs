@@ -32,7 +32,8 @@ public class Player : MonoBehaviour {
 	// Status variables
 	private float health = 0;
 	private float healTimer = 0;
-	private float respawnTimer = 0;
+	[HideInInspector]
+	public float respawnTimer = 0;
 	private bool isAimingDownSights = false;
 	public bool isDead = false;
 
@@ -141,7 +142,8 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		display.deathCam.gameObject.SetActive(false);
+		display.EndRespawnSequence ();
+		rigidbody.isKinematic = false;
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -237,13 +239,12 @@ public class Player : MonoBehaviour {
 				// Disable firing layer
 				anim.SetLayerWeight(1, 0);
 
-				display.deathCam.gameObject.SetActive(true);
+				display.StartRespawnSequence(RespawnWait);
 
 				if (Vector3.Angle(direction, transform.forward) < 90){
 					anim.SetTrigger(fwdDeadHash);
 					fpsAnim.SetTrigger(fwdDeadHash);
 					deathCamAnim.SetTrigger(fwdDeadHash);
-					print ("dead");
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
 				}
 				else{
@@ -251,6 +252,10 @@ public class Player : MonoBehaviour {
 					fpsAnim.SetTrigger(bckDeadHash);
 					deathCamAnim.SetTrigger(bckDeadHash);
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
+				}
+
+				if (playerController.IsGrounded()){
+					rigidbody.isKinematic = true;
 				}
 			}
 

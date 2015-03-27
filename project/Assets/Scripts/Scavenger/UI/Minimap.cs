@@ -30,7 +30,7 @@ public class Minimap : MonoBehaviour {
 	public Sprite goliathIcon;
 	public Sprite minionIcon;
 	public Sprite scavengerIcon;
-
+	
 	// Use this for initialization
 	void Start () {
 		minimapSize = minimapTrans.sizeDelta;
@@ -115,6 +115,7 @@ public class Minimap : MonoBehaviour {
 
 		// Create objective icon
 		icon = CreateIcon(objectiveIcon);
+		icon.transform.localScale = Vector3.one * 1.5f;
 		iconScript = icon.GetComponent<MinimapIcon> ();
 		iconScript.associatedObject = objective;
 		iconScript.type = MinimapIcon.MMIconType.Objective;
@@ -122,6 +123,7 @@ public class Minimap : MonoBehaviour {
 
 		// Create Goliath icons
 		icon = CreateIcon(goliathIcon);
+		icon.transform.localScale = Vector3.one * 1.75f;
 		iconScript = icon.GetComponent<MinimapIcon> ();
 		iconScript.associatedObject = goliath;
 		iconScript.type = MinimapIcon.MMIconType.Goliath;
@@ -130,6 +132,7 @@ public class Minimap : MonoBehaviour {
 		// Create Minion icon
 		foreach (Transform minion in minionGroup.transform){
 			icon = CreateIcon(minionIcon);
+			icon.transform.localScale = Vector3.one * 0.5f;
 			iconScript = icon.GetComponent<MinimapIcon> ();
 			iconScript.associatedObject = minion.gameObject;
 			iconScript.type = MinimapIcon.MMIconType.Minion;
