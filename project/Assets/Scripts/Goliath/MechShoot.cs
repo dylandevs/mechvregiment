@@ -139,19 +139,31 @@ public class MechShoot : MonoBehaviour {
 			rTrig = SixenseInput.Controllers[right].Trigger;
 
 			//hydra mode handling
-			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.FOUR)){
 				resetModes();
 				rocketMode = true;
 			}
-			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.FOUR)){
 				resetModes();
 				minionMode = true;
 			}
-			if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.FOUR)){
 				resetModes();
 				miniGunMode = true;
 			}
-			if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.FOUR)){
 				resetModes();
 				miniGunMode = true;
 			}
@@ -188,6 +200,12 @@ public class MechShoot : MonoBehaviour {
 		}
 		if(dash == true){
 			allowedToShoot = false;
+			miniGunFirer.fire = false;
+			miniGunFirer.cannonShoot = false;
+
+			miniGunArm.transform.localEulerAngles = new Vector3(0,0,15);
+			cannonArm.transform.localEulerAngles = new Vector3(0,0,20);
+
 		}else allowedToShoot = true;
 
 		if(allowedToShoot == true){
@@ -467,6 +485,9 @@ public class MechShoot : MonoBehaviour {
 		else pressToPickUp.SetActive(false);
 
 		if(carrying == true){
+
+			miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
+			cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
 
 			//turns off all other modes
 			resetModes();

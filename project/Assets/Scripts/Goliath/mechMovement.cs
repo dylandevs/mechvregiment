@@ -145,6 +145,7 @@ public class mechMovement : MonoBehaviour {
 		//dashing stuff
 		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.JOYSTICK)){
 			if(dashTimer <= 0){
+				networker.photonView.RPC ("GoliathDashingStart",PhotonTargets.All);
 				dash = true;
 				triggerFlagDropThing.dash = true;
 				chargeEffects.SetActive(true);
@@ -155,6 +156,7 @@ public class mechMovement : MonoBehaviour {
 			if(dashTimer <=0){
 				dashTimer = 5f;
 			}
+			networker.photonView.RPC ("GoliathDashingEnd",PhotonTargets.All);
 			chargeEffects.SetActive(false);
 			dash = false;
 			triggerFlagDropThing.dash = false;
