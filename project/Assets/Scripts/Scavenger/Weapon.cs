@@ -312,11 +312,15 @@ public class Weapon : MonoBehaviour {
 		
 		// Either generate physical bullet or just have raycast
 		if (PhysicalAmmo){
+
 			GameObject projectile = projectilePool.Retrieve(bulletOrigin);
 
 			Bullet bulletScript;
 			Mine mineScript;
 			if (bulletScript = projectile.GetComponent<Bullet>()){
+				//randomize pistol pitch
+				gunshotSound.pitch = 1f + Random.Range(-0.2f, 0.2f);
+
 				// Setting bullet properties
 				bulletScript.setProperties(Damage, bulletDirection, BulletSpeed, impactPool);
 				bulletScript.playerSource = player;
