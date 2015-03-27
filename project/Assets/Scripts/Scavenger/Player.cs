@@ -292,4 +292,22 @@ public class Player : MonoBehaviour {
 
 		return newWeaponIndex;
 	}
+
+	void OnCollisionEnter(Collision collision){
+		if (collision.gameObject.tag == "Shield"){
+			Shield shieldScript = collision.gameObject.GetComponent<Shield>();
+			if (shieldScript.goliathShield){
+				if (game.goliath.isDashing){
+					Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
+					rigidbody.AddForce(game.goliath.DashForce * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up));
+				}
+			}
+		}
+		else if (collision.gameObject.tag == "Goliath"){
+			if (game.goliath.isDashing){
+				Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
+				rigidbody.AddForce(game.goliath.DashForce * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up));
+			}
+		}
+	}
 }

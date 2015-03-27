@@ -15,6 +15,7 @@ public class ScavGame : MonoBehaviour {
 	public GameObject exitPoint;
 
 	public GameObject transitionMenu;
+	public GoliathAvatar goliath;
 
 	[HideInInspector]
 	public bool GameRunning = false;

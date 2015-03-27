@@ -202,6 +202,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		goliathShield.SetActive(false);
 	}
 
+	[RPC]
+	public void GoliathDashingStart(){
+		goliath.isDashing = true;
+	}
+	
+	[RPC]
+	public void GoliathDashingEnd(){
+		goliath.isDashing = false;
+	}
+
 	// Player RPC	
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}

@@ -587,6 +587,7 @@ public class ControllerScript : MonoBehaviour {
 		// Snap spine back to initial rotations
 		if (player.isDead){
 			spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles);
+			flagInRange = false;
 		}
 	}
 
