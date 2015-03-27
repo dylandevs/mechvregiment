@@ -447,8 +447,11 @@ public class mechMovement : MonoBehaviour {
 
 	}
 
-	void OnTriggerEnter(){
-		networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All);
-		print ("hit");
+	void OnTriggerEnter(Collider collider){
+		if (collider.tag == "Player"){
+			PlayerAvatar avatarScript = collider.transform.parent.GetComponent<PlayerAvatar>();
+			networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All, avatarScript.PlayerNum);
+			print ("hit");
+		}
 	}
 }
