@@ -112,6 +112,21 @@ public class GoliathGameScript : MonoBehaviour {
 
 	void OnEnable(){
 		restartMatch = true;
-		menu1B = true;
+	}
+
+	public void goliathWon(){
+		blackOut.SetActive(true);
+
+		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
+			reLoad();
+		}
+	}
+
+	public void goliathLost(){
+		blackOut.SetActive(true);
+
+		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
+			reLoad();
+		}
 	}
 }

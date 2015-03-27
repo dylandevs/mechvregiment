@@ -6,8 +6,8 @@ public class RocketScript : MonoBehaviour {
 	public Vector3 target;
 
 	//stuff fr detonation
-	public float damage = 50f;  //damage at center
-	public float explosionRadius = 10f;
+	public float damage = 75f;  //damage at center
+	public float explosionRadius = 15f;
 
 	//public GameObject missleRemains;
 	public ParticleEmitter smokeParticles;
