@@ -226,6 +226,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	[RPC]
 	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){}
 
+	[RPC]
+	public void LaunchPlayer(){}
+
 	// Minion RPC
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){

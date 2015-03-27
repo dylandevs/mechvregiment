@@ -446,4 +446,9 @@ public class mechMovement : MonoBehaviour {
 		}
 
 	}
+
+	void OnTriggerEnter(){
+		networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All);
+		print ("hit");
+	}
 }
