@@ -116,10 +116,10 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void GoliathDashingStart(){};
+	public void GoliathDashingStart(){}
 
 	[RPC]
-	public void GoliathDashingEnd(){};
+	public void GoliathDashingEnd(){}
 
 	[RPC]
 	public void ScavengerConnected(){
