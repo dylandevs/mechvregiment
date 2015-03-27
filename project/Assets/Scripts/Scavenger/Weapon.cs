@@ -120,6 +120,9 @@ public class Weapon : MonoBehaviour {
 	private int fireHash = Animator.StringToHash("Firing");
 	private int reloadHash = Animator.StringToHash("Reload");
 
+	//Gunshot audio emitter
+	public AudioSource gunshotSound;
+
 	void Awake(){
 		ammoRenderer.Initialize (MagSize);
 	}
@@ -290,6 +293,9 @@ public class Weapon : MonoBehaviour {
 	
 	// Generates projectile at specified generation position
 	private void Fire(){
+		//Play shot audio
+		gunshotSound.Play();
+
 		// Creates bullet at given position
 		Vector3 bulletOrigin = player.playerCam.transform.position;
 		
