@@ -8,6 +8,7 @@ public class ScavUI : MonoBehaviour {
 	public Camera playerCam;
 	public Camera uiCam;
 	public Camera gunCam;
+	public Camera deathCam;
 	public PoolManager damageDirPool;
 	public Player player;
 	public CanvasScaler scaler;
@@ -43,11 +44,21 @@ public class ScavUI : MonoBehaviour {
 	private float hitMarkerFadeRate = 1;
 	public CanvasGroup hitMarker;
 
+	// Respawn elements
+	public GameObject respawnPanel;
+	public UnityEngine.UI.Text respawnTimer;
+	private bool respawning = false;
+
+	// In-game markers
+	public RectTransform testMarker;
+
 	[HideInInspector]
 	public Camera skyCam;
 
 	// Time trackers
 	float weaponFlashProgress = 0;
+
+	public RectTransform ownTransform;
 
 	// Use this for initialization
 	void Start () {
@@ -70,6 +81,11 @@ public class ScavUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		print (ownTransform.sizeDelta);
+		testMarker.anchoredPosition = (RectTransformUtility.WorldToScreenPoint (playerCam, minimap.objective.transform.position) - ownTransform.sizeDelta / 2f)  * (Screen.height / ownTransform.sizeDelta.y);
+		print (testMarker.position);
+		//testMarker.position = new Vector3(testMarker.position.x, testMarker.position.y, 0);
+
 		UpdateReloadProgress ();
 
 		if (weaponFlashProgress > 0){
@@ -88,6 +104,10 @@ public class ScavUI : MonoBehaviour {
 
 		if (hitMarker.alpha > 0){
 			hitMarker.alpha -= Time.deltaTime * hitMarkerFadeRate;
+		}
+
+		if (respawning){
+			respawnTimer.text = Mathf.Ceil(player.respawnTimer).ToString();
 		}
 	}
 
@@ -111,6 +131,7 @@ public class ScavUI : MonoBehaviour {
 		playerCam.camera.rect = new Rect(x, y, width, height);
 		gunCam.camera.rect = new Rect(x, y, width, height);
 		skyCam.camera.rect = new Rect(x, y, width, height);
+		deathCam.camera.rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
 	}
 
@@ -163,5 +184,18 @@ public class ScavUI : MonoBehaviour {
 
 	public void TriggerHitMarker(){
 		hitMarker.alpha = 1;
+	}
+
+	public void StartRespawnSequence(float startTime){
+		respawnPanel.SetActive (true);
+		respawnTimer.text = Mathf.Ceil (startTime).ToString();
+		respawning = true;
+		deathCam.gameObject.SetActive (true);
+	}
+
+	public void EndRespawnSequence(){
+		respawnPanel.SetActive (false);
+		respawning = false;
+		deathCam.gameObject.SetActive (false);
 	}
 }

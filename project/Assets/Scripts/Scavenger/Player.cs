@@ -32,7 +32,8 @@ public class Player : MonoBehaviour {
 	// Status variables
 	private float health = 0;
 	private float healTimer = 0;
-	private float respawnTimer = 0;
+	[HideInInspector]
+	public float respawnTimer = 0;
 	private bool isAimingDownSights = false;
 	public bool isDead = false;
 
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour {
 
 	// Recorded variables
 	private Vector3 startingPos;
+	private Animator deathCamAnim;
 	private int flinchHash = Animator.StringToHash("Flinch");
 	private int resetHash = Animator.StringToHash("Reset");
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
@@ -58,6 +60,7 @@ public class Player : MonoBehaviour {
 		InvMaxHealth = 1 / MaxHealth;
 		health = MaxHealth;
 		startingPos = transform.position;
+		deathCamAnim = display.deathCam.GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -138,6 +141,9 @@ public class Player : MonoBehaviour {
 				weapon.ReplenishWeapon();
 			}
 		}
+
+		display.EndRespawnSequence ();
+		rigidbody.isKinematic = false;
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -233,15 +239,23 @@ public class Player : MonoBehaviour {
 				// Disable firing layer
 				anim.SetLayerWeight(1, 0);
 
+				display.StartRespawnSequence(RespawnWait);
+
 				if (Vector3.Angle(direction, transform.forward) < 90){
 					anim.SetTrigger(fwdDeadHash);
 					fpsAnim.SetTrigger(fwdDeadHash);
+					deathCamAnim.SetTrigger(fwdDeadHash);
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
 				}
 				else{
 					anim.SetTrigger(bckDeadHash);
 					fpsAnim.SetTrigger(bckDeadHash);
+					deathCamAnim.SetTrigger(bckDeadHash);
 					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
+				}
+
+				if (playerController.IsGrounded()){
+					rigidbody.isKinematic = true;
 				}
 			}
 

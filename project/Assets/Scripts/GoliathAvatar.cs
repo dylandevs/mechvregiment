@@ -66,6 +66,8 @@ public class GoliathAvatar : MonoBehaviour {
 				if (minionsToSpawn > 0){
 					minionSpawnProg = MinionSpawnRate;
 				}
+
+				networkManager.photonView.RPC ("SpawnNetworkedMinion", PhotonTargets.All, minionScript.pooled.index, minionSpawn.transform.position);
 			}
 		}
 	}

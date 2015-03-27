@@ -77,6 +77,8 @@ public class BotAI : MonoBehaviour {
 	private PoolManager pool;
 	public GameObject waypoint;
 	public GoliathAvatar goliath;
+	public ParticleEmitter flash;
+	public Transform bulletSpawn;
 
 	[HideInInspector]
 	public int remoteId = -1;
@@ -212,6 +214,7 @@ public class BotAI : MonoBehaviour {
 		else{
 			pool.Deactivate(gameObject);
 			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
+			remoteId = -1;
 		}
 	}
 
@@ -227,6 +230,8 @@ public class BotAI : MonoBehaviour {
 
 		state = State.AllClear;
 		isDead = false;
+		reloadProg = FireRate;
+		resightProg = ResightRate;
 	}
 
 	void OnCollisionEnter(Collision collision){
@@ -464,7 +469,8 @@ public class BotAI : MonoBehaviour {
 
 	// Fires bullet predictively at target based on velocity
 	void FireAtPredictively(GameObject target){
-		Vector3 bulletGenPos = transform.position + transform.forward;
+		Vector3 bulletGenPos = bulletSpawn.position;
+		flash.Emit();
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
 		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		float timeDelay = 0;
@@ -480,12 +486,12 @@ public class BotAI : MonoBehaviour {
 		bulletScript.shootableLayer = shootableLayer;
 		bulletScript.bulletMarkPool = impactPool;
 
-		pooled.scavNetworker.photonView.RPC ("CreateMinionBullet", PhotonTargets.All, bulletGenPos, direction);
+		pooled.scavNetworker.photonView.RPC ("CreateMinionBullet", PhotonTargets.All, bulletGenPos, direction, remoteId);
 	}
 
 	// Fires bullet in direction provided
 	void fireInDirection(Transform target){
-		Vector3 bulletGenPos = transform.position + transform.forward;
+		Vector3 bulletGenPos = bulletSpawn.position;
 		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - bulletGenPos;
 
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos);

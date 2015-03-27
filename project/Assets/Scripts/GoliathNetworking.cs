@@ -116,6 +116,12 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 
 	[RPC]
+	public void GoliathDashingStart(){};
+
+	[RPC]
+	public void GoliathDashingEnd(){};
+
+	[RPC]
 	public void ScavengerConnected(){
 		goliathGame.netWorkReady = true;
 	}
@@ -239,6 +245,16 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			}
 		}
 	}
+
+	[RPC]
+	public void SpawnNetworkedMinion(int networkId, Vector3 startPos){
+		GameObject spawnedMinion = minionManager.Retrieve(startPos);
+		MinionAvatar avatarScript = spawnedMinion.GetComponent<MinionAvatar>();
+		photonView.RPC ("LinkMinions", PhotonTargets.All, networkId, avatarScript.pooled.index);
+	}
+
+	[RPC]
+	public void LinkMinions(int masterNum, int avatarNum){}
 	
 	// Projectile RPC
 	[RPC]
@@ -278,13 +294,17 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void SetMineID(int creatorId, int networkId){}
 	
 	[RPC]
-	public void CreateMinionBullet(Vector3 position, Vector3 facing){
+	public void CreateMinionBullet(Vector3 position, Vector3 facing, int minionNum){
 		GameObject bullet = minionBulletManager.Retrieve(position);
 		bullet.transform.forward = facing;
 		MinionBullet bulletScript = bullet.GetComponent<MinionBullet>();
 		bulletScript.shootableLayer = shootableLayer;
 		bulletScript.bulletMarkPool = scorchMarkManager;
 		bulletScript.isAvatar = true;
+
+		if (minionNum >= 0 && minionNum < minionAvatars.Length){
+			minionAvatars[minionNum].TriggerFlash();
+		}
 	}
 
 	[RPC]

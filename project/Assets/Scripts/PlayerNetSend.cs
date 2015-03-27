@@ -92,9 +92,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 					// Update minion positions
 					for(int i = 0; i < minions.Length; i++){
-						Transform minionTransform = minions[i].transform;
-						NavMeshAgent minionAgent = minions[i].GetComponent<NavMeshAgent>();
-						photonView.RPC ("SetMinionTransform", PhotonTargets.All, minions[i].remoteId, minionTransform.position, minionTransform.rotation, minionAgent.velocity);
+						if (minions[i].remoteId != -1){
+							Transform minionTransform = minions[i].transform;
+							NavMeshAgent minionAgent = minions[i].GetComponent<NavMeshAgent>();
+							photonView.RPC ("SetMinionTransform", PhotonTargets.All, minions[i].remoteId, minionTransform.position, minionTransform.rotation, minionAgent.velocity);
+						}
 					}
 		        	        
 					sendTimer = SendInterval;
@@ -246,6 +248,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	[RPC]
 	public void DestroyMinion(int networkId){}
 
+	[RPC]
+	public void SpawnNetworkedMinion(int networkId, Vector3 startPos){}
+
+	[RPC]
+	public void LinkMinions(int masterNum, int avatarNum){
+		if (masterNum >= 0 && masterNum < minions.Length){
+			minions[masterNum].remoteId = avatarNum;
+		}
+	}
+
 	// Projectile RPC
 	[RPC]
 	public void CreateMine(int creatorId, Vector3 position, Vector3 direction){}
@@ -270,7 +282,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	[RPC]
-	public void CreateMinionBullet(Vector3 position, Vector3 facing){}
+	public void CreateMinionBullet(Vector3 position, Vector3 facing, int minionNum){}
 
 	[RPC]
 	public void PlaceMinionWaypoint(Vector3 position){

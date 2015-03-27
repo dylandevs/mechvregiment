@@ -39,14 +39,13 @@ public class MechShoot : MonoBehaviour {
 	public GameObject cannonAimer;
 	public GameObject cannonArm;
 	public GameObject cannonRet;
-	public GameObject cannonEffect;
-	public GameObject cannonEffect2;
-	public GameObject cannonEffectParent;
-	public GameObject cannonEffect2Parent;
 	public GameObject rangeIndicator;
 	public GameObject outOfRange;
 	public GameObject minionFlag;
 	public GameObject cannonShotStart;
+	public GameObject pressToPickUp;
+	public GameObject pressToDropFlag;
+
 	//masks
 	public LayerMask mask;
 	public LayerMask maskForRet;
@@ -79,6 +78,7 @@ public class MechShoot : MonoBehaviour {
 	public bool forceKeyboard = false;
 	public bool allowedToShoot;
 	public bool dash;
+	public bool pressToPick;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -90,6 +90,7 @@ public class MechShoot : MonoBehaviour {
 	bool ableToShoot;
 	bool ableToShootM;
 	bool flagDown;
+
 
 	int miniIdle = Animator.StringToHash("miniGunIdle");
 	int miniFire = Animator.StringToHash("miniGunFire");
@@ -109,6 +110,7 @@ public class MechShoot : MonoBehaviour {
 	void Start () {
 		flagCarried.SetActive(false);
 		rocketAimSpeed = 15 * Time.deltaTime;
+		allowedToShoot = false;
 		miniGunMode = true;
 		carrying = false;
 	}
@@ -137,19 +139,31 @@ public class MechShoot : MonoBehaviour {
 			rTrig = SixenseInput.Controllers[right].Trigger;
 
 			//hydra mode handling
-			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.FOUR)){
 				resetModes();
 				rocketMode = true;
 			}
-			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.FOUR)){
 				resetModes();
 				minionMode = true;
 			}
-			if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[right].GetButtonUp(SixenseButtons.FOUR)){
 				resetModes();
 				miniGunMode = true;
 			}
-			if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE)){
+			if(SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.ONE) || 
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.TWO) ||
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.THREE)||
+			   SixenseInput.Controllers[left].GetButtonUp(SixenseButtons.FOUR)){
 				resetModes();
 				miniGunMode = true;
 			}
@@ -186,6 +200,12 @@ public class MechShoot : MonoBehaviour {
 		}
 		if(dash == true){
 			allowedToShoot = false;
+			miniGunFirer.fire = false;
+			miniGunFirer.cannonShoot = false;
+
+			miniGunArm.transform.localEulerAngles = new Vector3(0,0,15);
+			cannonArm.transform.localEulerAngles = new Vector3(0,0,20);
+
 		}else allowedToShoot = true;
 
 		if(allowedToShoot == true){
@@ -210,21 +230,12 @@ public class MechShoot : MonoBehaviour {
 			if(inRangeCannonX == true && inRangeCannonY == true){
 				ableToShoot = true;
 				cannonRet.SetActive(true);
-				cannonEffect.SetActive(true);
-				cannonEffect2.SetActive(true);
 			}
 			else if(inRangeCannonX == false || inRangeCannonY == false){
 				ableToShoot = false;
 				cannonRet.SetActive(false);
-				cannonEffect.SetActive(false);
-				cannonEffect2.SetActive(false);
 			}
 
-
-			//spin the reticle
-			cannonEffectParent.transform.Rotate(cannonEffect.transform.right * Time.deltaTime * 10,Space.World);
-			cannonEffect2Parent.transform.Rotate(cannonEffect2.transform.right * Time.deltaTime * 10,Space.World);
-			
 			//********needs adjusting after model import*****************************************************
 			//aim the position of where the minigun is going to fire from
 			/*
@@ -468,13 +479,22 @@ public class MechShoot : MonoBehaviour {
 		}
 	}
 
+		if(pressToPick == true){
+			pressToPickUp.SetActive(true);
+		}
+		else pressToPickUp.SetActive(false);
+
 		if(carrying == true){
+
+			miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
+			cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
+
 			//turns off all other modes
 			resetModes();
 			//turns off world flag and replaces it with carried version
 			flag.SetActive(false);
 			flagCarried.SetActive(true);
-			
+			pressToDropFlag.SetActive(true);
 			leftEmitter.SetActive(true);
 			rightEmitter.SetActive(true);
 			//play animation for mech carrying flag thingy; 
@@ -501,8 +521,6 @@ public class MechShoot : MonoBehaviour {
 		miniGunReticle.SetActive (false);
 		lightBeam.SetActive(false);
 		notLightBeam.SetActive (false);
-		cannonEffect.SetActive(false);
-		cannonEffect2.SetActive(false);
 	}
 
 	public void releaseFlag(){
@@ -511,6 +529,7 @@ public class MechShoot : MonoBehaviour {
 		networkManager.photonView.RPC ("GoliathDroppedFlag",PhotonTargets.All,flag.transform.position);
 		flag.SetActive(true);
 		flagCarried.SetActive(false);
+		pressToDropFlag.SetActive(false);
 		leftEmitter.SetActive(false);
 		rightEmitter.SetActive(false);
 		carrying = false;

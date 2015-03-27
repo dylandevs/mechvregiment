@@ -31,8 +31,6 @@ public class GoliathGameScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float lTrig = SixenseInput.Controllers[0].Trigger;
-		float rTrig = SixenseInput.Controllers[1].Trigger;
 
 		if(reLoadScene == true){
 			reLoad();
@@ -58,6 +56,7 @@ public class GoliathGameScript : MonoBehaviour {
 		goliathUI.SetActive(false);
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
+		mechShoot.allowedToShoot = false;
 		mechMesh.transform.position = spawnPoint.transform.position;
 		if(readyToGo == false){
 			if(menu1B == true){
