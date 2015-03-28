@@ -48,6 +48,7 @@ public class PlayerAvatar : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 	private int reloadHash = Animator.StringToHash("Reload");
+	private int flagCarryHash = Animator.StringToHash ("CarryFlag");
 
 	float turnOffTimer;
 	// Use this for initialization
@@ -188,5 +189,14 @@ public class PlayerAvatar : MonoBehaviour {
 		weapons [weaponNum].SetActive (false);
 		weaponNum = nextWeapon;
 		weapons [weaponNum].SetActive (true);
+	}
+
+	public void CarryFlag(){
+		anim.SetBool (flagCarryHash, true);
+	}
+
+	public void DropFlag(){
+		anim.SetBool (flagCarryHash, false);
+		anim.SetTrigger (resetHash);
 	}
 }

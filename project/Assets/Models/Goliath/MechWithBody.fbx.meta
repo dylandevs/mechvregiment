@@ -92,7 +92,9 @@ ModelImporter:
     4300012: Gem
     4300014: GlassBox
     4300016: RightArm
-    7400000: Take 001
+    7400000: Goliath_Walk
+    7400002: Goliath_Strafe
+    7400004: Goliath_Idle
     9500000: //RootNode
     13700000: Base
     13700002: Body
@@ -112,13 +114,331 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Goliath_Walk
+      takeName: Take 001
+      firstFrame: 2
+      lastFrame: 41
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_CTRL
+        weight: 1
+      - path: Bottom_CTRL/Hips_CTRL
+        weight: 1
+      - path: Bottom_CTRL/LeftKnee_CTRL
+        weight: 1
+      - path: Bottom_CTRL/RightKnee_CTRL
+        weight: 1
+      - path: jnt_Root_Bottom
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball/jnt_L_Toe
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball/jnt_R_Toe
+        weight: 1
+      - path: jnt_Root_Top
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase/jnt_L_GunBarrel
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_Hand
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Hand
+        weight: 0
+      - path: Mech
+        weight: 0
+      - path: Mech/Base
+        weight: 0
+      - path: Mech/LeftArm
+        weight: 0
+      - path: Mech/LeftArm/Gem
+        weight: 0
+      - path: Mech/LeftArm/GlassBox
+        weight: 0
+      - path: Mech/LeftArm/LeftArm 1
+        weight: 0
+      - path: Mech/LefttBoot
+        weight: 0
+      - path: Mech/RightArm
+        weight: 0
+      - path: Mech/RightBoot
+        weight: 0
+      - path: Mech/Torso
+        weight: 0
+      - path: Mech/Torso/Body
+        weight: 0
+      - path: Mech/Torso/Eyes
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Goliath_Strafe
+      takeName: Take 001
+      firstFrame: 43
+      lastFrame: 82
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_CTRL
+        weight: 1
+      - path: Bottom_CTRL/Hips_CTRL
+        weight: 1
+      - path: Bottom_CTRL/LeftKnee_CTRL
+        weight: 1
+      - path: Bottom_CTRL/RightKnee_CTRL
+        weight: 1
+      - path: jnt_Root_Bottom
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball/jnt_L_Toe
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball/jnt_R_Toe
+        weight: 1
+      - path: jnt_Root_Top
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase/jnt_L_GunBarrel
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_Hand
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Hand
+        weight: 0
+      - path: Mech
+        weight: 0
+      - path: Mech/Base
+        weight: 0
+      - path: Mech/LeftArm
+        weight: 0
+      - path: Mech/LeftArm/Gem
+        weight: 0
+      - path: Mech/LeftArm/GlassBox
+        weight: 0
+      - path: Mech/LeftArm/LeftArm 1
+        weight: 0
+      - path: Mech/LefttBoot
+        weight: 0
+      - path: Mech/RightArm
+        weight: 0
+      - path: Mech/RightBoot
+        weight: 0
+      - path: Mech/Torso
+        weight: 0
+      - path: Mech/Torso/Body
+        weight: 0
+      - path: Mech/Torso/Eyes
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Goliath_Idle
+      takeName: Take 001
+      firstFrame: 42
+      lastFrame: 42.0999985
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bottom_CTRL
+        weight: 1
+      - path: Bottom_CTRL/Hips_CTRL
+        weight: 1
+      - path: Bottom_CTRL/LeftKnee_CTRL
+        weight: 1
+      - path: Bottom_CTRL/RightKnee_CTRL
+        weight: 1
+      - path: jnt_Root_Bottom
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_L_Hip/jnt_L_Knee/jnt_L_Ankle/jnt_L_Ball/jnt_L_Toe
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball
+        weight: 1
+      - path: jnt_Root_Bottom/jnt_Hip/jnt_R_Hip/jnt_R_Knee/jnt_R_Ankle/jnt_R_Ball/jnt_R_Toe
+        weight: 1
+      - path: jnt_Root_Top
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_GunBase/jnt_L_GunBarrel
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_L_Shoulder/jnt_L_Elbow/jnt_L_Wrist/jnt_L_Hand
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow
+        weight: 0
+      - path: jnt_Root_Top/jnt_Spine/jnt_R_Shoulder/jnt_R_Elbow/jnt_R_Hand
+        weight: 0
+      - path: Mech
+        weight: 0
+      - path: Mech/Base
+        weight: 0
+      - path: Mech/LeftArm
+        weight: 0
+      - path: Mech/LeftArm/Gem
+        weight: 0
+      - path: Mech/LeftArm/GlassBox
+        weight: 0
+      - path: Mech/LeftArm/LeftArm 1
+        weight: 0
+      - path: Mech/LefttBoot
+        weight: 0
+      - path: Mech/RightArm
+        weight: 0
+      - path: Mech/RightBoot
+        weight: 0
+      - path: Mech/Torso
+        weight: 0
+      - path: Mech/Torso/Body
+        weight: 0
+      - path: Mech/Torso/Eyes
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []

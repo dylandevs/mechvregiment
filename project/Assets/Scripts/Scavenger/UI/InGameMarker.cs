@@ -5,6 +5,8 @@ using System.Collections;
 public class InGameMarker : MonoBehaviour {
 
 	public GameObject associatedObject;
+	public enum IGMarkerType {Objective, Scavenger, Goliath};
+	public IGMarkerType type;
 	public Image img;
 	public RectTransform rectTransform;
 

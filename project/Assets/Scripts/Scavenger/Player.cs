@@ -210,7 +210,7 @@ public class Player : MonoBehaviour {
 		crystal.SetActive(true);
 
 		game.FlagRetrieved(gameObject);
-		display.minimap.UpdateObjective(game.exitPoint);
+		display.UpdateObjective(game.exitPoint);
 		game.exitPoint.SetActive(true);
 
 		networkManager.photonView.RPC ("ScavengerPickedUpFlag", PhotonTargets.All, initializer.Layer - 1);
