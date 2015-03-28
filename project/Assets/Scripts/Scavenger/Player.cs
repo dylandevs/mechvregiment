@@ -45,6 +45,7 @@ public class Player : MonoBehaviour {
 	private GameObject[] weaponModels3;
 	private Weapon[] weapons;
 	public GameObject crystal;
+	public GameObject crystalTP;
 
 	[HideInInspector]
 	public int currentWeaponIndex = 0;
@@ -208,6 +209,7 @@ public class Player : MonoBehaviour {
 		weapons[currentWeaponIndex].gameObject.SetActive(false);
 		weaponModels3[currentWeaponIndex].SetActive(false);
 		crystal.SetActive(true);
+		crystalTP.SetActive (true);
 
 		game.FlagRetrieved(gameObject);
 		display.UpdateObjective(game.exitPoint);
@@ -220,6 +222,7 @@ public class Player : MonoBehaviour {
 		weapons[currentWeaponIndex].gameObject.SetActive(true);
 		weaponModels3[currentWeaponIndex].SetActive(true);
 		crystal.SetActive(false);
+		crystalTP.SetActive (false);
 
 		game.FlagDropped(transform.position);
 		game.exitPoint.SetActive(false);

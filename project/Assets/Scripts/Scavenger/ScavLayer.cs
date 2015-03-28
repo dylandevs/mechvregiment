@@ -9,10 +9,12 @@ public class ScavLayer : MonoBehaviour {
 	public GameObject Weapon3Wrapper;
 	public GameObject Ammo1Wrapper;
 	public GameObject Ammo3Wrapper;
+	public GameObject CrystalTP;
 
 	public GameObject PlayerMeshWrapper;
 	public GameObject PlayerShadowWrapper;
 	public GameObject PlayerShotColliderWrapper;
+	public GameObject CrystalShadow;
 
 	public Camera PlayerCam;
 	public Camera GunCam;
@@ -35,6 +37,8 @@ public class ScavLayer : MonoBehaviour {
 		SetLayerRecursively(Weapon3Wrapper, view3Layer);
 		SetLayerRecursively(Ammo1Wrapper, weaponLayer);
 		SetLayerRecursively(Ammo3Wrapper, view3Layer);
+		SetLayerRecursively(CrystalTP, view3Layer);
+		SetLayerRecursively(CrystalShadow, view1Layer);
 
 		// Duplicate weapon3 meshes and convert to invisible shadowcasters
 		foreach (Transform weapon3 in Weapon3Wrapper.transform){
