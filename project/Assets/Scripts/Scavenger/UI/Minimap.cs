@@ -24,7 +24,7 @@ public class Minimap : MonoBehaviour {
 	public GameObject goliath;
 	public GameObject mapIconPrefab;
 
-	public List<MinimapIcon> icons = new List<MinimapIcon>();
+	private List<MinimapIcon> icons = new List<MinimapIcon>();
 
 	public Sprite objectiveIcon;
 	public Sprite goliathIcon;
@@ -103,7 +103,7 @@ public class Minimap : MonoBehaviour {
 	public void UpdateObjective(GameObject newObj){
 		foreach (MinimapIcon icon in icons){
 			if (icon.type == MinimapIcon.MMIconType.Objective){
-				icon.GetComponent<MinimapIcon> ().associatedObject = newObj;
+				icon.associatedObject = newObj;
 			}
 		}
 		objective = newObj;

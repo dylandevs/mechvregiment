@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ScavUI : MonoBehaviour {
 
@@ -50,7 +51,17 @@ public class ScavUI : MonoBehaviour {
 	private bool respawning = false;
 
 	// In-game markers
-	public RectTransform testMarker;
+	private Vector2 deltaScreenRatio = Vector2.zero;
+	private Vector2 cachedSizeDelta;
+	private Vector2 addScreenRatio;
+	private Vector2 addSizeDelta;
+	private List<InGameMarker> markers = new List<InGameMarker>();
+
+	public GameObject markerPrefab;
+	public Transform markerGroup;
+	public Sprite objectiveMarker;
+	public Sprite goliathMarker;
+	public Sprite scavengerMarker;
 
 	[HideInInspector]
 	public Camera skyCam;
@@ -58,7 +69,7 @@ public class ScavUI : MonoBehaviour {
 	// Time trackers
 	float weaponFlashProgress = 0;
 
-	public RectTransform ownTransform;
+	public RectTransform markerTransform;
 
 	// Use this for initialization
 	void Start () {
@@ -77,16 +88,45 @@ public class ScavUI : MonoBehaviour {
 		}
 
 		hitMarkerFadeRate = 1 / HitMarkerFadeTime;
+	
+		// Create in-game markers
+		GameObject marker;
+		InGameMarker markerScript;
+
+		marker = CreateInGameMarker(objectiveMarker);
+		markerScript = marker.GetComponent<InGameMarker>();
+		markerScript.associatedObject = minimap.objective;
+		markerScript.type = InGameMarker.IGMarkerType.Objective;
+		markers.Add(markerScript);
+
+		marker = CreateInGameMarker(goliathMarker);
+		markerScript = marker.GetComponent<InGameMarker>();
+		markerScript.associatedObject = minimap.goliath;
+		markerScript.type = InGameMarker.IGMarkerType.Goliath;
+		markers.Add(markerScript);
+
+		foreach (Transform scavenger in minimap.playerGroup.transform){
+			// Verify that current player is not selected
+			if (scavenger.gameObject != player.gameObject){
+				marker = CreateInGameMarker(scavengerMarker);
+				markerScript = marker.GetComponent<InGameMarker>();
+				markerScript.associatedObject = scavenger.gameObject;
+				markerScript.type = InGameMarker.IGMarkerType.Scavenger;
+				markers.Add(markerScript);
+			}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		print (ownTransform.sizeDelta);
-		testMarker.anchoredPosition = (RectTransformUtility.WorldToScreenPoint (playerCam, minimap.objective.transform.position) - ownTransform.sizeDelta / 2f)  * (Screen.height / ownTransform.sizeDelta.y);
-		print (testMarker.position);
-		//testMarker.position = new Vector3(testMarker.position.x, testMarker.position.y, 0);
+		// First-time value calculation after initialization
+		if (deltaScreenRatio == Vector2.zero){
+			deltaScreenRatio = Vector2.Scale(addScreenRatio, new Vector2(markerTransform.sizeDelta.x / Screen.width, markerTransform.sizeDelta.y / Screen.height));
+			cachedSizeDelta = markerTransform.sizeDelta * 0.5f + Vector2.Scale(markerTransform.sizeDelta, addSizeDelta);
+		}
 
 		UpdateReloadProgress ();
+		UpdateMarkerPositions ();
 
 		if (weaponFlashProgress > 0){
 			weaponFlashProgress -= Time.deltaTime;
@@ -111,6 +151,45 @@ public class ScavUI : MonoBehaviour {
 		}
 	}
 
+	public void UpdateObjective(GameObject newObj){
+		foreach (InGameMarker marker in markers){
+			if (marker.type == InGameMarker.IGMarkerType.Objective){
+				marker.associatedObject = newObj;
+			}
+		}
+
+		minimap.UpdateObjective (newObj);
+	}
+
+	private void UpdateMarkerPositions(){
+		foreach(InGameMarker marker in markers){
+			Vector3 targetPos = marker.associatedObject.transform.position + Vector3.up * 3;
+			Vector3 difference = targetPos - playerCam.transform.position;
+
+			if (Vector3.Dot(playerCam.transform.forward, difference) > 0 && !player.isDead && marker.associatedObject.GetActive()){
+				marker.gameObject.SetActive(true);
+				Vector2 initScreenPos = RectTransformUtility.WorldToScreenPoint (playerCam, targetPos);
+				initScreenPos.x *= deltaScreenRatio.x;
+				initScreenPos.y *= deltaScreenRatio.y;
+				Vector2 screenPos = initScreenPos - cachedSizeDelta;
+
+				marker.rectTransform.anchoredPosition = screenPos;
+			}
+			else{
+				marker.gameObject.SetActive(false);
+			}
+		}
+	}
+
+	public GameObject CreateInGameMarker(Sprite sprite){
+		GameObject marker = Instantiate (markerPrefab) as GameObject;
+		marker.transform.SetParent (markerGroup);
+		marker.transform.localPosition = Vector3.zero;
+		marker.GetComponent<Image> ().sprite = sprite;
+
+		return marker;
+	}
+
 	public void IndicateDamageDirection(Vector3 hitVector){
 
 		// Determining rotation relative to player forward
@@ -133,6 +212,8 @@ public class ScavUI : MonoBehaviour {
 		skyCam.camera.rect = new Rect(x, y, width, height);
 		deathCam.camera.rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
+		addScreenRatio = new Vector2 (1 / width, 1 / height);
+		addSizeDelta = new Vector2 (x * 2, y * 2);
 	}
 
 	public void UpdateReloadProgress(){

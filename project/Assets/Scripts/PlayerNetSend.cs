@@ -33,7 +33,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject minionWaypoint;
 	public GameObject crystal;
 
-	private bool connectionReceived = false;
+	public bool connectionReceived = false;
 
 	// Use this for initialization
 	void Start () {
@@ -241,6 +241,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void ApplyPlayerDamage(int playerNum, float damage, Vector3 direction){
 		if (playerNum >= 0 && playerNum < players.Length){
 			players[playerNum].Damage(damage, direction);
+		}
+	}
+
+	[RPC]
+	public void LaunchPlayer(int playerNum){
+		if (playerNum >= 0 && playerNum < players.Length){
+			players[playerNum].Launch();
 		}
 	}
 

@@ -24,6 +24,7 @@ public class PlayerAvatar : MonoBehaviour {
 	public Transform spineJoint;
 	public GameObject[] muzzleFlashes;
 	private GameObject[] weapons;
+	public GameObject crystal;
 
 	public float AutoFireRate = 0.1f;
 	private float autoFireProg = 0;
@@ -48,6 +49,7 @@ public class PlayerAvatar : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 	private int reloadHash = Animator.StringToHash("Reload");
+	private int flagCarryHash = Animator.StringToHash ("CarryFlag");
 
 	float turnOffTimer;
 	// Use this for initialization
@@ -177,16 +179,29 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
+		muzzleFlashes[weaponNum].particleEmitter.Emit();
+
 		//send location and turn on miniMapIcon
 		miniMapIndication.GetComponent<cockpitUI>();
 		miniMapIndication.miniMapIndicators(PlayerNum);
-
-		muzzleFlashes[weaponNum].particleEmitter.Emit();
 	}
 
 	public void ShowNewWeapon(){
 		weapons [weaponNum].SetActive (false);
 		weaponNum = nextWeapon;
 		weapons [weaponNum].SetActive (true);
+	}
+
+	public void CarryFlag(){
+		anim.SetBool (flagCarryHash, true);
+		weapons [weaponNum].SetActive (false);
+		crystal.SetActive (true);
+	}
+
+	public void DropFlag(){
+		anim.SetBool (flagCarryHash, false);
+		anim.SetTrigger (resetHash);
+		weapons [weaponNum].SetActive (true);
+		crystal.SetActive (false);
 	}
 }

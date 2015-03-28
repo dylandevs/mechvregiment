@@ -82,7 +82,7 @@ public class ScavGame : MonoBehaviour {
 
 	public void FlagRetrieved(GameObject retriever){
 		foreach (Player player in players){
-			player.display.minimap.UpdateObjective (retriever);
+			player.display.UpdateObjective (retriever);
 			flag.SetActive(false);
 		}
 	}
@@ -90,7 +90,7 @@ public class ScavGame : MonoBehaviour {
 	public void FlagDropped(Vector3 flagPos){
 		foreach (Player player in players){
 			flag.transform.position = flagPos + Vector3.up;
-			player.display.minimap.UpdateObjective (flag);
+			player.display.UpdateObjective (flag);
 			flag.SetActive(true);
 			flag.rigidbody.velocity = Vector3.zero;
 

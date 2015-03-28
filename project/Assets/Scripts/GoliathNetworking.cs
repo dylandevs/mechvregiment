@@ -131,12 +131,14 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		flag.transform.position = flagPos;
 		flag.SetActive(true);
 		cockpit.droppedFlag(Player);
+		playerAvatars [Player].DropFlag ();
 	}
 
 	[RPC]
 	public void ScavengerPickedUpFlag(int Player){
 		flag.SetActive(false);
 		cockpit.switchToFlag(Player);
+		playerAvatars [Player].CarryFlag ();
 	}
 
 	[RPC]
