@@ -13,7 +13,7 @@ public class GoliathAvatar : MonoBehaviour {
 	public Transform shoulderLJoint;
 
 	public float DashDamage = 80;
-	public float DashForce = 100;
+	public float DashForce = 1000;
 	public float MinionSpawnRate = 5;
 	private float minionSpawnProg = 0;
 	public Transform minionSpawn;
@@ -44,7 +44,6 @@ public class GoliathAvatar : MonoBehaviour {
 	private Quaternion lastSyncRotShouldL;
 	private Quaternion nextSyncRotShouldL;
 
-	[HideInInspector]
 	public bool isDashing = false;
 
 	// Use this for initialization

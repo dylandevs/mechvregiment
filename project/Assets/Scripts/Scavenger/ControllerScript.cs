@@ -554,7 +554,7 @@ public class ControllerScript : MonoBehaviour {
 		newVel.z *= speedFactor;
 
 		// Apply velocity and force
-		if (!rigidbody.isKinematic){
+		if (!rigidbody.isKinematic && !player.isStunned){
 			rigidbody.velocity = newVel;
 		}
 

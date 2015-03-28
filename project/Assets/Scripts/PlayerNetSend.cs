@@ -244,6 +244,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		}
 	}
 
+	[RPC]
+	public void LaunchPlayer(int playerNum){
+		if (playerNum >= 0 && playerNum < players.Length){
+			players[playerNum].Launch();
+		}
+	}
+
 	// Minion RPC
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}

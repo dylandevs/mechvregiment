@@ -17,6 +17,8 @@ public class Player : MonoBehaviour {
 	private float InvMaxHealth = 1;
 	public float RegenInc = 25f;
 	public float RespawnWait = 5.0f;
+	public float StunLength = 3.0f;
+	private float stunProg = 0;
 
 	// Inputs
 	public Camera playerCam;
@@ -46,6 +48,8 @@ public class Player : MonoBehaviour {
 
 	[HideInInspector]
 	public int currentWeaponIndex = 0;
+	[HideInInspector]
+	public bool isStunned = false;
 
 	// Recorded variables
 	private Vector3 startingPos;
@@ -73,6 +77,13 @@ public class Player : MonoBehaviour {
 		}
 		//crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 		display.UpdateCrosshairSpread(weapons [currentWeaponIndex].GetSpread ());
+
+		if (stunProg > 0){
+			stunProg -= Time.deltaTime;
+			if (stunProg <= 0){
+				isStunned = false;
+			}
+		}
 	}
 
 	public void Initialize(int playerId, float[] window, float uiScale){
@@ -293,21 +304,12 @@ public class Player : MonoBehaviour {
 		return newWeaponIndex;
 	}
 
-	void OnCollisionEnter(Collision collision){
-		if (collision.gameObject.tag == "Shield"){
-			Shield shieldScript = collision.gameObject.GetComponent<Shield>();
-			if (shieldScript.goliathShield){
-				if (game.goliath.isDashing){
-					Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
-					rigidbody.AddForce(game.goliath.DashForce * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up));
-				}
-			}
-		}
-		else if (collision.gameObject.tag == "Goliath"){
-			if (game.goliath.isDashing){
-				Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
-				rigidbody.AddForce(game.goliath.DashForce * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up));
-			}
+	public void Launch(){
+		if (!isStunned){
+			Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
+			rigidbody.velocity = 10 * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up * 1.5f);
+			stunProg = StunLength;
+			isStunned = true;
 		}
 	}
 }
