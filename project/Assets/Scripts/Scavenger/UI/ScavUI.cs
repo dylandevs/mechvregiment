@@ -51,7 +51,10 @@ public class ScavUI : MonoBehaviour {
 	private bool respawning = false;
 
 	// In-game markers
-	private Vector2 deltaScreenRatio;
+	private Vector2 deltaScreenRatio = Vector2.zero;
+	private Vector2 cachedSizeDelta;
+	private Vector2 addScreenRatio;
+	private Vector2 addSizeDelta;
 	private List<InGameMarker> markers = new List<InGameMarker>();
 
 	public GameObject markerPrefab;
@@ -113,7 +116,11 @@ public class ScavUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		// First-time value calculation after initialization
+		if (deltaScreenRatio == Vector2.zero){
+			deltaScreenRatio = Vector2.Scale(addScreenRatio, new Vector2(markerTransform.sizeDelta.x / Screen.width, markerTransform.sizeDelta.y / Screen.height));
+			cachedSizeDelta = markerTransform.sizeDelta * 0.5f + Vector2.Scale(markerTransform.sizeDelta, addSizeDelta);
+		}
 
 		UpdateReloadProgress ();
 		UpdateMarkerPositions ();
@@ -151,7 +158,7 @@ public class ScavUI : MonoBehaviour {
 				Vector2 initScreenPos = RectTransformUtility.WorldToScreenPoint (playerCam, targetPos);
 				initScreenPos.x *= deltaScreenRatio.x;
 				initScreenPos.y *= deltaScreenRatio.y;
-				Vector2 screenPos = initScreenPos - markerTransform.sizeDelta * 0.5f;
+				Vector2 screenPos = initScreenPos - cachedSizeDelta;
 
 				marker.rectTransform.anchoredPosition = screenPos;
 			}
@@ -192,7 +199,8 @@ public class ScavUI : MonoBehaviour {
 		skyCam.camera.rect = new Rect(x, y, width, height);
 		deathCam.camera.rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
-		deltaScreenRatio = new Vector2(markerTransform.sizeDelta.x / Screen.width, markerTransform.sizeDelta.y / Screen.height);
+		addScreenRatio = new Vector2 (1 / width, 1 / height);
+		addSizeDelta = new Vector2 (x * 2, y * 2);
 	}
 
 	public void UpdateReloadProgress(){
