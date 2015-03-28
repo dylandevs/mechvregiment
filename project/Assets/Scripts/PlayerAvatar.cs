@@ -179,11 +179,11 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
+		muzzleFlashes[weaponNum].particleEmitter.Emit();
+
 		//send location and turn on miniMapIcon
 		miniMapIndication.GetComponent<cockpitUI>();
 		miniMapIndication.miniMapIndicators(PlayerNum);
-
-		muzzleFlashes[weaponNum].particleEmitter.Emit();
 	}
 
 	public void ShowNewWeapon(){
