@@ -24,6 +24,7 @@ public class PlayerAvatar : MonoBehaviour {
 	public Transform spineJoint;
 	public GameObject[] muzzleFlashes;
 	private GameObject[] weapons;
+	public GameObject crystal;
 
 	public float AutoFireRate = 0.1f;
 	private float autoFireProg = 0;
@@ -193,10 +194,14 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void CarryFlag(){
 		anim.SetBool (flagCarryHash, true);
+		weapons [weaponNum].SetActive (false);
+		crystal.SetActive (true);
 	}
 
 	public void DropFlag(){
 		anim.SetBool (flagCarryHash, false);
 		anim.SetTrigger (resetHash);
+		weapons [weaponNum].SetActive (true);
+		crystal.SetActive (false);
 	}
 }
