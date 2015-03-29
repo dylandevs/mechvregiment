@@ -9,6 +9,7 @@ public class BulletHoleBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
+		this.GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
 	}
 	
 	// Update is called once per frame

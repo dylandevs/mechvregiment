@@ -32,6 +32,9 @@ public class Mine : MonoBehaviour {
 	[HideInInspector]
 	private bool transmitPosition = false;
 
+	//Audio for explosion and landing sound
+	public AudioSource landingSound;
+
 	// Use this for initializations
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -133,6 +136,7 @@ public class Mine : MonoBehaviour {
 		rigidbody.isKinematic = true;
 		isFixed = true;
 		transmitPosition = true;
+		landingSound.Play();
 	}
 
 	void OnEnable(){
