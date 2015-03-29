@@ -44,7 +44,12 @@ public class GoliathAvatar : MonoBehaviour {
 	private Quaternion lastSyncRotShouldL;
 	private Quaternion nextSyncRotShouldL;
 
+	private Vector3 cachedVelocity;
+
 	public bool isDashing = false;
+
+	private int fwdHash = Animator.StringToHash("FwdSpeed");
+	private int rgtHash = Animator.StringToHash("RgtSpeed");
 
 	// Use this for initialization
 	void Start () {
@@ -74,6 +79,16 @@ public class GoliathAvatar : MonoBehaviour {
 				networkManager.photonView.RPC ("SpawnNetworkedMinion", PhotonTargets.All, minionScript.pooled.index, minionSpawn.transform.position);
 			}
 		}
+
+		// Calculate directional speeds
+		Quaternion revFacingRot = Quaternion.FromToRotation(botJoint.forward, Vector3.forward);
+		Vector3 rotatedVelocity = revFacingRot * cachedVelocity;
+		
+		float forwardSpeed = rotatedVelocity.z;
+		float rightSpeed = rotatedVelocity.x;
+
+		anim.SetFloat (fwdHash, forwardSpeed);
+		anim.SetFloat (rgtHash, rightSpeed);
 	}
 
 	private void InterpolateTransform(){
@@ -115,6 +130,8 @@ public class GoliathAvatar : MonoBehaviour {
 		nextSyncRotSpine = nextSpineRot;
 		nextSyncRotShouldR = nextShouldRRot;
 		nextSyncRotShouldL = nextShouldLRot;
+
+		cachedVelocity = currBotVelocity;
 	}
 
 	public void Damage(float damage, Vector3 direction){

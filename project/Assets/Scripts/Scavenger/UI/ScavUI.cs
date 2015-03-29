@@ -97,12 +97,14 @@ public class ScavUI : MonoBehaviour {
 		markerScript = marker.GetComponent<InGameMarker>();
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
+		markerScript.offset.y = 1;
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
 		markerScript = marker.GetComponent<InGameMarker>();
 		markerScript.associatedObject = minimap.goliath;
 		markerScript.type = InGameMarker.IGMarkerType.Goliath;
+		markerScript.offset.y = 2;
 		markers.Add(markerScript);
 
 		foreach (Transform scavenger in minimap.playerGroup.transform){
@@ -112,6 +114,7 @@ public class ScavUI : MonoBehaviour {
 				markerScript = marker.GetComponent<InGameMarker>();
 				markerScript.associatedObject = scavenger.gameObject;
 				markerScript.type = InGameMarker.IGMarkerType.Scavenger;
+				markerScript.offset.y = 2;
 				markers.Add(markerScript);
 			}
 		}
@@ -163,7 +166,7 @@ public class ScavUI : MonoBehaviour {
 
 	private void UpdateMarkerPositions(){
 		foreach(InGameMarker marker in markers){
-			Vector3 targetPos = marker.associatedObject.transform.position + Vector3.up * 3;
+			Vector3 targetPos = marker.associatedObject.transform.position + marker.offset;
 			Vector3 difference = targetPos - playerCam.transform.position;
 
 			if (Vector3.Dot(playerCam.transform.forward, difference) > 0 && !player.isDead && marker.associatedObject.GetActive()){

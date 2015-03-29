@@ -9,6 +9,7 @@ public class InGameMarker : MonoBehaviour {
 	public IGMarkerType type;
 	public Image img;
 	public RectTransform rectTransform;
+	public Vector3 offset = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
