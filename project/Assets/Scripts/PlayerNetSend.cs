@@ -132,7 +132,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	// Connection RPC
 	[RPC]
-	public void ScavengerConnected(int startTime){}
+	public void ScavengerConnected(float startTime){}
 
 	[RPC]
 	public void GoliathConnected(){

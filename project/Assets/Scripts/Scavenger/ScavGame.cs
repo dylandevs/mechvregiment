@@ -34,7 +34,7 @@ public class ScavGame : MonoBehaviour {
 			players[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
 		}
 
-		BeginRound();
+
 	}
 	
 	// Update is called once per frame
