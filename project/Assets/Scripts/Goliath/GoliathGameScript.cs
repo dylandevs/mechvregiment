@@ -45,6 +45,7 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void restartMatchFunction(){
+		print(netWorkReady);
 
 		movement.allowedToMove = false;
 

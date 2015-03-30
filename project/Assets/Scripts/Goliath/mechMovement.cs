@@ -12,6 +12,7 @@ public class mechMovement : MonoBehaviour {
 	public GameObject topHalfX;
 	public GameObject topHalfY;
 	public GameObject miniMapCam;
+	public GameObject locatorLocation; 
 
 	//for taking damage
 	public GameObject damageIndicatorLeft;
@@ -42,6 +43,12 @@ public class mechMovement : MonoBehaviour {
 	const int left = 0;
 	const int right = 1;
 
+	public bool forceKeyboard = false;
+	public bool allowedToMove;
+	
+	public GoliathNetworking networker;
+	public PoolManager damageMiniMap;
+
 	float lStickX; 
 	float lStickY;
 	float rStickX;
@@ -51,13 +58,10 @@ public class mechMovement : MonoBehaviour {
 	float dashSpeed;
 	float dashTimer;
 
-	public bool forceKeyboard = false;
-	public bool allowedToMove;
 
 	bool allowedToMoveRay;
 	bool dash;
 
-	public GoliathNetworking networker;
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -73,8 +77,6 @@ public class mechMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-
 
 		groundingCast();
 
@@ -323,6 +325,8 @@ public class mechMovement : MonoBehaviour {
 
 	public void takeDamage(float amount,Vector3 direction){
 
+		miniMapDamage(direction);
+
 		damagedTime = 10;
 
 		if(shieldActive == true){
@@ -358,6 +362,12 @@ public class mechMovement : MonoBehaviour {
 			damageTurnOffRight= 0.5f;
 		}
 
+	}
+
+	void miniMapDamage(Vector3 direction){
+		GameObject damageMini = damageMiniMap.Retrieve(locatorLocation.transform.position);
+		Vector3 targetDir = direction - damageMini.transform.position;
+		damageMini.transform.forward = targetDir;
 	}
 
 	void FixedUpdate(){
@@ -451,7 +461,6 @@ public class mechMovement : MonoBehaviour {
 		if (collider.tag == "Player"){
 			PlayerAvatar avatarScript = collider.transform.parent.GetComponent<PlayerAvatar>();
 			networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All, avatarScript.PlayerNum);
-			print ("hit");
 		}
 	}
 }

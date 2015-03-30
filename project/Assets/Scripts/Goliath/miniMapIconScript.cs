@@ -19,6 +19,7 @@ public class miniMapIconScript : MonoBehaviour {
 		if(life < 0){
 			gameObject.SetActive(false);
 		}
+
 		Color tempColour =sprite.color ;
 		tempColour.a = life/2f;
 		sprite.color = tempColour;

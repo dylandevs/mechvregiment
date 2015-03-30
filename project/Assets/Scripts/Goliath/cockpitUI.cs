@@ -13,6 +13,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject camPos;
 	public GameObject objectivePointer;
 	public GameObject flag;
+	public GameObject indicatorPos;
 
 	private Transform[] playerAvatars;
 
@@ -22,6 +23,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject [] miniMapIndicatorsList;
 	public GameObject [] miniMapFlag;
 	public GameObject[] disabledSparks;
+	public GameObject[] sightedImage;
 
 	public Image miniGunImage;
 	public Image miniGunImageOutline;
@@ -32,7 +34,7 @@ public class cockpitUI : MonoBehaviour {
 	public Image missleImage;
 	public Image minionModeImage;
 
-	public GameObject[] sightedImage;
+
 
 	float coolDown;
 	float mechShield;
@@ -128,9 +130,13 @@ public class cockpitUI : MonoBehaviour {
 						}
 				}
 					else if(dist > 100){
+						
 						Color tempColour = sightedImage[i].renderer.material.color;
 						tempColour.a = 0f;
 						sightedImage[i].renderer.material.color = tempColour;
+
+
+
 					}
 		    }
 
