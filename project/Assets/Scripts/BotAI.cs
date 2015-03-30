@@ -88,6 +88,10 @@ public class BotAI : MonoBehaviour {
 	private bool navigating = false;
 	private bool waypointQueued = false;
 
+	//Audio sources
+	public AudioSource yes1Sound;
+	public AudioSource yes2Sound;
+
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
@@ -106,6 +110,9 @@ public class BotAI : MonoBehaviour {
 		if (!pooled){
 			pooled = GetComponent<Pooled>();
 		}
+
+		yes1Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
+		yes2Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
 	}
 	
 	// Update is called once per frame
@@ -254,6 +261,12 @@ public class BotAI : MonoBehaviour {
 				state = State.Traveling;
 				navMeshAgent.speed = RunSpeed;
 				navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
+				if(Random.Range(0f, 1f) < 0.5){
+					yes1Sound.Play();
+				}
+				else {
+					yes2Sound.Play();
+				}
 			}
 			else{
 				waypointQueued = true;
