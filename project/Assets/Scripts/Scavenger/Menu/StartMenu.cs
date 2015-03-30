@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using XInputDotNetPure;
 
@@ -7,6 +8,9 @@ public class StartMenu : MonoBehaviour {
 	// XInput variables
 	private GamePadState state;
 	private GamePadState prevState;
+	public Button[] mainOptions;
+
+	private int currentSelectedOption = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -31,5 +35,15 @@ public class StartMenu : MonoBehaviour {
 		
 		prevState = state;
 
+	}
+
+	void AdjustSelection(int adjustment){
+		currentSelectedOption += adjustment;
+		if (currentSelectedOption < 0){
+			currentSelectedOption = mainOptions.Length - 1;
+		}
+		else if (currentSelectedOption >= mainOptions.Length){
+			currentSelectedOption = 0;
+		}
 	}
 }

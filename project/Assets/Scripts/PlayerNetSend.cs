@@ -204,12 +204,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void GoliathDashingStart(){
-		goliath.isDashing = true;
+		goliath.StartDash();
 	}
 	
 	[RPC]
 	public void GoliathDashingEnd(){
-		goliath.isDashing = false;
+		goliath.EndDash();
 	}
 
 	// Player RPC	

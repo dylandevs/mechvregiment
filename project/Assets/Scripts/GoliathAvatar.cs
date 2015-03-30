@@ -11,6 +11,7 @@ public class GoliathAvatar : MonoBehaviour {
 	public Transform spineJoint;
 	public Transform shoulderRJoint;
 	public Transform shoulderLJoint;
+	public GameObject dashingEffect;
 
 	public float DashDamage = 80;
 	public float DashForce = 1000;
@@ -143,5 +144,15 @@ public class GoliathAvatar : MonoBehaviour {
 			minionSpawnProg = MinionSpawnRate;
 		}
 		minionsToSpawn++;
+	}
+
+	public void StartDash(){
+		isDashing = true;
+		dashingEffect.SetActive (true);
+	}
+
+	public void EndDash(){
+		isDashing = false;
+		dashingEffect.SetActive (false);
 	}
 }
