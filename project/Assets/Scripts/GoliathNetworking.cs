@@ -102,6 +102,17 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
+	// Game RPC
+	[RPC]
+	void ScavengerWin(){
+		goliathGame.goliathLost();
+	}
+
+	[RPC]
+	void GoliathWin(){
+		goliathGame.goliathWon();
+	}
+
 	// Goliath RPC
 	[RPC]
 	void SetGoliathJoints(Vector3 topPos, Quaternion topRot, Vector3 botPos, Quaternion botRot, Vector3 botVel, Quaternion spineRot, Quaternion shoulderRRot, Quaternion shoulderLRot){}
@@ -122,8 +133,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void GoliathDashingEnd(){}
 
 	[RPC]
-	public void ScavengerConnected(){
+	public void ScavengerConnected(int startTime){
 		goliathGame.netWorkReady = true;
+		goliathGame.remainingTime = startTime;
 	}
 
 	[RPC]

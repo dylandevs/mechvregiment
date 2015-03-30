@@ -104,7 +104,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 			}
 			else{
 				if(sendTimer <= 0){
-					photonView.RPC("ScavengerConnected", PhotonTargets.All);
+					photonView.RPC("ScavengerConnected", PhotonTargets.All, game.StartMatchTime);
 					sendTimer = SendInterval;
 				}
 			}
@@ -123,9 +123,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
 
+	// Game RPC
+	[RPC]
+	public void ScavengerWin(){}
+	
+	[RPC]
+	public void GoliathWin(){}
+
 	// Connection RPC
 	[RPC]
-	public void ScavengerConnected(){}
+	public void ScavengerConnected(int startTime){}
 
 	[RPC]
 	public void GoliathConnected(){

@@ -25,6 +25,8 @@ public class ScavGame : MonoBehaviour {
 	private GamePadState state;
 	private GamePadState prevState;
 
+	public PlayerNetSend networkManager;
+
 	// Use this for initialization
 	void Start () {
 		players = new Player[playerWrapper.transform.childCount];
@@ -101,10 +103,12 @@ public class ScavGame : MonoBehaviour {
 	void GameLost(){
 		// Endgame UI
 		print ("defeat");
+		networkManager.photonView.RPC("GoliathWin", PhotonTargets.All);
 	}
 
 	public void GameWon(){
 		// Endgame UI
 		print ("victory");
+		networkManager.photonView.RPC("ScavengerWin", PhotonTargets.All);
 	}
 }
