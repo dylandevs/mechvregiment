@@ -133,7 +133,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void GoliathDashingEnd(){}
 
 	[RPC]
-	public void ScavengerConnected(int startTime){
+	public void ScavengerConnected(float startTime){
 		goliathGame.netWorkReady = true;
 		goliathGame.remainingTime = startTime;
 	}

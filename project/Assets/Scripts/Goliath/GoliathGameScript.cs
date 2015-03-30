@@ -36,7 +36,7 @@ public class GoliathGameScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(remainingTime >= 0){
+		if(remainingTime > 0){
 			remainingTime = Mathf.Max(0, remainingTime - Time.deltaTime);
 			
 			string minutes = Mathf.Floor(remainingTime / 60).ToString();
@@ -63,8 +63,6 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void restartMatchFunction(){
-		print(netWorkReady);
-
 		movement.allowedToMove = false;
 
 		float lTrig = SixenseInput.Controllers[0].Trigger;

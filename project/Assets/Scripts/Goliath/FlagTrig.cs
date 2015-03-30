@@ -19,8 +19,6 @@ public class FlagTrig : MonoBehaviour {
 
 		currHealth = health.currMechHealth;
 
-		print(currHealth);
-
 		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.BUMPER)){
 			pickedUp();
 		}
