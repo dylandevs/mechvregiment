@@ -366,8 +366,11 @@ public class mechMovement : MonoBehaviour {
 
 	void miniMapDamage(Vector3 direction){
 		GameObject damageMini = damageMiniMap.Retrieve(locatorLocation.transform.position);
-		Vector3 targetDir = direction - damageMini.transform.position;
-		damageMini.transform.forward = targetDir;
+		//Vector3 targetDir = direction - topHalfX.transform.position;
+
+		//print(targetDir);
+
+		damageMini.transform.forward = -direction;
 	}
 
 	void FixedUpdate(){

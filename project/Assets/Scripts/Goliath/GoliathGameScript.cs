@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GoliathGameScript : MonoBehaviour {
 	//mech stuff
@@ -24,6 +25,9 @@ public class GoliathGameScript : MonoBehaviour {
 
 	bool menu1B;
 	bool readyToGo;
+
+	public float remainingTime;
+	public UnityEngine.UI.Text timerText;
 	// Use this for initialization
 	void Start () {
 		 minimap.SetActive(false);
@@ -31,6 +35,20 @@ public class GoliathGameScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(remainingTime >= 0){
+			remainingTime = Mathf.Max(0, remainingTime - Time.deltaTime);
+			
+			string minutes = Mathf.Floor(remainingTime / 60).ToString();
+			string seconds = Mathf.Floor(remainingTime % 60).ToString();
+			
+			if (seconds.Length == 1){
+				seconds = "0" + seconds;
+			}
+			
+			timerText.text = minutes + ":" + seconds;
+		}
+
 
 		if(reLoadScene == true){
 			reLoad();
@@ -91,6 +109,7 @@ public class GoliathGameScript : MonoBehaviour {
 		waitingForPlayers.SetActive(true);
 
 		if(allConditions = true && netWorkReady == true){
+
 			menu1.SetActive(false);
 			menu2.SetActive(false);
 			menu3.SetActive(false);
