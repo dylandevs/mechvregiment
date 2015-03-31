@@ -43,6 +43,8 @@ public class ScavGame : MonoBehaviour {
 		}
 
 		invUiTransitionTime = 1 / uiTransitionTime;
+
+		BeginRound();
 	}
 	
 	// Update is called once per frame
