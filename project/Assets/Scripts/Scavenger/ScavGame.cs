@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ScavGame : MonoBehaviour {
 
-	public float StartMatchTime = 3;
+	public float StartMatchTime = 300;
 	private float remainingTime = 0;
 	public UnityEngine.UI.Text timerText;
 
@@ -41,8 +41,6 @@ public class ScavGame : MonoBehaviour {
 		}
 
 		invUiTransitionTime = 1 / uiTransitionTime;
-
-		BeginRound();
 	}
 	
 	// Update is called once per frame
@@ -86,6 +84,7 @@ public class ScavGame : MonoBehaviour {
 
 					// Load menu
 					if (playersConfirmed){
+						PhotonNetwork.Disconnect();
 						Time.timeScale = 1;
 						Application.LoadLevel("ScavengerMenu");
 					}
