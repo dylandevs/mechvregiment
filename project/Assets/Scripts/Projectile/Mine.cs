@@ -93,7 +93,8 @@ public class Mine : MonoBehaviour {
 					PlayerDamager playerHit = hitObject.GetComponent<PlayerDamager>();
 					playerHit.DamagePlayer(Damage * hitDistance * invExplosionRadius, direction);
 				}
-				else if (hitObject.tag == "Goliath"){
+				else if (hitObject.tag == "Goliath" &&
+				         (hitObject.name == "jnt_Root_Bottom" || hitObject.name == "jnt_L_Ball" || hitObject.name == "jnt_R_Ball")){
 					Vector3 direction = hitObject.transform.position - transform.position;
 					
 					GoliathDamager damager = hitObject.GetComponent<GoliathDamager>();

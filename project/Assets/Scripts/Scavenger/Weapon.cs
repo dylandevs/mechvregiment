@@ -141,7 +141,6 @@ public class Weapon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		// Progress through reload
 		if (isReloading) {
 			reloadProgress -= Time.deltaTime;
@@ -475,8 +474,8 @@ public class Weapon : MonoBehaviour {
 		float yRaw = recoilTarget.y + Random.Range(-RecoilVariance.y, RecoilVariance.y);
 		float xRaw = recoilTarget.x + Random.Range(-RecoilVariance.x, RecoilVariance.x);
 		
-		float yAdjust = Mathf.Lerp (0, yRaw, recoilProg);
-		float xAdjust = Mathf.Lerp (0, xRaw, recoilProg);
+		float yAdjust = Mathf.Lerp (0, yRaw, recoilProg) * Time.timeScale;
+		float xAdjust = Mathf.Lerp (0, xRaw, recoilProg) * Time.timeScale;
 		
 		Quaternion verticalAdjust = Quaternion.identity;
 		float newVertAngle = Vector3.Angle(newFacing, Vector3.up) - yAdjust;

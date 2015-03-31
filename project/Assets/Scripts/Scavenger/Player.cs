@@ -60,6 +60,9 @@ public class Player : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 
+	[HideInInspector]
+	public bool readyToEnd = false;
+
 	// Use this for initialization
 	void Start () {
 		InvMaxHealth = 1 / MaxHealth;

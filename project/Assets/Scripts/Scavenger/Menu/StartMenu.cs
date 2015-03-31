@@ -30,6 +30,7 @@ public class StartMenu : MonoBehaviour {
 	private BaseEventData eventExecutor;
 
 	private bool isSubMenu = false;
+	private bool loading = false;
 
 	// Use this for initialization
 	void Start () {
@@ -79,7 +80,7 @@ public class StartMenu : MonoBehaviour {
 				}
 			}
 		}
-		else{
+		else if (!loading){
 			if (!isSubMenu){
 				if (Select){
 					RegisterOptionSelect();
@@ -122,6 +123,7 @@ public class StartMenu : MonoBehaviour {
 		switch (mainOptions[currentSelectedOption].tag){
 		case "StartButton":
 			TriggerTransition(mainMenu, loadingScreen);
+			loading = true;
 			callback = LoadGame;
 			break;
 		case "ControlsButton":
@@ -144,6 +146,6 @@ public class StartMenu : MonoBehaviour {
 	}
 
 	void LoadGame(){
-		AsyncOperation loadScene = Application.LoadLevelAsync("ScavengerScene");
+		Application.LoadLevel("ScavengerScene");
 	}
 }

@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ScavGame : MonoBehaviour {
 
-	public float StartMatchTime = 300;
+	public float StartMatchTime = 3;
 	private float remainingTime = 0;
 	public UnityEngine.UI.Text timerText;
 
@@ -19,8 +19,19 @@ public class ScavGame : MonoBehaviour {
 	[HideInInspector]
 	public bool GameRunning = false;
 	private bool goliathReady = false;
+	private bool gameToStart = false;
+	private bool gameToEnd = false;
 
 	public PlayerNetSend networkManager;
+
+	public float uiTransitionTime = 0.4f;
+	private float invUiTransitionTime = 1;
+	private float lastTimeCheck = 0;
+	private float endAnimProgress = 0;
+	
+	public CanvasGroup victoryModal;
+	public CanvasGroup defeatModal;
+	private CanvasGroup currentModal;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +40,9 @@ public class ScavGame : MonoBehaviour {
 			players[i] = playerWrapper.transform.GetChild(i).GetComponent<Player>();
 		}
 
+		invUiTransitionTime = 1 / uiTransitionTime;
 
+		BeginRound();
 	}
 	
 	// Update is called once per frame
@@ -51,7 +64,36 @@ public class ScavGame : MonoBehaviour {
 			}
 		}
 		else{
-			if (goliathReady){
+			// Game ended
+			if (gameToEnd){
+				if (endAnimProgress > 0){
+					float deltaTime = Time.realtimeSinceStartup - lastTimeCheck;
+					endAnimProgress -= deltaTime;
+
+					currentModal.alpha = Mathf.Lerp(0, 1, 1 - endAnimProgress/invUiTransitionTime);
+
+					if (endAnimProgress <= 0){
+						currentModal.alpha = 1;
+					}
+				}
+				else{
+					bool playersConfirmed = true;
+					foreach(Player player in players){
+						if (player.gameObject.GetActive() && !player.readyToEnd){
+							playersConfirmed = false;
+						}
+					}
+
+					// Load menu
+					if (playersConfirmed){
+						Time.timeScale = 1;
+						Application.LoadLevel("ScavengerMenu");
+					}
+				}
+			}
+		
+			// Game not yet started
+			if (goliathReady && !gameToStart){
 				BeginRound();
 			}
 		}
@@ -65,6 +107,7 @@ public class ScavGame : MonoBehaviour {
 		remainingTime = StartMatchTime;
 		GameRunning = true;
 		transitionMenu.SetActive(false);
+		gameToStart = true;
 	}
 
 	public void FlagRetrieved(GameObject retriever){
@@ -87,13 +130,23 @@ public class ScavGame : MonoBehaviour {
 
 	void GameLost(){
 		// Endgame UI
-		print ("defeat");
 		networkManager.photonView.RPC("GoliathWin", PhotonTargets.All);
+		GameRunning = false;
+		lastTimeCheck = Time.realtimeSinceStartup;
+		endAnimProgress = uiTransitionTime;
+		currentModal = defeatModal;
+		gameToEnd = true;
+		Time.timeScale = 0;
 	}
 
 	public void GameWon(){
 		// Endgame UI
-		print ("victory");
 		networkManager.photonView.RPC("ScavengerWin", PhotonTargets.All);
+		GameRunning = false;
+		lastTimeCheck = Time.realtimeSinceStartup;
+		endAnimProgress = uiTransitionTime;
+		currentModal = victoryModal;
+		gameToEnd = true;
+		Time.timeScale = 0;
 	}
 }

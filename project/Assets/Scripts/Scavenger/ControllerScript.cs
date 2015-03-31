@@ -561,6 +561,16 @@ public class ControllerScript : MonoBehaviour {
 		// Apply spread to weapon based on actions
 		currentWeapon.SetTargetSpread (spread);
 
+		// Behaviour for if game is not running
+		if (!player.game.GameRunning){
+			X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+			
+			if (X_Press){
+				player.readyToEnd = true;
+				player.display.blackout.SetActive(true);
+			}
+		}
+
 		// Update previous controller state
 		prevState = state;
 

@@ -63,6 +63,8 @@ public class ScavUI : MonoBehaviour {
 	public Sprite goliathMarker;
 	public Sprite scavengerMarker;
 
+	public GameObject blackout;
+
 	[HideInInspector]
 	public Camera skyCam;
 
@@ -70,6 +72,7 @@ public class ScavUI : MonoBehaviour {
 	float weaponFlashProgress = 0;
 
 	public RectTransform markerTransform;
+
 
 	// Use this for initialization
 	void Start () {
