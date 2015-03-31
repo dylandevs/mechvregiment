@@ -562,7 +562,7 @@ public class ControllerScript : MonoBehaviour {
 		currentWeapon.SetTargetSpread (spread);
 
 		// Behaviour for if game is not running
-		if (!player.game.GameRunning){
+		if (player.game.awaitingEndConfirm){
 			X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
 			
 			if (X_Press){

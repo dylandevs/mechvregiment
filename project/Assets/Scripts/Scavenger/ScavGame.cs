@@ -21,6 +21,8 @@ public class ScavGame : MonoBehaviour {
 	private bool goliathReady = false;
 	private bool gameToStart = false;
 	private bool gameToEnd = false;
+	[HideInInspector]
+	public bool awaitingEndConfirm = false;
 
 	public PlayerNetSend networkManager;
 
@@ -72,6 +74,7 @@ public class ScavGame : MonoBehaviour {
 
 					if (endAnimProgress <= 0){
 						currentModal.alpha = 1;
+						awaitingEndConfirm = true;
 					}
 				}
 				else{
