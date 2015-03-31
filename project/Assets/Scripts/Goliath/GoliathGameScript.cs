@@ -15,7 +15,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject goliathUI;
 	public GameObject winScreen;
 	public GameObject looseScreen;
-
+	public GameObject screens;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -32,6 +32,8 @@ public class GoliathGameScript : MonoBehaviour {
 	bool gameEnded;
 	bool one;
 	bool two;
+
+	float life = 0;
 
 	public float remainingTime;
 	public UnityEngine.UI.Text timerText;
@@ -70,6 +72,17 @@ public class GoliathGameScript : MonoBehaviour {
 
 		//checks if  the game has ended then does stuff
 		if(gameEnded == true){
+			if(life >= 0){
+				life -= Time.deltaTime;
+			}
+
+			float lerpAmnt = life / 2;
+			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
+			Color tempColour = screens.renderer.material.color;
+			tempColour.a = Mathf.Lerp(0,1,lerpAmnt);
+			screens.renderer.material.color = tempColour;
+
+
 			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
 				reLoad();
 			}
@@ -154,14 +167,14 @@ public class GoliathGameScript : MonoBehaviour {
 	public void goliathWon(){
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
-		blackOut.SetActive(true);
+		life = 2;
 		gameEnded = true;
 	}
 
 	public void goliathLost(){
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
-		blackOut.SetActive(true);
+		life = 2;
 		gameEnded = true;
 	}
 }
