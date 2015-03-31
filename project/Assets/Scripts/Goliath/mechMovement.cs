@@ -461,7 +461,7 @@ public class mechMovement : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider){
-		if (collider.tag == "Player"){
+		if (collider.tag == "Player" && dash == true){
 			PlayerAvatar avatarScript = collider.transform.parent.GetComponent<PlayerAvatar>();
 			networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All, avatarScript.PlayerNum);
 		}
