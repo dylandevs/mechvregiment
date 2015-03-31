@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using XInputDotNetPure;
 
 public class ScavGame : MonoBehaviour {
 
@@ -20,10 +19,6 @@ public class ScavGame : MonoBehaviour {
 	[HideInInspector]
 	public bool GameRunning = false;
 	private bool goliathReady = false;
-
-	// XInput variables
-	private GamePadState state;
-	private GamePadState prevState;
 
 	public PlayerNetSend networkManager;
 
@@ -56,19 +51,9 @@ public class ScavGame : MonoBehaviour {
 			}
 		}
 		else{
-			// Wait for X press
-			state = GamePad.GetState((PlayerIndex)0);
-			if (!state.IsConnected){
-				return;
-			}
-
-			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
-		
-			if (X_Press && goliathReady){
+			if (goliathReady){
 				BeginRound();
 			}
-
-			prevState = state;
 		}
 	}
 
