@@ -40,6 +40,7 @@ public class GoliathGameScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		 minimap.SetActive(false);
+		movement.allowedToDash = false;
 	}
 	
 	// Update is called once per frame
@@ -75,13 +76,14 @@ public class GoliathGameScript : MonoBehaviour {
 			if(life >= 0){
 				life -= Time.deltaTime;
 			}
-
+			//change colour of the screens
 			float lerpAmnt = life / 2;
 			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
 			Color tempColour = screens.renderer.material.color;
-			tempColour.a = Mathf.Lerp(0,1,lerpAmnt);
+			tempColour.a = Mathf.Lerp(1,0,lerpAmnt);
 			screens.renderer.material.color = tempColour;
 
+			mechShoot.allowedToShootGame = false;
 
 			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
 				reLoad();
@@ -100,7 +102,7 @@ public class GoliathGameScript : MonoBehaviour {
 		goliathUI.SetActive(false);
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
-		mechShoot.allowedToShoot = false;
+		mechShoot.allowedToShootGame = false;
 		mechMesh.transform.position = spawnPoint.transform.position;
 		if(readyToGo == false){
 			if(menu1B == true){
@@ -143,12 +145,12 @@ public class GoliathGameScript : MonoBehaviour {
 				blackOut.SetActive(false);
 				waitingForPlayers.SetActive(false);
 
-				mechShoot.allowedToShoot = true;
+				mechShoot.allowedToShootGame = true;
 				goliathUI.SetActive(true);
 				minimap.SetActive(true);
 				mechMesh.SetActive(true);
 				movement.allowedToMove = true;
-
+				movement.allowedToDash = true;
 				restartMatch = false;
 				oneTime = false;
 			}
@@ -156,6 +158,9 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void reLoad(){
+
+		PhotonNetwork.Disconnect();
+
 		Application.LoadLevel("GoliathStartScene"); 
 	}
 
@@ -167,6 +172,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public void goliathWon(){
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
+		movement.allowedToMove = false;
 		life = 2;
 		gameEnded = true;
 	}
@@ -174,6 +180,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public void goliathLost(){
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
+		movement.allowedToMove = false;
 		life = 2;
 		gameEnded = true;
 	}

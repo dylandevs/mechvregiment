@@ -13,7 +13,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject camPos;
 	public GameObject objectivePointer;
 	public GameObject flag;
-	public GameObject indicatorPos;
+	public GameObject diamondForObjective;
 
 	private Transform[] playerAvatars;
 
@@ -34,7 +34,7 @@ public class cockpitUI : MonoBehaviour {
 	public Image missleImage;
 	public Image minionModeImage;
 
-
+	GameObject player;
 
 	float coolDown;
 	float mechShield;
@@ -78,6 +78,7 @@ public class cockpitUI : MonoBehaviour {
 		mechHasFlag = mechShoot.carrying;
 
 		updateObjectiveLocator();
+		updateObjectiveDiamond();
 
 			for(int i = 0;i < playerAvatars.Length;i++){
 					//turn the diamon to look at the camera in the mech
@@ -310,6 +311,7 @@ public class cockpitUI : MonoBehaviour {
 			if(objectivePointer.GetActive() == false){
 				objectivePointer.SetActive(true);
 			}
+
 			Vector3 playerPoint = miniMapIndicatorsList[playerNumber].transform.position;
 			playerPoint.y = objectivePointer.transform.position.y;
 			Vector3 targetDir = playerPoint - objectivePointer.transform.position;
@@ -328,6 +330,36 @@ public class cockpitUI : MonoBehaviour {
 			flagPoint.y = objectivePointer.transform.position.y;
 			Vector3 targetDir = flagPoint - objectivePointer.transform.position;
 			objectivePointer.transform.forward = targetDir;
+		}
+	}
+
+	public void updateObjectiveDiamond(GameObject playerWithFlag = null){
+		if(playerWithFlag!= null){
+			 player = playerWithFlag;
+		}
+
+		if(flagTaken == true){	
+			Vector3 diamondLook = player.transform.position - camPos.transform.position;
+			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
+			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
+			
+			Vector3 direction = (player.transform.position + Vector3.up) - camPos.transform.position ;
+			
+			diamondForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
+		}
+		else if(mechHasFlag == true){
+			diamondForObjective.SetActive(false);
+		}
+		else{
+
+			Vector3 diamondLook = flag.transform.position - camPos.transform.position;
+			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
+			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
+			
+			Vector3 direction = (flag.transform.position + Vector3.forward) - camPos.transform.position ;
+
+			diamondForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
+
 		}
 	}
 }
