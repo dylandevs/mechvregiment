@@ -717,4 +717,12 @@ public class ControllerScript : MonoBehaviour {
 	public void EndWeaponSwap(){
 		isSwapping = false;
 	}
+
+	public void ResetWeaponSelected(){
+		swapAdjustment = -player.currentWeaponIndex;
+		int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
+		anim.SetInteger(weaponHash, nextWeaponIndex);
+		fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+		player.CycleWeapons(swapAdjustment);
+	}
 }

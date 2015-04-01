@@ -144,6 +144,8 @@ public class Player : MonoBehaviour {
 		healTimer = 0;
 		display.UpdateDamageOverlay (0);
 
+		playerController.ResetWeaponSelected();
+
 		// Enable firing layer
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
