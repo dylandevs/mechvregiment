@@ -150,6 +150,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void ScavengerPickedUpFlag(int Player){
 		flag.SetActive(false);
 		cockpit.switchToFlag(Player);
+		cockpit.updateObjectiveDiamond(playerAvatars[Player].gameObject);
 		playerAvatars [Player].CarryFlag ();
 	}
 

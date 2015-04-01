@@ -45,7 +45,8 @@ public class mechMovement : MonoBehaviour {
 
 	public bool forceKeyboard = false;
 	public bool allowedToMove;
-	
+	public bool allowedToDash;
+
 	public GoliathNetworking networker;
 	public PoolManager damageMiniMap;
 
@@ -62,6 +63,7 @@ public class mechMovement : MonoBehaviour {
 	bool allowedToMoveRay;
 	bool dash;
 
+
 	// Use this for initialization
 	void Start () {
 		mechHealth = 1000;
@@ -73,6 +75,7 @@ public class mechMovement : MonoBehaviour {
 		dashSpeed = 20;
 		moveSpeedX = 7.5f;
 		rotSpeedX = 2f;
+		allowedToDash = true;
 	}
 	
 	// Update is called once per frame
@@ -145,7 +148,7 @@ public class mechMovement : MonoBehaviour {
 			dashTimer -= Time.deltaTime;
 		}
 		//dashing stuff
-		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.JOYSTICK)){
+		if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.JOYSTICK) && allowedToDash == true){
 			if(dashTimer <= 0){
 				networker.photonView.RPC ("GoliathDashingStart",PhotonTargets.All);
 				dash = true;
