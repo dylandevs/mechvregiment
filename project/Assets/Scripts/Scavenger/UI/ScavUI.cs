@@ -102,8 +102,9 @@ public class ScavUI : MonoBehaviour {
 		markerScript = marker.GetComponent<InGameMarker>();
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
-		markerScript.offset.y = 1;
-		markerScript.message.text = "Retrieve";
+		markerScript.offset.y = 2.2f;
+		markerScript.message.text = "Grab";
+		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
@@ -169,13 +170,13 @@ public class ScavUI : MonoBehaviour {
 					marker.message.text = "Escort";
 				}
 				else if (newObj.tag == "Goliath"){
-					marker.message.text = "Destroy";
+					marker.message.text = "Disable";
 				}
 				else if (newObj.tag == "ExitGoal"){
 					marker.message.text = "Deliver";
 				}
 				else{
-					marker.message.text = "Retrieve";
+					marker.message.text = "Grab";
 				}
 			}
 		}
@@ -195,6 +196,12 @@ public class ScavUI : MonoBehaviour {
 				initScreenPos.y *= deltaScreenRatio.y;
 				Vector2 screenPos = initScreenPos - cachedSizeDelta;
 
+				// Limit to screen positions
+				if (marker.constrainToScreen){
+					screenPos.x = Mathf.Max(Mathf.Min(screenPos.x, markerTransform.sizeDelta.x * 0.5f), -markerTransform.sizeDelta.x * 0.5f);
+					screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f), -markerTransform.sizeDelta.y * 0.5f);
+				}
+
 				marker.rectTransform.anchoredPosition = screenPos;
 			}
 			else{
@@ -207,6 +214,7 @@ public class ScavUI : MonoBehaviour {
 		GameObject marker = Instantiate (markerPrefab) as GameObject;
 		marker.transform.SetParent (markerGroup);
 		marker.transform.localPosition = Vector3.zero;
+		marker.transform.localScale = Vector3.one;
 		marker.GetComponent<Image> ().sprite = sprite;
 
 		return marker;

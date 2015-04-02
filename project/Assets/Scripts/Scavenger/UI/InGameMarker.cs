@@ -11,6 +11,7 @@ public class InGameMarker : MonoBehaviour {
 	public RectTransform rectTransform;
 	public Vector3 offset = Vector3.zero;
 	public UnityEngine.UI.Text message;
+	public bool constrainToScreen = false;
 
 	// Use this for initialization
 	void Start () {
