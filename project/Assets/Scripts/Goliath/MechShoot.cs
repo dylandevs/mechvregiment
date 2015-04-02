@@ -74,11 +74,13 @@ public class MechShoot : MonoBehaviour {
 	public AudioSource aiDirectorEmitter;
 
 	public GoliathNetworking networkManager;
-
+	public mechMovement movement;
 	public bool forceKeyboard = false;
 	public bool allowedToShoot;
+	public bool allowedToShootGame;
 	public bool dash;
 	public bool pressToPick;
+	public bool allowedToDrop;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -117,6 +119,9 @@ public class MechShoot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		print(allowedToDrop);
+
 		//update aimer pos.
 		updateAimerPos();
 		//show missile landing zone
@@ -208,7 +213,7 @@ public class MechShoot : MonoBehaviour {
 
 		}else allowedToShoot = true;
 
-		if(allowedToShoot == true){
+		if(allowedToShoot == true && allowedToShootGame == true){
 		//cooldowns
 		cooldownRemainingRocket -= Time.deltaTime;
 		if (miniGunMode == true) {
@@ -489,6 +494,8 @@ public class MechShoot : MonoBehaviour {
 			miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
 			cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
 
+			movement.allowedToDash = false;
+
 			//turns off all other modes
 			resetModes();
 			//turns off world flag and replaces it with carried version
@@ -500,10 +507,11 @@ public class MechShoot : MonoBehaviour {
 			//play animation for mech carrying flag thingy; 
 			
 			//drops the flag
-			if(SixenseInput.Controllers[left].GetButtonDown(SixenseButtons.BUMPER) ){
+			if(SixenseInput.Controllers[right].GetButtonDown(SixenseButtons.JOYSTICK) && allowedToDrop == true){
 				carrying = false;
 				releaseFlag();
 				miniGunMode = true;
+				allowedToDrop = false;
 			}
 		}
 
@@ -533,6 +541,7 @@ public class MechShoot : MonoBehaviour {
 		leftEmitter.SetActive(false);
 		rightEmitter.SetActive(false);
 		carrying = false;
+		movement.allowedToDash = true;
 		resetModes();
 	}
 

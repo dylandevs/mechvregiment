@@ -18,7 +18,7 @@ public class cannonShot : MonoBehaviour {
 	public bool isAvatar = false;
 
 	public GameObject cannonHit;
-
+	public LayerMask mask;
 	float timer;
 	float speed = 30;
 	float waitOutTimer;
@@ -61,7 +61,7 @@ public class cannonShot : MonoBehaviour {
 			}
 		}
 
-		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime)) 
+		if (Physics.Raycast (ray,out hit, 35 * Time.deltaTime,mask)) 
 		{
 			if(hit.collider.tag == "Player"){
 				GameObject hitPlayer = hit.collider.gameObject;
@@ -69,7 +69,7 @@ public class cannonShot : MonoBehaviour {
 				if (hitPlayer){
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 					if (hitPlayerScript){
-						hitPlayerScript.DamagePlayer(damageDirect,gameObject.transform.forward);
+						hitPlayerScript.DamagePlayer(damageDirect, gameObject.transform.forward);
 					}
 					else{
 					}
@@ -86,7 +86,7 @@ public class cannonShot : MonoBehaviour {
 
 				if (!isAvatar){
 					//hurts whats near the boom depending on a overlap sphere function
-					Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
+					Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
 					foreach (Collider c in colliders) 
 					{
 						if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
@@ -109,9 +109,9 @@ public class cannonShot : MonoBehaviour {
 								if (hitPlayerScript){
 									hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.forward);
 								}
-								else{}
+								else{print ("delse1");}
 							}
-							else{}
+							else{print("else2");}
 						}
 						if(c.gameObject.collider.tag == "Enemy"){
 

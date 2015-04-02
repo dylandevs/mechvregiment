@@ -60,6 +60,9 @@ public class Player : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 
+	[HideInInspector]
+	public bool readyToEnd = false;
+
 	// Use this for initialization
 	void Start () {
 		InvMaxHealth = 1 / MaxHealth;
@@ -76,7 +79,6 @@ public class Player : MonoBehaviour {
 		else{
 			TryRespawn();
 		}
-		//crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 		display.UpdateCrosshairSpread(weapons [currentWeaponIndex].GetSpread ());
 
 		if (stunProg > 0){
@@ -141,6 +143,8 @@ public class Player : MonoBehaviour {
 		healTimer = 0;
 		display.UpdateDamageOverlay (0);
 
+		playerController.ResetWeaponSelected();
+
 		// Enable firing layer
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
@@ -153,6 +157,9 @@ public class Player : MonoBehaviour {
 				weapon.ReplenishWeapon();
 			}
 		}
+
+		weapons [currentWeaponIndex].gameObject.SetActive (false);
+		weapons [currentWeaponIndex].gameObject.SetActive (true);
 
 		display.EndRespawnSequence ();
 		rigidbody.isKinematic = false;
@@ -214,6 +221,8 @@ public class Player : MonoBehaviour {
 		game.FlagRetrieved(gameObject);
 		display.UpdateObjective(game.exitPoint);
 		game.exitPoint.SetActive(true);
+		display.dropFlagPrompt.SetActive(true);
+		display.grabFlagPrompt.SetActive(false);
 
 		networkManager.photonView.RPC ("ScavengerPickedUpFlag", PhotonTargets.All, initializer.Layer - 1);
 	}
@@ -223,6 +232,7 @@ public class Player : MonoBehaviour {
 		weaponModels3[currentWeaponIndex].SetActive(true);
 		crystal.SetActive(false);
 		crystalTP.SetActive (false);
+		display.dropFlagPrompt.SetActive(false);
 
 		game.FlagDropped(transform.position);
 		game.exitPoint.SetActive(false);

@@ -141,7 +141,6 @@ public class Weapon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		// Progress through reload
 		if (isReloading) {
 			reloadProgress -= Time.deltaTime;
@@ -262,6 +261,28 @@ public class Weapon : MonoBehaviour {
 				StopDrop();
 			}
 		}
+	}
+
+	void OnDisable(){
+		if (magazineDrop1){
+			magazineDrop1.SetActive(false);
+		}
+		if (magazineDrop3){
+			magazineDrop3.SetActive(false);
+		}
+		if (magazineDynamic1){
+			magazineDynamic1.SetActive(false);
+		}
+		if (magazineDynamic3){
+			magazineDynamic3.SetActive(false);
+		}
+		if (magazineStatic1){
+			magazineStatic1.SetActive(true);
+		}
+		if (magazineStatic3){
+			magazineStatic3.SetActive(true);
+		}
+
 	}
 	
 	public void SetPlayerReference(Player player){
@@ -475,8 +496,8 @@ public class Weapon : MonoBehaviour {
 		float yRaw = recoilTarget.y + Random.Range(-RecoilVariance.y, RecoilVariance.y);
 		float xRaw = recoilTarget.x + Random.Range(-RecoilVariance.x, RecoilVariance.x);
 		
-		float yAdjust = Mathf.Lerp (0, yRaw, recoilProg);
-		float xAdjust = Mathf.Lerp (0, xRaw, recoilProg);
+		float yAdjust = Mathf.Lerp (0, yRaw, recoilProg) * Time.timeScale;
+		float xAdjust = Mathf.Lerp (0, xRaw, recoilProg) * Time.timeScale;
 		
 		Quaternion verticalAdjust = Quaternion.identity;
 		float newVertAngle = Vector3.Angle(newFacing, Vector3.up) - yAdjust;
@@ -643,6 +664,9 @@ public class Weapon : MonoBehaviour {
 
 		untilNextTracer = 0;
 		ammoRenderer.Reload (magAmmo);
+
+		// Cancel in case swapping animation interrupted
+		player.playerController.EndWeaponSwap ();
 	}
 	
 	// Returns number of bullets in current magazine, and number of bullets in reserve
@@ -703,53 +727,76 @@ public class Weapon : MonoBehaviour {
 
 	public void SwapInDynamic(){
 		magazineStatic1.SetActive(false);
-		magazineStatic3.SetActive(false);
 		magazineDynamic1.SetActive(true);
-		magazineDynamic3.SetActive(true);
 	}
 	
 	public void SwapOutDynamic(){
 		magazineStatic1.SetActive(true);
-		magazineStatic3.SetActive(true);
 		magazineDynamic1.SetActive(false);
-		magazineDynamic3.SetActive(false);
 	}
 	
 	public void PlaceInDynamic(){
 		magazineDynamic1.SetActive(true);
-		magazineDynamic3.SetActive(true);
 	}
 	
 	public void TakeOutDynamic(){
 		magazineDynamic1.SetActive(false);
-		magazineDynamic3.SetActive(false);
 	}
 
 	public void ReleaseStatic(){
 		StopDrop();
 		magazineStatic1.SetActive(false);
-		magazineStatic3.SetActive(false);
 
 		magazineDrop1.SetActive(true);
-		magazineDrop3.SetActive(true);
 		magazineDrop1.rigidbody.isKinematic = false;
-		magazineDrop3.rigidbody.isKinematic = false;
 		dropStopProg = DropStopTime;
 	}
 
 	public void ResetStatic(){
 		magazineStatic1.SetActive(true);
-		magazineStatic3.SetActive(true);
 	}
 
 	public void StopDrop(){
 		magazineDrop1.rigidbody.velocity = Vector3.zero;
-		magazineDrop3.rigidbody.velocity = Vector3.zero;
 		magazineDrop1.rigidbody.isKinematic = true;
-		magazineDrop3.rigidbody.isKinematic = true;
 		magazineDrop1.SetActive(false);
-		magazineDrop3.SetActive(false);
 		magazineDrop1.transform.localPosition = initMagStatic1Pos;
+	}
+
+	public void SwapInDynamic3(){
+		magazineStatic3.SetActive(false);
+		magazineDynamic3.SetActive(true);
+	}
+	
+	public void SwapOutDynamic3(){
+		magazineStatic3.SetActive(true);
+		magazineDynamic3.SetActive(false);
+	}
+	
+	public void PlaceInDynamic3(){
+		magazineDynamic3.SetActive(true);
+	}
+	
+	public void TakeOutDynamic3(){
+		magazineDynamic3.SetActive(false);
+	}
+	
+	public void ReleaseStatic3(){
+		StopDrop();
+		magazineStatic3.SetActive(false);
+		
+		magazineDrop3.SetActive(true);
+		magazineDrop3.rigidbody.isKinematic = false;
+	}
+	
+	public void ResetStatic3(){
+		magazineStatic3.SetActive(true);
+	}
+	
+	public void StopDrop3(){
+		magazineDrop3.rigidbody.velocity = Vector3.zero;
+		magazineDrop3.rigidbody.isKinematic = true;
+		magazineDrop3.SetActive(false);
 		magazineDrop3.transform.localPosition = initMagStatic3Pos;
 	}
 }

@@ -74,6 +74,7 @@ public class BotAI : MonoBehaviour {
 	// Inputs
 	public PoolManager projectilePool;
 	public PoolManager impactPool;
+	public PoolManager wreckagePool;
 	private PoolManager pool;
 	public GameObject waypoint;
 	public GoliathAvatar goliath;
@@ -219,6 +220,7 @@ public class BotAI : MonoBehaviour {
 			}
 		}
 		else{
+			wreckagePool.Retrieve(transform.position, transform.rotation);
 			pool.Deactivate(gameObject);
 			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 			remoteId = -1;

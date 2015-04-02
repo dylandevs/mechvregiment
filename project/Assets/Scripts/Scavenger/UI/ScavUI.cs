@@ -63,6 +63,10 @@ public class ScavUI : MonoBehaviour {
 	public Sprite goliathMarker;
 	public Sprite scavengerMarker;
 
+	public GameObject blackout;
+	public GameObject grabFlagPrompt;
+	public GameObject dropFlagPrompt;
+
 	[HideInInspector]
 	public Camera skyCam;
 
@@ -70,6 +74,7 @@ public class ScavUI : MonoBehaviour {
 	float weaponFlashProgress = 0;
 
 	public RectTransform markerTransform;
+
 
 	// Use this for initialization
 	void Start () {
@@ -98,6 +103,7 @@ public class ScavUI : MonoBehaviour {
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
 		markerScript.offset.y = 1;
+		markerScript.message.text = "Retrieve";
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
@@ -158,6 +164,19 @@ public class ScavUI : MonoBehaviour {
 		foreach (InGameMarker marker in markers){
 			if (marker.type == InGameMarker.IGMarkerType.Objective){
 				marker.associatedObject = newObj;
+				
+				if (newObj.tag == "Player"){
+					marker.message.text = "Escort";
+				}
+				else if (newObj.tag == "Goliath"){
+					marker.message.text = "Destroy";
+				}
+				else if (newObj.tag == "ExitGoal"){
+					marker.message.text = "Deliver";
+				}
+				else{
+					marker.message.text = "Retrieve";
+				}
 			}
 		}
 

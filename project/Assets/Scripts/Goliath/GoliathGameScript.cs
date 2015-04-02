@@ -13,6 +13,9 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject menu3;
 	public GameObject minimap;
 	public GameObject goliathUI;
+	public GameObject winScreen;
+	public GameObject looseScreen;
+	public GameObject screens;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -25,12 +28,19 @@ public class GoliathGameScript : MonoBehaviour {
 
 	bool menu1B;
 	bool readyToGo;
+	bool oneTime;
+	bool gameEnded;
+	bool one;
+	bool two;
+
+	float life = 0;
 
 	public float remainingTime;
 	public UnityEngine.UI.Text timerText;
 	// Use this for initialization
 	void Start () {
 		 minimap.SetActive(false);
+		movement.allowedToDash = false;
 	}
 	
 	// Update is called once per frame
@@ -60,6 +70,25 @@ public class GoliathGameScript : MonoBehaviour {
 		if(readyToGo == true){
 			readyToStart();
 		}
+
+		//checks if  the game has ended then does stuff
+		if(gameEnded == true){
+			if(life >= 0){
+				life -= Time.deltaTime;
+			}
+			//change colour of the screens
+			float lerpAmnt = life / 2;
+			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
+			Color tempColour = screens.renderer.material.color;
+			tempColour.a = Mathf.Lerp(1,0,lerpAmnt);
+			screens.renderer.material.color = tempColour;
+
+			mechShoot.allowedToShootGame = false;
+
+			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
+				reLoad();
+			}
+		}
 	}
 
 	public void restartMatchFunction(){
@@ -73,7 +102,7 @@ public class GoliathGameScript : MonoBehaviour {
 		goliathUI.SetActive(false);
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
-		mechShoot.allowedToShoot = false;
+		mechShoot.allowedToShootGame = false;
 		mechMesh.transform.position = spawnPoint.transform.position;
 		if(readyToGo == false){
 			if(menu1B == true){
@@ -85,13 +114,15 @@ public class GoliathGameScript : MonoBehaviour {
 				menu1.SetActive(false);
 				menu1.SetActive(false);
 				menu2.SetActive(true);
+				one = true;
 			}
-			if(rTrig >= 0.8){
+			if(rTrig >= 0.8 && one == true){
 				menu1.SetActive(false);
 				menu2.SetActive(false);
 				menu3.SetActive(true);
+				two = true;
 			}
-			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
+			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START) && two == true){
 				menu3.SetActive(false);
 				readyToGo = true;
 			}
@@ -104,47 +135,53 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void readyToStart(){
-		waitingForPlayers.SetActive(true);
+		if(oneTime == true){
+			waitingForPlayers.SetActive(true);
 
-		if(allConditions = true && netWorkReady == true){
+			if(allConditions = true && netWorkReady == true){
+				menu1.SetActive(false);
+				menu2.SetActive(false);
+				menu3.SetActive(false);
+				blackOut.SetActive(false);
+				waitingForPlayers.SetActive(false);
 
-			menu1.SetActive(false);
-			menu2.SetActive(false);
-			menu3.SetActive(false);
-			blackOut.SetActive(false);
-			waitingForPlayers.SetActive(false);
-
-			mechShoot.allowedToShoot = true;
-			goliathUI.SetActive(true);
-			minimap.SetActive(true);
-			mechMesh.SetActive(true);
-			movement.allowedToMove = true;
-
-			restartMatch = false;
+				mechShoot.allowedToShootGame = true;
+				goliathUI.SetActive(true);
+				minimap.SetActive(true);
+				mechMesh.SetActive(true);
+				movement.allowedToMove = true;
+				movement.allowedToDash = true;
+				restartMatch = false;
+				oneTime = false;
+			}
 		}
 	}
 
 	public void reLoad(){
-		Application.LoadLevel ("GoliathScene"); 
+
+		PhotonNetwork.Disconnect();
+
+		Application.LoadLevel("GoliathStartScene"); 
 	}
 
 	void OnEnable(){
 		restartMatch = true;
+		oneTime = true;
 	}
 
 	public void goliathWon(){
-		blackOut.SetActive(true);
-
-		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
-			reLoad();
-		}
+		//display a win message and turn off movement and shooting stuff and turn off windows
+		winScreen.SetActive(true);
+		movement.allowedToMove = false;
+		life = 2;
+		gameEnded = true;
 	}
 
 	public void goliathLost(){
-		blackOut.SetActive(true);
-
-		if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
-			reLoad();
-		}
+		//display a win message and turn off movement and shooting stuff and turn off windows
+		winScreen.SetActive(true);
+		movement.allowedToMove = false;
+		life = 2;
+		gameEnded = true;
 	}
 }

@@ -8,6 +8,8 @@ public class FlagTrig : MonoBehaviour {
 	public GoliathNetworking network;
 
 	public bool flagActive;
+
+	bool up;
 	float currHealth;
 	// Use this for initialization
 	void Start () {
@@ -19,8 +21,12 @@ public class FlagTrig : MonoBehaviour {
 
 		currHealth = health.currMechHealth;
 
-		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.BUMPER)){
+		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.JOYSTICK)){
 			pickedUp();
+		}
+
+		if(SixenseInput.Controllers[1].GetButtonUp(SixenseButtons.JOYSTICK)){
+			mechShooty.allowedToDrop = true;
 		}
 	}
 
@@ -43,6 +49,9 @@ public class FlagTrig : MonoBehaviour {
 		if(currHealth >= 1){
 			mechShooty.pressToPick = false;
 			mechShooty.carrying = true;
+			up = true;
+
+
 			network.photonView.RPC("GoliathPickedUpFlag",PhotonTargets.All);
 			flagActive = false;
 		}

@@ -140,7 +140,6 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		// Updating attributes
 		Vector3 newVel = rigidbody.velocity;
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
@@ -299,7 +298,7 @@ public class ControllerScript : MonoBehaviour {
 				}
 
 				// Trigger change weapon
-				if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
+				if (!isSwapping){
 					if (DPad_Next || Y_Press){
 						swapAdjustment = 1;
 						int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
@@ -561,6 +560,16 @@ public class ControllerScript : MonoBehaviour {
 		// Apply spread to weapon based on actions
 		currentWeapon.SetTargetSpread (spread);
 
+		// Behaviour for if game is not running
+		if (player.game.awaitingEndConfirm){
+			X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+			
+			if (X_Press){
+				player.readyToEnd = true;
+				player.display.blackout.SetActive(true);
+			}
+		}
+
 		// Update previous controller state
 		prevState = state;
 
@@ -588,12 +597,14 @@ public class ControllerScript : MonoBehaviour {
 		if (player.isDead){
 			spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles);
 			flagInRange = false;
+			player.display.grabFlagPrompt.SetActive(false);
 		}
 	}
 
 	public void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = true;
+			player.display.grabFlagPrompt.SetActive(true);
 		}
 		else if (collider.gameObject.tag == "ExitGoal" && flagPickedUp){
 			player.game.GameWon();
@@ -603,6 +614,7 @@ public class ControllerScript : MonoBehaviour {
 	public void OnTriggerExit(Collider collider){
 		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = false;
+			player.display.grabFlagPrompt.SetActive(false);
 		}
 	}
 
@@ -706,5 +718,13 @@ public class ControllerScript : MonoBehaviour {
 
 	public void EndWeaponSwap(){
 		isSwapping = false;
+	}
+
+	public void ResetWeaponSelected(){
+		swapAdjustment = -player.currentWeaponIndex;
+		int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);
+		anim.SetInteger(weaponHash, nextWeaponIndex);
+		fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
+		player.CycleWeapons(swapAdjustment);
 	}
 }
