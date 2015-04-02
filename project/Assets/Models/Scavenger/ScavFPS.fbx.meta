@@ -5421,6 +5421,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0
+        functionName: NewWeaponReady
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: .196414188
         functionName: ReleaseStatic
         data: 
@@ -5435,22 +5442,15 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: .514135718
-        functionName: TakeOutDynamic
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: .514135718
+      - time: .539631486
         functionName: ResetStatic
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0
-        functionName: NewWeaponReady
+      - time: .539631486
+        functionName: TakeOutDynamic
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

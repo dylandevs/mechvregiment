@@ -84,6 +84,8 @@ public class PoolManager : MonoBehaviour {
 		else if (loopable && activeObjectPool.Count > 0){
 			GameObject returnedObj = activeObjectPool[0];
 			activeObjectPool.RemoveAt(0);
+			returnedObj.SetActive(false);
+			returnedObj.SetActive(true);
 			activeObjectPool.Add(returnedObj);
 
 			if (retainLocal){

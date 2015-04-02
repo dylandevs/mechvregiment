@@ -597,12 +597,14 @@ public class ControllerScript : MonoBehaviour {
 		if (player.isDead){
 			spineJoint.transform.localRotation = Quaternion.Euler(initialSpineAngles);
 			flagInRange = false;
+			player.display.grabFlagPrompt.SetActive(false);
 		}
 	}
 
 	public void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = true;
+			player.display.grabFlagPrompt.SetActive(true);
 		}
 		else if (collider.gameObject.tag == "ExitGoal" && flagPickedUp){
 			player.game.GameWon();
@@ -612,6 +614,7 @@ public class ControllerScript : MonoBehaviour {
 	public void OnTriggerExit(Collider collider){
 		if (collider.gameObject.tag == "Crystal"){
 			flagInRange = false;
+			player.display.grabFlagPrompt.SetActive(false);
 		}
 	}
 

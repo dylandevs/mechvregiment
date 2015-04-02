@@ -158,6 +158,9 @@ public class Player : MonoBehaviour {
 			}
 		}
 
+		weapons [currentWeaponIndex].gameObject.SetActive (false);
+		weapons [currentWeaponIndex].gameObject.SetActive (true);
+
 		display.EndRespawnSequence ();
 		rigidbody.isKinematic = false;
 	}
@@ -218,6 +221,8 @@ public class Player : MonoBehaviour {
 		game.FlagRetrieved(gameObject);
 		display.UpdateObjective(game.exitPoint);
 		game.exitPoint.SetActive(true);
+		display.dropFlagPrompt.SetActive(true);
+		display.grabFlagPrompt.SetActive(false);
 
 		networkManager.photonView.RPC ("ScavengerPickedUpFlag", PhotonTargets.All, initializer.Layer - 1);
 	}
@@ -227,6 +232,7 @@ public class Player : MonoBehaviour {
 		weaponModels3[currentWeaponIndex].SetActive(true);
 		crystal.SetActive(false);
 		crystalTP.SetActive (false);
+		display.dropFlagPrompt.SetActive(false);
 
 		game.FlagDropped(transform.position);
 		game.exitPoint.SetActive(false);

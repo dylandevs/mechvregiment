@@ -64,6 +64,8 @@ public class ScavUI : MonoBehaviour {
 	public Sprite scavengerMarker;
 
 	public GameObject blackout;
+	public GameObject grabFlagPrompt;
+	public GameObject dropFlagPrompt;
 
 	[HideInInspector]
 	public Camera skyCam;
