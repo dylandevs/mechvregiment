@@ -1709,6 +1709,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0
+        functionName: NewWeaponReady
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -3554,6 +3561,13 @@ ModelImporter:
         messageOptions: 0
       - time: .795803308
         functionName: TakeOutDynamic
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: NewWeaponReady
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -5430,6 +5444,13 @@ ModelImporter:
         messageOptions: 0
       - time: .514135718
         functionName: ResetStatic
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: NewWeaponReady
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

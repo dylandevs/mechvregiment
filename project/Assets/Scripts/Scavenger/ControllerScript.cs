@@ -140,7 +140,6 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		// Updating attributes
 		Vector3 newVel = rigidbody.velocity;
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
@@ -299,7 +298,7 @@ public class ControllerScript : MonoBehaviour {
 				}
 
 				// Trigger change weapon
-				if (!isSwapping && !player.GetCurrentWeapon().IsReloading()){
+				if (!isSwapping){
 					if (DPad_Next || Y_Press){
 						swapAdjustment = 1;
 						int nextWeaponIndex = player.GetExpectedWeaponIndex(swapAdjustment);

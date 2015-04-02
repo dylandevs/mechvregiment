@@ -79,7 +79,6 @@ public class Player : MonoBehaviour {
 		else{
 			TryRespawn();
 		}
-		//crossScript.updateSpread (weapons [currentWeaponIndex].GetSpread ());
 		display.UpdateCrosshairSpread(weapons [currentWeaponIndex].GetSpread ());
 
 		if (stunProg > 0){

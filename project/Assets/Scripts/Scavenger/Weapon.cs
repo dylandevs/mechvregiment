@@ -262,6 +262,28 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 	}
+
+	void OnDisable(){
+		if (magazineDrop1){
+			magazineDrop1.SetActive(false);
+		}
+		if (magazineDrop3){
+			magazineDrop3.SetActive(false);
+		}
+		if (magazineDynamic1){
+			magazineDynamic1.SetActive(false);
+		}
+		if (magazineDynamic3){
+			magazineDynamic3.SetActive(false);
+		}
+		if (magazineStatic1){
+			magazineStatic1.SetActive(true);
+		}
+		if (magazineStatic3){
+			magazineStatic3.SetActive(true);
+		}
+
+	}
 	
 	public void SetPlayerReference(Player player){
 		this.player = player;
@@ -642,6 +664,9 @@ public class Weapon : MonoBehaviour {
 
 		untilNextTracer = 0;
 		ammoRenderer.Reload (magAmmo);
+
+		// Cancel in case swapping animation interrupted
+		player.playerController.EndWeaponSwap ();
 	}
 	
 	// Returns number of bullets in current magazine, and number of bullets in reserve
