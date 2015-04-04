@@ -12,6 +12,7 @@ public class InGameMarker : MonoBehaviour {
 	public Vector3 offset = Vector3.zero;
 	public UnityEngine.UI.Text message;
 	public bool constrainToScreen = false;
+	public GameObject direction;
 
 	// Use this for initialization
 	void Start () {
