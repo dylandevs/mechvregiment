@@ -57,6 +57,7 @@ public class ScavUI : MonoBehaviour {
 	private Vector2 addSizeDelta;
 	private List<InGameMarker> markers = new List<InGameMarker>();
 
+	public float constrainedMarkerBuffer = 50;
 	public GameObject markerPrefab;
 	public Transform markerGroup;
 	public Sprite objectiveMarker;
@@ -102,8 +103,9 @@ public class ScavUI : MonoBehaviour {
 		markerScript = marker.GetComponent<InGameMarker>();
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
-		markerScript.offset.y = 1;
-		markerScript.message.text = "Retrieve";
+		markerScript.offset.y = 2.2f;
+		markerScript.message.text = "Grab";
+		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
@@ -169,13 +171,13 @@ public class ScavUI : MonoBehaviour {
 					marker.message.text = "Escort";
 				}
 				else if (newObj.tag == "Goliath"){
-					marker.message.text = "Destroy";
+					marker.message.text = "Disable";
 				}
 				else if (newObj.tag == "ExitGoal"){
 					marker.message.text = "Deliver";
 				}
 				else{
-					marker.message.text = "Retrieve";
+					marker.message.text = "Grab";
 				}
 			}
 		}
@@ -186,9 +188,56 @@ public class ScavUI : MonoBehaviour {
 	private void UpdateMarkerPositions(){
 		foreach(InGameMarker marker in markers){
 			Vector3 targetPos = marker.associatedObject.transform.position + marker.offset;
-			Vector3 difference = targetPos - playerCam.transform.position;
+			Vector3 relPoint = playerCam.transform.InverseTransformPoint(targetPos);
 
-			if (Vector3.Dot(playerCam.transform.forward, difference) > 0 && !player.isDead && marker.associatedObject.GetActive()){
+			if (marker.constrainToScreen  && !player.isDead && marker.associatedObject.GetActive()){
+				marker.gameObject.SetActive(true);
+
+				Vector2 initScreenPos = RectTransformUtility.WorldToScreenPoint (playerCam, targetPos);
+				initScreenPos.x *= deltaScreenRatio.x;
+				initScreenPos.y *= deltaScreenRatio.y;
+				Vector2 screenPos = initScreenPos - cachedSizeDelta;
+				
+				//screenPos.x = Mathf.Max(Mathf.Min(screenPos.x, markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.x * 0.5f + constrainedMarkerBuffer);
+				//screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.y * 0.5f + constrainedMarkerBuffer);
+
+				// If in constrained screen space, treat normally
+				if (relPoint.z >= 0 && Mathf.Abs(screenPos.x) < markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer && Mathf.Abs(screenPos.y) < markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer){
+					marker.rectTransform.anchoredPosition = screenPos;
+				}
+				else{
+					// Snap to an edge of the screen
+					Vector3 difference = targetPos - playerCam.transform.position;
+					float diffAngle = Vector3.Angle(player.transform.forward, difference.normalized);
+					Vector3 rotatedPosition = Quaternion.AngleAxis(diffAngle, Vector3.up) * difference + playerCam.transform.position;
+
+					Vector3 perpVector = Vector3.Cross(difference, player.transform.forward);
+					float dotProduct = Vector3.Dot(Vector3.up, perpVector);
+
+					if (dotProduct < 0){
+						rotatedPosition = Quaternion.AngleAxis(-diffAngle, Vector3.up) * difference + playerCam.transform.position;
+					}
+
+					initScreenPos = RectTransformUtility.WorldToScreenPoint (playerCam, rotatedPosition);
+					initScreenPos.x *= deltaScreenRatio.x;
+					initScreenPos.y *= deltaScreenRatio.y;
+					screenPos = initScreenPos - cachedSizeDelta;
+
+					//screenPos.x = -Mathf.Sign(screenPos.x) * markerTransform.sizeDelta.x * 0.5f;
+					//screenPos.y = -Mathf.Sign(screenPos.y) * markerTransform.sizeDelta.y * 0.5f;
+
+					if (dotProduct < 0){
+						screenPos.x = (markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer);
+					}
+					else{
+						screenPos.x = -(markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer);
+					}
+					screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.y * 0.5f + constrainedMarkerBuffer);
+					
+					marker.rectTransform.anchoredPosition = screenPos;
+				}
+			}
+			else if (relPoint.z >= 0 && !player.isDead && marker.associatedObject.GetActive()){
 				marker.gameObject.SetActive(true);
 				Vector2 initScreenPos = RectTransformUtility.WorldToScreenPoint (playerCam, targetPos);
 				initScreenPos.x *= deltaScreenRatio.x;
@@ -207,6 +256,7 @@ public class ScavUI : MonoBehaviour {
 		GameObject marker = Instantiate (markerPrefab) as GameObject;
 		marker.transform.SetParent (markerGroup);
 		marker.transform.localPosition = Vector3.zero;
+		marker.transform.localScale = Vector3.one;
 		marker.GetComponent<Image> ().sprite = sprite;
 
 		return marker;
