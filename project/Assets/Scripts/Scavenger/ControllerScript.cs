@@ -324,7 +324,7 @@ public class ControllerScript : MonoBehaviour {
 				}
 
 				// Reloading
-				if (X_Press && !isSwapping){
+				if (X_Press && !isSwapping && !flagPickedUp){
 					player.TriggerReload();
 				}
 

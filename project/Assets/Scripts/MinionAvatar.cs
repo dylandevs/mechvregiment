@@ -25,6 +25,8 @@ public class MinionAvatar : MonoBehaviour {
 
 	[HideInInspector]
 	public int remoteId = -1;
+	public PoolManager burntMinionManager;
+
 	
 	// Use this for initialization
 	void Start () {
@@ -91,6 +93,7 @@ public class MinionAvatar : MonoBehaviour {
 
 	public void Kill(){
 		pool.Deactivate (gameObject);
+		burntMinionManager.Retrieve(transform.position, transform.rotation);
 	}
 
 	public void TriggerFlash(){
