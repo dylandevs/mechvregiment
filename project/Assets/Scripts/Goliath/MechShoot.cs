@@ -533,7 +533,7 @@ public class MechShoot : MonoBehaviour {
 
 	public void releaseFlag(){
 		//moves the realflag to the fake flags position and adds a force to it so it flies away
-		flag.transform.position = flagCarried.transform.position + new Vector3 (0,-5,0);
+		flag.transform.position = flagCarried.transform.position + new Vector3 (0,-2,0);
 		networkManager.photonView.RPC ("GoliathDroppedFlag",PhotonTargets.All,flag.transform.position);
 		flag.SetActive(true);
 		flagCarried.SetActive(false);
@@ -543,6 +543,7 @@ public class MechShoot : MonoBehaviour {
 		carrying = false;
 		movement.allowedToDash = true;
 		resetModes();
+		miniGunMode = true;
 	}
 
 	public void updateAimerPos(){

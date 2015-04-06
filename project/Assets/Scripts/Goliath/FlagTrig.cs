@@ -20,7 +20,11 @@ public class FlagTrig : MonoBehaviour {
 	void Update () {
 
 		currHealth = health.currMechHealth;
+		if(currHealth <= 0){
+			mechShooty.pressToPickUp.SetActive(false);
+			mechShooty.pressToDropFlag.SetActive(false);
 
+		}
 		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.JOYSTICK)){
 			pickedUp();
 		}

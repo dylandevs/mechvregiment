@@ -27,6 +27,6 @@ public class miniMapIconScript : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		life = 0.5f;
+		life = 0.75f;
 	}
 }

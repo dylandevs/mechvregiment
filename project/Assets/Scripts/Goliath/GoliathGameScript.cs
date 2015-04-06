@@ -77,10 +77,10 @@ public class GoliathGameScript : MonoBehaviour {
 				life -= Time.deltaTime;
 			}
 			//change colour of the screens
-			float lerpAmnt = life / 2;
+			float lerpAmnt = life / 3;
 			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
 			Color tempColour = screens.renderer.material.color;
-			tempColour.a = Mathf.Lerp(1,0,lerpAmnt);
+			tempColour.a = Mathf.Lerp(0,1,1 - lerpAmnt);
 			screens.renderer.material.color = tempColour;
 
 			mechShoot.allowedToShootGame = false;
@@ -173,7 +173,7 @@ public class GoliathGameScript : MonoBehaviour {
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
 		movement.allowedToMove = false;
-		life = 2;
+		life = 3;
 		gameEnded = true;
 	}
 
@@ -181,7 +181,7 @@ public class GoliathGameScript : MonoBehaviour {
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
 		movement.allowedToMove = false;
-		life = 2;
+		life = 3;
 		gameEnded = true;
 	}
 }

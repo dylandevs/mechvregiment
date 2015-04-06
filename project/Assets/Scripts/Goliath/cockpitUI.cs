@@ -136,9 +136,6 @@ public class cockpitUI : MonoBehaviour {
 						Color tempColour = sightedImage[i].renderer.material.color;
 						tempColour.a = 0f;
 						sightedImage[i].renderer.material.color = tempColour;
-
-
-
 					}
 		    }
 
@@ -270,17 +267,17 @@ public class cockpitUI : MonoBehaviour {
 	}
 
 	public void miniMapIndicators(int indicatorNum){
+		//indicatorNum = indicatorNum -1;
 		float dist = Vector3.Distance(transform.position,miniMapIndicatorsList[indicatorNum].transform.position);
 
-		if(dist < 50){
+		if(dist < 200){
 			if(miniMapIndicatorsList[indicatorNum].GetActive() != true){
 				miniMapIndicatorsList[indicatorNum].SetActive(true);
 			}
 			else{
 				miniMapIconScript miniMap = miniMapIndicatorsList[indicatorNum].GetComponent<miniMapIconScript>();
-				miniMap.life = 3;
+				miniMap.life = 0.5f;
 			}
-
 		}
 		//check distance between to see if he is ont he minimap.
 		else{

@@ -48,6 +48,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 		playerAvatars = new PlayerAvatar[playerAvatarWrapper.transform.childCount];
 		for (int i = 0; i < playerAvatarWrapper.transform.childCount; i++){
 			playerAvatars[i] = playerAvatarWrapper.transform.GetChild(i).GetComponent<PlayerAvatar>();
+			//playerAvatars[i].PlayerNum = i + 1;
 		}
 	}
 	
