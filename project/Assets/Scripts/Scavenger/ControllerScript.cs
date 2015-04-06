@@ -668,27 +668,27 @@ public class ControllerScript : MonoBehaviour {
 		RaycastHit rayHit;
 
 		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate"){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
 		}
