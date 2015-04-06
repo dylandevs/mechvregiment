@@ -23,7 +23,7 @@ public class MiniMapDamgeIcon : MonoBehaviour {
 			pool.Deactivate(gameObject);
 		}
 		
-		Color tempColour =sprite.color ;
+		Color tempColour = sprite.color;
 		tempColour.a = life/2f;
 		sprite.color = tempColour;
 		

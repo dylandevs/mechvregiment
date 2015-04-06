@@ -25,9 +25,9 @@ public class FlagTrig : MonoBehaviour {
 			pickedUp();
 		}
 
-		if(SixenseInput.Controllers[1].GetButtonUp(SixenseButtons.JOYSTICK)){
+		if(SixenseInput.Controllers[1].GetButton(SixenseButtons.JOYSTICK) == false){
 			mechShooty.allowedToDrop = true;
-		}
+		}else{mechShooty.allowedToDrop = true;}
 	}
 
 	void OnTriggerEnter(Collider other){

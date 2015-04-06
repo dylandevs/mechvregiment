@@ -14,6 +14,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject objectivePointer;
 	public GameObject flag;
 	public GameObject diamondForObjective;
+	public GameObject KillForObjective;
 
 	private Transform[] playerAvatars;
 
@@ -339,19 +340,26 @@ public class cockpitUI : MonoBehaviour {
 		}
 
 		if(flagTaken == true){	
+
+			diamondForObjective.SetActive(false);
+			KillForObjective.SetActive(true);
+
 			Vector3 diamondLook = player.transform.position - camPos.transform.position;
 			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
-			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
+			KillForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
 			
 			Vector3 direction = (player.transform.position + Vector3.up) - camPos.transform.position ;
 			
-			diamondForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
+			KillForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
 		}
 		else if(mechHasFlag == true){
+			KillForObjective.SetActive(false);
 			diamondForObjective.SetActive(false);
 		}
 		else{
 
+			diamondForObjective.SetActive(true);
+			KillForObjective.SetActive(false);
 			Vector3 diamondLook = flag.transform.position - camPos.transform.position;
 			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
 			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);

@@ -21,12 +21,12 @@ public class miniMapIconScript : MonoBehaviour {
 		}
 
 		Color tempColour =sprite.color ;
-		tempColour.a = life/2f;
+		tempColour.a = life/0.5f;
 		sprite.color = tempColour;
 
 	}
 
 	void OnEnable(){
-		life = 3f;
+		life = 0.5f;
 	}
 }
