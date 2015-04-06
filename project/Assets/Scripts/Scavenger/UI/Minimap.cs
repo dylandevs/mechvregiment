@@ -157,6 +157,7 @@ public class Minimap : MonoBehaviour {
 		foreach (MinimapIcon icon in icons){
 			if (icon.type == MinimapIcon.MMIconType.Objective){
 				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+				icon.transform.localRotation = Quaternion.Inverse(minimapRot.localRotation);
 			}
 			else if (icon.type == MinimapIcon.MMIconType.Scavenger){
 				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);

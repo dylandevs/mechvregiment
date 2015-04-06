@@ -11,6 +11,12 @@ ModelImporter:
     100010: hinge2
     100012: hinge3
     100014: lid
+    100016: polySurface1
+    100018: polySurface2
+    100020: polySurface3
+    100022: polySurface4
+    100024: polySurface5
+    100026: transform1
     400000: AmmoCache
     400002: AmmoCache_OPENED
     400004: //RootNode
@@ -19,21 +25,42 @@ ModelImporter:
     400010: hinge2
     400012: hinge3
     400014: lid
+    400016: polySurface1
+    400018: polySurface2
+    400020: polySurface3
+    400022: polySurface4
+    400024: polySurface5
+    400026: transform1
     2300000: cacheBase
     2300002: hinge1
     2300004: hinge2
     2300006: hinge3
     2300008: lid
+    2300010: polySurface1
+    2300012: polySurface2
+    2300014: polySurface3
+    2300016: polySurface4
+    2300018: polySurface5
     3300000: cacheBase
     3300002: hinge1
     3300004: hinge2
     3300006: hinge3
     3300008: lid
+    3300010: polySurface1
+    3300012: polySurface2
+    3300014: polySurface3
+    3300016: polySurface4
+    3300018: polySurface5
     4300000: cacheBase
     4300002: lid
     4300004: hinge1
     4300006: hinge2
     4300008: hinge3
+    4300010: polySurface1
+    4300012: polySurface2
+    4300014: polySurface3
+    4300016: polySurface4
+    4300018: polySurface5
     9500000: //RootNode
   materials:
     importMaterials: 1
