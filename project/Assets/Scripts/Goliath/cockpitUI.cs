@@ -27,11 +27,11 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject[] sightedImage;
 
 	public Image miniGunImage;
-	public Image miniGunImageOutline;
-	public Image overHeatedImage;
+	public GameObject miniGunImageOutline;
+	public GameObject overHeatedImage;
 	public Image cannonReload;
-	public Image cannonReloadOutline;
-	public Image missleImageOutline;
+	public GameObject cannonReloadOutline;
+	public GameObject missleImageOutline;
 	public Image missleImage;
 	public Image minionModeImage;
 
@@ -146,7 +146,7 @@ public class cockpitUI : MonoBehaviour {
 			miniGunImageOutline.gameObject.SetActive(true);
 			overHeatedImage.gameObject.SetActive(true);
 			cannonReload.gameObject.SetActive(true);
-			cannonReloadOutline.gameObject.SetActive(true);
+			cannonReloadOutline.SetActive(true);
 
 			//update the vars from the other script
 			overHeated = minigun.overHeated;
@@ -162,14 +162,14 @@ public class cockpitUI : MonoBehaviour {
 				overHeatedTimer += Time.deltaTime;
 
 				if(overHeatedTimer >= 0.1){
-					overHeatedImage.fillAmount = 0;
+					overHeatedImage.SetActive(true);
 				}
 				if(overHeatedTimer >= 0.2){
-					overHeatedImage.fillAmount = 1;
+					overHeatedImage.SetActive(false);
 					overHeatedTimer = 0;
 				}
 			}
-			else overHeatedImage.fillAmount = 0;
+			else overHeatedImage.SetActive(false);
 
 			//fill the cannon reload thing
 			float fillAmountCannon =1-( cannonCDR/8);
@@ -261,9 +261,9 @@ public class cockpitUI : MonoBehaviour {
 		missleImage.gameObject.SetActive(false);
 		minionModeImage.gameObject.SetActive(false);
 		//outlines
-		miniGunImageOutline.gameObject.SetActive(false);
-		cannonReloadOutline.gameObject.SetActive(false);
-		missleImageOutline.gameObject.SetActive(false);
+		miniGunImageOutline.SetActive(false);
+		cannonReloadOutline.SetActive(false);
+		missleImageOutline.SetActive(false);
 	}
 
 	public void miniMapIndicators(int indicatorNum){
