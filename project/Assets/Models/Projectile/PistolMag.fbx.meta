@@ -1,18 +1,15 @@
 fileFormatVersion: 2
-guid: 75297ab55f7b47c489eff7f45c12a6ec
+guid: ddb7019ca5117f543ab84983936728fe
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
-    100002: mineMag
+    100002: pistolMag1
     400000: //RootNode
-    400002: mineMag
-    2300000: //RootNode
-    2300002: mineMag
-    3300000: //RootNode
-    3300002: mineMag
-    4300000: mine
-    4300002: mineMag
+    400002: pistolMag1
+    2300000: pistolMag1
+    3300000: pistolMag1
+    4300000: pistolMag1
     9500000: //RootNode
   materials:
     importMaterials: 1
