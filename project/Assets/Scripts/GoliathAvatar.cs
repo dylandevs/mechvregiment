@@ -52,6 +52,8 @@ public class GoliathAvatar : MonoBehaviour {
 	private int fwdHash = Animator.StringToHash("FwdSpeed");
 	private int rgtHash = Animator.StringToHash("RgtSpeed");
 
+	public GameObject carryEmitters;
+
 	// Use this for initialization
 	void Start () {
 	
