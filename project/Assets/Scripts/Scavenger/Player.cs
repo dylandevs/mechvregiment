@@ -19,6 +19,8 @@ public class Player : MonoBehaviour {
 	public float RespawnWait = 5.0f;
 	public float StunLength = 3.0f;
 	private float stunProg = 0;
+	public float AmmoReplenishTime = 2;
+	private float ammoReplenishProg = 0;
 
 	// Inputs
 	public Camera playerCam;
@@ -51,6 +53,10 @@ public class Player : MonoBehaviour {
 	public int currentWeaponIndex = 0;
 	[HideInInspector]
 	public bool isStunned = false;
+	[HideInInspector]
+	public bool isReplenishingAmmo = false;
+	[HideInInspector]
+	public bool readyToEnd = false;
 
 	// Recorded variables
 	private Vector3 startingPos;
@@ -59,9 +65,6 @@ public class Player : MonoBehaviour {
 	private int resetHash = Animator.StringToHash("Reset");
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
-
-	[HideInInspector]
-	public bool readyToEnd = false;
 
 	// Use this for initialization
 	void Start () {
@@ -75,6 +78,17 @@ public class Player : MonoBehaviour {
 	void Update () {
 		if (!isDead){
 			TryRegen();
+
+			// Weapon ammunition restoration
+			if (ammoReplenishProg > 0){
+				ammoReplenishProg -= Time.deltaTime;
+			}
+			if (isReplenishingAmmo && ammoReplenishProg <= 0){
+				ammoReplenishProg = AmmoReplenishTime;
+				foreach(Weapon weapon in weapons){
+					weapon.AttemptPartialReplenish();
+				}
+			}
 		}
 		else{
 			TryRespawn();
@@ -254,36 +268,41 @@ public class Player : MonoBehaviour {
 			display.UpdateDamageOverlay (1 - health * InvMaxHealth);
 
 			if (health <= 0){
-				isDead = true;
-				respawnTimer = RespawnWait;
-				if (playerController.flagPickedUp){
-					playerController.DropFlag();
-				}
-
-				// Disable firing layer
-				anim.SetLayerWeight(1, 0);
-
-				display.StartRespawnSequence(RespawnWait);
-
-				if (Vector3.Angle(direction, transform.forward) < 90){
-					anim.SetTrigger(fwdDeadHash);
-					fpsAnim.SetTrigger(fwdDeadHash);
-					deathCamAnim.SetTrigger(fwdDeadHash);
-					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
-				}
-				else{
-					anim.SetTrigger(bckDeadHash);
-					fpsAnim.SetTrigger(bckDeadHash);
-					deathCamAnim.SetTrigger(bckDeadHash);
-					networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
-				}
-
-				if (playerController.IsGrounded()){
-					rigidbody.isKinematic = true;
-				}
+				Kill (direction);
 			}
 
 			anim.SetTrigger(flinchHash);
+		}
+	}
+
+	private void Kill(Vector3 direction){
+		isDead = true;
+		isReplenishingAmmo = false;
+		respawnTimer = RespawnWait;
+		if (playerController.flagPickedUp){
+			playerController.DropFlag();
+		}
+		
+		// Disable firing layer
+		anim.SetLayerWeight(1, 0);
+		
+		display.StartRespawnSequence(RespawnWait);
+		
+		if (Vector3.Angle(direction, transform.forward) < 90){
+			anim.SetTrigger(fwdDeadHash);
+			fpsAnim.SetTrigger(fwdDeadHash);
+			deathCamAnim.SetTrigger(fwdDeadHash);
+			networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, true);
+		}
+		else{
+			anim.SetTrigger(bckDeadHash);
+			fpsAnim.SetTrigger(bckDeadHash);
+			deathCamAnim.SetTrigger(bckDeadHash);
+			networkManager.photonView.RPC ("PlayerDeath", PhotonTargets.All, initializer.Layer - 1, false);
+		}
+		
+		if (playerController.IsGrounded()){
+			rigidbody.isKinematic = true;
 		}
 	}
 

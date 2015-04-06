@@ -40,6 +40,7 @@ public class Weapon : MonoBehaviour {
 	public int MagSize = 30;
 	public int ReserveSize = 120;
 	public float Damage = 15;
+	public float ReplenishRate = 40;
 
 	// Cosmetic attributes
 	public float FlashDuration = 0.05f;
@@ -724,6 +725,15 @@ public class Weapon : MonoBehaviour {
 	public bool IsFiringAudibly(){
 		return (Audible && fireNoiseProgress > 0);
 	}
+
+	public void AttemptPartialReplenish(){
+		// Partially restores ammo amount
+		reserveAmmo = (int)Mathf.Min(ReserveSize, reserveAmmo + ReplenishRate);
+		isAllAmmoDepleted = false;
+	}
+
+
+	// === Animation functions ===
 
 	public void SwapInDynamic(){
 		magazineStatic1.SetActive(false);

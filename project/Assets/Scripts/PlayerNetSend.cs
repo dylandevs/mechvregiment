@@ -207,6 +207,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void BrokenShield(){
 		templeShield.SetActive(false);
 		goliathShield.SetActive(false);
+		foreach (Player player in players){
+			player.display.UpdateBrokenShield();
+		}
 	}
 
 	[RPC]

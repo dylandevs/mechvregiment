@@ -104,8 +104,6 @@ public class ScavUI : MonoBehaviour {
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
 		markerScript.offset.y = 2.2f;
-		markerScript.message.text = "Grab";
-		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
@@ -113,6 +111,8 @@ public class ScavUI : MonoBehaviour {
 		markerScript.associatedObject = minimap.goliath;
 		markerScript.type = InGameMarker.IGMarkerType.Goliath;
 		markerScript.offset.y = 2;
+		markerScript.message.text = "Break";
+		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		foreach (Transform scavenger in minimap.playerGroup.transform){
@@ -367,5 +367,18 @@ public class ScavUI : MonoBehaviour {
 		respawnPanel.SetActive (false);
 		respawning = false;
 		deathCam.gameObject.SetActive (false);
+	}
+
+	public void UpdateBrokenShield(){
+		foreach(InGameMarker marker in markers){
+			if (marker.type == InGameMarker.IGMarkerType.Objective){
+				marker.message.text = "Grab";
+				marker.constrainToScreen = true;
+			}
+			else if (marker.type == InGameMarker.IGMarkerType.Goliath){
+				marker.message.text = "";
+				marker.constrainToScreen = false;
+			}
+		}
 	}
 }
