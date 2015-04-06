@@ -31,14 +31,14 @@ public class FlagTrig : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other){
-		if(other.tag == "Goliath" && currHealth >= 1){
+		if(other.tag == "Goliath" && currHealth >= 1 && mechShooty){
 			flagActive = true;
 			mechShooty.pressToPick = true;
 		}
 	}
 
 	void OnTriggerExit(Collider other){
-		if(other.tag == "Goliath"){
+		if(other.tag == "Goliath" && mechShooty){
 			flagActive = false;
 			mechShooty.pressToPick = false;
 		}
@@ -46,7 +46,7 @@ public class FlagTrig : MonoBehaviour {
 	}
 
 	void pickedUp(){
-		if(currHealth >= 1){
+		if(currHealth >= 1 && mechShooty){
 			mechShooty.pressToPick = false;
 			mechShooty.carrying = true;
 			up = true;
