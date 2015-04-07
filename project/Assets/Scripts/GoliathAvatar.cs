@@ -157,4 +157,12 @@ public class GoliathAvatar : MonoBehaviour {
 		isDashing = false;
 		dashingEffect.SetActive (false);
 	}
+
+	public void SetDisabled(){
+
+	}
+
+	public void SetEnabled(){
+
+	}
 }

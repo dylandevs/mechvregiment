@@ -224,6 +224,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		goliath.EndDash();
 	}
 
+	[RPC]
+	public void GoliathDisabled(){
+		goliath.SetDisabled();
+	}
+
+	[RPC]
+	public void GoliathEnabled(){
+		goliath.SetEnabled();
+	}
+
 	// Player RPC	
 	[RPC]
 	void SetPlayerTransform(int playerNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
