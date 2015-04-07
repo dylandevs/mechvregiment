@@ -102,6 +102,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
     	Room currentRoom = PhotonNetwork.room;
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
+	
 
 	// Game RPC
 	[RPC]
@@ -132,6 +133,12 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 
 	[RPC]
 	public void GoliathDashingEnd(){}
+
+	[RPC]
+	public void GoliathDisabled(){}
+
+	[RPC] 
+	public void GoliathEnabled(){}
 
 	[RPC]
 	public void ScavengerConnected(float startTime){

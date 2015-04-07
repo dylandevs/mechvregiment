@@ -303,6 +303,9 @@ public class mechMovement : MonoBehaviour {
 		
 		// when mech is disabled start timer to restart
 		if(currMechHealth <=0){
+
+			networker.photonView.RPC("GoliathDisabled",PhotonTargets.All);
+
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
 				triggerFlagDropThing.carrying = false;
@@ -312,6 +315,7 @@ public class mechMovement : MonoBehaviour {
 		}
 		
 		if(restartTimer >= 8){
+			networker.photonView.RPC("GoliathEnabled",PhotonTargets.All);
 			currMechHealth = mechHealth;
 			restartTimer = 0;
 		}
