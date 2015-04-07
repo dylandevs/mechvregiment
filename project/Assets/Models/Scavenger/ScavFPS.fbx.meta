@@ -131,6 +131,8 @@ ModelImporter:
     100250: clothWrapping
     100252: curve1
     100254: TO_DELETE
+    100256: clothWrapping1
+    100258: pistolMag1
     400000: Ar_Body
     400002: AR_Weapon
     400004: Body
@@ -259,6 +261,8 @@ ModelImporter:
     400250: clothWrapping
     400252: curve1
     400254: TO_DELETE
+    400256: clothWrapping1
+    400258: pistolMag1
     2300000: Ar_Body
     2300002: bullet:bullet
     2300004: crystal
@@ -277,6 +281,8 @@ ModelImporter:
     2300030: MAG_LH
     2300032: Gnd
     2300034: clothWrapping
+    2300036: clothWrapping1
+    2300038: pistolMag1
     3300000: Ar_Body
     3300002: bullet:bullet
     3300004: crystal
@@ -295,6 +301,8 @@ ModelImporter:
     3300030: MAG_LH
     3300032: Gnd
     3300034: clothWrapping
+    3300036: clothWrapping1
+    3300038: pistolMag1
     4300000: pistolMag
     4300002: Mag_LH
     4300004: bullet:bullet
@@ -314,6 +322,8 @@ ModelImporter:
     4300032: AR_Body
     4300034: Gnd
     4300036: clothWrapping
+    4300038: pistolMag1
+    4300040: clothWrapping1
     7400000: FP_Run_AR
     7400002: Take 0010
     7400004: FP_Walk_AR

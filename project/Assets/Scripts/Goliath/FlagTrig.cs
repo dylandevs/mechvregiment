@@ -20,25 +20,29 @@ public class FlagTrig : MonoBehaviour {
 	void Update () {
 
 		currHealth = health.currMechHealth;
+		if(currHealth <= 0){
+			mechShooty.pressToPickUp.SetActive(false);
+			mechShooty.pressToDropFlag.SetActive(false);
 
+		}
 		if(flagActive == true && SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.JOYSTICK)){
 			pickedUp();
 		}
 
-		if(SixenseInput.Controllers[1].GetButtonUp(SixenseButtons.JOYSTICK)){
+		if(SixenseInput.Controllers[1].GetButton(SixenseButtons.JOYSTICK) == false){
 			mechShooty.allowedToDrop = true;
-		}
+		}else{mechShooty.allowedToDrop = true;}
 	}
 
 	void OnTriggerEnter(Collider other){
-		if(other.tag == "Goliath" && currHealth >= 1){
+		if(other.tag == "Goliath" && currHealth >= 1 && mechShooty){
 			flagActive = true;
 			mechShooty.pressToPick = true;
 		}
 	}
 
 	void OnTriggerExit(Collider other){
-		if(other.tag == "Goliath"){
+		if(other.tag == "Goliath" && mechShooty){
 			flagActive = false;
 			mechShooty.pressToPick = false;
 		}
@@ -46,7 +50,7 @@ public class FlagTrig : MonoBehaviour {
 	}
 
 	void pickedUp(){
-		if(currHealth >= 1){
+		if(currHealth >= 1 && mechShooty){
 			mechShooty.pressToPick = false;
 			mechShooty.carrying = true;
 			up = true;

@@ -8,6 +8,8 @@ public class MiniMapDamgeIcon : MonoBehaviour {
 	public PoolManager pool;
 
 	public SpriteRenderer sprite;
+
+	public GameObject mechPos;
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -15,6 +17,9 @@ public class MiniMapDamgeIcon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+
+
 		if(life >= 0){
 			life -= Time.deltaTime;
 		}
@@ -23,7 +28,7 @@ public class MiniMapDamgeIcon : MonoBehaviour {
 			pool.Deactivate(gameObject);
 		}
 		
-		Color tempColour =sprite.color ;
+		Color tempColour = sprite.color;
 		tempColour.a = life/2f;
 		sprite.color = tempColour;
 		
@@ -31,5 +36,10 @@ public class MiniMapDamgeIcon : MonoBehaviour {
 	
 	void OnEnable(){
 		life = 3f;
+	}
+
+	void updatePos(){
+		Vector3 newPos = mechPos.transform.position + new Vector3(0,130,0);
+		transform.position = newPos;
 	}
 }

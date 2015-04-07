@@ -154,6 +154,18 @@ ModelImporter:
     100296: Weapons3
     100298: WEAPONS
     100300: sunDirection
+    100302: AR
+    100304: AR_Body
+    100306: AR_Mag
+    100308: Artifact
+    100310: bullet
+    100312: clothWrapping
+    100314: clothWrapping1
+    100316: Handle
+    100318: MAG_LH
+    100320: Magazines
+    100322: pistolMag1
+    100324: pistolMag_LH
     400000: Ar_Body
     400002: AR_Weapon
     400004: Body
@@ -305,6 +317,18 @@ ModelImporter:
     400296: Weapons3
     400298: WEAPONS
     400300: sunDirection
+    400302: AR
+    400304: AR_Body
+    400306: AR_Mag
+    400308: Artifact
+    400310: bullet
+    400312: clothWrapping
+    400314: clothWrapping1
+    400316: Handle
+    400318: MAG_LH
+    400320: Magazines
+    400322: pistolMag1
+    400324: pistolMag_LH
     2300000: Ar_Body
     2300002: crystal
     2300004: Mag
@@ -315,6 +339,15 @@ ModelImporter:
     2300014: pistolMag
     2300016: pistolMag 1
     2300018: pTorus2
+    2300020: AR_Body
+    2300022: Artifact
+    2300024: bullet
+    2300026: clothWrapping
+    2300028: clothWrapping1
+    2300030: Handle
+    2300032: MAG_LH
+    2300034: pistolMag1
+    2300036: pistolMag_LH
     3300000: Ar_Body
     3300002: crystal
     3300004: Mag
@@ -325,6 +358,15 @@ ModelImporter:
     3300014: pistolMag
     3300016: pistolMag 1
     3300018: pTorus2
+    3300020: AR_Body
+    3300022: Artifact
+    3300024: bullet
+    3300026: clothWrapping
+    3300028: clothWrapping1
+    3300030: Handle
+    3300032: MAG_LH
+    3300034: pistolMag1
+    3300036: pistolMag_LH
     4300000: pistolMag
     4300002: Mag_LH
     4300004: mineMag
@@ -339,6 +381,15 @@ ModelImporter:
     4300022: head
     4300024: crystal
     4300026: pTorus2
+    4300028: Artifact
+    4300030: Handle
+    4300032: MAG_LH
+    4300034: bullet
+    4300036: pistolMag_LH
+    4300038: pistolMag1
+    4300040: AR_Body
+    4300042: clothWrapping
+    4300044: clothWrapping1
     7400000: Walk_AR
     7400002: Run_AR
     7400004: Flinch_AR

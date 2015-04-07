@@ -151,12 +151,14 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	[RPC]
 	public void GoliathDroppedFlag(Vector3 flagPos){
 		game.FlagDropped(flagPos);
+		goliath.carryEmitters.SetActive(false);
 	}
 	
 	[RPC] 
 	public void GoliathPickedUpFlag(){
 		game.flag.SetActive(false);
 		game.FlagRetrieved(goliath.botJoint.gameObject);
+		goliath.carryEmitters.SetActive(true);
 	}
 
 	// Goliath RPC
@@ -207,6 +209,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void BrokenShield(){
 		templeShield.SetActive(false);
 		goliathShield.SetActive(false);
+		foreach (Player player in players){
+			player.display.UpdateBrokenShield();
+		}
 	}
 
 	[RPC]

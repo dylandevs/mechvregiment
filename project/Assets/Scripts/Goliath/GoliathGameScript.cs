@@ -26,12 +26,17 @@ public class GoliathGameScript : MonoBehaviour {
 	public bool restartMatch;
 	public bool reLoadScene;
 
+	public Image artifactLostImage;
+	public Image artifactDefendedImage;
+
 	bool menu1B;
 	bool readyToGo;
 	bool oneTime;
 	bool gameEnded;
 	bool one;
 	bool two;
+	bool win;
+	bool loose;
 
 	float life = 0;
 
@@ -77,11 +82,19 @@ public class GoliathGameScript : MonoBehaviour {
 				life -= Time.deltaTime;
 			}
 			//change colour of the screens
-			float lerpAmnt = life / 2;
+			float lerpAmnt = life / 3;
 			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
 			Color tempColour = screens.renderer.material.color;
-			tempColour.a = Mathf.Lerp(1,0,lerpAmnt);
+			tempColour.a = Mathf.Lerp(0,1,1 - lerpAmnt);
 			screens.renderer.material.color = tempColour;
+
+			if(win == true){
+				artifactDefendedImage.fillAmount = 1 - lerpAmnt;
+			}
+			if(loose == true){
+				artifactLostImage.fillAmount = 1 - lerpAmnt;
+			}
+
 
 			mechShoot.allowedToShootGame = false;
 
@@ -158,9 +171,7 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void reLoad(){
-
 		PhotonNetwork.Disconnect();
-
 		Application.LoadLevel("GoliathStartScene"); 
 	}
 
@@ -173,15 +184,17 @@ public class GoliathGameScript : MonoBehaviour {
 		//display a win message and turn off movement and shooting stuff and turn off windows
 		winScreen.SetActive(true);
 		movement.allowedToMove = false;
-		life = 2;
+		life = 3;
 		gameEnded = true;
+		win = true;
 	}
 
 	public void goliathLost(){
 		//display a win message and turn off movement and shooting stuff and turn off windows
-		winScreen.SetActive(true);
+		looseScreen.SetActive(true);
 		movement.allowedToMove = false;
-		life = 2;
+		life = 3;
 		gameEnded = true;
+		loose = true;
 	}
 }

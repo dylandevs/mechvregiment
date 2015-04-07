@@ -168,7 +168,7 @@ public class mechMovement : MonoBehaviour {
 		}
 
 
-		//is moving calcs
+		/*//is moving calcs
 		if(lStickX >= 0.05f){
 			isMoving = true;
 		}
@@ -183,7 +183,8 @@ public class mechMovement : MonoBehaviour {
 		
 		if(lStickY <= -0.05f){
 			isMoving = true;
-		}
+		}*/
+
 		//rotations tuffs
 		if (nextRot.x >= 180){
 			nextRot.x = nextRot.x - 360;
@@ -369,9 +370,9 @@ public class mechMovement : MonoBehaviour {
 
 	void miniMapDamage(Vector3 direction){
 		GameObject damageMini = damageMiniMap.Retrieve(locatorLocation.transform.position);
-		//Vector3 targetDir = direction - topHalfX.transform.position;
+		MiniMapDamgeIcon damageThingy = damageMini.GetComponent<MiniMapDamgeIcon>();
 
-		//print(targetDir);
+		damageThingy.mechPos = bottomHalf;
 
 		damageMini.transform.forward = -direction;
 	}
@@ -464,7 +465,9 @@ public class mechMovement : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider){
+
 		if (collider.tag == "Player" && dash == true){
+
 			PlayerAvatar avatarScript = collider.transform.parent.GetComponent<PlayerAvatar>();
 			networker.photonView.RPC ("LaunchPlayer", PhotonTargets.All, avatarScript.PlayerNum);
 		}

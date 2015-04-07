@@ -104,8 +104,6 @@ public class ScavUI : MonoBehaviour {
 		markerScript.associatedObject = minimap.objective;
 		markerScript.type = InGameMarker.IGMarkerType.Objective;
 		markerScript.offset.y = 2.2f;
-		markerScript.message.text = "Grab";
-		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		marker = CreateInGameMarker(goliathMarker);
@@ -113,6 +111,8 @@ public class ScavUI : MonoBehaviour {
 		markerScript.associatedObject = minimap.goliath;
 		markerScript.type = InGameMarker.IGMarkerType.Goliath;
 		markerScript.offset.y = 2;
+		markerScript.message.text = "Break";
+		markerScript.constrainToScreen = true;
 		markers.Add(markerScript);
 
 		foreach (Transform scavenger in minimap.playerGroup.transform){
@@ -197,12 +197,24 @@ public class ScavUI : MonoBehaviour {
 				initScreenPos.x *= deltaScreenRatio.x;
 				initScreenPos.y *= deltaScreenRatio.y;
 				Vector2 screenPos = initScreenPos - cachedSizeDelta;
+				Vector2 baseScreenPos = screenPos;
+
+				bool showDir = false;
 				
 				//screenPos.x = Mathf.Max(Mathf.Min(screenPos.x, markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.x * 0.5f + constrainedMarkerBuffer);
-				//screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.y * 0.5f + constrainedMarkerBuffer);
+				screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.y * 0.5f + constrainedMarkerBuffer);
+
+				if (baseScreenPos.y > markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer){
+					marker.direction.transform.localRotation = Quaternion.Euler(0, 0, 0);
+					showDir = true;
+				}
+				else if (baseScreenPos.y < -(markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer)){
+					marker.direction.transform.localRotation = Quaternion.Euler(0, 0, 180);
+					showDir = true;
+				}
 
 				// If in constrained screen space, treat normally
-				if (relPoint.z >= 0 && Mathf.Abs(screenPos.x) < markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer && Mathf.Abs(screenPos.y) < markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer){
+				if (relPoint.z >= 0 && Mathf.Abs(screenPos.x) < markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer){
 					marker.rectTransform.anchoredPosition = screenPos;
 				}
 				else{
@@ -228,14 +240,19 @@ public class ScavUI : MonoBehaviour {
 
 					if (dotProduct < 0){
 						screenPos.x = (markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer);
+						marker.direction.transform.localRotation = Quaternion.Euler(0, 0, -90);
 					}
 					else{
 						screenPos.x = -(markerTransform.sizeDelta.x * 0.5f - constrainedMarkerBuffer);
+						marker.direction.transform.localRotation = Quaternion.Euler(0, 0, 90);
 					}
 					screenPos.y = Mathf.Max(Mathf.Min(screenPos.y, markerTransform.sizeDelta.y * 0.5f - constrainedMarkerBuffer), -markerTransform.sizeDelta.y * 0.5f + constrainedMarkerBuffer);
 					
 					marker.rectTransform.anchoredPosition = screenPos;
+					showDir = true;
 				}
+
+				marker.direction.SetActive(showDir);
 			}
 			else if (relPoint.z >= 0 && !player.isDead && marker.associatedObject.GetActive()){
 				marker.gameObject.SetActive(true);
@@ -350,5 +367,18 @@ public class ScavUI : MonoBehaviour {
 		respawnPanel.SetActive (false);
 		respawning = false;
 		deathCam.gameObject.SetActive (false);
+	}
+
+	public void UpdateBrokenShield(){
+		foreach(InGameMarker marker in markers){
+			if (marker.type == InGameMarker.IGMarkerType.Objective){
+				marker.message.text = "Grab";
+				marker.constrainToScreen = true;
+			}
+			else if (marker.type == InGameMarker.IGMarkerType.Goliath){
+				marker.message.text = "";
+				marker.constrainToScreen = false;
+			}
+		}
 	}
 }

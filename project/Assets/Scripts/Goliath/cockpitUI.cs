@@ -14,6 +14,7 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject objectivePointer;
 	public GameObject flag;
 	public GameObject diamondForObjective;
+	public GameObject KillForObjective;
 
 	private Transform[] playerAvatars;
 
@@ -26,11 +27,11 @@ public class cockpitUI : MonoBehaviour {
 	public GameObject[] sightedImage;
 
 	public Image miniGunImage;
-	public Image miniGunImageOutline;
-	public Image overHeatedImage;
+	public GameObject miniGunImageOutline;
+	public GameObject overHeatedImage;
 	public Image cannonReload;
-	public Image cannonReloadOutline;
-	public Image missleImageOutline;
+	public GameObject cannonReloadOutline;
+	public GameObject missleImageOutline;
 	public Image missleImage;
 	public Image minionModeImage;
 
@@ -135,9 +136,6 @@ public class cockpitUI : MonoBehaviour {
 						Color tempColour = sightedImage[i].renderer.material.color;
 						tempColour.a = 0f;
 						sightedImage[i].renderer.material.color = tempColour;
-
-
-
 					}
 		    }
 
@@ -148,7 +146,7 @@ public class cockpitUI : MonoBehaviour {
 			miniGunImageOutline.gameObject.SetActive(true);
 			overHeatedImage.gameObject.SetActive(true);
 			cannonReload.gameObject.SetActive(true);
-			cannonReloadOutline.gameObject.SetActive(true);
+			cannonReloadOutline.SetActive(true);
 
 			//update the vars from the other script
 			overHeated = minigun.overHeated;
@@ -164,14 +162,14 @@ public class cockpitUI : MonoBehaviour {
 				overHeatedTimer += Time.deltaTime;
 
 				if(overHeatedTimer >= 0.1){
-					overHeatedImage.fillAmount = 0;
+					overHeatedImage.SetActive(true);
 				}
 				if(overHeatedTimer >= 0.2){
-					overHeatedImage.fillAmount = 1;
+					overHeatedImage.SetActive(false);
 					overHeatedTimer = 0;
 				}
 			}
-			else overHeatedImage.fillAmount = 0;
+			else overHeatedImage.SetActive(false);
 
 			//fill the cannon reload thing
 			float fillAmountCannon =1-( cannonCDR/8);
@@ -263,23 +261,23 @@ public class cockpitUI : MonoBehaviour {
 		missleImage.gameObject.SetActive(false);
 		minionModeImage.gameObject.SetActive(false);
 		//outlines
-		miniGunImageOutline.gameObject.SetActive(false);
-		cannonReloadOutline.gameObject.SetActive(false);
-		missleImageOutline.gameObject.SetActive(false);
+		miniGunImageOutline.SetActive(false);
+		cannonReloadOutline.SetActive(false);
+		missleImageOutline.SetActive(false);
 	}
 
 	public void miniMapIndicators(int indicatorNum){
+		//indicatorNum = indicatorNum -1;
 		float dist = Vector3.Distance(transform.position,miniMapIndicatorsList[indicatorNum].transform.position);
 
-		if(dist < 50){
+		if(dist < 200){
 			if(miniMapIndicatorsList[indicatorNum].GetActive() != true){
 				miniMapIndicatorsList[indicatorNum].SetActive(true);
 			}
 			else{
 				miniMapIconScript miniMap = miniMapIndicatorsList[indicatorNum].GetComponent<miniMapIconScript>();
-				miniMap.life = 3;
+				miniMap.life = 0.5f;
 			}
-
 		}
 		//check distance between to see if he is ont he minimap.
 		else{
@@ -339,19 +337,26 @@ public class cockpitUI : MonoBehaviour {
 		}
 
 		if(flagTaken == true){	
+
+			diamondForObjective.SetActive(false);
+			KillForObjective.SetActive(true);
+
 			Vector3 diamondLook = player.transform.position - camPos.transform.position;
 			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
-			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
+			KillForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
 			
 			Vector3 direction = (player.transform.position + Vector3.up) - camPos.transform.position ;
 			
-			diamondForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
+			KillForObjective.transform.position = camPos.transform.position + direction.normalized * 5;
 		}
 		else if(mechHasFlag == true){
+			KillForObjective.SetActive(false);
 			diamondForObjective.SetActive(false);
 		}
 		else{
 
+			diamondForObjective.SetActive(true);
+			KillForObjective.SetActive(false);
 			Vector3 diamondLook = flag.transform.position - camPos.transform.position;
 			Vector3 newDir = Vector3.RotateTowards(transform.forward, diamondLook,100,100);
 			diamondForObjective.transform.rotation =  Quaternion.LookRotation(newDir);
