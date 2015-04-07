@@ -191,7 +191,7 @@ public class Weapon : MonoBehaviour {
 		
 		// Decrease fire-related spread quickly over time
 		if (fireSpread > 0) {
-			fireSpread -= FireSpreadRecoveryRate;
+			fireSpread -= FireSpreadRecoveryRate * Time.deltaTime;
 			
 			if (fireSpread < 0){
 				fireSpread = 0;
@@ -284,6 +284,7 @@ public class Weapon : MonoBehaviour {
 			magazineStatic3.SetActive(true);
 		}
 
+		spread = BaseSpread;
 	}
 	
 	public void SetPlayerReference(Player player){
