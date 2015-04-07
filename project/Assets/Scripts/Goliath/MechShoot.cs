@@ -239,6 +239,11 @@ public class MechShoot : MonoBehaviour {
 				cannonRet.SetActive(false);
 			}
 
+			if(allowedToShoot == false){
+				miniGunFirer.fire = false;
+				miniGunFirer.cannonShoot = false;
+			}
+
 			//********needs adjusting after model import*****************************************************
 			//aim the position of where the minigun is going to fire from
 			/*

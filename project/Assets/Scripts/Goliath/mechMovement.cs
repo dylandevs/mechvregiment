@@ -205,6 +205,8 @@ public class mechMovement : MonoBehaviour {
 		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
 
+			triggerFlagDropThing.allowedToShoot = true;
+
 			if(allowedToMoveRay == true){
 				currVel.x = 0;
 				currVel.z = 0;
@@ -304,6 +306,7 @@ public class mechMovement : MonoBehaviour {
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
 				triggerFlagDropThing.carrying = false;
+				triggerFlagDropThing.allowedToShoot = false;
 			}
 			restartTimer += Time.deltaTime;
 		}
