@@ -120,8 +120,6 @@ public class MechShoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		print(allowedToDrop);
-
 		//update aimer pos.
 		updateAimerPos();
 		//show missile landing zone

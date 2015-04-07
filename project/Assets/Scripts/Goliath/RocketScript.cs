@@ -124,8 +124,9 @@ public class RocketScript : MonoBehaviour {
 				}
 			}
 		}
-
-		pool.Deactivate(gameObject);
+		if (smokeParticles.particleEmitter.particleCount == 0) {
+			pool.Deactivate(gameObject);
+		}
 	}
 
 }

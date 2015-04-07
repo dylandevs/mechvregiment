@@ -72,7 +72,7 @@ public class mechMovement : MonoBehaviour {
 		shieldActive = true;
 		moveSpeedY = 10;
 		rotSpeedY = 1.5f;
-		dashSpeed = 20;
+		dashSpeed = 40;
 		moveSpeedX = 7.5f;
 		rotSpeedX = 2f;
 		allowedToDash = true;
@@ -224,6 +224,13 @@ public class mechMovement : MonoBehaviour {
 
 				Vector3 velMod = bottomHalf.transform.forward * dashSpeed;
 				currVel += velMod;
+			}
+
+			if(allowedToMoveRay == false){
+				Vector3 velAmount = rigidbody.velocity;
+				velAmount.y = -15;
+
+				rigidbody.velocity = velAmount;
 			}
 
 			if (lStickX != 0 && dash == false){
