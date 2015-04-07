@@ -1,0 +1,213 @@
+fileFormatVersion: 2
+guid: aecbdd9c251eef54e88b30e452cbbe35
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Debris
+    100002: Debris 1
+    100004: Debris 2
+    100006: Debris10
+    100008: Debris10 1
+    100010: Debris11
+    100012: Debris11 1
+    100014: Debris12
+    100016: Debris12 1
+    100018: Debris13
+    100020: Debris14
+    100022: Debris2
+    100024: Debris2 1
+    100026: Debris2 2
+    100028: Debris3
+    100030: Debris3 1
+    100032: Debris3 2
+    100034: Debris4
+    100036: Debris4 1
+    100038: Debris5
+    100040: Debris5 1
+    100042: Debris6
+    100044: Debris6 1
+    100046: Debris7
+    100048: Debris7 1
+    100050: Debris8
+    100052: Debris8 1
+    100054: Debris9
+    100056: Debris9 1
+    100058: LeftSection
+    100060: MiddleSection
+    100062: Right_MechSpawn_Section
+    100064: //RootNode
+    400000: Debris
+    400002: Debris 1
+    400004: Debris 2
+    400006: Debris10
+    400008: Debris10 1
+    400010: Debris11
+    400012: Debris11 1
+    400014: Debris12
+    400016: Debris12 1
+    400018: Debris13
+    400020: Debris14
+    400022: Debris2
+    400024: Debris2 1
+    400026: Debris2 2
+    400028: Debris3
+    400030: Debris3 1
+    400032: Debris3 2
+    400034: Debris4
+    400036: Debris4 1
+    400038: Debris5
+    400040: Debris5 1
+    400042: Debris6
+    400044: Debris6 1
+    400046: Debris7
+    400048: Debris7 1
+    400050: Debris8
+    400052: Debris8 1
+    400054: Debris9
+    400056: Debris9 1
+    400058: LeftSection
+    400060: MiddleSection
+    400062: Right_MechSpawn_Section
+    400064: //RootNode
+    2300000: Debris
+    2300002: Debris 1
+    2300004: Debris 2
+    2300006: Debris10
+    2300008: Debris10 1
+    2300010: Debris11
+    2300012: Debris11 1
+    2300014: Debris12
+    2300016: Debris12 1
+    2300018: Debris13
+    2300020: Debris14
+    2300022: Debris2
+    2300024: Debris2 1
+    2300026: Debris2 2
+    2300028: Debris3
+    2300030: Debris3 1
+    2300032: Debris3 2
+    2300034: Debris4
+    2300036: Debris4 1
+    2300038: Debris5
+    2300040: Debris5 1
+    2300042: Debris6
+    2300044: Debris6 1
+    2300046: Debris7
+    2300048: Debris7 1
+    2300050: Debris8
+    2300052: Debris8 1
+    2300054: Debris9
+    2300056: Debris9 1
+    3300000: Debris
+    3300002: Debris 1
+    3300004: Debris 2
+    3300006: Debris10
+    3300008: Debris10 1
+    3300010: Debris11
+    3300012: Debris11 1
+    3300014: Debris12
+    3300016: Debris12 1
+    3300018: Debris13
+    3300020: Debris14
+    3300022: Debris2
+    3300024: Debris2 1
+    3300026: Debris2 2
+    3300028: Debris3
+    3300030: Debris3 1
+    3300032: Debris3 2
+    3300034: Debris4
+    3300036: Debris4 1
+    3300038: Debris5
+    3300040: Debris5 1
+    3300042: Debris6
+    3300044: Debris6 1
+    3300046: Debris7
+    3300048: Debris7 1
+    3300050: Debris8
+    3300052: Debris8 1
+    3300054: Debris9
+    3300056: Debris9 1
+    4300000: Debris
+    4300002: Debris2
+    4300004: Debris3
+    4300006: Debris
+    4300008: Debris2
+    4300010: Debris3
+    4300012: Debris4
+    4300014: Debris5
+    4300016: Debris6
+    4300018: Debris7
+    4300020: Debris8
+    4300022: Debris9
+    4300024: Debris10
+    4300026: Debris11
+    4300028: Debris12
+    4300030: Debris
+    4300032: Debris2
+    4300034: Debris3
+    4300036: Debris4
+    4300038: Debris5
+    4300040: Debris6
+    4300042: Debris7
+    4300044: Debris8
+    4300046: Debris9
+    4300048: Debris10
+    4300050: Debris11
+    4300052: Debris12
+    4300054: Debris13
+    4300056: Debris14
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
