@@ -40,8 +40,10 @@ public class Mine : MonoBehaviour {
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
 		invExplosionRadius = 1 / ExplosionRadius;
-		pool.splitListener.StoreAudioSource(landingSound);
-		pool.splitListener.StoreAudioSource(explosionSound);
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(landingSound);
+			pool.splitListener.StoreAudioSource(explosionSound);
+		}
 	}
 	
 	// Update is called once per frame
