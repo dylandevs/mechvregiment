@@ -125,21 +125,24 @@ public class GoliathAvatar : MonoBehaviour {
 		lastSync = Time.time;
 
 		lastSyncPosBot = botJoint.position;
-		lastSyncPosTop = topJoint.position;
 		nextSyncPosBot = nextBotPos + currBotVelocity * syncDelay;
-		nextSyncPosTop = nextTopPos + currBotVelocity * syncDelay;
-		
-		lastSyncRotBot = botJoint.rotation;
-		lastSyncRotTop = topJoint.rotation;
-		lastSyncRotSpine = spineJoint.rotation;
-		lastSyncRotShouldR = shoulderRJoint.rotation;
-		lastSyncRotShouldL = shoulderLJoint.rotation;
 
-		nextSyncRotBot = nextBotRot;
-		nextSyncRotTop = nextTopRot;
-		nextSyncRotSpine = nextSpineRot;
-		nextSyncRotShouldR = nextShouldRRot;
-		nextSyncRotShouldL = nextShouldLRot;
+		if (!isDisabled){
+			lastSyncPosTop = topJoint.position;
+			nextSyncPosTop = nextTopPos + currBotVelocity * syncDelay;
+			
+			lastSyncRotBot = botJoint.rotation;
+			lastSyncRotTop = topJoint.rotation;
+			lastSyncRotSpine = spineJoint.rotation;
+			lastSyncRotShouldR = shoulderRJoint.rotation;
+			lastSyncRotShouldL = shoulderLJoint.rotation;
+
+			nextSyncRotBot = nextBotRot;
+			nextSyncRotTop = nextTopRot;
+			nextSyncRotSpine = nextSpineRot;
+			nextSyncRotShouldR = nextShouldRRot;
+			nextSyncRotShouldL = nextShouldLRot;
+		}
 
 		cachedVelocity = currBotVelocity;
 	}
@@ -168,8 +171,11 @@ public class GoliathAvatar : MonoBehaviour {
 	public void SetDisabled(){
 		SetLayerRecursively(topJoint.gameObject, LayerMask.NameToLayer("Non-Interactive Physics"));
 		topJoint.rigidbody.isKinematic = false;
+		topJoint.rigidbody.WakeUp();
 		shoulderLJoint.rigidbody.isKinematic = false;
+		shoulderLJoint.rigidbody.WakeUp();
 		shoulderRJoint.rigidbody.isKinematic = false;
+		shoulderRJoint.rigidbody.WakeUp();
 		isDisabled = true;
 	}
 
