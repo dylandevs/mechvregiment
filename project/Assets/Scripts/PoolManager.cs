@@ -12,6 +12,9 @@ public class PoolManager : MonoBehaviour {
 	public PlayerNetSend scavNetworker = null;
 	public GoliathNetworking goliathNetworker = null;
 
+	// Audio
+	public SplitAudioListener splitListener;
+
 	private List<GameObject> inactiveObjectPool = new List<GameObject>();
 	private List<GameObject> activeObjectPool = new List<GameObject>();
 	private List<GameObject> temporaryObjectPool = new List<GameObject>();

@@ -34,11 +34,14 @@ public class Mine : MonoBehaviour {
 
 	//Audio for explosion and landing sound
 	public AudioSource landingSound;
+	public AudioSource explosionSound;
 
 	// Use this for initializations
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
 		invExplosionRadius = 1 / ExplosionRadius;
+		pool.splitListener.StoreAudioSource(landingSound);
+		pool.splitListener.StoreAudioSource(explosionSound);
 	}
 	
 	// Update is called once per frame
@@ -75,6 +78,13 @@ public class Mine : MonoBehaviour {
 		isDetonated = true;
 
 		explosionPool.Retrieve (transform.position);
+
+		if (pool.splitListener){
+			pool.splitListener.PlayAudioSource(explosionSound, transform.position);
+		}
+		else{
+			explosionSound.Play();
+		}
 
 		if (!isAvatar){
 			Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius, damageableMask);
@@ -137,7 +147,12 @@ public class Mine : MonoBehaviour {
 		rigidbody.isKinematic = true;
 		isFixed = true;
 		transmitPosition = true;
-		landingSound.Play();
+		if (pool.splitListener){
+			pool.splitListener.PlayAudioSource(landingSound, transform.position);
+		}
+		else{
+			landingSound.Play();
+		}
 	}
 
 	void OnEnable(){

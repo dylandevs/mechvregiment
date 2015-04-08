@@ -99,7 +99,12 @@ public class SplitAudioListener : MonoBehaviour {
 						}
 
 						if (shortestDist > 0){
-							bestMatch.volume = (bestMatch.volume * triggerSource.maxDistance * triggerSource.maxDistance) / shortestDist;
+							float maxDist = triggerSource.maxDistance * triggerSource.maxDistance;
+							float newVol = Mathf.Max(0, ((maxDist - shortestDist) / maxDist));
+
+							newVol *= newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol;
+							newVol *= bestMatch.volume;
+							bestMatch.volume = newVol;
 						}
 					}
 

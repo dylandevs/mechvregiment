@@ -35,8 +35,10 @@ public class ControllerScript : MonoBehaviour {
 	float speedFactor = 1;
 	Vector3 initialSpineAngles;
 
-	private Vector3 groundCheckStart;
-	private Vector3 groundCheckMargin;
+	private float mainRad;
+	private float margin;
+	private float colliderRad;
+	private float offset;
 
 	// XInput variables
 	private GamePadState state;
@@ -141,6 +143,11 @@ public class ControllerScript : MonoBehaviour {
 		anim = player.anim;
 		fpsAnim = player.fpsAnim;
 		terrainCollider = GetComponent<CapsuleCollider>();
+
+		mainRad = terrainCollider.radius;
+		margin = Mathf.Sqrt(2 * mainRad) - mainRad;
+		colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
+		offset = (mainRad + margin) / 2;
 	}
 	
 	// Update is called once per frame
@@ -740,10 +747,7 @@ public class ControllerScript : MonoBehaviour {
 			}
 		}*/
 
-		float mainRad = terrainCollider.radius;
-		float margin = Mathf.Sqrt(2 * mainRad) - mainRad;
-		float colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
-		float offset = (mainRad + margin) / 2;
+
 		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.14f, collider.bounds.center.z);
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
