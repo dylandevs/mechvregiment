@@ -120,8 +120,6 @@ public class MechShoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		print(allowedToDrop);
-
 		//update aimer pos.
 		updateAimerPos();
 		//show missile landing zone
@@ -239,6 +237,11 @@ public class MechShoot : MonoBehaviour {
 			else if(inRangeCannonX == false || inRangeCannonY == false){
 				ableToShoot = false;
 				cannonRet.SetActive(false);
+			}
+
+			if(allowedToShoot == false){
+				miniGunFirer.fire = false;
+				miniGunFirer.cannonShoot = false;
 			}
 
 			//********needs adjusting after model import*****************************************************

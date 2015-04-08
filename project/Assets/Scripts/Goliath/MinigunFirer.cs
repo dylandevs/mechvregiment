@@ -90,14 +90,14 @@ public class MinigunFirer : MonoBehaviour {
 			}
 		}
 		
-		else if(Physics.Raycast (ray, out rayHit ,10)){
+		/*else if(Physics.Raycast (ray, out rayHit ,10)){
 			if(rayHit.collider.tag != "Terrain"){
 				Vector3 placeHitRock = rayHit.point;
 				Vector3 retPos = placeHitRock.normalized * -3;
 				miniGunReticle.transform.position = placeHitRock + retPos;
 				miniGunReticle.transform.forward = rayHit.normal;
 			}
-		}
+		}*/
 	
 
 		//this is for when it doesnt hit an object it still displays
@@ -229,14 +229,14 @@ public class MinigunFirer : MonoBehaviour {
 			}
 		}
 		
-		else if(Physics.Raycast (rayCannon, out rayHitCannon ,10)){
+		/*else if(Physics.Raycast (rayCannon, out rayHitCannon ,10)){
 			if(rayHitCannon.collider.tag != "Terrain"){
 				Vector3 placeHitRock = rayHitCannon.point;
 				Vector3 retPos = placeHitRock.normalized * -3;
 				cannonReticle.transform.position = placeHitRock + retPos;
 				cannonReticle.transform.forward = rayHit.normal;
 			}
-		}
+		}*/
 		
 		//this is for when it doesnt hit an object it still displays
 		else{

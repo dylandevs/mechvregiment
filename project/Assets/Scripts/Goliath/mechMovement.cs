@@ -72,7 +72,7 @@ public class mechMovement : MonoBehaviour {
 		shieldActive = true;
 		moveSpeedY = 10;
 		rotSpeedY = 1.5f;
-		dashSpeed = 20;
+		dashSpeed = 40;
 		moveSpeedX = 7.5f;
 		rotSpeedX = 2f;
 		allowedToDash = true;
@@ -205,6 +205,8 @@ public class mechMovement : MonoBehaviour {
 		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
 
+			triggerFlagDropThing.allowedToShoot = true;
+
 			if(allowedToMoveRay == true){
 				currVel.x = 0;
 				currVel.z = 0;
@@ -224,6 +226,13 @@ public class mechMovement : MonoBehaviour {
 
 				Vector3 velMod = bottomHalf.transform.forward * dashSpeed;
 				currVel += velMod;
+			}
+
+			if(allowedToMoveRay == false){
+				Vector3 velAmount = rigidbody.velocity;
+				velAmount.y = -15;
+
+				rigidbody.velocity = velAmount;
 			}
 
 			if (lStickX != 0 && dash == false){
@@ -294,14 +303,19 @@ public class mechMovement : MonoBehaviour {
 		
 		// when mech is disabled start timer to restart
 		if(currMechHealth <=0){
+
+			networker.photonView.RPC("GoliathDisabled",PhotonTargets.All);
+
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
 				triggerFlagDropThing.carrying = false;
+				triggerFlagDropThing.allowedToShoot = false;
 			}
 			restartTimer += Time.deltaTime;
 		}
 		
 		if(restartTimer >= 8){
+			networker.photonView.RPC("GoliathEnabled",PhotonTargets.All);
 			currMechHealth = mechHealth;
 			restartTimer = 0;
 		}

@@ -23,6 +23,7 @@ public class Minimap : MonoBehaviour {
 	public GameObject objective;
 	public GameObject goliath;
 	public GameObject mapIconPrefab;
+	public GameObject ammoGroup;
 
 	private List<MinimapIcon> icons = new List<MinimapIcon>();
 
@@ -30,6 +31,7 @@ public class Minimap : MonoBehaviour {
 	public Sprite goliathIcon;
 	public Sprite minionIcon;
 	public Sprite scavengerIcon;
+	public Sprite ammoIcon;
 	
 	// Use this for initialization
 	void Start () {
@@ -129,6 +131,16 @@ public class Minimap : MonoBehaviour {
 		iconScript.type = MinimapIcon.MMIconType.Goliath;
 		icons.Add(iconScript);
 
+		// Create ammo icon
+		foreach (Transform ammo in ammoGroup.transform){
+			icon = CreateIcon(ammoIcon);
+			//icon.transform.localScale = Vector3.one * 0.5f;
+			iconScript = icon.GetComponent<MinimapIcon> ();
+			iconScript.associatedObject = ammo.gameObject;
+			iconScript.type = MinimapIcon.MMIconType.Ammo;
+			icons.Add(iconScript);
+		}
+
 		// Create Minion icon
 		foreach (Transform minion in minionGroup.transform){
 			icon = CreateIcon(minionIcon);
@@ -170,6 +182,10 @@ public class Minimap : MonoBehaviour {
 			else if (icon.type == MinimapIcon.MMIconType.Minion){
 				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
 				icon.img.color = new Color(1, 1, 1, icon.GetEnemyOpacity());
+			}
+			else if (icon.type == MinimapIcon.MMIconType.Ammo){
+				icon.transform.localPosition = CalculateIconTranslation(icon.associatedObject.transform.position);
+				icon.transform.localRotation = Quaternion.Inverse(minimapRot.localRotation);
 			}
 		}
 	}

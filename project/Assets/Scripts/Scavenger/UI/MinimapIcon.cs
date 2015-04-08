@@ -5,7 +5,7 @@ using System.Collections;
 public class MinimapIcon : MonoBehaviour {
 
 	public GameObject associatedObject;
-	public enum MMIconType {Objective, Scavenger, Minion, Goliath};
+	public enum MMIconType {Objective, Scavenger, Minion, Goliath, Ammo};
 	public MMIconType type;
 	public BotAI minionScript = null;
 	public Image img;
