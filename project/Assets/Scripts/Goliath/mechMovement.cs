@@ -315,6 +315,7 @@ public class mechMovement : MonoBehaviour {
 		}
 		
 		if(restartTimer >= 8){
+			print("ifix");
 			networker.photonView.RPC("GoliathEnabled",PhotonTargets.All);
 			currMechHealth = mechHealth;
 			restartTimer = 0;
@@ -342,44 +343,49 @@ public class mechMovement : MonoBehaviour {
 	}// End of update
 
 	public void takeDamage(float amount,Vector3 direction){
+		/*if(currMechHealth <= 0){
+			print("ibroke");
+			networker.photonView.RPC("GoliathDisabled",PhotonTargets.All);
+		}*/
 
-		miniMapDamage(direction);
+		if(currMechHealth > 0){
+			miniMapDamage(direction);
 
-		damagedTime = 10;
+			damagedTime = 10;
 
-		if(shieldActive == true){
-			if(mechShield <= 0){
-				networker.photonView.RPC("BrokenShield",PhotonTargets.All);
-				templeShield.SetActive(false);
-				shieldActive = false;
+			if(shieldActive == true){
+				if(mechShield <= 0){
+					networker.photonView.RPC("BrokenShield",PhotonTargets.All);
+					templeShield.SetActive(false);
+					shieldActive = false;
+				}
+			}
+			if(shieldActive == false){
+				currMechHealth -= amount;
+			}
+			else{
+				mechShield -= amount;
+			}
+
+			//damage direction indicators calculations
+			float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
+			float amountFromRight = Vector3.Angle(direction,topHalfX.transform.right);
+			float amountFromLeft = Vector3.Angle(direction,topHalfX.transform.right * -1);
+
+			if(amountFromRight < amountFromLeft){
+				// its on the left side
+				damageIndicatorLeft.SetActive(true);
+				damageTurnOffLeft = 0.5f;
+			}
+			else if(amountFromForward > 150f && amountFromForward < 180f){
+				//shownon of them
+			}
+			else{
+				//its ont he right side
+				damageIndicatorRight.SetActive(true);
+				damageTurnOffRight= 0.5f;
 			}
 		}
-		if(shieldActive == false){
-			currMechHealth -= amount;
-		}
-		else{
-			mechShield -= amount;
-		}
-
-		//damage direction indicators calculations
-		float amountFromForward = Vector3.Angle(direction,topHalfX.transform.forward);
-		float amountFromRight = Vector3.Angle(direction,topHalfX.transform.right);
-		float amountFromLeft = Vector3.Angle(direction,topHalfX.transform.right * -1);
-
-		if(amountFromRight < amountFromLeft){
-			// its on the left side
-			damageIndicatorLeft.SetActive(true);
-			damageTurnOffLeft = 0.5f;
-		}
-		else if(amountFromForward > 150f && amountFromForward < 180f){
-			//shownon of them
-		}
-		else{
-			//its ont he right side
-			damageIndicatorRight.SetActive(true);
-			damageTurnOffRight= 0.5f;
-		}
-
 	}
 
 	void miniMapDamage(Vector3 direction){

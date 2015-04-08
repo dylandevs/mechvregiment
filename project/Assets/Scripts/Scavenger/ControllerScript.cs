@@ -18,6 +18,10 @@ public class ControllerScript : MonoBehaviour {
 	const float JumpSpeed = 6f;
 	const float ADSSpeedFactor = 0.7f;
 	const float CrouchSpeedFactor = 0.5f;
+	const float StandHeight = 3.33f;
+	const float CrouchHeight = 2.8f;
+
+	private CapsuleCollider terrainCollider;
 
 	public bool isKeyboard = false;
 	public int controllerId = -1;
@@ -31,6 +35,8 @@ public class ControllerScript : MonoBehaviour {
 	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
 	Vector3 halfColliderX;
 	Vector3 halfColliderZ;
+	Vector3 quarterColliderX;
+	Vector3 quarterColliderZ;
 	float speedFactor = 1;
 	Vector3 initialSpineAngles;
 
@@ -115,6 +121,8 @@ public class ControllerScript : MonoBehaviour {
 
 	// Weapon swap variables
 	private bool isSwapping = false;
+	private float swapTime = 0;
+	private float expectedSwapTime = 1;
 	private int swapAdjustment = 0;
 
 	// Flag pickup variables
@@ -129,13 +137,16 @@ public class ControllerScript : MonoBehaviour {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
-		groundCheckVector.y += collider.bounds.extents.y * 0.5f;
-		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.5f, 0, 0);
-		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.5f);
+		groundCheckVector.y += collider.bounds.extents.y * 0.2f;
+		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.4f, 0, 0);
+		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.4f);
+		quarterColliderX = halfColliderX / 2;
+		quarterColliderZ = halfColliderZ / 2;
 		initialSpineAngles = spineJoint.transform.localRotation.eulerAngles;
 
 		anim = player.anim;
 		fpsAnim = player.fpsAnim;
+		terrainCollider = GetComponent<CapsuleCollider>();
 	}
 	
 	// Update is called once per frame
@@ -171,6 +182,17 @@ public class ControllerScript : MonoBehaviour {
 				if (!state.IsConnected){
 					return;
 				}
+			}
+
+			// Emergency fallback for ending swapping state
+			if (isSwapping){
+				swapTime -= Time.deltaTime;
+				if (swapTime <= 0){
+					isSwapping = false;
+				}
+			}
+			else{
+				swapTime = expectedSwapTime;
 			}
 
 			// Ignore all input if dead
@@ -309,6 +331,7 @@ public class ControllerScript : MonoBehaviour {
 						fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
 
 						isSwapping = true;
+						swapTime = expectedSwapTime;
 					}
 					else if (DPad_Prev){
 						swapAdjustment = -1;
@@ -320,6 +343,7 @@ public class ControllerScript : MonoBehaviour {
 						fpsAnim.SetInteger(weaponHash, nextWeaponIndex);
 
 						isSwapping = true;
+						swapTime = expectedSwapTime;
 					}
 				}
 
@@ -633,6 +657,15 @@ public class ControllerScript : MonoBehaviour {
 
 		cameraAnim.SetBool(crouchHash, isCrouching);
 		gunCamAnim.SetBool(crouchHash, isCrouching);
+
+		if (isCrouching){
+			terrainCollider.height = CrouchHeight;
+			terrainCollider.center = new Vector3(0, CrouchHeight * 0.5f, 0);
+		}
+		else{
+			terrainCollider.height = StandHeight;
+			terrainCollider.center = new Vector3(0, StandHeight * 0.5f, 0);
+		}
 	}
 
 	// Sets facing according to input
@@ -688,6 +721,26 @@ public class ControllerScript : MonoBehaviour {
 			}
 		}
 		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
+				return true;
+			}
+		}
+		if (Physics.Raycast(transform.position + groundCheckVector + quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
+				return true;
+			}
+		}
+		if (Physics.Raycast(transform.position + groundCheckVector - quarterColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
+				return true;
+			}
+		}
+		if (Physics.Raycast(transform.position + groundCheckVector + quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
+			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
+				return true;
+			}
+		}
+		if (Physics.Raycast(transform.position + groundCheckVector - quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
