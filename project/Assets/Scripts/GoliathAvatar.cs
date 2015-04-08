@@ -54,9 +54,14 @@ public class GoliathAvatar : MonoBehaviour {
 
 	public GameObject carryEmitters;
 
+	private bool isDisabled = false;
+	private Vector3 armLOrigPos;
+	private Vector3 armROrigPos;
+
 	// Use this for initialization
 	void Start () {
-	
+		armLOrigPos = shoulderLJoint.localPosition;
+		armROrigPos = shoulderRJoint.localPosition;
 	}
 	
 	// Update is called once per frame
@@ -97,16 +102,18 @@ public class GoliathAvatar : MonoBehaviour {
 	private void InterpolateTransform(){
 		if (syncProg < syncDelay){
 			syncProg += Time.deltaTime;
-
-			topJoint.position = Vector3.Lerp (lastSyncPosTop, nextSyncPosTop, syncProg * invSyncDelay);
-			topJoint.rotation = Quaternion.Lerp (lastSyncRotTop, nextSyncRotTop, syncProg * invSyncDelay);
-
+	
 			botJoint.position = Vector3.Lerp (lastSyncPosBot, nextSyncPosBot, syncProg * invSyncDelay);
 			botJoint.rotation = Quaternion.Lerp (lastSyncRotBot, nextSyncRotBot, syncProg * invSyncDelay);
 
-			spineJoint.rotation = Quaternion.Lerp (lastSyncRotSpine, nextSyncRotSpine, syncProg * invSyncDelay);
-			shoulderRJoint.rotation = Quaternion.Lerp (lastSyncRotShouldR, nextSyncRotShouldR, syncProg * invSyncDelay);
-			shoulderLJoint.rotation = Quaternion.Lerp (lastSyncRotShouldL, nextSyncRotShouldL, syncProg * invSyncDelay);
+			if (!isDisabled){
+				topJoint.position = Vector3.Lerp (lastSyncPosTop, nextSyncPosTop, syncProg * invSyncDelay);
+				topJoint.rotation = Quaternion.Lerp (lastSyncRotTop, nextSyncRotTop, syncProg * invSyncDelay);
+
+				spineJoint.rotation = Quaternion.Lerp (lastSyncRotSpine, nextSyncRotSpine, syncProg * invSyncDelay);
+				shoulderRJoint.rotation = Quaternion.Lerp (lastSyncRotShouldR, nextSyncRotShouldR, syncProg * invSyncDelay);
+				shoulderLJoint.rotation = Quaternion.Lerp (lastSyncRotShouldL, nextSyncRotShouldL, syncProg * invSyncDelay);
+			}
 		}
 	}
 	
@@ -159,10 +166,39 @@ public class GoliathAvatar : MonoBehaviour {
 	}
 
 	public void SetDisabled(){
-
+		SetLayerRecursively(topJoint.gameObject, LayerMask.NameToLayer("Non-Interactive Physics"));
+		topJoint.rigidbody.isKinematic = false;
+		shoulderLJoint.rigidbody.isKinematic = false;
+		shoulderRJoint.rigidbody.isKinematic = false;
+		isDisabled = true;
 	}
 
 	public void SetEnabled(){
+		SetLayerRecursively(topJoint.gameObject, LayerMask.NameToLayer("Goliath"));
+		topJoint.rigidbody.velocity = Vector3.zero;
+		topJoint.rigidbody.angularVelocity = Vector3.zero;
+		topJoint.rigidbody.isKinematic = true;
 
+		shoulderLJoint.rigidbody.velocity = Vector3.zero;
+		shoulderLJoint.rigidbody.angularVelocity = Vector3.zero;
+		shoulderLJoint.localPosition = armLOrigPos;
+		shoulderLJoint.localRotation = Quaternion.identity;
+		shoulderLJoint.rigidbody.isKinematic = true;
+
+		shoulderRJoint.rigidbody.velocity = Vector3.zero;
+		shoulderRJoint.rigidbody.angularVelocity = Vector3.zero;
+		shoulderRJoint.localPosition = armROrigPos;
+		shoulderRJoint.localRotation = Quaternion.identity;
+		shoulderRJoint.rigidbody.isKinematic = true;
+
+		isDisabled = false;
+	}
+
+	void SetLayerRecursively(GameObject baseObj, int layer){
+		baseObj.layer = layer;
+		
+		foreach (Transform child in baseObj.transform){
+			SetLayerRecursively(child.gameObject, layer);
+		}
 	}
 }
