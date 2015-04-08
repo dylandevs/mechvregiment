@@ -32,13 +32,11 @@ public class ControllerScript : MonoBehaviour {
 	public Vector3 perpFacing = new Vector3(1, 0, 0);
 	[HideInInspector]
 	public Vector3 cameraOffset = Vector3.zero;
-	Vector3 groundCheckVector = new Vector3(0, 0.1f, 0);
-	Vector3 halfColliderX;
-	Vector3 halfColliderZ;
-	Vector3 quarterColliderX;
-	Vector3 quarterColliderZ;
 	float speedFactor = 1;
 	Vector3 initialSpineAngles;
+
+	private Vector3 groundCheckStart;
+	private Vector3 groundCheckMargin;
 
 	// XInput variables
 	private GamePadState state;
@@ -137,11 +135,7 @@ public class ControllerScript : MonoBehaviour {
 		// Adjust facing direction based on starting rotation
 		facing = transform.rotation * facing;
 		cameraOffset = playerCam.transform.localPosition;
-		groundCheckVector.y += collider.bounds.extents.y * 0.2f;
-		halfColliderX = new Vector3 (collider.bounds.extents.x * 0.4f, 0, 0);
-		halfColliderZ = new Vector3 (0, 0, collider.bounds.extents.z * 0.4f);
-		quarterColliderX = halfColliderX / 2;
-		quarterColliderZ = halfColliderZ / 2;
+
 		initialSpineAngles = spineJoint.transform.localRotation.eulerAngles;
 
 		anim = player.anim;
@@ -698,9 +692,9 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Testing for ground directly beneath and at edges of collider
 	public bool IsGrounded(){
-		RaycastHit rayHit;
+		//RaycastHit rayHit;
 
-		if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
+		/*if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
@@ -744,7 +738,23 @@ public class ControllerScript : MonoBehaviour {
 			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
 				return true;
 			}
+		}*/
+
+		float mainRad = 0.7f;
+		float margin = Mathf.Sqrt(2 * mainRad) - mainRad;
+		float colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
+		float offset = (mainRad + margin) / 2;
+		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset / 2, collider.bounds.center.z);
+
+		print (margin);
+		print (colliderRad);
+
+		Debug.DrawLine(groundCheckCenter, groundCheckCenter - Vector3.up * colliderRad);
+
+		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
+			return true;
 		}
+
 
 		return false;
 	}
