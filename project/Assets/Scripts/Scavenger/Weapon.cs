@@ -121,8 +121,9 @@ public class Weapon : MonoBehaviour {
 	private int fireHash = Animator.StringToHash("Firing");
 	private int reloadHash = Animator.StringToHash("Reload");
 
-	//Gunshot audio emitter
+	//Audio emitters
 	public AudioSource gunshotSound;
+	public AudioSource reloadSound;
 
 	void Awake(){
 		ammoRenderer.Initialize (MagSize);
@@ -641,6 +642,7 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	private void StartReloading(){
+		reloadSound.Play();
 		reloadProgress = ReloadTime;
 		isReloading = true;
 		isFiring = false;
