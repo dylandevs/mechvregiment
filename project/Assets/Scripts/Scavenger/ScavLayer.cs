@@ -59,6 +59,7 @@ public class ScavLayer : MonoBehaviour {
 		PlayerCam.cullingMask |= 1 << view1Layer;
 		GunCam.cullingMask ^= 1 << weaponLayer;
 		player.shootableLayer ^= 1 << shotColliderLayer;
+		player.groundedLayer ^= 1 << shotColliderLayer;
 	}
 
 	// Use this for initialization

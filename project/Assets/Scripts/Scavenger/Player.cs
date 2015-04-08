@@ -28,6 +28,7 @@ public class Player : MonoBehaviour {
 	public PlayerNetSend networkManager;
 	public ScavUI display;
 	public LayerMask shootableLayer;
+	public LayerMask groundedLayer;
 	public Animator anim;
 	public Animator fpsAnim;
 	public ScavLayer initializer;
