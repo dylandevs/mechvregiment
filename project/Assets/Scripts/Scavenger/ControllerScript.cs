@@ -740,16 +740,11 @@ public class ControllerScript : MonoBehaviour {
 			}
 		}*/
 
-		float mainRad = 0.7f;
+		float mainRad = terrainCollider.radius;
 		float margin = Mathf.Sqrt(2 * mainRad) - mainRad;
 		float colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
 		float offset = (mainRad + margin) / 2;
-		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset / 2, collider.bounds.center.z);
-
-		print (margin);
-		print (colliderRad);
-
-		Debug.DrawLine(groundCheckCenter, groundCheckCenter - Vector3.up * colliderRad);
+		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.14f, collider.bounds.center.z);
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
 			return true;

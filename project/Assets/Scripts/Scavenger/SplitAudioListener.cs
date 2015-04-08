@@ -44,7 +44,6 @@ public class SplitAudioListener : MonoBehaviour {
 			if (sourceGroup[0].clip == inputSource.clip){
 				AudioSource newSource = gameObject.AddComponent<AudioSource>();
 				newSource.clip = inputSource.clip;
-				newSource.volume = inputSource.volume;
 				sourceGroup.Add(newSource);
 
 				clipMatch = true;
@@ -56,7 +55,6 @@ public class SplitAudioListener : MonoBehaviour {
 			List<AudioSource> newSourceGroup = new List<AudioSource>();
 			AudioSource newSource = gameObject.AddComponent<AudioSource>();
 			newSource.clip = inputSource.clip;
-			newSource.volume = inputSource.volume;
 			newSourceGroup.Add(newSource);
 			audioSources.Add(newSourceGroup);
 			print ("Added");
@@ -64,7 +62,7 @@ public class SplitAudioListener : MonoBehaviour {
 	}
 
 	// Play audio if conditions are met
-	public void PlayAudioSource(AudioSource triggerSource){
+	public void PlayAudioSource(AudioSource triggerSource, Vector3 position = default(Vector3)){
 		foreach (List<AudioSource> sourceGroup in audioSources){
 			if (sourceGroup[0].clip == triggerSource.clip){
 				bool overlapAvoided = true;
@@ -85,6 +83,24 @@ public class SplitAudioListener : MonoBehaviour {
 						}
 
 						break;
+					}
+
+					bestMatch.volume = triggerSource.volume;
+
+					if (position != Vector3.zero){
+						float shortestDist = Vector3.SqrMagnitude (playerTransforms[0].position - position);
+						foreach(Transform playerPos in playerTransforms){
+							if (playerPos.gameObject.GetActive()){
+								float checkDistance = Vector3.SqrMagnitude (playerPos.position - position);
+								if (checkDistance < shortestDist){
+									shortestDist = checkDistance;
+								}
+							}
+						}
+
+						if (shortestDist > 0){
+							bestMatch.volume = (bestMatch.volume * triggerSource.maxDistance * triggerSource.maxDistance) / shortestDist;
+						}
 					}
 
 					bestMatch.Play();
