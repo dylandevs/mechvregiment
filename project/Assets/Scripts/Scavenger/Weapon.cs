@@ -318,7 +318,8 @@ public class Weapon : MonoBehaviour {
 	// Generates projectile at specified generation position
 	private void Fire(){
 		//Play shot audio
-		gunshotSound.Play();
+		//gunshotSound.Play();
+		player.game.listener.PlayAudioSource (gunshotSound);
 
 		// Creates bullet at given position
 		Vector3 bulletOrigin = player.playerCam.transform.position;
@@ -642,7 +643,8 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	private void StartReloading(){
-		reloadSound.Play();
+		//reloadSound.Play();
+		player.game.listener.PlayAudioSource (reloadSound);
 		reloadProgress = ReloadTime;
 		isReloading = true;
 		isFiring = false;

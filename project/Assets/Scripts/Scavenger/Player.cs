@@ -126,6 +126,9 @@ public class Player : MonoBehaviour {
 			weapons[i].SetPlayerReference(this);
 			weapons[i].SetControllerReference(this.playerController);
 			weapons[i].gameObject.SetActive(false);
+
+			game.listener.StoreAudioSource (weapons[i].gunshotSound);
+			game.listener.StoreAudioSource (weapons[i].reloadSound);
 		}
 
 		weapons [currentWeaponIndex].gameObject.SetActive (true);

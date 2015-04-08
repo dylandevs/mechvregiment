@@ -34,7 +34,7 @@ public class ScavGame : MonoBehaviour {
 	public CanvasGroup victoryModal;
 	public CanvasGroup defeatModal;
 	private CanvasGroup currentModal;
-	public AudioListener listener;
+	public SplitAudioListener listener;
 
 	// Use this for initialization
 	void Start () {
@@ -45,7 +45,8 @@ public class ScavGame : MonoBehaviour {
 
 		invUiTransitionTime = 1 / uiTransitionTime;
 
-		//BeginRound();
+
+		BeginRound();
 	}
 	
 	// Update is called once per frame
