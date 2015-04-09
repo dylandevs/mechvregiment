@@ -58,18 +58,10 @@ public class GoliathAvatar : MonoBehaviour {
 	private Vector3 armLOrigPos;
 	private Vector3 armROrigPos;
 
-	public SplitAudioListener splitListener;
-	public AudioSource minigunSound;
-	public AudioSource cannonSound;
-
 	// Use this for initialization
 	void Start () {
 		armLOrigPos = shoulderLJoint.localPosition;
 		armROrigPos = shoulderRJoint.localPosition;
-		if(splitListener){
-			splitListener.StoreAudioSource(minigunSound);
-			splitListener.StoreAudioSource(cannonSound);
-		}
 	}
 	
 	// Update is called once per frame
@@ -214,11 +206,5 @@ public class GoliathAvatar : MonoBehaviour {
 		foreach (Transform child in baseObj.transform){
 			SetLayerRecursively(child.gameObject, layer);
 		}
-	}
-	public void PlayCannonSound(){
-		splitListener.PlayAudioSource(cannonSound, cannonSound.gameObject.transform.position);
-	}
-	public void PlayMinigunSound(){
-		splitListener.PlayAudioSource(minigunSound, minigunSound.gameObject.transform.position);
 	}
 }
