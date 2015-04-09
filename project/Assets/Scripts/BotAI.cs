@@ -95,6 +95,7 @@ public class BotAI : MonoBehaviour {
 	public AudioSource yes1Sound;
 	public AudioSource yes2Sound;
 	public AudioSource fireSound;
+	public AudioSource deathSound;
 
 	// Use this for initialization
 	void Start () {
@@ -122,6 +123,7 @@ public class BotAI : MonoBehaviour {
 			pool.splitListener.StoreAudioSource(yes1Sound);
 			pool.splitListener.StoreAudioSource(yes2Sound);
 			pool.splitListener.StoreAudioSource(fireSound);
+			pool.splitListener.StoreAudioSource(deathSound);
 		}
 	}
 	
@@ -230,8 +232,14 @@ public class BotAI : MonoBehaviour {
 			}
 		}
 		else{
-			wreckagePool.Retrieve(transform.position, transform.rotation);
+			wreckagePool.Retrieve(transform.position, transform.rotation);if (pool.splitListener){
+				pool.splitListener.PlayAudioSource(deathSound, transform.position);
+			}
+			else{
+				deathSound.Play();
+			}
 			pool.Deactivate(gameObject);
+
 			pooled.scavNetworker.photonView.RPC("DestroyMinion", PhotonTargets.All, remoteId);
 			remoteId = -1;
 		}
