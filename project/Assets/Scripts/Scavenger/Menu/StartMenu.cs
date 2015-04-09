@@ -32,6 +32,9 @@ public class StartMenu : MonoBehaviour {
 	private bool isSubMenu = false;
 	private bool loading = false;
 
+	public AudioSource switchSound;
+	public AudioSource selectSound;
+
 	// Use this for initialization
 	void Start () {
 		//Application.LoadLevelAsync("ScavengerScene");
@@ -117,9 +120,11 @@ public class StartMenu : MonoBehaviour {
 			currentSelectedOption = 0;
 		}
 		ExecuteEvents.Execute(mainOptions[currentSelectedOption].gameObject, eventExecutor, ExecuteEvents.pointerEnterHandler);
+		switchSound.Play ();
 	}
 
 	void RegisterOptionSelect(){
+		selectSound.Play();
 		switch (mainOptions[currentSelectedOption].tag){
 		case "StartButton":
 			TriggerTransition(mainMenu, loadingScreen);

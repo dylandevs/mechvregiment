@@ -20,8 +20,6 @@ public class MinionAvatar : MonoBehaviour {
 	PoolManager pool;
 	public Pooled pooled;
 
-	public AudioSource yes1Sound;
-	public AudioSource yes2Sound;
 	public AudioSource fireSound;
 
 	[HideInInspector]
@@ -37,9 +35,6 @@ public class MinionAvatar : MonoBehaviour {
 		lastSyncRot = transform.rotation;
 		nextSyncRot = transform.rotation;
 		lastSync = Time.time;
-
-		yes1Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
-		yes2Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
 	}
 	
 	// Update is called once per frame
@@ -67,13 +62,6 @@ public class MinionAvatar : MonoBehaviour {
 	
 		lastSyncRot = transform.rotation;
 		nextSyncRot = nextRot;
-
-		if(Random.Range(0f, 1f) < 0.5){
-			yes1Sound.Play();
-		}
-		else {
-			yes2Sound.Play();
-		}
 	}
 
 	public void Damage(float damage){

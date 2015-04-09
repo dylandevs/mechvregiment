@@ -58,7 +58,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 			for (int i = 0; i < minionManager.transform.childCount; i++){
 				minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
 				if (minions[i].gameObject.GetActive()){
-					minions[i].remoteId = i;
+					photonView.RPC ("FirstTimeMinionActivation", PhotonTargets.All, minions[i].pooled.index, minions[i].transform.position);
 				}
 			}
 			
@@ -276,6 +276,9 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	}
 
 	// Minion RPC
+	[RPC]
+	void FirstTimeMinionActivation(int networkId, Vector3 position){}
+
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){}
 
