@@ -52,19 +52,6 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		if (!minionScriptsRetrieved){
-			minions = new BotAI[minionManager.transform.childCount];
-			for (int i = 0; i < minionManager.transform.childCount; i++){
-				minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
-				if (minions[i].gameObject.GetActive()){
-					photonView.RPC ("FirstTimeMinionActivation", PhotonTargets.All, minions[i].pooled.index, minions[i].transform.position);
-				}
-			}
-			
-			minionScriptsRetrieved = true;
-		}
-
         if(PhotonNetwork.connectionStateDetailed.ToString() == "JoinedLobby"){
             Debug.Log(PhotonNetwork.connectionStateDetailed.ToString());
             MakeRoom();
@@ -73,6 +60,18 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 			sendTimer -= Time.deltaTime;
 
 			if (connectionReceived){
+
+				if (!minionScriptsRetrieved){
+					minions = new BotAI[minionManager.transform.childCount];
+					for (int i = 0; i < minionManager.transform.childCount; i++){
+						minions[i] = minionManager.transform.GetChild(i).GetComponent<BotAI>();
+						if (minions[i].gameObject.GetActive()){
+							photonView.RPC ("FirstTimeMinionActivation", PhotonTargets.All, minions[i].pooled.index, minions[i].transform.position);
+						}
+					}
+					
+					minionScriptsRetrieved = true;
+				}
 
 
 	        	if(sendTimer <= 0){
