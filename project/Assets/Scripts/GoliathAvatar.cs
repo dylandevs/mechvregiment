@@ -58,6 +58,9 @@ public class GoliathAvatar : MonoBehaviour {
 	private Vector3 armLOrigPos;
 	private Vector3 armROrigPos;
 
+	public AudioSource minigunSound;
+	public AudioSource cannonSound;
+
 	// Use this for initialization
 	void Start () {
 		armLOrigPos = shoulderLJoint.localPosition;
@@ -97,6 +100,11 @@ public class GoliathAvatar : MonoBehaviour {
 
 		anim.SetFloat (fwdHash, forwardSpeed);
 		anim.SetFloat (rgtHash, rightSpeed);
+
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(minigunSound);
+			pool.splitListener.StoreAudioSource(cannonSound);
+		}
 	}
 
 	private void InterpolateTransform(){
@@ -205,6 +213,23 @@ public class GoliathAvatar : MonoBehaviour {
 		
 		foreach (Transform child in baseObj.transform){
 			SetLayerRecursively(child.gameObject, layer);
+		}
+	}
+
+	public void FireMinigun(){
+		if (pool.splitListener){
+			pool.splitListener.PlayAudioSource(minigunSound, minigunSound.gameObject.transform.position);
+		}
+		else{
+			minigunSound.Play();
+		}
+	}
+	public void FireCannon(){
+		if (pool.splitListener){
+			pool.splitListener.PlayAudioSource(cannonSound, cannonSound.gameObject.transform.position);
+		}
+		else{
+			cannonSound.Play();
 		}
 	}
 }

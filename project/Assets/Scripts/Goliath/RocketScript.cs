@@ -36,6 +36,9 @@ public class RocketScript : MonoBehaviour {
 
 	void Start(){
 		pool = transform.parent.GetComponent<PoolManager>();
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(this.GetComponent<AudioSource>());
+		}
 	}
 
 	// Update is called once per frame
@@ -82,6 +85,9 @@ public class RocketScript : MonoBehaviour {
 		hitGround = false;
 		missleMesh.SetActive(true);
 		hitAPlayer = false;
+		if(pool.splitListener){
+			pool.splitListener.PlayAudioSource(this.GetComponent<AudioSource>(), transform.position);
+		}
 	}
 
 	public void SetTarget(Vector3 newTarget){
