@@ -92,6 +92,7 @@ public class BotAI : MonoBehaviour {
 	//Audio sources
 	public AudioSource yes1Sound;
 	public AudioSource yes2Sound;
+	public AudioSource fireSound;
 
 	// Use this for initialization
 	void Start () {
@@ -114,6 +115,12 @@ public class BotAI : MonoBehaviour {
 
 		yes1Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
 		yes2Sound.pitch = 1 + Random.Range(-0.2f, 0.2f);
+		fireSound.pitch = 1 + Random.Range(-0.2f, 0.2f);
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(yes1Sound);
+			pool.splitListener.StoreAudioSource(yes2Sound);
+			pool.splitListener.StoreAudioSource(fireSound);
+		}
 	}
 	
 	// Update is called once per frame
@@ -264,10 +271,20 @@ public class BotAI : MonoBehaviour {
 				navMeshAgent.speed = RunSpeed;
 				navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
 				if(Random.Range(0f, 1f) < 0.5){
-					yes1Sound.Play();
+					if (pool.splitListener){
+						pool.splitListener.PlayAudioSource(yes1Sound, transform.position);
+					}
+					else{
+						yes1Sound.Play();
+					}
 				}
 				else {
-					yes2Sound.Play();
+					if (pool.splitListener){
+						pool.splitListener.PlayAudioSource(yes2Sound, transform.position);
+					}
+					else{
+						yes2Sound.Play();
+					}
 				}
 			}
 			else{
@@ -502,6 +519,12 @@ public class BotAI : MonoBehaviour {
 		bulletScript.bulletMarkPool = impactPool;
 
 		pooled.scavNetworker.photonView.RPC ("CreateMinionBullet", PhotonTargets.All, bulletGenPos, direction, remoteId);
+		if (pool.splitListener){
+			pool.splitListener.PlayAudioSource(fireSound, transform.position);
+		}
+		else{
+			fireSound.Play();
+		}
 	}
 
 	// Fires bullet in direction provided

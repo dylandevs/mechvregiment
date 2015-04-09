@@ -22,6 +22,7 @@ public class MinionAvatar : MonoBehaviour {
 
 	public AudioSource yes1Sound;
 	public AudioSource yes2Sound;
+	public AudioSource fireSound;
 
 	[HideInInspector]
 	public int remoteId = -1;
@@ -63,7 +64,7 @@ public class MinionAvatar : MonoBehaviour {
 		
 		lastSyncPos = transform.position;
 		nextSyncPos = nextPos + currVelocity * syncDelay;
-		
+	
 		lastSyncRot = transform.rotation;
 		nextSyncRot = nextRot;
 
