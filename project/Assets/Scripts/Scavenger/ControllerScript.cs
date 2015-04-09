@@ -78,6 +78,7 @@ public class ControllerScript : MonoBehaviour {
 	public bool isSprinting = false;
 	[HideInInspector]
 	public bool aimingDownSight = false;
+	private float adsHoldTime = 1;
 	
 	// Publicly accessible controller attributes
 	[HideInInspector]
@@ -354,15 +355,33 @@ public class ControllerScript : MonoBehaviour {
 				}
 
 				// Toggle ADS
-				if (TriggersL != 0 && currentlyGrounded && !currentWeapon.IsReloading() && !isSprinting && !isSwapping) {
-					player.ToggleADS(true);
-					fpsAnim.SetBool(adsHash, true);
-					cameraAnim.SetBool(adsHash, true);
-					gunCamAnim.SetBool(adsHash, true);
-					anim.SetBool(adsHash, true);
-					aimingDownSight = true;
-					spread += currentWeapon.AdsSpreadAdjust;
-					speedFactor *= ADSSpeedFactor;
+				if (TriggersL != 0 && !currentWeapon.IsReloading() && !isSprinting && !isSwapping) {
+					if (currentlyGrounded){
+						player.ToggleADS(true);
+						fpsAnim.SetBool(adsHash, true);
+						cameraAnim.SetBool(adsHash, true);
+						gunCamAnim.SetBool(adsHash, true);
+						anim.SetBool(adsHash, true);
+						aimingDownSight = true;
+						spread += currentWeapon.AdsSpreadAdjust;
+						speedFactor *= ADSSpeedFactor;
+					
+						adsHoldTime = 1;
+					}
+					else{
+						// Some tolerance for falling and holding ADS
+						if (aimingDownSight){
+							adsHoldTime -= Time.deltaTime;
+							if (adsHoldTime <= 0){
+								player.ToggleADS(false);
+								fpsAnim.SetBool(adsHash, false);
+								cameraAnim.SetBool(adsHash, false);
+								gunCamAnim.SetBool(adsHash, false);
+								anim.SetBool(adsHash, false);
+								aimingDownSight = false;
+							}
+						}
+					}
 				}
 				else{
 					player.ToggleADS(false);
@@ -699,54 +718,6 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Testing for ground directly beneath and at edges of collider
 	public bool IsGrounded(){
-		//RaycastHit rayHit;
-
-		/*if (Physics.Raycast(transform.position + groundCheckVector, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector + halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector - halfColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector + quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector - quarterColliderZ, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector + quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}
-		if (Physics.Raycast(transform.position + groundCheckVector - quarterColliderX, -Vector3.up, out rayHit, groundCheckVector.y, player.shootableLayer)){
-			if (rayHit.collider.tag == "Terrain" || rayHit.collider.tag == "Player" || rayHit.collider.tag == "AmmoCrate" || rayHit.collider.tag == "Goliath"){
-				return true;
-			}
-		}*/
-
 
 		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.12f, collider.bounds.center.z);
 
