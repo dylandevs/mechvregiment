@@ -119,6 +119,12 @@ public class GoliathGameScript : MonoBehaviour {
 		blackOut.SetActive(true);
 		mechShoot.allowedToShootGame = false;
 		mechMesh.transform.position = spawnPoint.transform.position;
+
+		if (Input.GetKey (KeyCode.R)) {
+			PhotonNetwork.Disconnect();
+			Application.LoadLevel("GoliathScene"); 
+		}
+
 		if(readyToGo == false){
 			if(menu1B == true){
 				menu1.SetActive(true);

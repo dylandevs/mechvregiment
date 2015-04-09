@@ -52,9 +52,17 @@ public class PoolManager : MonoBehaviour {
 			inactiveObjectPool[i].SetActive(false);
 			inactiveObjectPool[i].transform.SetParent(transform, !retainLocal);
 
+
 			Pooled pooledScript = null;
 			if (pooledScript = inactiveObjectPool[i].GetComponent<Pooled>() as Pooled){
 				pooledScript.index = transform.childCount - 1;
+
+				if (scavNetworker){
+					pooledScript.scavNetworker = scavNetworker;
+				}
+				if (goliathNetworker){
+					pooledScript.goliathNetworker = goliathNetworker;
+				}
 			}
 		}
 	}

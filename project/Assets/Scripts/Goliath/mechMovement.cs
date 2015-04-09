@@ -61,7 +61,7 @@ public class mechMovement : MonoBehaviour {
 
 
 	bool allowedToMoveRay;
-	bool dash;
+	public bool dash;
 
 
 	// Use this for initialization

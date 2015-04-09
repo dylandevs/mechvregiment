@@ -56,6 +56,7 @@ public class cockpitUI : MonoBehaviour {
 	bool shieldActive;
 	bool flagTaken;
 	bool mechHasFlag;
+	bool dash;
 	//modes
 	bool minigunMode;
 	bool missleMode;
@@ -92,16 +93,19 @@ public class cockpitUI : MonoBehaviour {
 		//healthbar stuff
 		float fillAmountHealth = currMechHealth / 750;
 		healthBar.fillAmount = fillAmountHealth;
-		healthBar.color = Color.Lerp(Color.green, Color.red, fillAmountHealth);
+		healthBar.color = Color.Lerp(Color.blue, Color.blue, fillAmountHealth);
 
 		float fillAmountShield = mechShield / 1000;
 		ShieldBar.fillAmount = fillAmountShield;
-		ShieldBar.color = Color.Lerp(Color.green, Color.red, fillAmountShield);
+		ShieldBar.color = Color.Lerp(Color.red, Color.green, fillAmountShield);
 
-		float fillAmountDash = 1 - (dashTimer / 5);
-		dashBar.fillAmount = fillAmountHealth;
-		dashBar.color = Color.Lerp(Color.green, Color.red, fillAmountHealth);
-
+		if (dash == true) {
+			dashBar.fillAmount = 0;
+		} else {
+			float fillAmountDash = 1 - (dashTimer / 5);
+			dashBar.fillAmount = fillAmountDash;
+			dashBar.color = Color.Lerp (Color.red, Color.red, fillAmountDash);
+		}
 
 
 			for(int i = 0;i < playerAvatars.Length;i++){
