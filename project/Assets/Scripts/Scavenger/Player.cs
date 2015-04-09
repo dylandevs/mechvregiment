@@ -168,7 +168,7 @@ public class Player : MonoBehaviour {
 		anim.SetTrigger(resetHash);
 		fpsAnim.SetTrigger(resetHash);
 
-		networkManager.photonView.RPC ("PlayerRespawn", PhotonTargets.All, initializer.Layer - 1);
+		networkManager.photonView.RPC ("PlayerRespawn", PhotonTargets.All, initializer.Layer - 1, transform.position);
 
 		foreach (Weapon weapon in weapons){
 			if (weapon){
