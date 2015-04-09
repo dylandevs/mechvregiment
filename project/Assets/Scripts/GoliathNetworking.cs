@@ -55,17 +55,17 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 //UPDATE
 
 	void Update () {
-		/*if (!minionScriptsRetrieved){
+		if (!minionScriptsRetrieved){
 			minionAvatars = new MinionAvatar[minionManager.transform.childCount];
 			for (int i = 0; i < minionManager.transform.childCount; i++){
 				minionAvatars[i] = minionManager.transform.GetChild(i).GetComponent<MinionAvatar>();
-				if (minionAvatars[i].gameObject.GetActive()){
+				/*if (minionAvatars[i].gameObject.GetActive()){
 					minionAvatars[i].remoteId = i;
-				}
+				}*/
 			}
 
 			minionScriptsRetrieved = true;
-		}*/
+		}
 
 		sendTimer -= Time.deltaTime;
 
