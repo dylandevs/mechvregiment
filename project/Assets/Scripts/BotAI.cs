@@ -183,7 +183,6 @@ public class BotAI : MonoBehaviour {
 				else if (state == State.Traveling){
 					if (HasAgentArrivedAtDest()){
 						state = State.AllClear;
-						print ("arrived");
 					}
 				}
 				else if (state == State.Searching){
@@ -278,7 +277,6 @@ public class BotAI : MonoBehaviour {
 	public void SetNewWaypoint(){
 		if (controllable){
 			if (navMeshAgent.enabled){
-				print ("waypoint set");
 				state = State.Traveling;
 				navMeshAgent.speed = RunSpeed;
 				navMeshAgent.destination = GetRandPos(WaypointRad, waypoint.transform.position);
@@ -298,8 +296,6 @@ public class BotAI : MonoBehaviour {
 						yes2Sound.Play();
 					}
 				}
-
-				print (waypoint.transform.position + " " + navMeshAgent.destination);
 			}
 			else{
 				waypointQueued = true;
@@ -341,11 +337,6 @@ public class BotAI : MonoBehaviour {
 				currentTarget = ally.currentTarget;
 				lastSighted = ally.lastSighted;
 			}
-
-			//state = ally.state;
-			
-			//alertTime = ally.alertTime;
-			//print (alertTime);
 		}
 	}
 
@@ -387,8 +378,6 @@ public class BotAI : MonoBehaviour {
 						lastSighted = ally.lastSighted;
 
 						alertTime = ally.alertTime;
-
-						print (pooled.index);
 					}
 				}
 			}
@@ -418,7 +407,6 @@ public class BotAI : MonoBehaviour {
 
 				// Start searching area
 				else if (prevState > State.Searching) {
-					print ("Setsearching");
 					searchTime = SearchDuration;
 					newState = State.Searching;
 				}
