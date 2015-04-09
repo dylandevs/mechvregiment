@@ -8,6 +8,7 @@ public class SplitAudioListener : MonoBehaviour {
 	private Transform[] playerTransforms;
 	private List<List<AudioSource>> audioSources = new List<List<AudioSource>>();
 	public float overlapTolerance = 0.3f;
+	public int maxPoolSize = 15;
 
 	// Use this for initialization
 	void Start () {
@@ -42,11 +43,13 @@ public class SplitAudioListener : MonoBehaviour {
 		bool clipMatch = false;
 		foreach (List<AudioSource> sourceGroup in audioSources){
 			if (sourceGroup[0].clip == inputSource.clip){
-				AudioSource newSource = gameObject.AddComponent<AudioSource>();
-				newSource.clip = inputSource.clip;
-				sourceGroup.Add(newSource);
+				if (sourceGroup.Count < maxPoolSize){
+					AudioSource newSource = gameObject.AddComponent<AudioSource>();
+					newSource.clip = inputSource.clip;
+					sourceGroup.Add(newSource);
 
-				clipMatch = true;
+					clipMatch = true;
+				}
 				break;
 			}
 		}
@@ -63,55 +66,57 @@ public class SplitAudioListener : MonoBehaviour {
 
 	// Play audio if conditions are met
 	public void PlayAudioSource(AudioSource triggerSource, Vector3 position = default(Vector3)){
-		foreach (List<AudioSource> sourceGroup in audioSources){
-			if (sourceGroup[0].clip == triggerSource.clip){
-				bool overlapAvoided = true;
-
-				foreach (AudioSource checkingSource in sourceGroup){
-					if (checkingSource.isPlaying && checkingSource.time < overlapTolerance){
-						overlapAvoided = false;
-					}
+		float shortestDistSqr = Vector3.SqrMagnitude (playerTransforms[0].position - position);
+		float maxDistSqr = triggerSource.maxDistance * triggerSource.maxDistance;
+		foreach(Transform playerPos in playerTransforms){
+			if (playerPos.gameObject.GetActive()){
+				float checkDistance = Vector3.SqrMagnitude (playerPos.position - position);
+				if (checkDistance < shortestDistSqr){
+					shortestDistSqr = checkDistance;
 				}
+			}
+		}
 
-				// If not too close temporally to other source playing, play audio
-				if (overlapAvoided){
-					AudioSource bestMatch = sourceGroup[0];
+		if (shortestDistSqr < maxDistSqr){
+			foreach (List<AudioSource> sourceGroup in audioSources){
+				if (sourceGroup[0].clip == triggerSource.clip){
+					bool overlapAvoided = true;
 
 					foreach (AudioSource checkingSource in sourceGroup){
-						if (!checkingSource.isPlaying || checkingSource.time > bestMatch.time){
-							bestMatch = checkingSource;
+						if (checkingSource.isPlaying && checkingSource.time < overlapTolerance){
+							overlapAvoided = false;
 						}
-
-						break;
 					}
 
-					bestMatch.volume = triggerSource.volume;
+					// If not too close temporally to other source playing, play audio
+					if (overlapAvoided){
+						AudioSource bestMatch = sourceGroup[0];
 
-					if (position != Vector3.zero){
-						float shortestDist = Vector3.SqrMagnitude (playerTransforms[0].position - position);
-						foreach(Transform playerPos in playerTransforms){
-							if (playerPos.gameObject.GetActive()){
-								float checkDistance = Vector3.SqrMagnitude (playerPos.position - position);
-								if (checkDistance < shortestDist){
-									shortestDist = checkDistance;
-								}
+						foreach (AudioSource checkingSource in sourceGroup){
+							if (!checkingSource.isPlaying || checkingSource.time > bestMatch.time){
+								bestMatch = checkingSource;
+							}
+
+							break;
+						}
+
+						bestMatch.volume = triggerSource.volume;
+
+						if (position != Vector3.zero){
+							if (shortestDistSqr > 0){
+								float newVol = Mathf.Max(0, ((maxDistSqr - shortestDistSqr) / maxDistSqr));
+
+								newVol *= newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol;
+								newVol *= bestMatch.volume;
+								bestMatch.volume = newVol;
 							}
 						}
 
-						if (shortestDist > 0){
-							float maxDist = triggerSource.maxDistance * triggerSource.maxDistance;
-							float newVol = Mathf.Max(0, ((maxDist - shortestDist) / maxDist));
-
-							newVol *= newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol * newVol;
-							newVol *= bestMatch.volume;
-							bestMatch.volume = newVol;
-						}
+						bestMatch.Play();
 					}
 
-					bestMatch.Play();
+					break;
 				}
-
-				break;
 			}
 		}
 	}
