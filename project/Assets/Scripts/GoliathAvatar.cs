@@ -66,6 +66,10 @@ public class GoliathAvatar : MonoBehaviour {
 	void Start () {
 		armLOrigPos = shoulderLJoint.localPosition;
 		armROrigPos = shoulderRJoint.localPosition;
+		if (splitListener){
+			splitListener.StoreAudioSource(minigunSound);
+			splitListener.StoreAudioSource(cannonSound);
+		}
 	}
 	
 	// Update is called once per frame
@@ -101,11 +105,6 @@ public class GoliathAvatar : MonoBehaviour {
 
 		anim.SetFloat (fwdHash, forwardSpeed);
 		anim.SetFloat (rgtHash, rightSpeed);
-
-		if (splitListener){
-			splitListener.StoreAudioSource(minigunSound);
-			splitListener.StoreAudioSource(cannonSound);
-		}
 	}
 
 	private void InterpolateTransform(){
