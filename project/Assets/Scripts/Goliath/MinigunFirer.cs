@@ -103,8 +103,6 @@ public class MinigunFirer : MonoBehaviour {
 		//this is for when it doesnt hit an object it still displays
 		else{
 
-			print("in the else");
-
 			Vector3 vecEnd = tracerStart.transform.forward * 100;
 			Vector3 miniArmPos = tracerStart.transform.position; 
 			Vector3 sendBack =  miniArmPos += vecEnd;
