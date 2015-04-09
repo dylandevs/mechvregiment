@@ -438,12 +438,18 @@ public class MechShoot : MonoBehaviour {
 			//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 			if(Physics.Raycast (minMode, out minHit,75,mask)){
 				if(minHit.collider.tag == "Terrain"){
+
+						print ("minion ray cast hit");
+
 					lightBeam.SetActive(true);
 					notLightBeam.SetActive(false);
 					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
 
 					if(lTrig > 0.9f){
+
+							print ("place flag doen");
+
 						pilotAnimator.SetBool(minionPlace,true);
 						pilotAnimator.SetBool(minionIdle,false);
 						
@@ -452,6 +458,9 @@ public class MechShoot : MonoBehaviour {
 
 					if(lTrig < 0.2f && flagDown == true){
 						
+
+						print("this is actually where the thing gets place");
+
 						minionFlag.transform.position = placeHitRock;
 						minionFlag.SetActive(true);
 						
@@ -532,6 +541,8 @@ public class MechShoot : MonoBehaviour {
 		miniGunReticle.SetActive (false);
 		lightBeam.SetActive(false);
 		notLightBeam.SetActive (false);
+		miniGunFirer.fire = false;
+		miniGunFirer.cannonShoot = false;
 	}
 
 	public void releaseFlag(){

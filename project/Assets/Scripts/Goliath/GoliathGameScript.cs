@@ -78,15 +78,21 @@ public class GoliathGameScript : MonoBehaviour {
 
 		//checks if  the game has ended then does stuff
 		if(gameEnded == true){
+
+			print("game ended");
+
 			if(life >= 0){
 				life -= Time.deltaTime;
 			}
+
 			//change colour of the screens
 			float lerpAmnt = life / 3;
 			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
 			Color tempColour = screens.renderer.material.color;
 			tempColour.a = Mathf.Lerp(0,1,1 - lerpAmnt);
 			screens.renderer.material.color = tempColour;
+
+			print(lerpAmnt);
 
 			if(win == true){
 				artifactDefendedImage.fillAmount = 1 - lerpAmnt;

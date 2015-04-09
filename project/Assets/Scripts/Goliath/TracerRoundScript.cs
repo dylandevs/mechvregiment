@@ -17,6 +17,8 @@ public class TracerRoundScript : MonoBehaviour {
 
 	public GameObject miniGunHit;
 
+	Vector3 previousPos;
+
 	// Use this for initialization
 	void Start () {
 		pool = transform.parent.GetComponent<PoolManager>();
@@ -24,6 +26,48 @@ public class TracerRoundScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(previousPos != null){
+			Ray rayPos = new Ray(previousPos,transform.up);
+			RaycastHit hitInfoFirePos;
+
+			Vector3 dist = previousPos - transform.position;
+			float trueDist = dist.magnitude;
+
+			if (Physics.Raycast (rayPos,out hitInfoFirePos,trueDist,mask)) 
+			{
+				print("the special ray hit something");
+
+				if (hitInfoFirePos.collider.tag != "Player") {
+					//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
+					//and add a remaining bullet hole
+					GameObject spark = sparkPool.Retrieve(hitInfoFirePos.point);
+					spark.transform.up = hitInfoFirePos.transform.up;
+				}
+				
+				if(hitInfoFirePos.collider.tag == "Enemy" && !isAvatar){
+					if(miniGunHit.GetActive() == false){
+						miniGunHit.SetActive(true);
+					}
+					GameObject hitMinion = hitInfoFirePos.collider.gameObject;
+					MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
+					minionScript.Damage(damage);
+				}
+				
+				if(hitInfoFirePos.collider.tag == "Player" && !isAvatar){
+					GameObject hitPlayer = hitInfoFirePos.collider.gameObject;
+					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
+					hitPlayerScript.DamagePlayer(damage,gameObject.transform.up);
+					//add a hit graphic.
+					if(miniGunHit.GetActive() == false){
+						miniGunHit.SetActive(true);
+					}
+				}
+
+			}
+		}
+
+		previousPos = transform.position;
 
 		gameObject.transform.Translate (Vector3.up * speed * Time.deltaTime);
 
