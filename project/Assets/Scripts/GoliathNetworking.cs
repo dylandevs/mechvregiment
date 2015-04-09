@@ -55,7 +55,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 //UPDATE
 
 	void Update () {
-		if (!minionScriptsRetrieved){
+		/*if (!minionScriptsRetrieved){
 			minionAvatars = new MinionAvatar[minionManager.transform.childCount];
 			for (int i = 0; i < minionManager.transform.childCount; i++){
 				minionAvatars[i] = minionManager.transform.GetChild(i).GetComponent<MinionAvatar>();
@@ -65,7 +65,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			}
 
 			minionScriptsRetrieved = true;
-		}
+		}*/
 
 		sendTimer -= Time.deltaTime;
 
@@ -253,6 +253,14 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	public void LaunchPlayer(int playerNum){}
 
 	// Minion RPC
+	[RPC]
+	void FirstTimeMinionActivation(int networkId, Vector3 position){
+		GameObject avatar = minionManager.Retrieve(position);
+		MinionAvatar avatarScript = avatar.GetComponent<MinionAvatar>();
+		avatarScript.remoteId = networkId;
+		photonView.RPC ("LinkMinions", PhotonTargets.All, networkId, avatarScript.pooled.index);
+	}
+
 	[RPC]
 	void SetMinionTransform(int minionNum, Vector3 newPos, Quaternion newRot, Vector3 currVelocity){
 		if (minionNum >= 0 && minionNum < minionAvatars.Length){
