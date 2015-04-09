@@ -90,6 +90,8 @@ public class GoliathGameScript : MonoBehaviour {
 			tempColour.a = Mathf.Lerp(0,1,1 - lerpAmnt);
 			screens.renderer.material.color = tempColour;
 
+			print(lerpAmnt);
+
 			if(win == true){
 				artifactDefendedImage.fillAmount = 1 - lerpAmnt;
 			}
