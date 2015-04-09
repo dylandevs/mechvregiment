@@ -748,7 +748,7 @@ public class ControllerScript : MonoBehaviour {
 		}*/
 
 
-		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.14f, collider.bounds.center.z);
+		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.12f, collider.bounds.center.z);
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
 			return true;
