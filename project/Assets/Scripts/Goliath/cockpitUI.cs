@@ -39,6 +39,7 @@ public class cockpitUI : MonoBehaviour {
 	public Image ShieldBar;
 	public Image dashBar;
 
+	public Color colourBlue;
 	GameObject player;
 
 	float coolDown;
@@ -93,18 +94,18 @@ public class cockpitUI : MonoBehaviour {
 		//healthbar stuff
 		float fillAmountHealth = currMechHealth / 750;
 		healthBar.fillAmount = fillAmountHealth;
-		healthBar.color = Color.Lerp(Color.blue, Color.blue, fillAmountHealth);
+		healthBar.color = Color.Lerp(Color.red, Color.green, fillAmountHealth);
 
-		float fillAmountShield = mechShield / 1000;
+		float fillAmountShield = shieldAmount / 1000;
 		ShieldBar.fillAmount = fillAmountShield;
-		ShieldBar.color = Color.Lerp(Color.red, Color.green, fillAmountShield);
+		ShieldBar.color = colourBlue;
 
 		if (dash == true) {
 			dashBar.fillAmount = 0;
 		} else {
 			float fillAmountDash = 1 - (dashTimer / 5);
 			dashBar.fillAmount = fillAmountDash;
-			dashBar.color = Color.Lerp (Color.red, Color.red, fillAmountDash);
+			dashBar.color = Color.Lerp (Color.yellow, Color.yellow, fillAmountDash);
 		}
 
 

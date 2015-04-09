@@ -25,6 +25,8 @@ public class BotAI : MonoBehaviour {
 	const float IdleWalkRad = 5;
 	const float IdleTurnRate = 0.5f;
 
+	const float WaypointRad = 7;
+
 	// Search behaviour attributes
 	float alertTime = 0;
 	float searchTime = 0;
@@ -179,6 +181,7 @@ public class BotAI : MonoBehaviour {
 				else if (state == State.Traveling){
 					if (HasAgentArrivedAtDest()){
 						state = State.AllClear;
+						print ("arrived");
 					}
 				}
 				else if (state == State.Searching){
@@ -267,9 +270,10 @@ public class BotAI : MonoBehaviour {
 	public void SetNewWaypoint(){
 		if (controllable){
 			if (navMeshAgent.enabled){
+				print ("waypoint set");
 				state = State.Traveling;
 				navMeshAgent.speed = RunSpeed;
-				navMeshAgent.destination = GetRandPos(IdleWalkRad, waypoint.transform.position);
+				navMeshAgent.destination = GetRandPos(WaypointRad, waypoint.transform.position);
 				if(Random.Range(0f, 1f) < 0.5){
 					if (pool.splitListener){
 						pool.splitListener.PlayAudioSource(yes1Sound, transform.position);
@@ -286,6 +290,8 @@ public class BotAI : MonoBehaviour {
 						yes2Sound.Play();
 					}
 				}
+
+				print (waypoint.transform.position + " " + navMeshAgent.destination);
 			}
 			else{
 				waypointQueued = true;
@@ -373,6 +379,8 @@ public class BotAI : MonoBehaviour {
 						lastSighted = ally.lastSighted;
 
 						alertTime = ally.alertTime;
+
+						print (pooled.index);
 					}
 				}
 			}
@@ -402,6 +410,7 @@ public class BotAI : MonoBehaviour {
 
 				// Start searching area
 				else if (prevState > State.Searching) {
+					print ("Setsearching");
 					searchTime = SearchDuration;
 					newState = State.Searching;
 				}
@@ -627,8 +636,9 @@ public class BotAI : MonoBehaviour {
 	}
 	
 	bool HasAgentArrivedAtDest(){
-		float remainder = navMeshAgent.remainingDistance;
-		return (remainder != Mathf.Infinity && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0);
+		return (Vector3.Distance(transform.position, navMeshAgent.destination) < 1f && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete);
+		//float remainder = navMeshAgent.remainingDistance;
+		//return (remainder != Mathf.Infinity && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && navMeshAgent.remainingDistance == 0);
 	}
 
 	// Gets random position on navmesh within given radius
