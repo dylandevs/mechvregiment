@@ -181,6 +181,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 		GameObject flash = goliathMuzzleFlashManager.Retrieve(position);
 		flash.transform.up = direction;
+		goliath.PlayMinigunSound();
 	}
 
 	[RPC]
@@ -190,6 +191,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 		cannonShot plasmaScript = plasma.GetComponent<cannonShot>();
 		plasmaScript.plasmaExplodePool = goliathPlasmaExplosionManager;
 		plasmaScript.isAvatar = true;
+		goliath.PlayCannonSound();
 	}
 
 	[RPC]
