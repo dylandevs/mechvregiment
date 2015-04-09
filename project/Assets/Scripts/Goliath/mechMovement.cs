@@ -50,6 +50,8 @@ public class mechMovement : MonoBehaviour {
 	public GoliathNetworking networker;
 	public PoolManager damageMiniMap;
 
+	public AudioSource chargeSound;
+
 	float lStickX; 
 	float lStickY;
 	float rStickX;
@@ -154,6 +156,7 @@ public class mechMovement : MonoBehaviour {
 				dash = true;
 				triggerFlagDropThing.dash = true;
 				chargeEffects.SetActive(true);
+				chargeSound.Play();
 			}
 		}
 
@@ -163,6 +166,7 @@ public class mechMovement : MonoBehaviour {
 			}
 			networker.photonView.RPC ("GoliathDashingEnd",PhotonTargets.All);
 			chargeEffects.SetActive(false);
+			chargeSound.Stop();
 			dash = false;
 			triggerFlagDropThing.dash = false;
 		}
@@ -192,7 +196,7 @@ public class mechMovement : MonoBehaviour {
 
 		//rotations
 		float nextRotX = nextRot.x + (rotSpeedY * -rStickY);
-		if (nextRotX <= 10 && nextRotX >= -30 && dash == false) {
+		if (nextRotX <= 4 && nextRotX >= -30 && dash == false) {
 			topHalfY.transform.localRotation = Quaternion.Euler(nextRotX,nextRot.y,0);
 		}
 
@@ -315,6 +319,7 @@ public class mechMovement : MonoBehaviour {
 		}
 		
 		if(restartTimer >= 8){
+			print("ifix");
 			networker.photonView.RPC("GoliathEnabled",PhotonTargets.All);
 			currMechHealth = mechHealth;
 			restartTimer = 0;
