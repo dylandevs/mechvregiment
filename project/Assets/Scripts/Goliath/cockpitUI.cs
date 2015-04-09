@@ -35,6 +35,10 @@ public class cockpitUI : MonoBehaviour {
 	public Image missleImage;
 	public Image minionModeImage;
 
+	public Image healthBar;
+	public Image ShieldBar;
+	public Image dashBar;
+
 	GameObject player;
 
 	float coolDown;
@@ -43,6 +47,8 @@ public class cockpitUI : MonoBehaviour {
 	float overHeatedTimer;
 	float cannonCDR;
 	float coolDownRocket;
+	float shieldAmount; 
+	float dashTimer;
 
 	int playerNumber;
 	//bools
@@ -75,11 +81,28 @@ public class cockpitUI : MonoBehaviour {
 		//change this to the same as the minigun filling thingy
 		currMechHealth = holoVars.currMechHealth;
 		mechShield = holoVars.mechShield;
+		shieldAmount = holoVars.mechShield;
+		dashTimer = holoVars.dashTimer;
 		shieldActive = holoVars.shieldActive;
 		mechHasFlag = mechShoot.carrying;
 
 		updateObjectiveLocator();
 		updateObjectiveDiamond();
+
+		//healthbar stuff
+		float fillAmountHealth = currMechHealth / 750;
+		healthBar.fillAmount = fillAmountHealth;
+		healthBar.color = Color.Lerp(Color.green, Color.red, fillAmountHealth);
+
+		float fillAmountShield = mechShield / 1000;
+		ShieldBar.fillAmount = fillAmountShield;
+		ShieldBar.color = Color.Lerp(Color.green, Color.red, fillAmountShield);
+
+		float fillAmountDash = 1 - (dashTimer / 5);
+		dashBar.fillAmount = fillAmountHealth;
+		dashBar.color = Color.Lerp(Color.green, Color.red, fillAmountHealth);
+
+
 
 			for(int i = 0;i < playerAvatars.Length;i++){
 					//turn the diamon to look at the camera in the mech
@@ -137,6 +160,8 @@ public class cockpitUI : MonoBehaviour {
 						tempColour.a = 0f;
 						sightedImage[i].renderer.material.color = tempColour;
 					}
+
+					
 		    }
 
 		//minigun mode graphics for weapons

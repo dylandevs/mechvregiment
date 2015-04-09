@@ -57,7 +57,7 @@ public class mechMovement : MonoBehaviour {
 	float damageTurnOffRight;
 	float damageTurnOffLeft;
 	float dashSpeed;
-	float dashTimer;
+	public float dashTimer;
 
 
 	bool allowedToMoveRay;
@@ -66,9 +66,9 @@ public class mechMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		mechHealth = 1000;
-		currMechHealth = 1000;
-		mechShield = 500;
+		mechHealth = 750;
+		currMechHealth = 750;
+		mechShield = 1000;
 		shieldActive = true;
 		moveSpeedY = 10;
 		rotSpeedY = 1.5f;
