@@ -58,6 +58,7 @@ public class GoliathAvatar : MonoBehaviour {
 	private Vector3 armLOrigPos;
 	private Vector3 armROrigPos;
 
+	public SplitAudioListener splitListener;
 	public AudioSource minigunSound;
 	public AudioSource cannonSound;
 
@@ -101,9 +102,9 @@ public class GoliathAvatar : MonoBehaviour {
 		anim.SetFloat (fwdHash, forwardSpeed);
 		anim.SetFloat (rgtHash, rightSpeed);
 
-		if (pool.splitListener){
-			pool.splitListener.StoreAudioSource(minigunSound);
-			pool.splitListener.StoreAudioSource(cannonSound);
+		if (splitListener){
+			splitListener.StoreAudioSource(minigunSound);
+			splitListener.StoreAudioSource(cannonSound);
 		}
 	}
 
@@ -217,16 +218,16 @@ public class GoliathAvatar : MonoBehaviour {
 	}
 
 	public void FireMinigun(){
-		if (pool.splitListener){
-			pool.splitListener.PlayAudioSource(minigunSound, minigunSound.gameObject.transform.position);
+		if (splitListener){
+			splitListener.PlayAudioSource(minigunSound, minigunSound.gameObject.transform.position);
 		}
 		else{
 			minigunSound.Play();
 		}
 	}
 	public void FireCannon(){
-		if (pool.splitListener){
-			pool.splitListener.PlayAudioSource(cannonSound, cannonSound.gameObject.transform.position);
+		if (splitListener){
+			splitListener.PlayAudioSource(cannonSound, cannonSound.gameObject.transform.position);
 		}
 		else{
 			cannonSound.Play();
