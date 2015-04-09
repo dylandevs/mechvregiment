@@ -7,7 +7,7 @@ public class MechShoot : MonoBehaviour {
 	public float damage = 50f;
 
 	//variables for rocketFire
-	public float coolDownRocket = 20f;
+	public float coolDownRocket = 50f;
 	public float cooldownRemainingRocket = 0;	
 	public float rocketAimSpeed;
 

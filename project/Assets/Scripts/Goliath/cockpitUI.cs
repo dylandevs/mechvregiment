@@ -216,7 +216,7 @@ public class cockpitUI : MonoBehaviour {
 			missleImage.gameObject.SetActive(true);
 			missleImageOutline.gameObject.SetActive(true);
 			coolDownRocket = mechShoot.cooldownRemainingRocket;
-			float fillAmountMissle = 1 - (coolDownRocket/30);
+			float fillAmountMissle = 1 - (coolDownRocket/50);
 
 			if(coolDownRocket <= 0){
 				missleImage.color = Color.green;
