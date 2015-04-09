@@ -50,6 +50,8 @@ public class mechMovement : MonoBehaviour {
 	public GoliathNetworking networker;
 	public PoolManager damageMiniMap;
 
+	public AudioSource chargeSound;
+
 	float lStickX; 
 	float lStickY;
 	float rStickX;
@@ -154,6 +156,7 @@ public class mechMovement : MonoBehaviour {
 				dash = true;
 				triggerFlagDropThing.dash = true;
 				chargeEffects.SetActive(true);
+				chargeSound.Play();
 			}
 		}
 
@@ -163,6 +166,7 @@ public class mechMovement : MonoBehaviour {
 			}
 			networker.photonView.RPC ("GoliathDashingEnd",PhotonTargets.All);
 			chargeEffects.SetActive(false);
+			chargeSound.Stop();
 			dash = false;
 			triggerFlagDropThing.dash = false;
 		}

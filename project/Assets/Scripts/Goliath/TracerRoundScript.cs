@@ -36,8 +36,6 @@ public class TracerRoundScript : MonoBehaviour {
 
 			if (Physics.Raycast (rayPos,out hitInfoFirePos,trueDist,mask)) 
 			{
-				print("the special ray hit something");
-
 				if (hitInfoFirePos.collider.tag != "Player") {
 					//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
 					//and add a remaining bullet hole
@@ -149,6 +147,7 @@ public class TracerRoundScript : MonoBehaviour {
 	}
 
 	void OnEnable(){
+		previousPos = new Vector3(0,0,0);
 		life = 5f;
 	}	
 }
