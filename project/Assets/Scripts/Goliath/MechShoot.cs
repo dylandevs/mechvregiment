@@ -439,16 +439,12 @@ public class MechShoot : MonoBehaviour {
 			if(Physics.Raycast (minMode, out minHit,75,mask)){
 				if(minHit.collider.tag == "Terrain"){
 
-						print ("minion ray cast hit");
-
 					lightBeam.SetActive(true);
 					notLightBeam.SetActive(false);
 					Vector3 placeHitRock = minHit.point;
 					lightBeam.transform.position = placeHitRock;
 
 					if(lTrig > 0.9f){
-
-							print ("place flag doen");
 
 						pilotAnimator.SetBool(minionPlace,true);
 						pilotAnimator.SetBool(minionIdle,false);
@@ -457,9 +453,6 @@ public class MechShoot : MonoBehaviour {
 					}
 
 					if(lTrig < 0.2f && flagDown == true){
-						
-
-						print("this is actually where the thing gets place");
 
 						minionFlag.transform.position = placeHitRock;
 						minionFlag.SetActive(true);
