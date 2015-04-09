@@ -16,6 +16,13 @@ public class BulletHoleBehaviour : MonoBehaviour {
 	void Update () {
 		life -= Time.deltaTime;
 		if (life <= 0) {
+			if (!pool){
+				pool = transform.parent.GetComponent<PoolManager>();
+				this.GetComponent<AudioSource>().pitch = 1 + Random.Range(-0.2f, 0.2f);
+				if (pool.splitListener){
+					pool.splitListener.StoreAudioSource(this.GetComponent<AudioSource>());
+				}
+			}
 			pool.Deactivate(gameObject);
 		}
 	}
