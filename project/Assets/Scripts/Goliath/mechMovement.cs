@@ -305,6 +305,8 @@ public class mechMovement : MonoBehaviour {
 		if(currMechHealth <=0){
 
 			networker.photonView.RPC("GoliathDisabled",PhotonTargets.All);
+			triggerFlagDropThing.allowedToShoot = false;
+			allowedToDash = false;
 
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
