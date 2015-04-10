@@ -128,8 +128,8 @@ public class Player : MonoBehaviour {
 			weapons[i].SetControllerReference(this.playerController);
 			weapons[i].gameObject.SetActive(false);
 
-			game.listener.StoreAudioSource (weapons[i].gunshotSound);
-			game.listener.StoreAudioSource (weapons[i].reloadSound);
+			game.splitListener.StoreAudioSource (weapons[i].gunshotSound);
+			game.splitListener.StoreAudioSource (weapons[i].reloadSound);
 		}
 
 		weapons [currentWeaponIndex].gameObject.SetActive (true);

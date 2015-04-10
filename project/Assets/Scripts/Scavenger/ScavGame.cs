@@ -34,7 +34,13 @@ public class ScavGame : MonoBehaviour {
 	public CanvasGroup victoryModal;
 	public CanvasGroup defeatModal;
 	private CanvasGroup currentModal;
-	public SplitAudioListener listener;
+
+	//Announcer audio
+	public SplitAudioListener splitListener;
+	public AudioSource matchStartSound;
+	public AudioSource[] droppedFlagSound;
+	public AudioSource goliathFlagSound;
+	public AudioSource noTimeSound;
 
 	// Use this for initialization
 	void Start () {
@@ -45,7 +51,14 @@ public class ScavGame : MonoBehaviour {
 
 		invUiTransitionTime = 1 / uiTransitionTime;
 
-
+		if(splitListener){
+			splitListener.StoreAudioSource(matchStartSound);
+			foreach(AudioSource flagDropVariation in droppedFlagSound){
+				splitListener.StoreAudioSource(flagDropVariation);
+			}
+			splitListener.StoreAudioSource(goliathFlagSound);
+			splitListener.StoreAudioSource(noTimeSound);
+		}
 		//BeginRound();
 	}
 	
@@ -114,6 +127,12 @@ public class ScavGame : MonoBehaviour {
 		GameRunning = true;
 		transitionMenu.SetActive(false);
 		gameToStart = true;
+		if(splitListener){
+			splitListener.PlayAudioSource(matchStartSound);
+		}
+		else {
+			matchStartSound.Play();
+		}
 	}
 
 	public void FlagRetrieved(GameObject retriever){

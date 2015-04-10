@@ -10,12 +10,16 @@ public class SplitAudioListener : MonoBehaviour {
 	public float overlapTolerance = 0.3f;
 	public int maxPoolSize = 15;
 
-	// Use this for initialization
-	void Start () {
+	void Awake(){
 		playerTransforms = new Transform[playerWrapper.childCount];
 		for (int i = 0; i < playerWrapper.childCount; i++){
 			playerTransforms[i] = playerWrapper.GetChild(i);
 		}
+	}
+
+	// Use this for initialization
+	void Start () {
+		
 	}
 	
 	// Update is called once per frame
