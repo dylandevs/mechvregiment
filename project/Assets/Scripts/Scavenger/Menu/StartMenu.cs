@@ -12,6 +12,7 @@ public class StartMenu : MonoBehaviour {
 	private float menuTransitionProg = 0;
 	private CanvasGroup transitionFrom;
 	private CanvasGroup transitionTo;
+	private RectTransform rectFrom;
 	private delegate void TransitionCallback();
 	private TransitionCallback callback;
 
@@ -24,6 +25,7 @@ public class StartMenu : MonoBehaviour {
 	public CanvasGroup controlsScreen;
 	public CanvasGroup creditsScreen;
 	public CanvasGroup loadingScreen;
+
 	private CanvasGroup currentGroup;
 
 	private int currentSelectedOption = 0;
@@ -31,6 +33,8 @@ public class StartMenu : MonoBehaviour {
 
 	private bool isSubMenu = false;
 	private bool loading = false;
+
+	public RectTransform selfRect;
 
 	public AudioSource switchSound;
 	public AudioSource selectSound;
@@ -72,7 +76,10 @@ public class StartMenu : MonoBehaviour {
 		if (menuTransitionProg > 0){
 			menuTransitionProg -= Time.deltaTime;
 			transitionFrom.alpha = Mathf.Lerp(1, 0, (1 - menuTransitionProg * invMenuTransitionTime));
+			float scaleProg = Mathf.Lerp(1, 0.95f, (1 - menuTransitionProg * invMenuTransitionTime));
+			rectFrom.localScale = Vector3.one * scaleProg;
 			transitionTo.alpha = Mathf.Lerp(0, 1, (1 - menuTransitionProg * invMenuTransitionTime));
+
 
 			if (menuTransitionProg <= 0){
 				transitionFrom.alpha = 0;
@@ -148,6 +155,8 @@ public class StartMenu : MonoBehaviour {
 		menuTransitionProg = menuTransitionTime;
 		transitionFrom = from;
 		transitionTo = to;
+		rectFrom = transitionFrom.GetComponent<RectTransform> ();
+		transitionTo.GetComponent<RectTransform> ().localScale = Vector3.one;
 	}
 
 	void LoadGame(){
