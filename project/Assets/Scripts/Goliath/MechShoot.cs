@@ -120,6 +120,11 @@ public class MechShoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if(allowedToShoot == false){
+			miniGunFirer.fire = false;
+			miniGunFirer.cannonShoot = false;
+		}
+
 		//update aimer pos.
 		updateAimerPos();
 		//show missile landing zone
@@ -202,14 +207,14 @@ public class MechShoot : MonoBehaviour {
 		//END OF KEYBOARD CONTROLS
 		}
 		if(dash == true){
-			allowedToShoot = false;
+			//allowedToShoot = false;
 			miniGunFirer.fire = false;
 			miniGunFirer.cannonShoot = false;
 
 			miniGunArm.transform.localEulerAngles = new Vector3(0,0,15);
 			cannonArm.transform.localEulerAngles = new Vector3(0,0,20);
 
-		}else allowedToShoot = true;
+		}//else allowedToShoot = true;
 
 		if(allowedToShoot == true && allowedToShootGame == true){
 		//cooldowns
@@ -239,10 +244,7 @@ public class MechShoot : MonoBehaviour {
 				cannonRet.SetActive(false);
 			}
 
-			if(allowedToShoot == false){
-				miniGunFirer.fire = false;
-				miniGunFirer.cannonShoot = false;
-			}
+		
 
 			//********needs adjusting after model import*****************************************************
 			//aim the position of where the minigun is going to fire from

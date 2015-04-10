@@ -80,7 +80,9 @@ public class mechMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (dash == true) {
+			triggerFlagDropThing.allowedToShoot = false;
+		}
 		groundingCast();
 
 		if(damageTurnOffLeft > 0){
@@ -145,6 +147,7 @@ public class mechMovement : MonoBehaviour {
 
 		//coutns down until next dash
 		if(dashTimer >=0){
+			triggerFlagDropThing.allowedToShoot = true;
 			dashTimer -= Time.deltaTime;
 		}
 		//dashing stuff
@@ -204,7 +207,7 @@ public class mechMovement : MonoBehaviour {
 
 		if(currMechHealth >=0){
 			Vector3 currVel = bottomHalf.rigidbody.velocity;
-
+			allowedToDash = true;
 			triggerFlagDropThing.allowedToShoot = true;
 
 			if(allowedToMoveRay == true){
@@ -307,6 +310,9 @@ public class mechMovement : MonoBehaviour {
 			networker.photonView.RPC("GoliathDisabled",PhotonTargets.All);
 			triggerFlagDropThing.allowedToShoot = false;
 			allowedToDash = false;
+			dash = false;
+
+			allowedToMove = false;
 
 			if(triggerFlagDropThing.carrying == true){
 				triggerFlagDropThing.releaseFlag();
@@ -316,9 +322,10 @@ public class mechMovement : MonoBehaviour {
 			restartTimer += Time.deltaTime;
 		}
 		
-		if(restartTimer >= 8){
+		if(restartTimer >= 12){
 			networker.photonView.RPC("GoliathEnabled",PhotonTargets.All);
 			currMechHealth = mechHealth;
+			allowedToMove = true;
 			restartTimer = 0;
 		}
 		if(damagedTime > 0){

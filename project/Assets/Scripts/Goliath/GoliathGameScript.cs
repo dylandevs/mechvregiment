@@ -111,6 +111,8 @@ public class GoliathGameScript : MonoBehaviour {
 
 
 			mechShoot.allowedToShootGame = false;
+			movement.allowedToDash = false;
+			movement.dash = false;
 
 			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
 				reLoad();
