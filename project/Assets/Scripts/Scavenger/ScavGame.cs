@@ -30,6 +30,7 @@ public class ScavGame : MonoBehaviour {
 	private float invUiTransitionTime = 1;
 	private float lastTimeCheck = 0;
 	private float endAnimProgress = 0;
+	private bool timeRunningOutPlayed = false;
 	
 	public CanvasGroup victoryModal;
 	public CanvasGroup defeatModal;
@@ -38,6 +39,7 @@ public class ScavGame : MonoBehaviour {
 	//Announcer audio
 	public SplitAudioListener splitListener;
 	public AudioSource matchStartSound;
+	public AudioSource gotFlagSound;
 	public AudioSource[] droppedFlagSound;
 	public AudioSource goliathFlagSound;
 	public AudioSource noTimeSound;
@@ -53,6 +55,7 @@ public class ScavGame : MonoBehaviour {
 
 		if(splitListener){
 			splitListener.StoreAudioSource(matchStartSound);
+			splitListener.StoreAudioSource(gotFlagSound);
 			foreach(AudioSource flagDropVariation in droppedFlagSound){
 				splitListener.StoreAudioSource(flagDropVariation);
 			}
@@ -75,8 +78,18 @@ public class ScavGame : MonoBehaviour {
 			}
 
 			timerText.text = minutes + ":" + seconds;
-
-			if (remainingTime <= 0){
+			if(remainingTime > 0 && remainingTime <= 1){
+				if(!timeRunningOutPlayed){
+					if(splitListener){
+						splitListener.PlayAudioSource(noTimeSound);
+					}
+					else {
+						noTimeSound.Play();
+					}
+					timeRunningOutPlayed = true;
+				}
+			}
+			else if (remainingTime <= 0){
 				GameLost();
 			}
 		}
@@ -140,6 +153,22 @@ public class ScavGame : MonoBehaviour {
 			player.display.UpdateObjective (retriever);
 			flag.SetActive(false);
 		}
+		if(retriever.tag == "Goliath"){
+			if(splitListener){
+				splitListener.PlayAudioSource(goliathFlagSound);
+			}
+			else {
+				goliathFlagSound.Play();
+			}
+		}
+		else {
+			if(splitListener){
+				splitListener.PlayAudioSource(gotFlagSound);
+			}
+			else {
+				gotFlagSound.Play();
+			}
+		}
 	}
 
 	public void FlagDropped(Vector3 flagPos){
@@ -150,6 +179,12 @@ public class ScavGame : MonoBehaviour {
 			flag.rigidbody.velocity = Vector3.zero;
 
 			//flag.rigidbody.AddForce(direction * 10);
+		}
+		if(splitListener){
+			splitListener.PlayAudioSource(droppedFlagSound[Random.Range(0,2)]);
+		}
+		else {
+			droppedFlagSound[Random.Range(0,2)].Play();
 		}
 	}
 
