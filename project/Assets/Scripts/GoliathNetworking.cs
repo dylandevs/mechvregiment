@@ -226,9 +226,9 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 	}
 	
 	[RPC]
-	public void PlayerRespawn(int playerNum){
+	public void PlayerRespawn(int playerNum, Vector3 respawnPos){
 		if (playerNum >= 0 && playerNum < playerAvatars.Length){
-			playerAvatars[playerNum].TriggerRespawn();
+			playerAvatars[playerNum].TriggerRespawn(respawnPos);
 		}
 	}
 	

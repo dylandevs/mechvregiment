@@ -164,13 +164,14 @@ public class PlayerAvatar : MonoBehaviour {
 		rigidbody.isKinematic = true;
 	}
 
-	public void TriggerRespawn(){
+	public void TriggerRespawn(Vector3 respawnPos){
 		// Enable firing layer
 		anim.SetLayerWeight(1, 1);
 		anim.SetTrigger(resetHash);
 
 		isDead = false;
 		rigidbody.isKinematic = false;
+		transform.position = respawnPos;
 	}
 
 	public void TriggerReload(){

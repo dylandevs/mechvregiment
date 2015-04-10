@@ -252,7 +252,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public void PlayerDeath(int playerNum, bool forward){}
 	
 	[RPC]
-	public void PlayerRespawn(int playerNum){}
+	public void PlayerRespawn(int playerNum, Vector3 respawnPos){}
 	
 	[RPC]
 	public void PlayerReload(int playerNum){}
