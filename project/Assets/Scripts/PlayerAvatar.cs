@@ -51,6 +51,12 @@ public class PlayerAvatar : MonoBehaviour {
 	private int reloadHash = Animator.StringToHash("Reload");
 	private int flagCarryHash = Animator.StringToHash ("CarryFlag");
 
+	//Audio
+	public AudioSource ARShotSound;
+	public AudioSource PistolShotSound;
+	public AudioSource MineShotSound;
+	public AudioSource[] Deaths;
+
 	float turnOffTimer;
 	// Use this for initialization
 	void Start () {
@@ -149,6 +155,7 @@ public class PlayerAvatar : MonoBehaviour {
 	}
 
 	public void DeathAnim(bool forward){
+		Deaths[Random.Range(0,1)].Play();
 		// Disable firing layer
 		anim.SetLayerWeight(1, 0);
 		
@@ -181,6 +188,19 @@ public class PlayerAvatar : MonoBehaviour {
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
 		muzzleFlashes[weaponNum].particleEmitter.Emit();
+
+		switch(weaponNum){
+			case 0:
+			default:
+				ARShotSound.Play();
+				break;
+			case 1:
+				PistolShotSound.Play();
+				break;
+			case 2:
+				MineShotSound.Play();
+				break;
+		}
 
 		//send location and turn on miniMapIcon
 		miniMapIndication.GetComponent<cockpitUI>();

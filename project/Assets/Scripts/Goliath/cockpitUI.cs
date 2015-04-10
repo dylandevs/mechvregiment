@@ -42,6 +42,9 @@ public class cockpitUI : MonoBehaviour {
 	public Color colourBlue;
 	GameObject player;
 
+	public AudioSource flagTakenSound;
+	public AudioSource heavyDamageSound;
+
 	float coolDown;
 	float mechShield;
 	float currMechHealth;
@@ -62,6 +65,7 @@ public class cockpitUI : MonoBehaviour {
 	bool minigunMode;
 	bool missleMode;
 	bool minionMode;
+
 
 	public GoliathNetworking networker;
 	// Use this for initialization
@@ -277,6 +281,7 @@ public class cockpitUI : MonoBehaviour {
 			int i = Random.Range(0,4);
 			disabledSparks[i].SetActive(true);
 			cockPitLight.color = Color.red;
+			heavyDamageSound.Play();
 		}
 
 
@@ -326,6 +331,7 @@ public class cockpitUI : MonoBehaviour {
 		playerNumber = playerNum;
 		miniMapIndicatorsList[playerNum].SetActive(false);
 		miniMapFlag[playerNum].SetActive(true);
+		flagTakenSound.Play();
 	}
 
 	public void droppedFlag(int playerNum){

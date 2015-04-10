@@ -37,6 +37,12 @@ public class GoliathGameScript : MonoBehaviour {
 	bool two;
 	bool win;
 	bool loose;
+	bool noTimePlayed = false;
+
+	public AudioSource matchStartSound;
+	public AudioSource flagTakenSound;
+	public AudioSource noTimeSound;
+	public AudioSource heavyDamageSound;
 
 	float life = 0;
 
@@ -44,7 +50,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public UnityEngine.UI.Text timerText;
 	// Use this for initialization
 	void Start () {
-		 minimap.SetActive(false);
+		minimap.SetActive(false);
 		movement.allowedToDash = false;
 	}
 	
@@ -57,6 +63,10 @@ public class GoliathGameScript : MonoBehaviour {
 			string minutes = Mathf.Floor(remainingTime / 60).ToString();
 			string seconds = Mathf.Floor(remainingTime % 60).ToString();
 			
+			if(remainingTime <= 60 && !noTimePlayed){
+				noTimeSound.Play();
+			}
+
 			if (seconds.Length == 1){
 				seconds = "0" + seconds;
 			}
@@ -153,6 +163,7 @@ public class GoliathGameScript : MonoBehaviour {
 		if(readyToGo == true && netWorkReady == true){
 			allConditions = true;
 			network.photonView.RPC("GoliathConnected",PhotonTargets.All);
+			noTimePlayed = false;
 		}
 		//check is they have clicked left fire then right fire then start
 	}
@@ -176,6 +187,7 @@ public class GoliathGameScript : MonoBehaviour {
 				movement.allowedToDash = true;
 				restartMatch = false;
 				oneTime = false;
+				matchStartSound.Play();
 			}
 		}
 	}
