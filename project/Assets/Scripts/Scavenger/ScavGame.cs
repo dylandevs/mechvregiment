@@ -78,7 +78,7 @@ public class ScavGame : MonoBehaviour {
 			}
 
 			timerText.text = minutes + ":" + seconds;
-			if(remainingTime > 0 && remainingTime <= 1){
+			if(remainingTime > 0 && remainingTime <= 60){
 				if(!timeRunningOutPlayed){
 					if(splitListener){
 						splitListener.PlayAudioSource(noTimeSound);
