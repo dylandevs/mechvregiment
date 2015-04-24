@@ -295,11 +295,11 @@ public class ScavUI : MonoBehaviour {
 
 	public void Initialize(float x, float y, float width, float height, float uiScale = 1, float baseWeaponSpread = 0){
 		// Setting camera and ui scale
-		uiCam.camera.rect = new Rect(x, y, width, height);
-		playerCam.camera.rect = new Rect(x, y, width, height);
-		gunCam.camera.rect = new Rect(x, y, width, height);
-		skyCam.camera.rect = new Rect(x, y, width, height);
-		deathCam.camera.rect = new Rect(x, y, width, height);
+		uiCam.GetComponent<Camera>().rect = new Rect(x, y, width, height);
+		playerCam.GetComponent<Camera>().rect = new Rect(x, y, width, height);
+		gunCam.GetComponent<Camera>().rect = new Rect(x, y, width, height);
+		skyCam.GetComponent<Camera>().rect = new Rect(x, y, width, height);
+		deathCam.GetComponent<Camera>().rect = new Rect(x, y, width, height);
 		scaler.referenceResolution = scaler.referenceResolution * uiScale;
 		addScreenRatio = new Vector2 (1 / width, 1 / height);
 		addSizeDelta = new Vector2 (x * 2, y * 2);

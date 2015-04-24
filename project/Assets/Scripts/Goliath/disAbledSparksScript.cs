@@ -10,12 +10,12 @@ public class disAbledSparksScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (particleEmitter.particleCount == 0) {
+		if (GetComponent<ParticleEmitter>().particleCount == 0) {
 			gameObject.SetActive(false);
 		}
 	}
 	void OnEnable(){
-		particleEmitter.Emit();
+		GetComponent<ParticleEmitter>().Emit();
 	}
 
 }

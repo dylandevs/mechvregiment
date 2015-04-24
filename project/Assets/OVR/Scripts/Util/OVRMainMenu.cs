@@ -20,7 +20,11 @@ limitations under the License.
 ************************************************************************************/
 
 // #define SHOW_DK2_VARIABLES
-// #define USE_NEW_GUI // You can use the Unity new GUI if you have Unity 4.6 or above.
+
+// Use the Unity new GUI with Unity 4.6 or above.
+#if UNITY_4_6 || UNITY_5_0
+#define USE_NEW_GUI
+#endif
 
 using System;
 using System.Collections;
@@ -47,15 +51,39 @@ using UnityEngine.UI;
 /// </summary>
 public class OVRMainMenu : MonoBehaviour
 {
+	/// <summary>
+	/// The amount of time in seconds that it takes for the menu to fade in.
+	/// </summary>
 	public float 	FadeInTime    	= 2.0f;
+
+	/// <summary>
+	/// An optional texture that appears before the menu fades in.
+	/// </summary>
 	public UnityEngine.Texture 	FadeInTexture 	= null;
+
+	/// <summary>
+	/// An optional font that replaces Unity's default Arial.
+	/// </summary>
 	public Font 	FontReplace		= null;
 
+	/// <summary>
+	/// The key that toggles the menu.
+	/// </summary>
 	public KeyCode	MenuKey			= KeyCode.Space;
+
+	/// <summary>
+	/// The key that quits the application.
+	/// </summary>
 	public KeyCode	QuitKey			= KeyCode.Escape;
 	
-	// Scenes to show onscreen
+	/// <summary>
+	/// Scene names to show on-screen for each of the scenes in Scenes.
+	/// </summary>
 	public string [] SceneNames;
+
+	/// <summary>
+	/// The set of scenes that the user can jump to.
+	/// </summary>
 	public string [] Scenes;
 	
 	private bool ScenesVisible   	= false;
@@ -67,13 +95,15 @@ public class OVRMainMenu : MonoBehaviour
 	private int    	WidthY			= 23;
 	
 	// Spacing for variables that users can change
+#if !USE_NEW_GUI
 	private int    	VRVarsSX		= 553;
 	private int		VRVarsSY		= 250;
 	private int    	VRVarsWidthX 	= 175;
 	private int    	VRVarsWidthY 	= 23;
+    private float   AlphaFadeValue	= 1.0f;
+#endif
+    private int    	StepY			= 25;
 
-	private int    	StepY			= 25;
-		
 	// Handle to OVRCameraRig
 	private OVRCameraRig CameraController = null;
 	
@@ -95,29 +125,25 @@ public class OVRMainMenu : MonoBehaviour
 	private int    Frames  			= 0; 	
 	private float  TimeLeft			= 0; 				
 	private string strFPS			= "FPS: 0";
-	
-	// IPD shift from physical IPD
-	public float   IPDIncrement		= 0.0025f;
+
 	private string strIPD 			= "IPD: 0.000";	
 	
-	// Prediction (in ms)
+	/// <summary>
+	/// Prediction (in ms)
+	/// </summary>
 	public float   PredictionIncrement = 0.001f; // 1 ms
 	private string strPrediction       = "Pred: OFF";	
-	
-	// FOV Variables
-	public float   FOVIncrement		= 0.2f;
+
 	private string strFOV     		= "FOV: 0.0f";
-	
-	// Height adjustment
-	public float   HeightIncrement   = 0.01f;
 	private string strHeight     	 = "Height: 0.0f";
 	
-	// Speed and rotation adjustment
+	/// <summary>
+	/// Controls how quickly the player's speed and rotation change based on input.
+	/// </summary>
 	public float   SpeedRotationIncrement   	= 0.05f;
 	private string strSpeedRotationMultipler    = "Spd. X: 0.0f Rot. X: 0.0f";
 	
-	private bool   LoadingLevel 	= false;	
-	private float  AlphaFadeValue	= 1.0f;
+	private bool   LoadingLevel 	= false;		
 	private int    CurrentLevel		= 0;
 	
 	// Rift detection
@@ -139,11 +165,15 @@ public class OVRMainMenu : MonoBehaviour
 	private GameObject RiftPresentGUIObject         = null;
 #endif
     
-	// We can set the layer to be anything we want to, this allows
-	// a specific camera to render it
+	/// <summary>
+	/// We can set the layer to be anything we want to, this allows
+	/// a specific camera to render it.
+	/// </summary>
 	public string 			LayerName 		 = "Default";
 
-	// Crosshair system, rendered onto 3D plane
+	/// <summary>
+	/// Crosshair rendered onto 3D plane.
+	/// </summary>
 	public UnityEngine.Texture  CrosshairImage 			= null;
 	private OVRCrosshair Crosshair        	= new OVRCrosshair();
 
@@ -162,10 +192,6 @@ public class OVRMainMenu : MonoBehaviour
 	// We want to hold onto GridCube, for potential sharing
 	// of the menu RenderTarget
 	OVRGridCube GridCube = null;
-
-	// We want to hold onto the VisionGuide so we can share
-	// the menu RenderTarget
-	OVRVisionGuide VisionGuide = null;
 
 	#region MonoBehaviour Message Handlers
 	/// <summary>
@@ -214,9 +240,9 @@ public class OVRMainMenu : MonoBehaviour
 	        r.localPosition = new Vector3(0.01f, 0.17f, 0.53f);
 	        r.localEulerAngles = Vector3.zero;
 
-			Canvas c = NewGUIObject.AddComponent<Canvas>();        
-	        c.renderMode = RenderMode.World;
-	        c.pixelPerfect = false;            
+			Canvas c = NewGUIObject.AddComponent<Canvas>();
+	        c.renderMode = RenderMode.WorldSpace;
+	        c.pixelPerfect = false;
 #endif
     }
 	
@@ -224,8 +250,7 @@ public class OVRMainMenu : MonoBehaviour
 	/// Start this instance.
 	/// </summary>
 	void Start()
-	{
-		AlphaFadeValue = 1.0f;	
+	{		
 		CurrentLevel   = 0;
 		PrevStartDown  = false;
 		PrevHatDown    = false;
@@ -305,12 +330,6 @@ public class OVRMainMenu : MonoBehaviour
 			// Add a GridCube component to this object
 			GridCube = gameObject.AddComponent<OVRGridCube>();
 			GridCube.SetOVRCameraController(ref CameraController);
-
-			// Add a VisionGuide component to this object
-			VisionGuide = gameObject.AddComponent<OVRVisionGuide>();
-			VisionGuide.SetOVRCameraController(ref CameraController);
-			VisionGuide.SetFadeTexture(ref FadeInTexture);
-			VisionGuide.SetVisionGuideLayer(ref LayerName);
 		}
 		
 		// Crosshair functionality
@@ -389,9 +408,11 @@ public class OVRMainMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
 			OVRManager.display.mirrorMode = !OVRManager.display.mirrorMode;
         
+#if !UNITY_ANDROID || UNITY_EDITOR
 		// Escape Application
 		if (Input.GetKeyDown(QuitKey))
 			Application.Quit();
+#endif
 	}
 
     /// <summary>
@@ -457,8 +478,7 @@ public class OVRMainMenu : MonoBehaviour
 			if (ScenesVisible || 
 			    ShowVRVars || 
 			    Crosshair.IsCrosshairVisible() || 
-			    RiftPresentTimeout > 0.0f || 
-			    VisionGuide.GetFadeAlphaValue() > 0.0f)
+			    RiftPresentTimeout > 0.0f)
 			{
 				GUIRenderObject.SetActive(true);
 			}
@@ -501,10 +521,6 @@ public class OVRMainMenu : MonoBehaviour
 		// useful
 		Crosshair.OnGUICrosshair();
 		
-		// Since we want to draw into the main GUI that is shared within the MainMenu,
-		// we call the OVRVisionGuide GUI function here
-		VisionGuide.OnGUIVisionGuide();
-		
 		// Restore active render texture
 		if (GUIRenderObject.activeSelf)
 		{
@@ -523,15 +539,15 @@ public class OVRMainMenu : MonoBehaviour
 	/// </summary>
 	void UpdateFPS()
 	{
-		TimeLeft -= Time.deltaTime;
-		Accum += Time.timeScale/Time.deltaTime;
+        TimeLeft -= Time.unscaledDeltaTime;
+        Accum += Time.unscaledDeltaTime;
 		++Frames;
  
     	// Interval ended - update GUI text and start new interval
     	if( TimeLeft <= 0.0 )
     	{
         	// display two fractional digits (f2 format)
-			float fps = Accum / Frames;
+            float fps = Frames / Accum;
 			
 			if(ShowVRVars == true)// limit gc
 				strFPS = System.String.Format("FPS: {0:F2}",fps);
@@ -600,7 +616,7 @@ public class OVRMainMenu : MonoBehaviour
 			OVRDisplay.EyeRenderDesc leftEyeDesc = OVRManager.display.GetEyeRenderDesc(OVREye.Left);
 			OVRDisplay.EyeRenderDesc rightEyeDesc = OVRManager.display.GetEyeRenderDesc(OVREye.Right);
 
-			float scale = OVRManager.instance.nativeTextureScale * OVRManager.instance.virtualTextureScale;
+			float scale = OVRManager.instance.virtualTextureScale;
 			float w = (int)(scale * (float)(leftEyeDesc.resolution.x + rightEyeDesc.resolution.x));
 			float h = (int)(scale * (float)Mathf.Max(leftEyeDesc.resolution.y, rightEyeDesc.resolution.y));
 
@@ -618,12 +634,14 @@ public class OVRMainMenu : MonoBehaviour
         {
 			OVRDisplay.LatencyData latency = OVRManager.display.latency;
             if (latency.render < 0.000001f && latency.timeWarp < 0.000001f && latency.postPresent < 0.000001f)
-                strLatencies = System.String.Format("Ren : N/A TWrp: N/A PostPresent: N/A");
+                strLatencies = System.String.Format("Latency values are not available.");
             else
-                strLatencies = System.String.Format("Ren : {0:F3} TWrp: {1:F3} PostPresent: {2:F3}",
+                strLatencies = System.String.Format("R: {0:F3} TW: {1:F3} PP: {2:F3} RE: {3:F3} TWE: {4:F3}",
 					latency.render,
 					latency.timeWarp,
-					latency.postPresent);
+					latency.postPresent,
+					latency.renderError,
+					latency.timeWarpError);
         }
 #endif
     }
@@ -820,9 +838,10 @@ public class OVRMainMenu : MonoBehaviour
         if (ShowVRVars == false)
             return;
 
-        int y = VRVarsSY;
+        
 
 #if !USE_NEW_GUI
+        int y = VRVarsSY;
 #if	SHOW_DK2_VARIABLES
 		// Print out Vision Mode
 		GuiHelper.StereoBox (VRVarsSX, y += StepY, VRVarsWidthX, VRVarsWidthY, 
@@ -927,10 +946,20 @@ public class OVRMainMenu : MonoBehaviour
         r.localEulerAngles = Vector3.zero;
         r.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         Canvas c = RiftPresentGUIObject.AddComponent<Canvas>();
-        c.renderMode = RenderMode.World;
+		c.renderMode = RenderMode.WorldSpace;
         c.pixelPerfect = false;
         OVRUGUI.RiftPresentGUI(RiftPresentGUIObject);
 #endif
     }
 	#endregion
+
+    /// <summary>
+    /// Initialize OVRUGUI on OnDestroy
+    /// </summary>
+    void OnDestroy()
+    {
+#if USE_NEW_GUI
+        OVRUGUI.isInited = false;
+#endif
+    }
 }

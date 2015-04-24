@@ -59,14 +59,14 @@ public class SixenseHandsController : MonoBehaviour
 
 		if ( bControllerActive )
 		{
-			//hand.transform.localPosition = ( hand.m_controller.Position - m_baseOffset ) * m_sensitivity;
+			hand.transform.localPosition = ( hand.m_controller.Position - m_baseOffset ) * m_sensitivity;
 			hand.transform.localRotation = hand.m_controller.Rotation * hand.InitialRotation;
 		}
 
 		else
 		{
 			// use the inital position and orientation because the controller is not active
-			//hand.transform.localPosition = hand.InitialPosition;
+			hand.transform.localPosition = hand.InitialPosition;
 			hand.transform.localRotation  = hand.InitialRotation;
 		}
 	}

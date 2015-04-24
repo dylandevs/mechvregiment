@@ -146,28 +146,28 @@ public class cockpitUI : MonoBehaviour {
 						}	
 
 						if(hitTerrain == true && hitRet == true){
-							Color tempColour = sightedImage[i].renderer.material.color;
+							Color tempColour = sightedImage[i].GetComponent<Renderer>().material.color;
 							tempColour.a = 0.5f;
-							sightedImage[i].renderer.material.color = tempColour;
+							sightedImage[i].GetComponent<Renderer>().material.color = tempColour;
 						}
 						
 						if(hitRet == true && hitTerrain == false){
-							Color tempColour = sightedImage[i].renderer.material.color;
+							Color tempColour = sightedImage[i].GetComponent<Renderer>().material.color;
 							tempColour.a = 1f;
-							sightedImage[i].renderer.material.color = tempColour;
+							sightedImage[i].GetComponent<Renderer>().material.color = tempColour;
 						}
 
 						else if(hitRet == false){
-							Color tempColour = sightedImage[i].renderer.material.color;
+							Color tempColour = sightedImage[i].GetComponent<Renderer>().material.color;
 							tempColour.a = 0f;
-							sightedImage[i].renderer.material.color = tempColour;
+							sightedImage[i].GetComponent<Renderer>().material.color = tempColour;
 						}
 				}
 					else if(dist > 100){
 						
-						Color tempColour = sightedImage[i].renderer.material.color;
+						Color tempColour = sightedImage[i].GetComponent<Renderer>().material.color;
 						tempColour.a = 0f;
-						sightedImage[i].renderer.material.color = tempColour;
+						sightedImage[i].GetComponent<Renderer>().material.color = tempColour;
 					}
 
 					
@@ -245,37 +245,37 @@ public class cockpitUI : MonoBehaviour {
 		}
 		
 		if(shieldActive == true){
-			mechHolagram.renderer.material.color = Color.blue;
-			Color tempColour = mechHolagram.renderer.material.color;
+			mechHolagram.GetComponent<Renderer>().material.color = Color.blue;
+			Color tempColour = mechHolagram.GetComponent<Renderer>().material.color;
 			tempColour.a = 0.5f;
-			mechHolagram.renderer.material.color = tempColour;
+			mechHolagram.GetComponent<Renderer>().material.color = tempColour;
 
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth > 0){
 			float lerpAmnt = currMechHealth / 1000;
-			mechHolagram.renderer.material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
-			Color tempColour = mechHolagram.renderer.material.color;
+			mechHolagram.GetComponent<Renderer>().material.color = Color.Lerp(Color.red, Color.green, lerpAmnt);
+			Color tempColour = mechHolagram.GetComponent<Renderer>().material.color;
 			tempColour.a = 0.5f;
-			mechHolagram.renderer.material.color = tempColour;
+			mechHolagram.GetComponent<Renderer>().material.color = tempColour;
 
-			screens.renderer.material.color = Color.green;
-			Color screenTemp = screens.renderer.material.color;
+			screens.GetComponent<Renderer>().material.color = Color.green;
+			Color screenTemp = screens.GetComponent<Renderer>().material.color;
 			screenTemp.a = 0f;
-			screens.renderer.material.color = screenTemp;
+			screens.GetComponent<Renderer>().material.color = screenTemp;
 			cockPitLight.color = Color.white;
 		}
 		else if(currMechHealth <= 0){
-			mechHolagram.renderer.material.color = Color.black;
-			Color tempColour2 = mechHolagram.renderer.material.color;
+			mechHolagram.GetComponent<Renderer>().material.color = Color.black;
+			Color tempColour2 = mechHolagram.GetComponent<Renderer>().material.color;
 			tempColour2.a = 0.5f;
-			mechHolagram.renderer.material.color = tempColour2;
+			mechHolagram.GetComponent<Renderer>().material.color = tempColour2;
 
 			//add the disabled schtuff and change window texture
-			screens.renderer.material.color = Color.grey;
-			Color screenTemp = screens.renderer.material.color;
+			screens.GetComponent<Renderer>().material.color = Color.grey;
+			Color screenTemp = screens.GetComponent<Renderer>().material.color;
 			screenTemp.a = 0.5f;
-			screens.renderer.material.color = screenTemp;
+			screens.GetComponent<Renderer>().material.color = screenTemp;
 
 			//turn on sparks and shit then off and whatnot
 			int i = Random.Range(0,4);

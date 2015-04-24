@@ -60,8 +60,8 @@ public class MechShoot : MonoBehaviour {
 	public RocketFirer rocketScript;
 	
 	//hydra variables
-	const int left = 0;
-	const int right = 1;
+	 int left = 0;
+	 int right = 1;
 
 	//pilot movement stuff
 	public GameObject leftArm;
@@ -119,6 +119,17 @@ public class MechShoot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (Input.GetKeyDown(KeyCode.S)) {
+			if(left == 0){
+				left = 1;
+				right = 0;
+			}
+			else{
+				 left = 0;
+				 right = 1;
+			}
+		}
 
 		if(allowedToShoot == false){
 			miniGunFirer.fire = false;

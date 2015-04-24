@@ -154,7 +154,7 @@ public class ControllerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Updating attributes
-		Vector3 newVel = rigidbody.velocity;
+		Vector3 newVel = GetComponent<Rigidbody>().velocity;
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
@@ -166,7 +166,7 @@ public class ControllerScript : MonoBehaviour {
 		isSprinting = false;
 		
 		if (currentlyGrounded){
-			newVel = new Vector3(0, rigidbody.velocity.y, 0);
+			newVel = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
 		}
 		
 		Weapon currentWeapon = player.GetCurrentWeapon ();
@@ -449,7 +449,7 @@ public class ControllerScript : MonoBehaviour {
 
 		// Limited keyboard fallback
 		else{
-			Screen.showCursor = false;
+			Cursor.visible = false;
 
 			// Getting key states
 			bool Space_Down = Input.GetKeyDown(KeyCode.Space);
@@ -597,8 +597,8 @@ public class ControllerScript : MonoBehaviour {
 		newVel.z *= speedFactor;
 
 		// Apply velocity and force
-		if (!rigidbody.isKinematic && !player.isStunned){
-			rigidbody.velocity = newVel;
+		if (!GetComponent<Rigidbody>().isKinematic && !player.isStunned){
+			GetComponent<Rigidbody>().velocity = newVel;
 		}
 
 		// Apply spread to weapon based on actions
@@ -619,11 +619,11 @@ public class ControllerScript : MonoBehaviour {
 
 		// Apply calculated speed animation
 		Quaternion revFacingRot = Quaternion.FromToRotation(facing2D, Vector3.forward);
-		Vector3 rotatedVelocity = revFacingRot * rigidbody.velocity;
+		Vector3 rotatedVelocity = revFacingRot * GetComponent<Rigidbody>().velocity;
 
 		forwardSpeed = rotatedVelocity.z;
 		rightSpeed = rotatedVelocity.x;
-		speed = rigidbody.velocity.magnitude;
+		speed = GetComponent<Rigidbody>().velocity.magnitude;
 
 		anim.SetFloat(fwdSpeedHash, forwardSpeed);
 		anim.SetFloat(rgtSpeedHash, rightSpeed);
@@ -719,7 +719,7 @@ public class ControllerScript : MonoBehaviour {
 	// Testing for ground directly beneath and at edges of collider
 	public bool IsGrounded(){
 
-		Vector3 groundCheckCenter = new Vector3(collider.bounds.center.x, collider.bounds.min.y + offset * 0.5f + 0.12f, collider.bounds.center.z);
+		Vector3 groundCheckCenter = new Vector3(GetComponent<Collider>().bounds.center.x, GetComponent<Collider>().bounds.min.y + offset * 0.5f + 0.12f, GetComponent<Collider>().bounds.center.z);
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
 			return true;

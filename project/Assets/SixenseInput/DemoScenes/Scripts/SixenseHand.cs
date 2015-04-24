@@ -29,7 +29,6 @@ public class SixenseHand : MonoBehaviour
 
 	protected void Update()
 	{
-
 		if ( m_controller == null )
 		{
 			m_controller = SixenseInput.GetController( m_hand );
@@ -45,18 +44,16 @@ public class SixenseHand : MonoBehaviour
 	// Updates the animated object from controller input.
 	protected void UpdateHandAnimation()
 	{
-		/*
 		// Point
-		//this says if hand is right then get button one if it's not hand right do the second thing
-		if ( m_hand == SixenseHands.RIGHT ? m_controller.GetButtonDown(SixenseButtons.ONE) : m_controller.GetButtonDown(SixenseButtons.ONE) )
+		if ( m_hand == SixenseHands.RIGHT ? m_controller.GetButton(SixenseButtons.ONE) : m_controller.GetButton(SixenseButtons.TWO) )
 		{
-			//print ("razor did shit");
+			m_animator.SetBool( "Point", true );
 		}
 		else
 		{
-			//print ("razor second thingy");
+			m_animator.SetBool( "Point", false );
 		}
-
+		
 		// Grip Ball
 		if ( m_hand == SixenseHands.RIGHT ? m_controller.GetButton(SixenseButtons.TWO) : m_controller.GetButton(SixenseButtons.ONE)  )
 		{
@@ -105,7 +102,6 @@ public class SixenseHand : MonoBehaviour
 		{
 			m_animator.SetBool("Idle", false);
 		}
-		*/
 	}
 
 

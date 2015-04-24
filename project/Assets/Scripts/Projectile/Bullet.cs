@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour {
 	public void setProperties(float baseDamage, Vector3 direction, float speed, PoolManager markPool){
 		damage = baseDamage;
 		velocity = direction.normalized * speed;
-		rigidbody.velocity = direction.normalized * speed;
+		GetComponent<Rigidbody>().velocity = direction.normalized * speed;
 		bulletMarkPool = markPool;
 	}
 	
@@ -38,9 +38,9 @@ public class Bullet : MonoBehaviour {
 			// Decrease life
 			life -= Time.deltaTime;
 			if (life <= 0){
-				rigidbody.velocity = Vector3.zero;
+				GetComponent<Rigidbody>().velocity = Vector3.zero;
 				toDeactivate = true;
-				particleEmitter.emit = false;
+				GetComponent<ParticleEmitter>().emit = false;
 			}
 
 			// Check for collisions
@@ -50,14 +50,14 @@ public class Bullet : MonoBehaviour {
 			lastPos = transform.position;
 
 			if (collisionFound) {
-				rigidbody.velocity = Vector3.zero;
+				GetComponent<Rigidbody>().velocity = Vector3.zero;
 				toDeactivate = true;
-				particleEmitter.emit = false;
+				GetComponent<ParticleEmitter>().emit = false;
 			}
 		}
 		else{
 			// Allow trail to fade out
-			if (particleEmitter.particleCount == 0){
+			if (GetComponent<ParticleEmitter>().particleCount == 0){
 				pool.Deactivate(gameObject);
 			}
 		}
@@ -132,6 +132,6 @@ public class Bullet : MonoBehaviour {
 		life = LifeSpan;
 		lastPos = transform.position;
 		toDeactivate = false;
-		particleEmitter.emit = true;
+		GetComponent<ParticleEmitter>().emit = true;
 	}
 }

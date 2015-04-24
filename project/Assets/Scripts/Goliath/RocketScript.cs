@@ -100,7 +100,7 @@ public class RocketScript : MonoBehaviour {
 			Collider[] colliders = Physics.OverlapSphere (pos, explosionRadius,mask);
 			foreach (Collider c in colliders) 
 			{
-				if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
+				if(c.gameObject.GetComponent<Collider>().tag == "Player" && hitAPlayer == false){
 					hitAPlayer = true;
 					float dist = Vector3.Distance(transform.position, c.transform.position);
 					float damageRatio = 1f - (dist / explosionRadius);
@@ -108,23 +108,23 @@ public class RocketScript : MonoBehaviour {
 					// a bit iffy on this direction calculation
 					Vector3 direction = transform.position - c.transform.position;
 					
-					GameObject hitPlayer = c.collider.gameObject;
+					GameObject hitPlayer = c.GetComponent<Collider>().gameObject;
 					PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 					hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.up);
 				}
 
-				if(c.gameObject.collider.tag == "Enemy"){
+				if(c.gameObject.GetComponent<Collider>().tag == "Enemy"){
 					float dist = Vector3.Distance(transform.position, c.transform.position);
 					float damageRatio = 1f - (dist / explosionRadius);
 					float damageAmnt = damage * damageRatio;
 
-					GameObject hitMinion = c.collider.gameObject;
+					GameObject hitMinion = c.GetComponent<Collider>().gameObject;
 					MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
 					minionScript.Damage(damageAmnt);
 				}
 			}
 		}
-		if (smokeParticles.particleEmitter.particleCount == 0) {
+		if (smokeParticles.GetComponent<ParticleEmitter>().particleCount == 0) {
 			pool.Deactivate(gameObject);
 		}
 	}

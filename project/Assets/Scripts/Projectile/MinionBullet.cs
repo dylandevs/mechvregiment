@@ -31,9 +31,9 @@ public class MinionBullet : MonoBehaviour {
 			// Decrease life
 			life -= Time.deltaTime;
 			if (life <= 0){
-				rigidbody.velocity = Vector3.zero;
+				GetComponent<Rigidbody>().velocity = Vector3.zero;
 				toDeactivate = true;
-				particleEmitter.emit = false;
+				GetComponent<ParticleEmitter>().emit = false;
 			}
 
 			// Move forward (remember position)
@@ -44,14 +44,14 @@ public class MinionBullet : MonoBehaviour {
 			bool collisionFound = checkForwardCollision();
 			
 			if (collisionFound) {
-				rigidbody.velocity = Vector3.zero;
+				GetComponent<Rigidbody>().velocity = Vector3.zero;
 				toDeactivate = true;
-				particleEmitter.emit = false;
+				GetComponent<ParticleEmitter>().emit = false;
 			}
 		}
 		else{
 			// Allow trail to fade out
-			if (particleEmitter.particleCount == 0){
+			if (GetComponent<ParticleEmitter>().particleCount == 0){
 				pool.Deactivate(gameObject);
 			}
 		}
@@ -94,6 +94,6 @@ public class MinionBullet : MonoBehaviour {
 		life = LifeSpan;
 		lastPos = transform.position;
 		toDeactivate = false;
-		particleEmitter.emit = true;
+		GetComponent<ParticleEmitter>().emit = true;
 	}
 }

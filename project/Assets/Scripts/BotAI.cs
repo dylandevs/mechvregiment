@@ -245,8 +245,8 @@ public class BotAI : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		rigidbody.isKinematic = false;
-		rigidbody.velocity = Vector3.zero;
+		GetComponent<Rigidbody>().isKinematic = false;
+		GetComponent<Rigidbody>().velocity = Vector3.zero;
 
 		health = MaxHealth;
 
@@ -266,7 +266,7 @@ public class BotAI : MonoBehaviour {
 			if (navMeshAgent){
 				navMeshAgent.enabled = true;
 			}
-			rigidbody.isKinematic = true;
+			GetComponent<Rigidbody>().isKinematic = true;
 
 			if (waypointQueued){
 				SetNewWaypoint();
@@ -420,8 +420,8 @@ public class BotAI : MonoBehaviour {
 
 	bool IsSightUnobstructed(GameObject subject){
 		Vector3 diffVec = subject.transform.position - transform.position;
-		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
-		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
+		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.GetComponent<Collider>().bounds.extents.y - 0.1f, 0);
+		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.GetComponent<Collider>().bounds.extents.y - 0.1f, 0);
 
 		// Cast ray to determine obstructions in sight
 		RaycastHit rayHit;
@@ -453,8 +453,8 @@ public class BotAI : MonoBehaviour {
 	// Check whether subject is in sight
 	bool IsInSight(GameObject subject){
 		Vector3 diffVec = subject.transform.position - transform.position;
-		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
-		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.collider.bounds.extents.y - 0.1f, 0);
+		Vector3 headVec = diffVec + new Vector3 (0, subject.transform.GetComponent<Collider>().bounds.extents.y - 0.1f, 0);
+		Vector3 feetVec = diffVec - new Vector3 (0, subject.transform.GetComponent<Collider>().bounds.extents.y - 0.1f, 0);
 		float angle = Vector3.Angle(transform.forward, diffVec);
 
 		// Check if within FoV
@@ -513,11 +513,11 @@ public class BotAI : MonoBehaviour {
 		float timeDelay = 0;
 
 		float distanceSquare = Vector3.SqrMagnitude(target.transform.position - bulletGenPos);
-		float targetVelSquare = target.rigidbody.velocity.sqrMagnitude;
+		float targetVelSquare = target.GetComponent<Rigidbody>().velocity.sqrMagnitude;
 		float bulletVelSquare = bulletScript.speed * bulletScript.speed;
 
 		timeDelay = Mathf.Sqrt(distanceSquare / (Mathf.Abs(bulletVelSquare - targetVelSquare)));
-		Vector3 direction = new Vector3(target.transform.position.x + target.rigidbody.velocity.x * timeDelay, target.transform.position.y + target.collider.bounds.extents.y + target.rigidbody.velocity.y * timeDelay, target.transform.position.z + target.rigidbody.velocity.z * timeDelay) - bulletGenPos;
+		Vector3 direction = new Vector3(target.transform.position.x + target.GetComponent<Rigidbody>().velocity.x * timeDelay, target.transform.position.y + target.GetComponent<Collider>().bounds.extents.y + target.GetComponent<Rigidbody>().velocity.y * timeDelay, target.transform.position.z + target.GetComponent<Rigidbody>().velocity.z * timeDelay) - bulletGenPos;
 	
 		bullet.transform.forward = direction;
 		bulletScript.shootableLayer = shootableLayer;
@@ -535,7 +535,7 @@ public class BotAI : MonoBehaviour {
 	// Fires bullet in direction provided
 	void fireInDirection(Transform target){
 		Vector3 bulletGenPos = bulletSpawn.position;
-		Vector3 direction = new Vector3(target.position.x, target.position.y + target.collider.bounds.extents.y, target.position.z) - bulletGenPos;
+		Vector3 direction = new Vector3(target.position.x, target.position.y + target.GetComponent<Collider>().bounds.extents.y, target.position.z) - bulletGenPos;
 
 		GameObject bullet = projectilePool.Retrieve(bulletGenPos);
 		bullet.transform.forward = direction;

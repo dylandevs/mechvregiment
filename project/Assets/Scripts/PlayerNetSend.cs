@@ -83,7 +83,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 						ControllerScript control = player.playerController;
 
 						if (players[i].gameObject.GetActive() && !players[i].isDead){
-							photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.rigidbody.position, player.rigidbody.rotation, player.rigidbody.velocity);
+							photonView.RPC ("SetPlayerTransform", PhotonTargets.All, i, player.GetComponent<Rigidbody>().position, player.GetComponent<Rigidbody>().rotation, player.GetComponent<Rigidbody>().velocity);
 							photonView.RPC ("UpdatePlayerAnim", PhotonTargets.All, i, control.forwardSpeed, control.rightSpeed, control.speed, control.isCrouching,
 							                control.isSprinting, control.aimingDownSight, player.GetCurrentWeapon().isFiring, control.spineJoint.transform.localRotation);
 						}

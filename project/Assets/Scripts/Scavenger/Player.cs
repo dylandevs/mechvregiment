@@ -180,7 +180,7 @@ public class Player : MonoBehaviour {
 		weapons [currentWeaponIndex].gameObject.SetActive (true);
 
 		display.EndRespawnSequence ();
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 	}
 
 	// Regenerates if healing timer is depleted and health is below maximum
@@ -306,7 +306,7 @@ public class Player : MonoBehaviour {
 		}
 		
 		if (playerController.IsGrounded()){
-			rigidbody.isKinematic = true;
+			GetComponent<Rigidbody>().isKinematic = true;
 		}
 	}
 
@@ -343,7 +343,7 @@ public class Player : MonoBehaviour {
 	public void Launch(){
 		if (!isStunned){
 			Damage(game.goliath.DashDamage, game.goliath.botJoint.transform.forward);
-			rigidbody.velocity = 10 * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up * 1.5f);
+			GetComponent<Rigidbody>().velocity = 10 * (game.goliath.botJoint.transform.forward + new Vector3(Random.Range(game.goliath.botJoint.transform.right.x, -game.goliath.botJoint.transform.right.x), 0, Random.Range(game.goliath.botJoint.transform.right.z, -game.goliath.botJoint.transform.right.z)) + Vector3.up * 1.5f);
 			stunProg = StunLength;
 			isStunned = true;
 		}

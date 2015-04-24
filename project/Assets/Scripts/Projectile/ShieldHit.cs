@@ -12,12 +12,12 @@ public class ShieldHit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!particleSystem.IsAlive()){
+		if (!GetComponent<ParticleSystem>().IsAlive()){
 			pool.Deactivate(gameObject);
 		}
 	}
 
 	void OnEnable(){
-		particleSystem.Play();
+		GetComponent<ParticleSystem>().Play();
 	}
 }

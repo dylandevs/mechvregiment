@@ -16,6 +16,8 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject winScreen;
 	public GameObject looseScreen;
 	public GameObject screens;
+	public GameObject tutorialPos;
+	public GameObject mech;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -30,6 +32,8 @@ public class GoliathGameScript : MonoBehaviour {
 	public Image artifactDefendedImage;
 
 	bool menu1B;
+	bool tutorialPass = false;
+	bool tutorial;
 	bool readyToGo;
 	bool oneTime;
 	bool gameEnded;
@@ -51,78 +55,84 @@ public class GoliathGameScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		minimap.SetActive(false);
-		movement.allowedToDash = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (tutorial == true) {
+			tutuorialFuncion();
+		}
 
-		if(remainingTime > 0){
-			remainingTime = Mathf.Max(0, remainingTime - Time.deltaTime);
+		if (tutorialPass == true) {
+			if (remainingTime > 0) {
+				remainingTime = Mathf.Max (0, remainingTime - Time.deltaTime);
 			
-			string minutes = Mathf.Floor(remainingTime / 60).ToString();
-			string seconds = Mathf.Floor(remainingTime % 60).ToString();
+				string minutes = Mathf.Floor (remainingTime / 60).ToString ();
+				string seconds = Mathf.Floor (remainingTime % 60).ToString ();
 			
-			if(remainingTime <= 60 && !noTimePlayed){
-				noTimeSound.Play();
-			}
+				if (remainingTime <= 60 && !noTimePlayed) {
+					noTimeSound.Play ();
+				}
 
-			if (seconds.Length == 1){
-				seconds = "0" + seconds;
-			}
+				if (seconds.Length == 1) {
+					seconds = "0" + seconds;
+				}
 			
-			timerText.text = minutes + ":" + seconds;
-		}
-
-
-		if(reLoadScene == true){
-			reLoad();
-		}
-
-		if(restartMatch == true){
-			restartMatchFunction();
-		}
-		if(readyToGo == true){
-			readyToStart();
-		}
-
-		//checks if  the game has ended then does stuff
-		if(gameEnded == true){
-
-			if(life >= 0){
-				life -= Time.deltaTime;
-			}
-
-			//change colour of the screens
-			float lerpAmnt = life / 3;
-			screens.renderer.material.color = Color.Lerp(Color.black, Color.white, lerpAmnt);
-			Color tempColour = screens.renderer.material.color;
-			tempColour.a = Mathf.Lerp(0,1,1 - lerpAmnt);
-			screens.renderer.material.color = tempColour;
-
-			print(lerpAmnt);
-
-			if(win == true){
-				artifactDefendedImage.fillAmount = 1 - lerpAmnt;
-			}
-			if(loose == true){
-				artifactLostImage.fillAmount = 1 - lerpAmnt;
+				timerText.text = minutes + ":" + seconds;
 			}
 
 
-			mechShoot.allowedToShootGame = false;
-			movement.allowedToDash = false;
-			movement.dash = false;
-
-			if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.START)){
-				reLoad();
+			if (reLoadScene == true) {
+				reLoad ();
 			}
+
+			if (restartMatch == true) {
+				restartMatchFunction ();
+			}
+			if (readyToGo == true) {
+				readyToStart ();
+			}
+
+			//checks if  the game has ended then does stuff
+			if (gameEnded == true) {
+
+				if (life >= 0) {
+					life -= Time.deltaTime;
+				}
+
+				//change colour of the screens
+				float lerpAmnt = life / 3;
+				screens.GetComponent<Renderer> ().material.color = Color.Lerp (Color.black, Color.white, lerpAmnt);
+				Color tempColour = screens.GetComponent<Renderer> ().material.color;
+				tempColour.a = Mathf.Lerp (0, 1, 1 - lerpAmnt);
+				screens.GetComponent<Renderer> ().material.color = tempColour;
+
+				print (lerpAmnt);
+
+				if (win == true) {
+					artifactDefendedImage.fillAmount = 1 - lerpAmnt;
+				}
+				if (loose == true) {
+					artifactLostImage.fillAmount = 1 - lerpAmnt;
+				}
+
+
+				mechShoot.allowedToShootGame = false;
+				movement.allowedToDash = false;
+				movement.dash = false;
+
+				if (SixenseInput.Controllers [1].GetButtonDown (SixenseButtons.START)) {
+					reLoad ();
+				}
+			}
+
 		}
 	}
 
 	public void restartMatchFunction(){
+		mech.transform.position = spawnPoint.transform.position;
 		movement.allowedToMove = false;
-
+		movement.allowedToDash = false;
 		float lTrig = SixenseInput.Controllers[0].Trigger;
 		float rTrig = SixenseInput.Controllers[1].Trigger;
 
@@ -220,5 +230,9 @@ public class GoliathGameScript : MonoBehaviour {
 		life = 3;
 		gameEnded = true;
 		loose = true;
+	}
+
+	public void tutuorialFuncion(){
+		mech.transform.position = tutorialPos.transform.position;
 	}
 }

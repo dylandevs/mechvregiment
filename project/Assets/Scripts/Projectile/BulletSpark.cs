@@ -12,12 +12,12 @@ public class BulletSpark : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (particleEmitter.particleCount == 0){
+		if (GetComponent<ParticleEmitter>().particleCount == 0){
 			pool.Deactivate(gameObject);
 		}
 	}
 
 	void OnEnable(){
-		particleEmitter.Emit ();
+		GetComponent<ParticleEmitter>().Emit ();
 	}
 }

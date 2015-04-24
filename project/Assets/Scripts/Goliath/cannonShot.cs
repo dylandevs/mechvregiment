@@ -89,7 +89,7 @@ public class cannonShot : MonoBehaviour {
 					Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius,mask);
 					foreach (Collider c in colliders) 
 					{
-						if(c.gameObject.collider.tag == "Player" && hitAPlayer == false){
+						if(c.gameObject.GetComponent<Collider>().tag == "Player" && hitAPlayer == false){
 							hitAPlayer = true;
 
 							if(cannonHit.GetActive() == false){
@@ -102,7 +102,7 @@ public class cannonShot : MonoBehaviour {
 							// a bit iffy on this direction calculation
 							Vector3 direction = transform.position - c.transform.position;
 
-							GameObject hitPlayer = c.collider.gameObject;
+							GameObject hitPlayer = c.GetComponent<Collider>().gameObject;
 							if (hitPlayer){
 								PlayerAvatarDamager hitPlayerScript = hitPlayer.GetComponent<PlayerAvatarDamager>();
 
@@ -113,7 +113,7 @@ public class cannonShot : MonoBehaviour {
 							}
 							else{print("else2");}
 						}
-						if(c.gameObject.collider.tag == "Enemy"){
+						if(c.gameObject.GetComponent<Collider>().tag == "Enemy"){
 
 							if(cannonHit.GetActive() == false){
 								cannonHit.SetActive(true);
@@ -123,7 +123,7 @@ public class cannonShot : MonoBehaviour {
 							float damageRatio = 1f - (dist / explosionRadius);
 							float damageAmnt = damage * damageRatio;
 							
-							GameObject hitMinion = c.collider.gameObject;
+							GameObject hitMinion = c.GetComponent<Collider>().gameObject;
 							MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
 							minionScript.Damage(damageAmnt);
 						}

@@ -82,7 +82,7 @@ public class PlayerAvatar : MonoBehaviour {
 		if (isFiring){
 			autoFireProg += Time.deltaTime;
 			if (autoFireProg >= AutoFireRate){
-				muzzleFlashes[weaponNum].particleEmitter.Emit();
+				muzzleFlashes[weaponNum].GetComponent<ParticleEmitter>().Emit();
 				autoFireProg = 0;
 			}
 		}
@@ -168,7 +168,7 @@ public class PlayerAvatar : MonoBehaviour {
 
 		isDead = true;
 		isFiring = false;
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 	}
 
 	public void TriggerRespawn(Vector3 respawnPos){
@@ -177,7 +177,7 @@ public class PlayerAvatar : MonoBehaviour {
 		anim.SetTrigger(resetHash);
 
 		isDead = false;
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 		transform.position = respawnPos;
 	}
 
@@ -187,7 +187,7 @@ public class PlayerAvatar : MonoBehaviour {
 
 	public void TriggerFire(){
 		anim.SetBool(fireHash, true);
-		muzzleFlashes[weaponNum].particleEmitter.Emit();
+		muzzleFlashes[weaponNum].GetComponent<ParticleEmitter>().Emit();
 
 		switch(weaponNum){
 			case 0:

@@ -36,11 +36,11 @@ public class BurntMinion : MonoBehaviour {
 		for (int i = 0; i < pieces.transform.childCount; i++){
 			Transform child = pieces.transform.GetChild(i);
 
-			child.rigidbody.velocity = Vector3.zero;
-			child.rigidbody.angularVelocity = Vector3.zero;
+			child.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			child.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 			child.localPosition = originalPos[i];
 			child.localRotation = Quaternion.identity;
-			child.rigidbody.AddForce(new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), Random.Range(-50, 50)));
+			child.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), Random.Range(-50, 50)));
 		}
 	}
 }

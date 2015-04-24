@@ -78,7 +78,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
         	if(sendTimer <= 0){
                 //Here's where the RPC calls go so they happen once properly joined.
 				photonView.RPC ("SetGoliathJoints", PhotonTargets.All, goliathTop.transform.position, goliathTop.transform.rotation,
-				                goliathBot.transform.position, goliathBot.transform.rotation, goliathBot.rigidbody.velocity,
+				                goliathBot.transform.position, goliathBot.transform.rotation, goliathBot.GetComponent<Rigidbody>().velocity,
 				                goliathSpine.transform.rotation, goliathShoulderR.transform.rotation, goliathShoulderL.transform.rotation);
 	
 				sendTimer = SendInterval;
@@ -301,7 +301,7 @@ public class GoliathNetworking : Photon.MonoBehaviour {
 			mineScript.goliathNetworker = this;
 			mineScript.remoteId = creatorId;
 			projectile.transform.position += direction * 2;
-			projectile.rigidbody.AddForce(direction * 1000);
+			projectile.GetComponent<Rigidbody>().AddForce(direction * 1000);
 
 			mineScript.isAvatar = true;
 			photonView.RPC ("SetMineID", PhotonTargets.All, creatorId, mineScript.pooled.index);

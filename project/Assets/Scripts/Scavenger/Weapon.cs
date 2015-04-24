@@ -172,7 +172,7 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 		else if (recenterTargetSet && !isRecoiling){
-			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f || (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && isReloading)){
+			if (!isAllAmmoDepleted && player.GetComponent<Rigidbody>().velocity.magnitude <= 0.1f || (!isAllAmmoDepleted && player.GetComponent<Rigidbody>().velocity.magnitude <= 0.1f && isReloading)){
 				CalculateRecenteringSteps();
 			}
 			else{
@@ -358,7 +358,7 @@ public class Weapon : MonoBehaviour {
 				mineScript.playerSource = player;
 				mineScript.explosionPool = explosionPool;
 				projectile.transform.position += bulletDirection * 2;
-				projectile.rigidbody.AddForce(bulletDirection * 1000);
+				projectile.GetComponent<Rigidbody>().AddForce(bulletDirection * 1000);
 
 				player.networkManager.photonView.RPC("CreateMine", PhotonTargets.All, mineScript.pooled.index, bulletOrigin, bulletDirection);
 			}
@@ -763,7 +763,7 @@ public class Weapon : MonoBehaviour {
 		magazineStatic1.SetActive(false);
 
 		magazineDrop1.SetActive(true);
-		magazineDrop1.rigidbody.isKinematic = false;
+		magazineDrop1.GetComponent<Rigidbody>().isKinematic = false;
 		dropStopProg = DropStopTime;
 	}
 
@@ -772,8 +772,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void StopDrop(){
-		magazineDrop1.rigidbody.velocity = Vector3.zero;
-		magazineDrop1.rigidbody.isKinematic = true;
+		magazineDrop1.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		magazineDrop1.GetComponent<Rigidbody>().isKinematic = true;
 		magazineDrop1.SetActive(false);
 		magazineDrop1.transform.localPosition = initMagStatic1Pos;
 	}
@@ -801,7 +801,7 @@ public class Weapon : MonoBehaviour {
 		magazineStatic3.SetActive(false);
 		
 		magazineDrop3.SetActive(true);
-		magazineDrop3.rigidbody.isKinematic = false;
+		magazineDrop3.GetComponent<Rigidbody>().isKinematic = false;
 	}
 	
 	public void ResetStatic3(){
@@ -809,8 +809,8 @@ public class Weapon : MonoBehaviour {
 	}
 	
 	public void StopDrop3(){
-		magazineDrop3.rigidbody.velocity = Vector3.zero;
-		magazineDrop3.rigidbody.isKinematic = true;
+		magazineDrop3.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		magazineDrop3.GetComponent<Rigidbody>().isKinematic = true;
 		magazineDrop3.SetActive(false);
 		magazineDrop3.transform.localPosition = initMagStatic3Pos;
 	}

@@ -40,8 +40,8 @@ public class mechMovement : MonoBehaviour {
 	private float rotSpeedX;
 
 	//hydra variables
-	const int left = 0;
-	const int right = 1;
+	 int left = 0;
+	 int right = 1;
 
 	public bool forceKeyboard = false;
 	public bool allowedToMove;
@@ -80,6 +80,18 @@ public class mechMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (Input.GetKeyDown(KeyCode.S)) {
+			if(left == 0){
+				left = 1;
+				right = 0;
+			}
+			else{
+				left = 0;
+				right = 1;
+			}
+		}
+
 		if (dash == true) {
 			triggerFlagDropThing.allowedToShoot = false;
 		}
@@ -206,7 +218,7 @@ public class mechMovement : MonoBehaviour {
 		}
 
 		if(currMechHealth >=0){
-			Vector3 currVel = bottomHalf.rigidbody.velocity;
+			Vector3 currVel = bottomHalf.GetComponent<Rigidbody>().velocity;
 			allowedToDash = true;
 			triggerFlagDropThing.allowedToShoot = true;
 
@@ -232,10 +244,10 @@ public class mechMovement : MonoBehaviour {
 			}
 
 			if(allowedToMoveRay == false){
-				Vector3 velAmount = rigidbody.velocity;
+				Vector3 velAmount = GetComponent<Rigidbody>().velocity;
 				velAmount.y = -15;
 
-				rigidbody.velocity = velAmount;
+				GetComponent<Rigidbody>().velocity = velAmount;
 			}
 
 			if (lStickX != 0 && dash == false){
@@ -247,7 +259,7 @@ public class mechMovement : MonoBehaviour {
 				currVel += velMod;
 			}
 			if(allowedToMoveRay == true){
-				rigidbody.velocity = currVel;
+				GetComponent<Rigidbody>().velocity = currVel;
 			}
 			//Hydra Movement
 			//bottomHalf.rigidbody.MovePosition(bottomHalf.rigidbody.position + bottomHalf.transform.forward * moveSpeedY * lStickY);
@@ -420,7 +432,7 @@ public class mechMovement : MonoBehaviour {
 
 	void groundingCast(){
 
-		Vector3 colliderBounds = collider.bounds.extents;
+		Vector3 colliderBounds = GetComponent<Collider>().bounds.extents;
 
 		//add half on x and negative half on x then half on z and negative half on z
 		Vector3 xPosPos = bottomHalf.transform.position + new Vector3 (colliderBounds.x * 0.5f,0,0);

@@ -67,7 +67,7 @@ public class Mine : MonoBehaviour {
 		}
 		else{
 			RaycastHit rayHit;
-			if (Physics.Raycast(transform.position, rigidbody.velocity.normalized, out rayHit, Mathf.Max(rigidbody.velocity.magnitude * Time.deltaTime, 0.16f))){
+			if (Physics.Raycast(transform.position, GetComponent<Rigidbody>().velocity.normalized, out rayHit, Mathf.Max(GetComponent<Rigidbody>().velocity.magnitude * Time.deltaTime, 0.16f))){
 				if (rayHit.collider.tag == "Terrain"){
 					AffixToTerrain(rayHit.point);
 				}
@@ -146,7 +146,7 @@ public class Mine : MonoBehaviour {
 
 	void AffixToTerrain(Vector3 position){
 		transform.position = position;
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 		isFixed = true;
 		transmitPosition = true;
 		if (pool.splitListener){
@@ -158,7 +158,7 @@ public class Mine : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 		isFixed = false;
 		countdownTimer = 0;
 		isDetonated = false;
@@ -172,7 +172,7 @@ public class Mine : MonoBehaviour {
 
 	public void SetAffixedPosition(Vector3 position){
 		transform.position = position;
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 		isFixed = true;
 	}
 }

@@ -361,7 +361,7 @@ public class SixenseInput : MonoBehaviour
 	/// <summary>
 	/// Updates the controller manager GUI.
 	/// </summary>
-	/*void OnGUI()
+	void OnGUI()
 	{
 		if ( ControllerManagerEnabled && ( m_ControllerManagerState != ControllerManagerState.NONE ) )
 		{
@@ -372,7 +372,7 @@ public class SixenseInput : MonoBehaviour
 							 "Point right controller at base and pull trigger.";
 			GUI.Box( new Rect( ( ( Screen.width / 2 ) - ( boxWidth / 2 ) ), ( ( Screen.height / 2 ) - ( boxHeight / 2 ) ), boxWidth, boxHeight ), boxText );
 		}
-	}*/
+	}
 	
 	/// <summary>
 	/// Exit sixense when the application quits.

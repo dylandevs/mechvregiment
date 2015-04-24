@@ -40,12 +40,12 @@ public class XInputTestCS : MonoBehaviour
         // Detect if a button was pressed this frame
         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
         {
-            renderer.material.color = new Color(Random.value, Random.value, Random.value, 1.0f);
+            GetComponent<Renderer>().material.color = new Color(Random.value, Random.value, Random.value, 1.0f);
         }
         // Detect if a button was released this frame
         if (prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Released)
         {
-            renderer.material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         // Set vibration according to triggers

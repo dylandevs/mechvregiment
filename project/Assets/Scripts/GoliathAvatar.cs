@@ -178,32 +178,32 @@ public class GoliathAvatar : MonoBehaviour {
 
 	public void SetDisabled(){
 		SetLayerRecursively(topJoint.gameObject, LayerMask.NameToLayer("Non-Interactive Physics"));
-		topJoint.rigidbody.isKinematic = false;
-		topJoint.rigidbody.WakeUp();
-		shoulderLJoint.rigidbody.isKinematic = false;
-		shoulderLJoint.rigidbody.WakeUp();
-		shoulderRJoint.rigidbody.isKinematic = false;
-		shoulderRJoint.rigidbody.WakeUp();
+		topJoint.GetComponent<Rigidbody>().isKinematic = false;
+		topJoint.GetComponent<Rigidbody>().WakeUp();
+		shoulderLJoint.GetComponent<Rigidbody>().isKinematic = false;
+		shoulderLJoint.GetComponent<Rigidbody>().WakeUp();
+		shoulderRJoint.GetComponent<Rigidbody>().isKinematic = false;
+		shoulderRJoint.GetComponent<Rigidbody>().WakeUp();
 		isDisabled = true;
 	}
 
 	public void SetEnabled(){
 		SetLayerRecursively(topJoint.gameObject, LayerMask.NameToLayer("Goliath"));
-		topJoint.rigidbody.velocity = Vector3.zero;
-		topJoint.rigidbody.angularVelocity = Vector3.zero;
-		topJoint.rigidbody.isKinematic = true;
+		topJoint.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		topJoint.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+		topJoint.GetComponent<Rigidbody>().isKinematic = true;
 
-		shoulderLJoint.rigidbody.velocity = Vector3.zero;
-		shoulderLJoint.rigidbody.angularVelocity = Vector3.zero;
+		shoulderLJoint.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		shoulderLJoint.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 		shoulderLJoint.localPosition = armLOrigPos;
 		shoulderLJoint.localRotation = Quaternion.identity;
-		shoulderLJoint.rigidbody.isKinematic = true;
+		shoulderLJoint.GetComponent<Rigidbody>().isKinematic = true;
 
-		shoulderRJoint.rigidbody.velocity = Vector3.zero;
-		shoulderRJoint.rigidbody.angularVelocity = Vector3.zero;
+		shoulderRJoint.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		shoulderRJoint.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 		shoulderRJoint.localPosition = armROrigPos;
 		shoulderRJoint.localRotation = Quaternion.identity;
-		shoulderRJoint.rigidbody.isKinematic = true;
+		shoulderRJoint.GetComponent<Rigidbody>().isKinematic = true;
 
 		isDisabled = false;
 	}

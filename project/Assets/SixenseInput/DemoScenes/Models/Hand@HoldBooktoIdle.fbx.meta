@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 298f73d4ca997d643978a65ef5fa5055
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
     100002: Hand_MDL
@@ -84,11 +84,13 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -111,3 +113,5 @@ ModelImporter:
   animationType: 2
   additionalBone: 1
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

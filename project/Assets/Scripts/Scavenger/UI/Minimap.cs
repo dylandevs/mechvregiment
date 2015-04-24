@@ -36,8 +36,8 @@ public class Minimap : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		minimapSize = minimapTrans.sizeDelta;
-		terrainSize.x = mapObj.transform.collider.bounds.extents.x * 2;
-		terrainSize.y = mapObj.transform.collider.bounds.extents.z * 2;
+		terrainSize.x = mapObj.transform.GetComponent<Collider>().bounds.extents.x * 2;
+		terrainSize.y = mapObj.transform.GetComponent<Collider>().bounds.extents.z * 2;
 		terrainOffset = mapObj.transform.position;
 		mapRatio.x = minimapSize.x / terrainSize.x;
 		mapRatio.y = minimapSize.y / terrainSize.y;

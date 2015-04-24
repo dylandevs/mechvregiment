@@ -45,7 +45,7 @@ public class ScavLayer : MonoBehaviour {
 			foreach (Transform weaponComponent in weapon3){
 				if (weaponComponent.gameObject.GetComponent<MeshFilter>() != null){
 					GameObject invisComponent = Instantiate(weaponComponent.gameObject) as GameObject;
-					invisComponent.renderer.material = invisMat;
+					invisComponent.GetComponent<Renderer>().material = invisMat;
 					invisComponent.layer = view1Layer;
 
 					invisComponent.transform.parent = weaponComponent;

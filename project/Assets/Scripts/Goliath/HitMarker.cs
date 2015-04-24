@@ -13,10 +13,10 @@ public class HitMarker : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		Color tempColour = gameObject.renderer.material.color;
+		Color tempColour = gameObject.GetComponent<Renderer>().material.color;
 		float amount = life / 0.5f;
 		tempColour.a = life;
-		gameObject.renderer.material.color = tempColour;
+		gameObject.GetComponent<Renderer>().material.color = tempColour;
 
 		if(life >= 0){
 			life -= Time.deltaTime;
