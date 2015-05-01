@@ -4,6 +4,8 @@ using System.Collections;
 
 public class ScavGame : MonoBehaviour {
 
+	public bool forceStart = false;
+
 	public float StartMatchTime = 300;
 	private float remainingTime = 0;
 	public UnityEngine.UI.Text timerText;
@@ -62,7 +64,10 @@ public class ScavGame : MonoBehaviour {
 			splitListener.StoreAudioSource(goliathFlagSound);
 			splitListener.StoreAudioSource(noTimeSound);
 		}
-		//BeginRound();
+
+		if (forceStart){
+			BeginRound();
+		}
 	}
 	
 	// Update is called once per frame

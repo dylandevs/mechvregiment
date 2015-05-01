@@ -20,8 +20,6 @@ public class ScavLayer : MonoBehaviour {
 	public Camera GunCam;
 	public Player player;
 
-	public Material invisMat;
-
 	// Set all layers before beginning
 	void Awake(){
 		int view1Layer = LayerMask.NameToLayer("PlayerView1_" + Layer);
@@ -45,7 +43,7 @@ public class ScavLayer : MonoBehaviour {
 			foreach (Transform weaponComponent in weapon3){
 				if (weaponComponent.gameObject.GetComponent<MeshFilter>() != null){
 					GameObject invisComponent = Instantiate(weaponComponent.gameObject) as GameObject;
-					invisComponent.GetComponent<Renderer>().material = invisMat;
+					invisComponent.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 					invisComponent.layer = view1Layer;
 
 					invisComponent.transform.parent = weaponComponent;

@@ -64,7 +64,6 @@ public class SplitAudioListener : MonoBehaviour {
 			newSource.clip = inputSource.clip;
 			newSourceGroup.Add(newSource);
 			audioSources.Add(newSourceGroup);
-			print ("Added");
 		}
 	}
 
