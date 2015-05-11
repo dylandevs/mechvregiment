@@ -201,6 +201,7 @@ public class BotAI : MonoBehaviour {
 						navMeshAgent.speed = MoveSpeed;
 					}
 
+					navMeshAgent.Resume();
 					navMeshAgent.destination = lastSighted;
 				}
 				else if (state == State.VeryClose){
@@ -227,7 +228,6 @@ public class BotAI : MonoBehaviour {
 					searchTime -= Time.deltaTime;
 				}
 				prevState = state;
-
 			}
 		}
 		else{
@@ -279,6 +279,7 @@ public class BotAI : MonoBehaviour {
 			if (navMeshAgent.enabled){
 				state = State.Traveling;
 				navMeshAgent.speed = RunSpeed;
+				navMeshAgent.Resume();
 				navMeshAgent.destination = GetRandPos(WaypointRad, waypoint.transform.position);
 				if(Random.Range(0f, 1f) < 0.5){
 					if (pool.splitListener){
@@ -589,6 +590,7 @@ public class BotAI : MonoBehaviour {
 			navMeshAgent.speed = WalkSpeed;
 			idleState = IdleMoving;
 			actionTime = 0;
+			navMeshAgent.Resume();
 			navMeshAgent.destination = GetRandPos(IdleWalkRad, transform.position);
 			idleDelay = Random.Range(IdleDelayLow, IdleDelayHigh);
 		}
@@ -619,6 +621,7 @@ public class BotAI : MonoBehaviour {
 		// Move to new position
 		if (searchDelay <= 0){
 			searchDelay = Random.Range(SearchDelayLow, SearchDelayHigh);
+			navMeshAgent.Resume();
 			navMeshAgent.destination = GetRandPos(SearchRad, lastSighted);
 		}
 		else if (HasAgentArrivedAtDest()){
