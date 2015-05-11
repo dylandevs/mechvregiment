@@ -719,7 +719,7 @@ public class ControllerScript : MonoBehaviour {
 	// Testing for ground directly beneath and at edges of collider
 	public bool IsGrounded(){
 
-		Vector3 groundCheckCenter = new Vector3(GetComponent<Collider>().bounds.center.x, GetComponent<Collider>().bounds.min.y + offset * 0.5f + 0.12f, GetComponent<Collider>().bounds.center.z);
+		Vector3 groundCheckCenter = new Vector3(GetComponent<Collider>().bounds.center.x, GetComponent<Collider>().bounds.min.y + offset * 0.5f + 0.1f, GetComponent<Collider>().bounds.center.z);
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
 			return true;
