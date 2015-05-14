@@ -6,6 +6,8 @@ using XInputDotNetPure;
 
 public class StartMenu : MonoBehaviour {
 
+	private const int NumControllers = 4;
+
 	// Transition variables
 	public float menuTransitionTime = 0.6f;
 	private float invMenuTransitionTime = 1;
@@ -24,6 +26,7 @@ public class StartMenu : MonoBehaviour {
 	public CanvasGroup mainMenu;
 	public CanvasGroup controlsScreen;
 	public CanvasGroup creditsScreen;
+	public CanvasGroup waitingScreen;
 	public CanvasGroup loadingScreen;
 
 	private CanvasGroup currentGroup;
@@ -39,6 +42,15 @@ public class StartMenu : MonoBehaviour {
 	public AudioSource switchSound;
 	public AudioSource selectSound;
 
+	public ControllerManager controllerManager;
+
+	private bool awaitingPlayerConfirmation = false;
+	private int currentConnectedControllers = 4;
+	private bool[] controllersReady;
+	private bool[] controllersInverted;
+	private GamePadState[] controllerStates;
+	private GamePadState[] prevControllerStates;
+
 	// Use this for initialization
 	void Start () {
 		//Application.LoadLevelAsync("ScavengerScene");
@@ -46,6 +58,11 @@ public class StartMenu : MonoBehaviour {
 		eventExecutor = new PointerEventData(EventSystem.current);
 		ExecuteEvents.Execute(mainOptions[currentSelectedOption].gameObject, eventExecutor, ExecuteEvents.pointerEnterHandler);
 		invMenuTransitionTime = 1 / menuTransitionTime;
+
+		PlayerPrefs.SetString ("Player0Control", "Normal");
+		PlayerPrefs.SetString ("Player1Control", "Normal");
+		PlayerPrefs.SetString ("Player2Control", "Normal");
+		PlayerPrefs.SetString ("Player3Control", "Normal");
 	}
 	
 	// Update is called once per frame
@@ -56,22 +73,6 @@ public class StartMenu : MonoBehaviour {
 		if (!state.IsConnected){
 			return;
 		}
-		
-		bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
-		bool B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
-		bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
-		bool Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
-
-		bool Select = (A_Press || X_Press);
-		bool Cancel = (B_Press || Y_Press);
-
-		bool DecOptionIndex = ((state.ThumbSticks.Right.Y > 0.5f && prevState.ThumbSticks.Right.Y < 0.5f) ||
-		                       (state.ThumbSticks.Left.Y > 0.5f && prevState.ThumbSticks.Left.Y < 0.5f) ||
-		                       (state.DPad.Up == ButtonState.Pressed && prevState.DPad.Up == ButtonState.Released));
-
-		bool IncOptionIndex = ((state.ThumbSticks.Right.Y < -0.5f && prevState.ThumbSticks.Right.Y > -0.5f) ||
-		                       (state.ThumbSticks.Left.Y < -0.5f && prevState.ThumbSticks.Left.Y > -0.5f) ||
-		                       (state.DPad.Down == ButtonState.Pressed && prevState.DPad.Down == ButtonState.Released));
 
 		if (menuTransitionProg > 0){
 			menuTransitionProg -= Time.deltaTime;
@@ -90,7 +91,23 @@ public class StartMenu : MonoBehaviour {
 				}
 			}
 		}
-		else if (!loading){
+		else if (!loading && !awaitingPlayerConfirmation){
+			bool A_Press = (state.Buttons.A == ButtonState.Pressed && prevState.Buttons.A == ButtonState.Released);
+			bool B_Press = (state.Buttons.B == ButtonState.Pressed && prevState.Buttons.B == ButtonState.Released);
+			bool X_Press = (state.Buttons.X == ButtonState.Pressed && prevState.Buttons.X == ButtonState.Released);
+			bool Y_Press = (state.Buttons.Y == ButtonState.Pressed && prevState.Buttons.Y == ButtonState.Released);
+			
+			bool Select = (A_Press || X_Press);
+			bool Cancel = (B_Press || Y_Press);
+			
+			bool DecOptionIndex = ((state.ThumbSticks.Right.Y > 0.5f && prevState.ThumbSticks.Right.Y < 0.5f) ||
+			                       (state.ThumbSticks.Left.Y > 0.5f && prevState.ThumbSticks.Left.Y < 0.5f) ||
+			                       (state.DPad.Up == ButtonState.Pressed && prevState.DPad.Up == ButtonState.Released));
+			
+			bool IncOptionIndex = ((state.ThumbSticks.Right.Y < -0.5f && prevState.ThumbSticks.Right.Y > -0.5f) ||
+			                       (state.ThumbSticks.Left.Y < -0.5f && prevState.ThumbSticks.Left.Y > -0.5f) ||
+			                       (state.DPad.Down == ButtonState.Pressed && prevState.DPad.Down == ButtonState.Released));
+
 			if (!isSubMenu){
 				if (Select){
 					RegisterOptionSelect();
@@ -111,10 +128,65 @@ public class StartMenu : MonoBehaviour {
 					isSubMenu = false;
 				}
 			}
-		}
-		
-		prevState = state;
 
+			prevState = state;
+		}
+		else if (awaitingPlayerConfirmation){
+			for (int i = 0; i < currentConnectedControllers; i++){
+				controllerStates[i] = GamePad.GetState((PlayerIndex)i);
+
+				bool A_Press = (controllerStates[i].Buttons.A == ButtonState.Pressed && prevControllerStates[i].Buttons.A == ButtonState.Released);
+				bool B_Press = (controllerStates[i].Buttons.B == ButtonState.Pressed && prevControllerStates[i].Buttons.B == ButtonState.Released);
+				bool X_Press = (controllerStates[i].Buttons.X == ButtonState.Pressed && prevControllerStates[i].Buttons.X == ButtonState.Released);
+				bool Y_Press = (controllerStates[i].Buttons.Y == ButtonState.Pressed && prevControllerStates[i].Buttons.Y == ButtonState.Released);
+
+				// Set/unset ready state
+				if (A_Press){
+					if (!controllersReady[i]){
+						controllerManager.SetReady(i);
+						controllersReady[i] = true;
+					}
+				}
+				else if (B_Press){
+					if (controllersReady[i]){
+						controllerManager.UnsetReady(i);
+						controllersReady[i] = false;
+					}
+				}
+
+				// Set/unset control inversion
+				if (Y_Press && !controllersReady[i]){
+					if (!controllersInverted[i]){
+						controllerManager.SetInverted(i);
+						controllersInverted[i] = true;
+						PlayerPrefs.SetString ("Player" + i + "Control", "Inverted");
+					}
+					else{
+						controllerManager.UnsetInverted(i);
+						controllersInverted[i] = false;
+						PlayerPrefs.SetString ("Player" + i + "Control", "Normal");
+					}
+				}
+
+				prevControllerStates[i] = controllerStates[i];
+			}
+
+			int numReady = 0;
+
+			// Count up confirmations
+			for (int i = 0; i < controllersReady.Length; i++){
+				if (controllersReady[i]){
+					numReady++;
+				}
+			}
+
+			if (numReady == currentConnectedControllers){
+				awaitingPlayerConfirmation = false;
+				TriggerTransition(waitingScreen, loadingScreen);
+				callback = LoadGame;
+				loading = true;
+			}
+		}
 	}
 
 	void AdjustSelection(int adjustment){
@@ -134,9 +206,14 @@ public class StartMenu : MonoBehaviour {
 		selectSound.Play();
 		switch (mainOptions[currentSelectedOption].tag){
 		case "StartButton":
-			TriggerTransition(mainMenu, loadingScreen);
-			loading = true;
-			callback = LoadGame;
+			TriggerTransition(mainMenu, waitingScreen);
+			awaitingPlayerConfirmation = true;
+			currentConnectedControllers = CountConnectedControllers();
+			controllerManager.Initialize(currentConnectedControllers);
+			controllersReady = new bool[currentConnectedControllers];
+			controllersInverted = new bool[currentConnectedControllers];
+			controllerStates = new GamePadState[currentConnectedControllers];
+			prevControllerStates = new GamePadState[currentConnectedControllers];
 			break;
 		case "ControlsButton":
 			TriggerTransition(mainMenu, controlsScreen);
@@ -161,5 +238,15 @@ public class StartMenu : MonoBehaviour {
 
 	void LoadGame(){
 		Application.LoadLevel("ScavengerScene");
+	}
+
+	int CountConnectedControllers(){
+		int controllers = 0;
+		for (int i = 0; i < NumControllers; i++) {
+			if (GamePad.GetState((PlayerIndex)i).IsConnected){
+				controllers++;
+			}
+		}
+		return controllers;
 	}
 }

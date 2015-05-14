@@ -130,6 +130,9 @@ public class ControllerScript : MonoBehaviour {
 	private bool flagInRange = false;
 	[HideInInspector]
 	public bool flagPickedUp = false;
+
+	// Inverted controls
+	public bool inverted = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -230,6 +233,9 @@ public class ControllerScript : MonoBehaviour {
 				
 				R_XAxis = state.ThumbSticks.Right.X;
 				R_YAxis = -state.ThumbSticks.Right.Y;
+				if (inverted){
+					R_YAxis *= -1;
+				}
 				RS_Press = (state.Buttons.RightStick == ButtonState.Pressed && prevState.Buttons.RightStick == ButtonState.Released);
 				
 				L_XAxis = state.ThumbSticks.Left.X;
@@ -734,6 +740,9 @@ public class ControllerScript : MonoBehaviour {
 		if (newId > 0 && newId < 5){
 			controllerId = newId - 1;
 			player.isDead = false;
+			if (PlayerPrefs.GetString("Player" + controllerId + "Control") == "Inverted"){
+				inverted = true;
+			}
 		}
 	}
 	
