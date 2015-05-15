@@ -97,6 +97,8 @@ public class BotAI : MonoBehaviour {
 	public AudioSource fireSound;
 	public AudioSource deathSound;
 
+	private Vector3 referencePosition;
+
 	// Use this for initialization
 	void Start () {
 		navMeshAgent = GetComponent<NavMeshAgent>();
@@ -125,6 +127,8 @@ public class BotAI : MonoBehaviour {
 			pool.splitListener.StoreAudioSource(fireSound);
 			pool.splitListener.StoreAudioSource(deathSound);
 		}
+
+		referencePosition = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -263,6 +267,7 @@ public class BotAI : MonoBehaviour {
 	void OnCollisionEnter(Collision collision){
 		if (!navigating && collision.gameObject.tag == "Terrain"){
 			navigating = true;
+			referencePosition = transform.position;
 			if (navMeshAgent){
 				navMeshAgent.enabled = true;
 			}
@@ -591,7 +596,10 @@ public class BotAI : MonoBehaviour {
 			idleState = IdleMoving;
 			actionTime = 0;
 			navMeshAgent.Resume();
-			navMeshAgent.destination = GetRandPos(IdleWalkRad, transform.position);
+			navMeshAgent.destination = GetRandPos(IdleWalkRad, referencePosition);
+			if (navMeshAgent.remainingDistance > ThreshClose){
+				navMeshAgent.speed = RunSpeed;
+			}
 			idleDelay = Random.Range(IdleDelayLow, IdleDelayHigh);
 		}
 
