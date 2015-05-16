@@ -58,9 +58,9 @@ Shader "Toon/Surf"
         half4 LightingRamp (SurfaceOutput s, half3 lightDir, half atten) {
           half NdotL = dot (s.Normal, lightDir);
           half diff = NdotL * 0.5 + 0.5;
-          half3 ramp = tex2D (_Ramp, float2(diff)).rgb;
+          half3 ramp = tex2D (_Ramp, float2(diff, diff)).rgb;
           half4 c;
-          c.rgb = s.Albedo * _LightColor0.rgb * (ramp*1.3) * (atten * 2);
+          c.rgb = s.Albedo * _LightColor0.rgb * (ramp*1.3) * (atten * 1);
           c.a = s.Alpha;
           return c;
        }
