@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -18,6 +18,10 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject screens;
 	public GameObject tutorialPos;
 	public GameObject mech;
+	public GameObject cameraPos;
+	public GameObject cannonArm;
+	public GameObject miniGunArm;
+
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -27,13 +31,24 @@ public class GoliathGameScript : MonoBehaviour {
 	public bool netWorkReady;
 	public bool restartMatch;
 	public bool reLoadScene;
+	public bool tutorial;
+	public bool tutorialPass = false;
 
 	public Image artifactLostImage;
 	public Image artifactDefendedImage;
 
+	public int tutorialNumber;
+	
+	public AudioSource matchStartSound;
+	public AudioSource flagTakenSound;
+	public AudioSource noTimeSound;
+	public AudioSource heavyDamageSound;
+
+	public float remainingTime;
+	public UnityEngine.UI.Text timerText;
+
+	
 	bool menu1B;
-	bool tutorialPass = false;
-	bool tutorial;
 	bool readyToGo;
 	bool oneTime;
 	bool gameEnded;
@@ -42,23 +57,43 @@ public class GoliathGameScript : MonoBehaviour {
 	bool win;
 	bool loose;
 	bool noTimePlayed = false;
-
-	public AudioSource matchStartSound;
-	public AudioSource flagTakenSound;
-	public AudioSource noTimeSound;
-	public AudioSource heavyDamageSound;
-
+	
+	bool pressed;
+	bool previous;
+	
 	float life = 0;
+	float lTrig;
+	float rTrig;
+	
+	int left = 0;
+	int right = 1;
 
-	public float remainingTime;
-	public UnityEngine.UI.Text timerText;
 	// Use this for initialization
 	void Start () {
-		minimap.SetActive(false);
+		tutorialNumber = 1;
+		tutorial = true;
+		tutorialPass = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		print (tutorialNumber);
+
+		if (Input.GetKeyDown(KeyCode.S)) {
+
+			print ("swapped");
+
+			if(left == 0){
+				left = 1;
+				right = 0;
+			}
+			else{
+				left = 0;
+				right = 1;
+			}
+		}
+
 		if (tutorial == true) {
 			tutuorialFuncion();
 		}
@@ -92,49 +127,48 @@ public class GoliathGameScript : MonoBehaviour {
 			if (readyToGo == true) {
 				readyToStart ();
 			}
+		}
 
-			//checks if  the game has ended then does stuff
-			if (gameEnded == true) {
+		//checks if  the game has ended then does stuff
+		if (gameEnded == true) {
 
-				if (life >= 0) {
-					life -= Time.deltaTime;
-				}
-
-				//change colour of the screens
-				float lerpAmnt = life / 3;
-				screens.GetComponent<Renderer> ().material.color = Color.Lerp (Color.black, Color.white, lerpAmnt);
-				Color tempColour = screens.GetComponent<Renderer> ().material.color;
-				tempColour.a = Mathf.Lerp (0, 1, 1 - lerpAmnt);
-				screens.GetComponent<Renderer> ().material.color = tempColour;
-
-				print (lerpAmnt);
-
-				if (win == true) {
-					artifactDefendedImage.fillAmount = 1 - lerpAmnt;
-				}
-				if (loose == true) {
-					artifactLostImage.fillAmount = 1 - lerpAmnt;
-				}
-
-
-				mechShoot.allowedToShootGame = false;
-				movement.allowedToDash = false;
-				movement.dash = false;
-
-				if (SixenseInput.Controllers [1].GetButtonDown (SixenseButtons.START)) {
-					reLoad ();
-				}
+			if (life >= 0) {
+				life -= Time.deltaTime;
 			}
 
+			//change colour of the screens
+			float lerpAmnt = life / 3;
+			screens.GetComponent<Renderer> ().material.color = Color.Lerp (Color.black, Color.white, lerpAmnt);
+			Color tempColour = screens.GetComponent<Renderer> ().material.color;
+			tempColour.a = Mathf.Lerp (0, 1, 1 - lerpAmnt);
+			screens.GetComponent<Renderer> ().material.color = tempColour;
+
+			if (win == true) {
+				artifactDefendedImage.fillAmount = 1 - lerpAmnt;
+			}
+			if (loose == true) {
+				artifactLostImage.fillAmount = 1 - lerpAmnt;
+			}
+
+
+			mechShoot.allowedToShootGame = false;
+			movement.allowedToDash = false;
+			movement.dash = false;
+
+			if (SixenseInput.Controllers [1].GetButtonDown (SixenseButtons.START)) {
+				reLoad ();
+			}
 		}
 	}
 
 	public void restartMatchFunction(){
-		mech.transform.position = spawnPoint.transform.position;
+		print ("in restart");
+
+		minimap.SetActive(false);
 		movement.allowedToMove = false;
 		movement.allowedToDash = false;
-		float lTrig = SixenseInput.Controllers[0].Trigger;
-		float rTrig = SixenseInput.Controllers[1].Trigger;
+		lTrig = SixenseInput.Controllers[0].Trigger;
+		rTrig = SixenseInput.Controllers[1].Trigger;
 
 		//turn the mech off so he can't move
 		mechMesh.SetActive(false);
@@ -142,7 +176,7 @@ public class GoliathGameScript : MonoBehaviour {
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
 		mechShoot.allowedToShootGame = false;
-		mechMesh.transform.position = spawnPoint.transform.position;
+
 
 		if (Input.GetKey (KeyCode.R)) {
 			PhotonNetwork.Disconnect();
@@ -185,12 +219,14 @@ public class GoliathGameScript : MonoBehaviour {
 			waitingForPlayers.SetActive(true);
 
 			if(allConditions = true && netWorkReady == true){
+				mech.transform.position = spawnPoint.transform.position;
 				menu1.SetActive(false);
 				menu2.SetActive(false);
 				menu3.SetActive(false);
 				blackOut.SetActive(false);
 				waitingForPlayers.SetActive(false);
 
+				mechShoot.connected = true;
 				mechShoot.allowedToShootGame = true;
 				goliathUI.SetActive(true);
 				minimap.SetActive(true);
@@ -210,7 +246,6 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		restartMatch = true;
 		oneTime = true;
 	}
 
@@ -233,6 +268,136 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void tutuorialFuncion(){
-		mech.transform.position = tutorialPos.transform.position;
+
+		print (" in tut");
+
+		//mech.transform.position = tutorialPos.transform.position;
+
+		if (tutorialNumber == 1) {
+			mapfunction();
+		}
+
+		if (tutorialNumber == 2) {
+			healthFunction();
+		}
+
+		if (tutorialNumber == 3) {
+			leftHandShooting();
+		}
+
+		if (tutorialNumber == 4) {
+			rightHandShooting();
+		}
+
+		if (tutorialNumber == 5) {
+			finalStep();
+		}
+
+		if (tutorialPass == true) {
+			tutorial = false;
+			restartMatch = true;
+		}
+	}
+
+	void mapfunction(){
+
+		// check if he looked at map
+		Ray minMode = new Ray(cameraPos.transform.position,cameraPos.transform.forward);
+		RaycastHit minHit;
+		
+		
+		//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
+		if (Physics.Raycast (minMode, out minHit, 75)) {
+			if (minHit.collider.tag == "miniMap") {
+				print ("ran 1");
+				tutorialNumber = 2;
+			}
+		}
+	}
+
+	void healthFunction(){
+		//check if looked at health
+		Ray minMode = new Ray(cameraPos.transform.position,cameraPos.transform.forward);
+		RaycastHit minHit;
+
+			if (Physics.Raycast (minMode, out minHit, 75)) {
+			if (minHit.collider.tag == "Shield") {
+				print ("ran 2");
+				tutorialNumber = 3;
+			}
+		}
+	
+	}
+
+	void leftHandShooting(){
+		//keep arms up
+		miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
+		cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
+
+		print (pressed);
+
+		if (SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.ONE) || SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.TWO) ||
+		    SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.THREE) || SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.FOUR)) {
+			pressed = true;
+
+		}
+
+		if (SixenseInput.Controllers [left].GetButtonUp (SixenseButtons.ONE) || SixenseInput.Controllers [left].GetButtonUp (SixenseButtons.TWO) ||
+		    SixenseInput.Controllers [left].GetButtonUp (SixenseButtons.THREE) || SixenseInput.Controllers [left].GetButtonUp (SixenseButtons.FOUR)) {
+			pressed = false;
+		}
+
+		if (lTrig >= 0.8 && pressed == false ) {
+			//display next ui
+			//turn off previous ui
+			print("shoyL");
+			previous = true;
+
+		}
+		if (lTrig >= 0.8 && pressed == true && previous == true ) {
+			//turn off all UI
+			tutorialNumber = 4;
+			print ("ran 3");
+		}
+	}
+
+	void rightHandShooting(){
+
+		miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
+		cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
+		
+		if (SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.ONE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.TWO) ||
+		    SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.THREE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.FOUR)) {
+			pressed = true;
+		}
+		
+		if (SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.ONE) || SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.TWO) ||
+		    SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.THREE) || SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.FOUR)) {
+			pressed = false;
+		}
+		
+		if (lTrig >= 0.8 && pressed == false ) {
+			//display next ui
+			//turn off previous ui
+			
+			previous = true;
+			
+		}
+
+		if (lTrig >= 0.8 && pressed == true && previous == true ) {
+			//turn off all UI
+			print ("ran 4");
+			tutorialNumber = 5;
+		}
+
+	}
+
+	void finalStep(){
+		if (SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.ONE)){
+			//test it out
+
+			print ("Done");
+			tutorialPass = true;
+		}
 	}
 }

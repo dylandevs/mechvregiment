@@ -81,6 +81,7 @@ public class MechShoot : MonoBehaviour {
 	public bool dash;
 	public bool pressToPick;
 	public bool allowedToDrop;
+	public bool connected;
 
 	float shootTimer;
 	float missleRetTimer;
@@ -110,6 +111,7 @@ public class MechShoot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		connected = false;
 		flagCarried.SetActive(false);
 		rocketAimSpeed = 15 * Time.deltaTime;
 		allowedToShoot = false;
@@ -131,7 +133,7 @@ public class MechShoot : MonoBehaviour {
 			}
 		}
 
-		if(allowedToShoot == false){
+		if(allowedToShoot == false || allowedToShootGame == false){
 			miniGunFirer.fire = false;
 			miniGunFirer.cannonShoot = false;
 		}
@@ -474,7 +476,9 @@ public class MechShoot : MonoBehaviour {
 						pilotAnimator.SetBool(minionIdle,true);
 
 						flagDown = false;
-						networkManager.photonView.RPC("PlaceMinionWaypoint",PhotonTargets.All,minionFlag.transform.position);
+						if(connected == true){
+							networkManager.photonView.RPC("PlaceMinionWaypoint",PhotonTargets.All,minionFlag.transform.position);
+						}
 
 					}
 
