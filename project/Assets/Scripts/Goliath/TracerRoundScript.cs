@@ -6,7 +6,7 @@ public class TracerRoundScript : MonoBehaviour {
 	PoolManager pool;
 	float life = 5f;
 	float speed = 300;
-	float damage = 5;
+	float damage = 2;
 
 	public LayerMask mask;
 
@@ -93,12 +93,14 @@ public class TracerRoundScript : MonoBehaviour {
 		if (Physics.SphereCast (transform.position,1f,transform.forward, out hitInfoFire, 1f, mask)) 
 		{
 			Vector3 hitInfoFirePoint = hitInfoFire.point;
+			print ("hit anbything");
 
 			if (hitInfoFire.collider.tag != "Player") {
 				//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
 				//and add a remaining bullet hole
 				GameObject spark = sparkPool.Retrieve(hitInfoFirePoint);
 				spark.transform.up = hitInfoFire.transform.up;
+				print ("hit anbything");
 			}
 
 			if(hitInfoFire.collider.tag == "Enemy" && !isAvatar){
@@ -108,6 +110,7 @@ public class TracerRoundScript : MonoBehaviour {
 				GameObject hitMinion = hitInfoFire.collider.gameObject;
 				MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
 				minionScript.Damage(damage);
+				print ("hit anbything");
 			}
 
 			if(hitInfoFire.collider.tag == "Player" && !isAvatar){
@@ -118,6 +121,7 @@ public class TracerRoundScript : MonoBehaviour {
 				if(miniGunHit.GetActive() == false){
 					miniGunHit.SetActive(true);
 				}
+				print ("hit anbything");
 			}
 			//turn off the bullet prefab
 			pool.Deactivate(gameObject);

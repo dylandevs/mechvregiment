@@ -123,6 +123,9 @@ public class MechShoot : MonoBehaviour {
 	void Update () {
 
 		if (Input.GetKeyDown(KeyCode.S)) {
+
+			print("swapped");
+
 			if(left == 0){
 				left = 1;
 				right = 0;

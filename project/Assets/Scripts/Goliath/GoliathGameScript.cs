@@ -33,6 +33,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public bool reLoadScene;
 	public bool tutorial;
 	public bool tutorialPass = false;
+	public bool previousr;
 
 	public Image artifactLostImage;
 	public Image artifactDefendedImage;
@@ -60,7 +61,8 @@ public class GoliathGameScript : MonoBehaviour {
 	
 	bool pressed;
 	bool previous;
-	
+	bool pressedr;
+
 	float life = 0;
 	float lTrig;
 	float rTrig;
@@ -73,14 +75,19 @@ public class GoliathGameScript : MonoBehaviour {
 		tutorialNumber = 1;
 		tutorial = true;
 		tutorialPass = false;
+		previousr = false;
+		pressed = false;
+		pressedr = false;
+		menu1B = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		print (tutorialNumber);
-
-		if (Input.GetKeyDown(KeyCode.S)) {
+		lTrig = SixenseInput.Controllers[left].Trigger;
+		rTrig = SixenseInput.Controllers[right].Trigger;
+		
+		if (Input.GetKey(KeyCode.S)) {
 
 			print ("swapped");
 
@@ -162,7 +169,10 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void restartMatchFunction(){
-		print ("in restart");
+
+		print ("in restart function");
+
+		mech.transform.position = spawnPoint.transform.position;
 
 		minimap.SetActive(false);
 		movement.allowedToMove = false;
@@ -269,10 +279,6 @@ public class GoliathGameScript : MonoBehaviour {
 
 	public void tutuorialFuncion(){
 
-		print (" in tut");
-
-		//mech.transform.position = tutorialPos.transform.position;
-
 		if (tutorialNumber == 1) {
 			mapfunction();
 		}
@@ -305,12 +311,11 @@ public class GoliathGameScript : MonoBehaviour {
 		Ray minMode = new Ray(cameraPos.transform.position,cameraPos.transform.forward);
 		RaycastHit minHit;
 		
-		
+		tutorialNumber = 3;
 		//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 		if (Physics.Raycast (minMode, out minHit, 75)) {
 			if (minHit.collider.tag == "miniMap") {
-				print ("ran 1");
-				tutorialNumber = 2;
+
 			}
 		}
 	}
@@ -322,7 +327,6 @@ public class GoliathGameScript : MonoBehaviour {
 
 			if (Physics.Raycast (minMode, out minHit, 75)) {
 			if (minHit.collider.tag == "Shield") {
-				print ("ran 2");
 				tutorialNumber = 3;
 			}
 		}
@@ -333,8 +337,6 @@ public class GoliathGameScript : MonoBehaviour {
 		//keep arms up
 		miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
 		cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
-
-		print (pressed);
 
 		if (SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.ONE) || SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.TWO) ||
 		    SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.THREE) || SixenseInput.Controllers [left].GetButtonDown (SixenseButtons.FOUR)) {
@@ -348,16 +350,16 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (lTrig >= 0.8 && pressed == false ) {
+			print("shot L");
 			//display next ui
 			//turn off previous ui
-			print("shoyL");
 			previous = true;
 
 		}
 		if (lTrig >= 0.8 && pressed == true && previous == true ) {
 			//turn off all UI
+			print("shot L pressed");
 			tutorialNumber = 4;
-			print ("ran 3");
 		}
 	}
 
@@ -368,35 +370,36 @@ public class GoliathGameScript : MonoBehaviour {
 		
 		if (SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.ONE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.TWO) ||
 		    SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.THREE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.FOUR)) {
-			pressed = true;
+			pressedr = true;
 		}
 		
 		if (SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.ONE) || SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.TWO) ||
 		    SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.THREE) || SixenseInput.Controllers [right].GetButtonUp (SixenseButtons.FOUR)) {
-			pressed = false;
+			pressedr = false;
 		}
 		
-		if (lTrig >= 0.8 && pressed == false ) {
+		if (rTrig >= 0.8 && pressedr == false ) {
 			//display next ui
 			//turn off previous ui
-			
-			previous = true;
+			previousr = true;
+			print("shot R");
 			
 		}
 
-		if (lTrig >= 0.8 && pressed == true && previous == true ) {
+		if (rTrig >= 0.8 && pressedr == true && previousr == true ) {
+
+			print("shot R pressed");
 			//turn off all UI
-			print ("ran 4");
 			tutorialNumber = 5;
 		}
 
 	}
 
 	void finalStep(){
-		if (SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.ONE)){
+		print("last step active");
+		if (SixenseInput.Controllers[right].GetButtonDown (SixenseButtons.START)){
+			print ("done");
 			//test it out
-
-			print ("Done");
 			tutorialPass = true;
 		}
 	}
