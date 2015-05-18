@@ -21,6 +21,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject cameraPos;
 	public GameObject cannonArm;
 	public GameObject miniGunArm;
+	public GameObject tutorialZone;
 	public GameObject[] dummies;
 
 
@@ -80,6 +81,7 @@ public class GoliathGameScript : MonoBehaviour {
 		pressed = false;
 		pressedr = false;
 		menu1B = true;
+		mechShoot.connected = false;
 	}
 	
 	// Update is called once per frame
@@ -191,7 +193,7 @@ public class GoliathGameScript : MonoBehaviour {
 		//removes oculus vision except for menues
 		blackOut.SetActive(true);
 		mechShoot.allowedToShootGame = false;
-
+		tutorialZone.SetActive (false);
 		foreach(GameObject j in dummies){
 			j.SetActive(false);
 		}

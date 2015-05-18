@@ -21,6 +21,8 @@ public class dummyDamager : MonoBehaviour {
 
 	public void damageDummy(float damage){
 
+		print("ouch");
+
 		health -= damage;
 
 	}
