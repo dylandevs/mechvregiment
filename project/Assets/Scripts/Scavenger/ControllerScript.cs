@@ -79,7 +79,7 @@ public class ControllerScript : MonoBehaviour {
 	[HideInInspector]
 	public bool aimingDownSight = false;
 	private float adsHoldTime = 1;
-	
+
 	// Publicly accessible controller attributes
 	[HideInInspector]
 	public bool A_Press = false;
@@ -133,7 +133,11 @@ public class ControllerScript : MonoBehaviour {
 
 	// Inverted controls
 	public bool inverted = false;
-	
+
+	// Cached
+	private Rigidbody rigidbody;
+	private Collider collider;
+
 	// Use this for initialization
 	void Start () {
 		playerCam = cameraAnim.gameObject;
@@ -150,14 +154,16 @@ public class ControllerScript : MonoBehaviour {
 
 		mainRad = terrainCollider.radius;
 		margin = Mathf.Sqrt(2 * mainRad) - mainRad;
-		colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
-		offset = (mainRad + margin) / 2;
+		//colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
+		colliderRad = terrainCollider.radius - 0.05f;
+		offset = terrainCollider.radius - 0.1f;
+		rigidbody = GetComponent<Rigidbody> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Updating attributes
-		Vector3 newVel = GetComponent<Rigidbody>().velocity;
+		Vector3 newVel = rigidbody.velocity;
 		perpFacing = Vector3.Cross(Vector3.up, facing).normalized;
 		facing2D = new Vector3(facing.x, 0, facing.z).normalized;
 
@@ -169,7 +175,7 @@ public class ControllerScript : MonoBehaviour {
 		isSprinting = false;
 		
 		if (currentlyGrounded){
-			newVel = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
+			newVel = new Vector3(0, rigidbody.velocity.y, 0);
 		}
 		
 		Weapon currentWeapon = player.GetCurrentWeapon ();
@@ -251,12 +257,6 @@ public class ControllerScript : MonoBehaviour {
 			}
 
 			if (currentlyGrounded){
-
-				// Toggle crouching
-				if (B_Press){
-					SetCrouching(!isCrouching);
-				}
-				
 				// Jumping
 				if (A_Press && !flagPickedUp){
 					newVel.y += JumpSpeed;
@@ -269,6 +269,16 @@ public class ControllerScript : MonoBehaviour {
 					
 					player.networkManager.photonView.RPC ("PlayerJump", PhotonTargets.All, player.initializer.Layer - 1);
 				}
+			}
+
+			if (currentlyGrounded){
+
+				// Toggle crouching
+				if (B_Press){
+					SetCrouching(!isCrouching);
+				}
+				
+
 				
 				// Lateral movement (strafing)
 				if (L_XAxis != 0){
@@ -603,8 +613,8 @@ public class ControllerScript : MonoBehaviour {
 		newVel.z *= speedFactor;
 
 		// Apply velocity and force
-		if (!GetComponent<Rigidbody>().isKinematic && !player.isStunned){
-			GetComponent<Rigidbody>().velocity = newVel;
+		if (!rigidbody.isKinematic && !player.isStunned){
+			rigidbody.velocity = newVel;
 		}
 
 		// Apply spread to weapon based on actions
@@ -625,11 +635,11 @@ public class ControllerScript : MonoBehaviour {
 
 		// Apply calculated speed animation
 		Quaternion revFacingRot = Quaternion.FromToRotation(facing2D, Vector3.forward);
-		Vector3 rotatedVelocity = revFacingRot * GetComponent<Rigidbody>().velocity;
+		Vector3 rotatedVelocity = revFacingRot * rigidbody.velocity;
 
 		forwardSpeed = rotatedVelocity.z;
 		rightSpeed = rotatedVelocity.x;
-		speed = GetComponent<Rigidbody>().velocity.magnitude;
+		speed = rigidbody.velocity.magnitude;
 
 		anim.SetFloat(fwdSpeedHash, forwardSpeed);
 		anim.SetFloat(rgtSpeedHash, rightSpeed);
@@ -725,7 +735,11 @@ public class ControllerScript : MonoBehaviour {
 	// Testing for ground directly beneath and at edges of collider
 	public bool IsGrounded(){
 
-		Vector3 groundCheckCenter = new Vector3(GetComponent<Collider>().bounds.center.x, GetComponent<Collider>().bounds.min.y + offset * 0.5f + 0.1f, GetComponent<Collider>().bounds.center.z);
+		Vector3 groundCheckCenter = new Vector3(terrainCollider.bounds.center.x, terrainCollider.bounds.min.y + offset, terrainCollider.bounds.center.z);
+
+		/*Debug.DrawLine (groundCheckCenter, groundCheckCenter + colliderRad * Vector3.down);
+		Debug.DrawLine (groundCheckCenter - colliderRad * Vector3.right, groundCheckCenter + colliderRad * Vector3.right);
+		Debug.DrawLine (groundCheckCenter - colliderRad * Vector3.forward, groundCheckCenter + colliderRad * Vector3.forward);*/
 
 		if (Physics.CheckSphere(groundCheckCenter, colliderRad, player.groundedLayer)){
 			return true;

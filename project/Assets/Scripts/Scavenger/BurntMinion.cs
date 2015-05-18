@@ -13,6 +13,7 @@ public class BurntMinion : MonoBehaviour {
 		for (int i = 0; i < pieces.transform.childCount; i++){
 			originalPos[i] = pieces.transform.GetChild(i).localPosition;
 		}
+
 	}
 
 	// Use this for initialization
@@ -36,11 +37,13 @@ public class BurntMinion : MonoBehaviour {
 		for (int i = 0; i < pieces.transform.childCount; i++){
 			Transform child = pieces.transform.GetChild(i);
 
-			child.GetComponent<Rigidbody>().velocity = Vector3.zero;
-			child.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			Rigidbody childRigidbody = child.GetComponent<Rigidbody>();
+
+			childRigidbody.velocity = Vector3.zero;
+			childRigidbody.angularVelocity = Vector3.zero;
 			child.localPosition = originalPos[i];
 			child.localRotation = Quaternion.identity;
-			child.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), Random.Range(-50, 50)));
+			childRigidbody.AddForce(new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), Random.Range(-50, 50)));
 		}
 	}
 }

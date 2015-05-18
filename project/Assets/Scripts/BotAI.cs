@@ -216,7 +216,12 @@ public class BotAI : MonoBehaviour {
 				}
 
 				if (state > State.Searching){
-					navMeshAgent.stoppingDistance = 10;
+					//if (IsSightUnobstructed(currentTarget.gameObject)){
+						navMeshAgent.stoppingDistance = 10;
+					/*}
+					else{
+						navMeshAgent.stoppingDistance = 0;
+					}*/
 				}
 				else{
 					navMeshAgent.stoppingDistance = 0;
@@ -492,22 +497,6 @@ public class BotAI : MonoBehaviour {
 		}
 
 		return false;
-	}
-
-	// Calculates direction to fire in based on last-seen target component
-	Vector3 chooseFireTarget(){
-		Vector3 fireDir = transform.forward;
-		if (targetVisible == TargetComponent.Head){
-
-		}
-		else if (targetVisible == TargetComponent.Head){
-			
-		}
-		else if (targetVisible == TargetComponent.Head){
-			
-		}
-
-		return fireDir;
 	}
 
 	// Fires bullet predictively at target based on velocity
