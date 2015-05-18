@@ -109,9 +109,9 @@ public class cannonShot : MonoBehaviour {
 								if (hitPlayerScript){
 									hitPlayerScript.DamagePlayer(damageAmnt,gameObject.transform.forward);
 								}
-								else{print ("delse1");}
+
 							}
-							else{print("else2");}
+
 						}
 						if(c.gameObject.GetComponent<Collider>().tag == "Enemy"){
 
@@ -126,6 +126,21 @@ public class cannonShot : MonoBehaviour {
 							GameObject hitMinion = c.GetComponent<Collider>().gameObject;
 							MinionAvatar minionScript = hitMinion.GetComponent<MinionAvatar>();
 							minionScript.Damage(damageAmnt);
+						}
+
+						if(c.gameObject.GetComponent<Collider>().tag == "Dummy"){
+							
+							if(cannonHit.GetActive() == false){
+								cannonHit.SetActive(true);
+							}
+							
+							float dist = Vector3.Distance(transform.position, c.transform.position);
+							float damageRatio = 1f - (dist / explosionRadius);
+							float damageAmnt = damage * damageRatio;
+							
+							GameObject hitDummy = c.GetComponent<Collider>().gameObject;
+							dummyDamager dummyScript = hitDummy.GetComponent<dummyDamager>();
+							dummyScript.damageDummy(damageAmnt);
 						}
 					}
 				}
