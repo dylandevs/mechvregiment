@@ -21,6 +21,7 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject cameraPos;
 	public GameObject cannonArm;
 	public GameObject miniGunArm;
+	public GameObject[] dummies;
 
 
 	public mechMovement movement;
@@ -83,6 +84,10 @@ public class GoliathGameScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if (Input.GetKey (KeyCode.R)) {
+			tutorialPass = true;
+		}
 
 		lTrig = SixenseInput.Controllers[left].Trigger;
 		rTrig = SixenseInput.Controllers[right].Trigger;
@@ -187,10 +192,8 @@ public class GoliathGameScript : MonoBehaviour {
 		blackOut.SetActive(true);
 		mechShoot.allowedToShootGame = false;
 
-
-		if (Input.GetKey (KeyCode.R)) {
-			PhotonNetwork.Disconnect();
-			Application.LoadLevel("GoliathScene"); 
+		foreach(GameObject j in dummies){
+			j.SetActive(false);
 		}
 
 		if(readyToGo == false){
@@ -278,6 +281,9 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void tutuorialFuncion(){
+
+		mechShoot.allowedToShootGame = true;
+		movement.allowedToMove = true;
 
 		if (tutorialNumber == 1) {
 			mapfunction();
@@ -397,7 +403,7 @@ public class GoliathGameScript : MonoBehaviour {
 
 	void finalStep(){
 		print("last step active");
-		if (SixenseInput.Controllers[right].GetButtonDown (SixenseButtons.START)){
+		if (SixenseInput.Controllers[left].GetButtonDown (SixenseButtons.START)){
 			print ("done");
 			//test it out
 			tutorialPass = true;

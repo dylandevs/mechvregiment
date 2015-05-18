@@ -45,6 +45,14 @@ public class TracerRoundScript : MonoBehaviour {
 					spark.transform.up = hitInfoFirePos.transform.up;
 					print ("hit anbything");
 				}
+
+				if (hitInfoFirePos.collider.tag == "Dummy") {
+					//Quaternion hitRotation = Quaternion.FromToRotation(Vector3.up, hitInfoFire.normal);
+					//and add a remaining bullet hole
+					GameObject hitPlayer = hitInfoFirePos.collider.gameObject;
+					dummyDamager hitDummy = hitPlayer.GetComponent<dummyDamager>();
+					hitDummy.damageDummy(damage);
+				}
 				
 				if(hitInfoFirePos.collider.tag == "Enemy" && !isAvatar){
 					if(miniGunHit.GetActive() == false){
