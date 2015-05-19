@@ -21,6 +21,8 @@ public class RocketScript : MonoBehaviour {
 
 	//audio for explosion
 	public AudioSource explosionEmitter;
+	private AudioSource meteorEmitter;
+	private float initialPitch = 0.9f;
 
 	public LayerMask mask;
 
@@ -36,11 +38,26 @@ public class RocketScript : MonoBehaviour {
 
 	void Start(){
 		pool = transform.parent.GetComponent<PoolManager>();
+		meteorEmitter = transform.GetComponent<AudioSource>();
+		meteorEmitter.pitch = initialPitch;
+		meteorEmitter.volume = 0f;
 	}
 
 	// Update is called once per frame
 	void Update(){
 		timer += Time.deltaTime * 5;
+		if (turnTimer <= 0 && meteorEmitter.isPlaying){
+			if(initialPitch > 0){
+				//initialPitch -= Time.deltaTime/10;
+				meteorEmitter.pitch = initialPitch;
+			}
+			if(meteorEmitter.volume < 1f){
+				meteorEmitter.volume += Time.deltaTime/10;
+			}
+			else {
+				meteorEmitter.volume = 1f;
+			}
+		}
 	}
 
 	void FixedUpdate () {
@@ -73,6 +90,9 @@ public class RocketScript : MonoBehaviour {
 				Detonate(explosionPlace);
 			}
 		}
+		else if (smokeParticles.GetComponent<ParticleEmitter>().particleCount == 0) {
+			pool.Deactivate(gameObject);
+		}
 
 	}// end of fixed update
 
@@ -82,6 +102,7 @@ public class RocketScript : MonoBehaviour {
 		hitGround = false;
 		missleMesh.SetActive(true);
 		hitAPlayer = false;
+		meteorEmitter.enabled = true;
 	}
 
 	public void SetTarget(Vector3 newTarget){
@@ -91,7 +112,11 @@ public class RocketScript : MonoBehaviour {
 	void Detonate(Vector3 pos)
 	{
 		//stop the audio woosh and play the explosion
-		this.GetComponent<AudioSource>().Stop();
+		meteorEmitter.pitch = 0.9f;
+		meteorEmitter.volume = 0;
+		initialPitch = 0.9f;
+		meteorEmitter.Stop();
+		meteorEmitter.enabled = false;
 		explosionEmitter.Play();
 
 		if (!isAvatar){
@@ -123,9 +148,6 @@ public class RocketScript : MonoBehaviour {
 					minionScript.Damage(damageAmnt);
 				}
 			}
-		}
-		if (smokeParticles.GetComponent<ParticleEmitter>().particleCount == 0) {
-			pool.Deactivate(gameObject);
 		}
 	}
 

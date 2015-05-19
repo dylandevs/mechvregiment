@@ -121,6 +121,7 @@ public class GoliathGameScript : MonoBehaviour {
 			
 				if (remainingTime <= 60 && !noTimePlayed) {
 					noTimeSound.Play ();
+					noTimePlayed = true;
 				}
 
 				if (seconds.Length == 1) {
