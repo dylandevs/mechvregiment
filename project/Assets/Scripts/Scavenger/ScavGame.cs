@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using XInputDotNetPure;
 
 public class ScavGame : MonoBehaviour {
 
@@ -15,7 +16,8 @@ public class ScavGame : MonoBehaviour {
 	private Player[] players;
 	public GameObject exitPoint;
 
-	public GameObject transitionMenu;
+	public GameObject loader;
+	public GameObject startPrompt;
 	public GoliathAvatar goliath;
 
 	[HideInInspector]
@@ -38,6 +40,8 @@ public class ScavGame : MonoBehaviour {
 	public CanvasGroup defeatModal;
 	private CanvasGroup currentModal;
 
+	public ScavInstructions instructions;
+
 	//Announcer audio
 	public SplitAudioListener splitListener;
 	public AudioSource matchStartSound;
@@ -45,6 +49,9 @@ public class ScavGame : MonoBehaviour {
 	public AudioSource[] droppedFlagSound;
 	public AudioSource goliathFlagSound;
 	public AudioSource noTimeSound;
+
+	private GamePadState[] states = new GamePadState[4];
+	private GamePadState[] prevStates = new GamePadState[4];
 
 	// Use this for initialization
 	void Start () {
@@ -66,7 +73,7 @@ public class ScavGame : MonoBehaviour {
 		}
 
 		if (forceStart){
-			BeginRound();
+			GoliathOnline();
 		}
 	}
 	
@@ -113,38 +120,71 @@ public class ScavGame : MonoBehaviour {
 					}
 				}
 				else{
-					bool playersConfirmed = true;
+					bool singlePlayerConfirmed = false;
 					foreach(Player player in players){
-						if (player.gameObject.GetActive() && !player.readyToEnd){
-							playersConfirmed = false;
+						if (player.gameObject.GetActive() && player.readyToEnd){
+							singlePlayerConfirmed = true;
+							break;
 						}
 					}
 
 					// Load menu
-					if (playersConfirmed){
+					if (singlePlayerConfirmed){
 						PhotonNetwork.Disconnect();
 						Time.timeScale = 1;
 						Application.LoadLevel("ScavengerMenu");
 					}
 				}
 			}
-		
-			// Game not yet started
-			if (goliathReady && !gameToStart){
-				BeginRound();
+			else {
+				// Reading instructions
+				bool A_Press = false;
+				bool X_Press = false;
+
+				// Detecting any actives button presses
+				for (int i = 0; i < 4; i++){
+					states[i] = GamePad.GetState((PlayerIndex)i);
+					if (states[i].IsConnected){
+						if (!A_Press){
+							A_Press = (states[i].Buttons.A == ButtonState.Pressed && prevStates[i].Buttons.A == ButtonState.Released);
+						}
+						if (!X_Press){
+							X_Press = (states[i].Buttons.X == ButtonState.Pressed && prevStates[i].Buttons.X == ButtonState.Released);
+						}
+					}
+					else{
+						continue;
+					}
+					prevStates[i] = states[i];
+				}
+
+				if (A_Press){
+					instructions.AdvanceInstructions();
+				}
+
+				print (X_Press);
+
+				// Game not yet started
+				if ((goliathReady || forceStart) && !gameToStart){
+					if (X_Press){
+						BeginRound();
+					}
+				}
 			}
 		}
 	}
 
 	public void GoliathOnline(){
 		goliathReady = true;
+		loader.SetActive (false);
+		startPrompt.SetActive (true);
 	}
 
 	public void BeginRound(){
 		remainingTime = StartMatchTime;
 		GameRunning = true;
-		transitionMenu.SetActive(false);
 		gameToStart = true;
+		instructions.gameObject.SetActive (false);
 		if(splitListener){
 			splitListener.PlayAudioSource(matchStartSound);
 		}

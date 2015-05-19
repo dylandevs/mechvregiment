@@ -156,7 +156,7 @@ public class ControllerScript : MonoBehaviour {
 		margin = Mathf.Sqrt(2 * mainRad) - mainRad;
 		//colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
 		colliderRad = terrainCollider.radius - 0.05f;
-		offset = terrainCollider.radius - 0.1f;
+		offset = terrainCollider.radius - 0.11f;
 		rigidbody = GetComponent<Rigidbody> ();
 	}
 	
@@ -626,7 +626,7 @@ public class ControllerScript : MonoBehaviour {
 			
 			if (X_Press){
 				player.readyToEnd = true;
-				player.display.blackout.SetActive(true);
+				//player.display.blackout.SetActive(true);
 			}
 		}
 

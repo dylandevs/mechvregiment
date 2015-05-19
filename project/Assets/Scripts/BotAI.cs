@@ -33,8 +33,8 @@ public class BotAI : MonoBehaviour {
 	float searchDelay = 0;
 	const float SearchDelayLow = 3;
 	const float SearchDelayHigh = 5;
-	const float AlertDuration = 8;
-	const float SearchDuration = 12;
+	const float AlertDuration = 4;
+	const float SearchDuration = 8;
 	const float SearchRad = 15;
 	const float SearchTurnRate = 0.5f;
 

@@ -145,12 +145,14 @@ public class StartMenu : MonoBehaviour {
 					if (!controllersReady[i]){
 						controllerManager.SetReady(i);
 						controllersReady[i] = true;
+						selectSound.Play();
 					}
 				}
 				else if (B_Press){
 					if (controllersReady[i]){
 						controllerManager.UnsetReady(i);
 						controllersReady[i] = false;
+						selectSound.Play();
 					}
 				}
 
@@ -160,11 +162,13 @@ public class StartMenu : MonoBehaviour {
 						controllerManager.SetInverted(i);
 						controllersInverted[i] = true;
 						PlayerPrefs.SetString ("Player" + i + "Control", "Inverted");
+						switchSound.Play ();
 					}
 					else{
 						controllerManager.UnsetInverted(i);
 						controllersInverted[i] = false;
 						PlayerPrefs.SetString ("Player" + i + "Control", "Normal");
+						switchSound.Play ();
 					}
 				}
 
