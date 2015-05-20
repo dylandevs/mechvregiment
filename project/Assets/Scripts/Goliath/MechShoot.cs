@@ -482,7 +482,7 @@ public class MechShoot : MonoBehaviour {
 						if(connected == true){
 							networkManager.photonView.RPC("PlaceMinionWaypoint",PhotonTargets.All,minionFlag.transform.position);
 						}
-
+						aiDirectorEmitter.PlayScheduled(AudioSettings.dspTime);
 					}
 
 
@@ -493,7 +493,6 @@ public class MechShoot : MonoBehaviour {
 					//}
 
 					//plays the ai direction sound
-					aiDirectorEmitter.PlayScheduled(AudioSettings.dspTime);
 				}
 			}
 

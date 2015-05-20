@@ -37,10 +37,13 @@ public class RocketScript : MonoBehaviour {
 	public bool isAvatar = false;
 
 	void Start(){
-		pool = transform.parent.GetComponent<PoolManager>();
 		meteorEmitter = transform.GetComponent<AudioSource>();
 		meteorEmitter.pitch = initialPitch;
 		meteorEmitter.volume = 0f;
+		pool = transform.parent.GetComponent<PoolManager>();
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(this.GetComponent<AudioSource>());
+		}
 	}
 
 	// Update is called once per frame
@@ -56,6 +59,9 @@ public class RocketScript : MonoBehaviour {
 			}
 			else {
 				meteorEmitter.volume = 1f;
+			}
+			if (pool.splitListener){
+				pool.splitListener.StoreAudioSource(meteorEmitter);
 			}
 		}
 	}
@@ -118,6 +124,9 @@ public class RocketScript : MonoBehaviour {
 		meteorEmitter.Stop();
 		meteorEmitter.enabled = false;
 		explosionEmitter.Play();
+		if (pool.splitListener){
+			pool.splitListener.StoreAudioSource(explosionEmitter);
+		}
 
 		if (!isAvatar){
 
