@@ -22,7 +22,7 @@ public class ScavGame : MonoBehaviour {
 
 	[HideInInspector]
 	public bool GameRunning = false;
-	private bool goliathReady = false;
+	private bool connectionReady = false;
 	private bool gameToStart = false;
 	private bool gameToEnd = false;
 	[HideInInspector]
@@ -70,10 +70,6 @@ public class ScavGame : MonoBehaviour {
 			}
 			splitListener.StoreAudioSource(goliathFlagSound);
 			splitListener.StoreAudioSource(noTimeSound);
-		}
-
-		if (forceStart){
-			GoliathOnline();
 		}
 	}
 	
@@ -162,12 +158,13 @@ public class ScavGame : MonoBehaviour {
 					instructions.AdvanceInstructions();
 				}
 
-				print (X_Press);
-
-				// Game not yet started
-				if ((goliathReady || forceStart) && !gameToStart){
-					if (X_Press){
+				if (X_Press){
+					// Game not yet started
+					if (forceStart){
 						BeginRound();
+					}
+					else if (connectionReady && !gameToStart){
+						networkManager.BeginAttemptingHandshake();
 					}
 				}
 			}
@@ -175,7 +172,11 @@ public class ScavGame : MonoBehaviour {
 	}
 
 	public void GoliathOnline(){
-		goliathReady = true;
+		BeginRound();
+	}
+
+	public void ReadyToConnect(){
+		connectionReady = true;
 		loader.SetActive (false);
 		startPrompt.SetActive (true);
 	}
@@ -185,7 +186,9 @@ public class ScavGame : MonoBehaviour {
 		GameRunning = true;
 		gameToStart = true;
 		instructions.gameObject.SetActive (false);
+
 		if(splitListener){
+			splitListener.GetComponent<AudioListener>().enabled = true;
 			splitListener.PlayAudioSource(matchStartSound);
 		}
 		else {
