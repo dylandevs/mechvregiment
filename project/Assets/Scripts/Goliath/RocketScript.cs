@@ -108,7 +108,7 @@ public class RocketScript : MonoBehaviour {
 		hitGround = false;
 		missleMesh.SetActive(true);
 		hitAPlayer = false;
-		meteorEmitter.enabled = true;
+		//meteorEmitter.enabled = true;
 	}
 
 	public void SetTarget(Vector3 newTarget){

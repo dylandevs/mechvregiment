@@ -24,6 +24,14 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject tutorialZone;
 	public GameObject[] dummies;
 
+	public GameObject movementMenu;
+	public GameObject statsMenu;
+	public GameObject plasmaShotMenu;
+	public GameObject AIMenu;
+	public GameObject miniGunShot;
+	public GameObject meteorShot;
+	public GameObject pressStartLeft;
+	public GameObject tutShading;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -60,6 +68,8 @@ public class GoliathGameScript : MonoBehaviour {
 	bool win;
 	bool loose;
 	bool noTimePlayed = false;
+	bool moveDone;
+
 	
 	bool pressed;
 	bool previous;
@@ -68,7 +78,8 @@ public class GoliathGameScript : MonoBehaviour {
 	float life = 0;
 	float lTrig;
 	float rTrig;
-	
+	float timer;
+
 	int left = 0;
 	int right = 1;
 
@@ -82,6 +93,7 @@ public class GoliathGameScript : MonoBehaviour {
 		pressedr = false;
 		menu1B = true;
 		mechShoot.connected = false;
+		timer = 5;
 	}
 	
 	// Update is called once per frame
@@ -89,14 +101,14 @@ public class GoliathGameScript : MonoBehaviour {
 		
 		if (Input.GetKey (KeyCode.R)) {
 			tutorialPass = true;
+			readyToGo = true;
+
 		}
 
 		lTrig = SixenseInput.Controllers[left].Trigger;
 		rTrig = SixenseInput.Controllers[right].Trigger;
 		
 		if (Input.GetKey(KeyCode.S)) {
-
-			print ("swapped");
 
 			if(left == 0){
 				left = 1;
@@ -137,6 +149,9 @@ public class GoliathGameScript : MonoBehaviour {
 			}
 
 			if (restartMatch == true) {
+				if(tutShading.GetActive()==true){
+					tutShading.SetActive(false);
+				}
 				restartMatchFunction ();
 			}
 			if (readyToGo == true) {
@@ -177,8 +192,6 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	public void restartMatchFunction(){
-
-		print ("in restart function");
 
 		mech.transform.position = spawnPoint.transform.position;
 
@@ -285,10 +298,28 @@ public class GoliathGameScript : MonoBehaviour {
 
 	public void tutuorialFuncion(){
 
+		print(tutorialNumber);
+
 		mechShoot.allowedToShootGame = true;
 		movement.allowedToMove = true;
 
-		if (tutorialNumber == 1) {
+		if (timer >= 0) {
+			movementMenu.SetActive (true);
+		} 
+		else if (timer <= 0) {
+			movementMenu.SetActive(false);
+		}
+
+		if (timer >= 0) {
+			timer-= Time.deltaTime;
+		}
+
+		if (timer <= 0) {
+			moveDone = true;
+		}
+
+		if (tutorialNumber == 1 && moveDone == true) {
+				statsMenu.SetActive(true);
 			mapfunction();
 		}
 
@@ -297,6 +328,9 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (tutorialNumber == 3) {
+
+				statsMenu.SetActive(false);
+
 			leftHandShooting();
 		}
 
@@ -305,6 +339,10 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (tutorialNumber == 5) {
+				AIMenu.SetActive(false);
+			if(pressStartLeft.GetActive() == false){
+				pressStartLeft.SetActive(true);
+			}
 			finalStep();
 		}
 
@@ -320,11 +358,11 @@ public class GoliathGameScript : MonoBehaviour {
 		Ray minMode = new Ray(cameraPos.transform.position,cameraPos.transform.forward);
 		RaycastHit minHit;
 		
-		tutorialNumber = 3;
+
 		//fires the ray and gets hit info while ognoring layer 14 well it's supposed to
 		if (Physics.Raycast (minMode, out minHit, 75)) {
 			if (minHit.collider.tag == "miniMap") {
-
+				tutorialNumber = 2;
 			}
 		}
 	}
@@ -343,6 +381,26 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	void leftHandShooting(){
+
+		if(statsMenu.GetActive() == false){
+			statsMenu.SetActive(true);
+		}
+
+		if(plasmaShotMenu.GetActive() == false){
+			plasmaShotMenu.SetActive(true);
+		}
+
+		if (previous == true) {
+
+
+				plasmaShotMenu.SetActive(false);
+
+
+			if(AIMenu.GetActive() == false){
+				AIMenu.SetActive(true);
+			}
+		}
+
 		//keep arms up
 		miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
 		cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
@@ -359,7 +417,6 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (lTrig >= 0.8 && pressed == false ) {
-			print("shot L");
 			//display next ui
 			//turn off previous ui
 			previous = true;
@@ -367,15 +424,28 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 		if (lTrig >= 0.8 && pressed == true && previous == true ) {
 			//turn off all UI
-			print("shot L pressed");
 			tutorialNumber = 4;
 		}
 	}
 
 	void rightHandShooting(){
 
-		miniGunArm.transform.localEulerAngles = new Vector3(290,355,2);
-		cannonArm.transform.localEulerAngles =  new Vector3(287,22,354);
+		if(miniGunShot.GetActive() == false){
+			miniGunShot.SetActive(true);
+		}
+		
+		if (previousr == true) {
+			if(miniGunShot.GetActive() == true){
+				miniGunShot.SetActive(false);
+			}
+			
+			if(plasmaShotMenu.GetActive() == false){
+				plasmaShotMenu.SetActive(true);
+			}
+		}
+
+		miniGunArm.transform.localEulerAngles = new Vector3(250,12,2);
+		cannonArm.transform.localEulerAngles =  new Vector3(250,12,354);
 		
 		if (SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.ONE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.TWO) ||
 		    SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.THREE) || SixenseInput.Controllers [right].GetButtonDown (SixenseButtons.FOUR)) {
