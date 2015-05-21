@@ -29,9 +29,10 @@ public class GoliathGameScript : MonoBehaviour {
 	public GameObject plasmaShotMenu;
 	public GameObject AIMenu;
 	public GameObject miniGunShot;
-	public GameObject meteorShot;
-	public GameObject pressStartLeft;
+	public GameObject meteorShotMenu;
+	public GameObject pressStartLeftCont;
 	public GameObject tutShading;
+	public GameObject[] allMenus;
 
 	public mechMovement movement;
 	public MechShoot mechShoot;
@@ -125,6 +126,9 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (tutorialPass == true) {
+
+			allMenusOff();
+
 			if (remainingTime > 0) {
 				remainingTime = Mathf.Max (0, remainingTime - Time.deltaTime);
 			
@@ -329,20 +333,24 @@ public class GoliathGameScript : MonoBehaviour {
 
 		if (tutorialNumber == 3) {
 
-				statsMenu.SetActive(false);
+			statsMenu.SetActive(false);
 
 			leftHandShooting();
 		}
 
 		if (tutorialNumber == 4) {
+
+			AIMenu.SetActive(false);
+
 			rightHandShooting();
 		}
 
 		if (tutorialNumber == 5) {
-				AIMenu.SetActive(false);
-			if(pressStartLeft.GetActive() == false){
-				pressStartLeft.SetActive(true);
-			}
+			previousr = false;
+			meteorShotMenu.SetActive(false);
+
+			pressStartLeftCont.SetActive(true);
+
 			finalStep();
 		}
 
@@ -382,8 +390,8 @@ public class GoliathGameScript : MonoBehaviour {
 
 	void leftHandShooting(){
 
-		if(statsMenu.GetActive() == false){
-			statsMenu.SetActive(true);
+		if(statsMenu.GetActive() == true){
+			statsMenu.SetActive(false);
 		}
 
 		if(plasmaShotMenu.GetActive() == false){
@@ -391,14 +399,10 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (previous == true) {
-
-
-				plasmaShotMenu.SetActive(false);
-
-
-			if(AIMenu.GetActive() == false){
+			if(AIMenu.GetActive()==false){
 				AIMenu.SetActive(true);
 			}
+				plasmaShotMenu.SetActive(false);
 		}
 
 		//keep arms up
@@ -435,13 +439,13 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 		
 		if (previousr == true) {
-			if(miniGunShot.GetActive() == true){
+			print("i'm here");
+
+				meteorShotMenu.SetActive(true);
+
+
 				miniGunShot.SetActive(false);
-			}
-			
-			if(plasmaShotMenu.GetActive() == false){
-				plasmaShotMenu.SetActive(true);
-			}
+
 		}
 
 		miniGunArm.transform.localEulerAngles = new Vector3(250,12,2);
@@ -466,7 +470,6 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 
 		if (rTrig >= 0.8 && pressedr == true && previousr == true ) {
-
 			print("shot R pressed");
 			//turn off all UI
 			tutorialNumber = 5;
@@ -475,11 +478,15 @@ public class GoliathGameScript : MonoBehaviour {
 	}
 
 	void finalStep(){
-		print("last step active");
 		if (SixenseInput.Controllers[left].GetButtonDown (SixenseButtons.START)){
-			print ("done");
 			//test it out
 			tutorialPass = true;
+		}
+	}
+
+	void allMenusOff(){
+		foreach(GameObject t in allMenus){
+			t.SetActive(false);
 		}
 	}
 }
