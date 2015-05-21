@@ -120,6 +120,7 @@ public class Weapon : MonoBehaviour {
 	private ControllerScript controller;
 	private int fireHash = Animator.StringToHash("Firing");
 	private int reloadHash = Animator.StringToHash("Reload");
+	private Rigidbody rigidbody;
 
 	//Audio emitters
 	public AudioSource gunshotSound;
@@ -172,7 +173,7 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 		else if (recenterTargetSet && !isRecoiling){
-			if (!isAllAmmoDepleted && player.GetComponent<Rigidbody>().velocity.magnitude <= 0.1f || (!isAllAmmoDepleted && player.GetComponent<Rigidbody>().velocity.magnitude <= 0.1f && isReloading)){
+			if (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f || (!isAllAmmoDepleted && player.rigidbody.velocity.magnitude <= 0.1f && isReloading)){
 				CalculateRecenteringSteps();
 			}
 			else{

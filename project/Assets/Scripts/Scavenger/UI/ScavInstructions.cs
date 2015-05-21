@@ -60,8 +60,11 @@ public class ScavInstructions : MonoBehaviour {
 
 	public bool AdvanceInstructions(){
 		if (acceptingInput){
-			if (currInstruction++ >= views.Length){
+			if (currInstruction + 1 >= views.Length){
 				return true;
+			}
+			else{
+				currInstruction += 1;
 			}
 
 			if (currInstruction == views.Length - 1){

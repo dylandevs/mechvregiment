@@ -58,6 +58,8 @@ public class Player : MonoBehaviour {
 	public bool isReplenishingAmmo = false;
 	[HideInInspector]
 	public bool readyToEnd = false;
+	[HideInInspector]
+	public Rigidbody rigidbody;
 
 	// Recorded variables
 	private Vector3 startingPos;
@@ -73,6 +75,7 @@ public class Player : MonoBehaviour {
 		health = MaxHealth;
 		startingPos = transform.position;
 		deathCamAnim = display.deathCam.GetComponent<Animator>();
+		rigidbody = GetComponent<Rigidbody> ();
 	}
 	
 	// Update is called once per frame

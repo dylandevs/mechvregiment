@@ -32,8 +32,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject templeShield;
 	public GameObject minionWaypoint;
 	public GameObject crystal;
-
+	
 	public bool connectionReceived = false;
+	private bool roomJoined = false;
+	private bool initiatingHandshake = false;
 
 	// Use this for initialization
 	void Start () {
@@ -57,6 +59,11 @@ public class PlayerNetSend : Photon.MonoBehaviour {
             MakeRoom();
         }
         else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
+			if (!roomJoined){
+				roomJoined = true;
+				game.ReadyToConnect();
+			}
+
 			sendTimer -= Time.deltaTime;
 
 			if (connectionReceived){
@@ -102,7 +109,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 				}
 			}
 			else{
-				if(sendTimer <= 0){
+				if(sendTimer <= 0 && initiatingHandshake){
 					photonView.RPC("ScavengerConnected", PhotonTargets.All, game.StartMatchTime);
 					sendTimer = SendInterval;
 				}
@@ -121,6 +128,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
     	Room currentRoom = PhotonNetwork.room;
     	Debug.Log("Room \""+ currentRoom.name +"\" has this many joined: " + currentRoom.playerCount);
     }
+
+	public void BeginAttemptingHandshake(){
+		initiatingHandshake = true;
+	}
 
 	// Game RPC
 	[RPC]
