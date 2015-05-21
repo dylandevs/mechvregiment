@@ -60,9 +60,9 @@ public class RocketScript : MonoBehaviour {
 			else {
 				meteorEmitter.volume = 1f;
 			}
-			if (pool.splitListener){
+			/*if (pool.splitListener){
 				pool.splitListener.StoreAudioSource(meteorEmitter);
-			}
+			}*/
 		}
 	}
 
@@ -108,7 +108,6 @@ public class RocketScript : MonoBehaviour {
 		hitGround = false;
 		missleMesh.SetActive(true);
 		hitAPlayer = false;
-		meteorEmitter.enabled = true;
 	}
 
 	public void SetTarget(Vector3 newTarget){
@@ -122,7 +121,6 @@ public class RocketScript : MonoBehaviour {
 		meteorEmitter.volume = 0;
 		initialPitch = 0.9f;
 		meteorEmitter.Stop();
-		meteorEmitter.enabled = false;
 		explosionEmitter.Play();
 		if (pool.splitListener){
 			pool.splitListener.StoreAudioSource(explosionEmitter);
