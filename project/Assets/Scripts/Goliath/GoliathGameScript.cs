@@ -302,8 +302,6 @@ public class GoliathGameScript : MonoBehaviour {
 
 	public void tutuorialFuncion(){
 
-		print(tutorialNumber);
-
 		mechShoot.allowedToShootGame = true;
 		movement.allowedToMove = true;
 
@@ -439,11 +437,8 @@ public class GoliathGameScript : MonoBehaviour {
 		}
 		
 		if (previousr == true) {
-			print("i'm here");
 
-				meteorShotMenu.SetActive(true);
-
-
+			meteorShotMenu.SetActive(true);
 				miniGunShot.SetActive(false);
 
 		}
@@ -465,12 +460,10 @@ public class GoliathGameScript : MonoBehaviour {
 			//display next ui
 			//turn off previous ui
 			previousr = true;
-			print("shot R");
 			
 		}
 
 		if (rTrig >= 0.8 && pressedr == true && previousr == true ) {
-			print("shot R pressed");
 			//turn off all UI
 			tutorialNumber = 5;
 		}
