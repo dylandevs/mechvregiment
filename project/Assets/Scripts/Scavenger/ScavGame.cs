@@ -17,6 +17,7 @@ public class ScavGame : MonoBehaviour {
 	public GameObject exitPoint;
 
 	public GameObject loader;
+	public GameObject connecter;
 	public GameObject startPrompt;
 	public GoliathAvatar goliath;
 
@@ -165,6 +166,8 @@ public class ScavGame : MonoBehaviour {
 					}
 					else if (connectionReady && !gameToStart){
 						networkManager.BeginAttemptingHandshake();
+						connecter.SetActive(true);
+						startPrompt.SetActive(false);
 					}
 				}
 			}
