@@ -602,10 +602,10 @@ public class MechShoot : MonoBehaviour {
 
 		//the change in the pilot arm to match aiming
 
-		Vector3 adjustedRotP = new Vector3(miniGunAimer.transform.localEulerAngles.x, -miniGunAimer.transform.localEulerAngles.y, -miniGunAimer.transform.localEulerAngles.z) + new Vector3(0,50,20);
+		Vector3 adjustedRotP = new Vector3(miniGunAimer.transform.localEulerAngles.x, -miniGunAimer.transform.localEulerAngles.y, -miniGunAimer.transform.localEulerAngles.z) + new Vector3(-30,80,20);
 		rightArm.transform.localEulerAngles = adjustedRotP;
 
-		Vector3 adjustedRotPL = cannonAimer.transform.localEulerAngles + new Vector3(0,50,20);
+		Vector3 adjustedRotPL = cannonAimer.transform.localEulerAngles + new Vector3(-30,80,20);
 		leftArm.transform.localEulerAngles = adjustedRotPL;
 
 		//print("pilot" + rightArm.transform.localEulerAngles);
