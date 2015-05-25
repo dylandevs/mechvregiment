@@ -48,6 +48,7 @@ public class ScavGame : MonoBehaviour {
 	public AudioSource matchStartSound;
 	public AudioSource goliathFlagSound;
 	public AudioSource noTimeSound;
+	public AudioSource noTimeMusic;
 
 	public AudioSource[] gotFlagSounds;
 	public AudioSource[] droppedFlagSounds;
@@ -66,7 +67,7 @@ public class ScavGame : MonoBehaviour {
 	
 	private GamePadState[] states = new GamePadState[4];
 	private GamePadState[] prevStates = new GamePadState[4];
-	
+
 	// Use this for initialization
 	void Start () {
 		players = new Player[playerWrapper.transform.childCount];
@@ -119,6 +120,7 @@ public class ScavGame : MonoBehaviour {
 			timerText.text = minutes + ":" + seconds;
 			if(remainingTime > 0 && remainingTime <= 60){
 				if(!timeRunningOutPlayed){
+					noTimeMusic.Play();
 					splitListener.PlayAudioSource(noTimeSound);
 					timeRunningOutPlayed = true;
 				}
@@ -254,6 +256,7 @@ public class ScavGame : MonoBehaviour {
 		gameToEnd = true;
 		Time.timeScale = 0;
 		splitListener.PlayAudioSource(defeat);
+		noTimeMusic.Stop ();
 	}
 	
 	public void GameWon(){
@@ -266,6 +269,7 @@ public class ScavGame : MonoBehaviour {
 		gameToEnd = true;
 		Time.timeScale = 0;
 		splitListener.PlayAudioSource(victory);
+		noTimeMusic.Stop ();
 	}
 	
 	public void ShieldBroken(){

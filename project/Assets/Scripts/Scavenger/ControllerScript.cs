@@ -155,8 +155,8 @@ public class ControllerScript : MonoBehaviour {
 		mainRad = terrainCollider.radius;
 		margin = Mathf.Sqrt(2 * mainRad) - mainRad;
 		//colliderRad = Mathf.Sqrt(((mainRad + margin)/2) * ((mainRad + margin)/2) - (mainRad/2) * (mainRad/2));
-		colliderRad = terrainCollider.radius - 0.05f;
-		offset = terrainCollider.radius - 0.11f;
+		colliderRad = terrainCollider.radius - 0.02f;
+		offset = terrainCollider.radius - 0.12f;
 		rigidbody = GetComponent<Rigidbody> ();
 	}
 	
@@ -251,12 +251,14 @@ public class ControllerScript : MonoBehaviour {
 				TriggersR = state.Triggers.Right;
 				TriggersL = state.Triggers.Left;
 			}
-			
-			if (RS_Press){
-				
-			}
 
 			if (currentlyGrounded){
+
+				// Toggle crouching
+				if (B_Press){
+					SetCrouching(!isCrouching);
+				}
+				
 				// Jumping
 				if (A_Press && !flagPickedUp){
 					newVel.y += JumpSpeed;
@@ -269,16 +271,6 @@ public class ControllerScript : MonoBehaviour {
 					
 					player.networkManager.photonView.RPC ("PlayerJump", PhotonTargets.All, player.initializer.Layer - 1);
 				}
-			}
-
-			if (currentlyGrounded){
-
-				// Toggle crouching
-				if (B_Press){
-					SetCrouching(!isCrouching);
-				}
-				
-
 				
 				// Lateral movement (strafing)
 				if (L_XAxis != 0){
