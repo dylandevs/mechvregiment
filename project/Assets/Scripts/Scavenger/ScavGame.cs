@@ -46,11 +46,12 @@ public class ScavGame : MonoBehaviour {
 	// Announcer audio
 	public SplitAudioListener splitListener;
 	public AudioSource matchStartSound;
-	public AudioSource gotFlagSound;
-	public AudioSource[] droppedFlagSound;
 	public AudioSource goliathFlagSound;
 	public AudioSource noTimeSound;
-	
+
+	public AudioSource[] gotFlagSounds;
+	public AudioSource[] droppedFlagSounds;
+
 	// Soldier audio
 	public AudioSource shieldDown;
 	public AudioSource victory;
@@ -77,10 +78,6 @@ public class ScavGame : MonoBehaviour {
 		
 		if(splitListener){
 			splitListener.StoreAudioSource(matchStartSound);
-			splitListener.StoreAudioSource(gotFlagSound);
-			foreach(AudioSource flagDropVariation in droppedFlagSound){
-				splitListener.StoreAudioSource(flagDropVariation);
-			}
 			splitListener.StoreAudioSource(goliathFlagSound);
 			splitListener.StoreAudioSource(noTimeSound);
 			
@@ -89,6 +86,13 @@ public class ScavGame : MonoBehaviour {
 			splitListener.StoreAudioSource(defeat);
 			splitListener.StoreAudioSource(goliathDisabled);
 			splitListener.StoreAudioSource(goliathOnline);
+
+			foreach(AudioSource flagDropVariation in droppedFlagSounds){
+				splitListener.StoreAudioSource(flagDropVariation);
+			}
+			foreach(AudioSource flagGotVariation in gotFlagSounds){
+				splitListener.StoreAudioSource(flagGotVariation);
+			}
 			
 			splitListener.StoreAudioSource(destroyShield);
 		}
@@ -224,7 +228,7 @@ public class ScavGame : MonoBehaviour {
 			splitListener.PlayAudioSource(goliathFlagSound);
 		}
 		else {
-			splitListener.PlayAudioSource(gotFlagSound);
+			splitListener.PlayAudioSource(gotFlagSounds[Random.Range(0,gotFlagSounds.Length)]);
 		}
 	}
 	
@@ -237,7 +241,7 @@ public class ScavGame : MonoBehaviour {
 			
 			//flag.rigidbody.AddForce(direction * 10);
 		}
-		splitListener.PlayAudioSource(droppedFlagSound[Random.Range(0,2)]);
+		splitListener.PlayAudioSource(droppedFlagSounds[Random.Range(0,gotFlagSounds.Length)]);
 	}
 	
 	void GameLost(){
