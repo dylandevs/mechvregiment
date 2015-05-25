@@ -69,6 +69,9 @@ public class Player : MonoBehaviour {
 	private int fwdDeadHash = Animator.StringToHash("DieFwd");
 	private int bckDeadHash = Animator.StringToHash("DieBck");
 
+	public SplitAudioListener splitListener;
+	public AudioSource deathSound;
+
 	// Use this for initialization
 	void Start () {
 		InvMaxHealth = 1 / MaxHealth;
@@ -76,6 +79,7 @@ public class Player : MonoBehaviour {
 		startingPos = transform.position;
 		deathCamAnim = display.deathCam.GetComponent<Animator>();
 		rigidbody = GetComponent<Rigidbody> ();
+		splitListener.StoreAudioSource (deathSound);
 	}
 	
 	// Update is called once per frame
@@ -289,6 +293,8 @@ public class Player : MonoBehaviour {
 		if (playerController.flagPickedUp){
 			playerController.DropFlag();
 		}
+
+		splitListener.PlayAudioSource (deathSound);
 		
 		// Disable firing layer
 		anim.SetLayerWeight(1, 0);

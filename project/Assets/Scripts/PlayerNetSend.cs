@@ -239,8 +239,10 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void GoliathDisabled(){
-		goliath.SetDisabled();
-		game.GoliathDisabled ();
+		if (!goliath.isDisabled){
+			goliath.SetDisabled();
+			game.GoliathDisabled ();
+		}
 	}
 
 	[RPC]
