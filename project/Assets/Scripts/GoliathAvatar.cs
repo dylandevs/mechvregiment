@@ -54,7 +54,8 @@ public class GoliathAvatar : MonoBehaviour {
 
 	public GameObject carryEmitters;
 
-	private bool isDisabled = false;
+	[HideInInspector]
+	public bool isDisabled = false;
 	private Vector3 armLOrigPos;
 	private Vector3 armROrigPos;
 

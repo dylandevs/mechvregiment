@@ -271,4 +271,12 @@ public class ScavGame : MonoBehaviour {
 	public void ShieldBroken(){
 		splitListener.PlayAudioSource(shieldDown);
 	}
+
+	public void GoliathDisabled(){
+		splitListener.PlayAudioSource(goliathDisabled);
+	}
+
+	public void GoliathEnabled(){
+		splitListener.PlayAudioSource(goliathOnline);
+	}
 }

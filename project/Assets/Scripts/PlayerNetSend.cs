@@ -219,6 +219,7 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void BrokenShield(){
+		game.ShieldBroken ();
 		templeShield.SetActive(false);
 		goliathShield.SetActive(false);
 		foreach (Player player in players){
@@ -238,12 +239,16 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	[RPC]
 	public void GoliathDisabled(){
-		goliath.SetDisabled();
+		if (!goliath.isDisabled){
+			goliath.SetDisabled();
+			game.GoliathDisabled ();
+		}
 	}
 
 	[RPC]
 	public void GoliathEnabled(){
 		goliath.SetEnabled();
+		game.GoliathEnabled ();
 	}
 
 	// Player RPC	
