@@ -59,6 +59,11 @@ public class mechMovement : MonoBehaviour {
 	float dashSpeed;
 	public float dashTimer;
 
+	bool one;
+	bool two;
+	bool three;
+	bool four;
+	bool down;
 
 	bool allowedToMoveRay;
 	public bool dash;
@@ -82,8 +87,6 @@ public class mechMovement : MonoBehaviour {
 	void Update () {
 
 		if (Input.GetKeyDown(KeyCode.S)) {
-
-			print("swapped");
 
 			if(left == 0){
 				left = 1;
@@ -438,72 +441,78 @@ public class mechMovement : MonoBehaviour {
 		Vector3 colliderBounds = GetComponent<Collider>().bounds.extents;
 
 		//add half on x and negative half on x then half on z and negative half on z
-		Vector3 xPosPos = bottomHalf.transform.position + new Vector3 (colliderBounds.x * 0.5f,0,0);
-		Vector3 xPosNeg = bottomHalf.transform.position + new Vector3 (colliderBounds.x * -0.5f,0,0);
-		Vector3 zPosPos = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * 0.5f);
-		Vector3 zPosNeg = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * -0.5f);
+		Vector3 xPosPos = bottomHalf.transform.position + new Vector3 (colliderBounds.x *0.7f,0,0);
+		Vector3 xPosNeg = bottomHalf.transform.position + new Vector3 (colliderBounds.x * -0.7f,0,0);
+		Vector3 zPosPos = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * 0.7f);
+		Vector3 zPosNeg = bottomHalf.transform.position + new Vector3 (0,0,colliderBounds.z * -0.7f);
 
-		Ray downRayX1 = new Ray(xPosPos,bottomHalf.transform.up * -1);
+		Ray downRayX1 = new Ray(xPosPos,bottomHalf.transform.up * -1f);
 		RaycastHit rayHitX1;
 
-		if(Physics.Raycast (downRayX1, out rayHitX1,4f)){
+		if(Physics.Raycast (downRayX1, out rayHitX1,3.5f)){
 			if(rayHitX1.collider.gameObject.tag == "Terrain"){
-				allowedToMoveRay = true;
+				one = true;
 			}
 		}
 		else{
-			allowedToMoveRay = false;
+			one = false;
 		}
 
-		Ray downRayX2 = new Ray(xPosNeg,bottomHalf.transform.up * -1);
+		Ray downRayX2 = new Ray(xPosNeg,bottomHalf.transform.up * -1f);
 		RaycastHit rayHitX2;
 
-		if(Physics.Raycast (downRayX2, out rayHitX2,4f)){
+		if(Physics.Raycast (downRayX2, out rayHitX2,3.5f)){
 			if(rayHitX2.collider.gameObject.tag == "Terrain"){
-				allowedToMoveRay = true;
+				two = true;
 			}
 		}
 		else{
-			allowedToMoveRay = false;
+			two = false;
 		}
 
-		Ray downRayZ1 = new Ray(zPosPos,bottomHalf.transform.up * -1);
+		Ray downRayZ1 = new Ray(zPosPos,bottomHalf.transform.up * -1f);
 		RaycastHit rayHitZ1;
-		
-		if(Physics.Raycast (downRayZ1, out rayHitZ1,4f)){
+
+
+		if(Physics.Raycast (downRayZ1, out rayHitZ1,3.5f)){
 			if(rayHitZ1.collider.gameObject.tag == "Terrain"){
-				allowedToMoveRay = true;
+				three = true;
 			}
 		}
 		else{
-			allowedToMoveRay = false;
+			three = false;
 		}
 		
-		Ray downRayZ2 = new Ray(zPosNeg,bottomHalf.transform.up * -1);
+		Ray downRayZ2 = new Ray(zPosNeg,bottomHalf.transform.up * -1f);
 		RaycastHit rayHitZ2;
 
-		if(Physics.Raycast (downRayZ2, out rayHitZ2,4f)){
+		if(Physics.Raycast (downRayZ2, out rayHitZ2,3.5f)){
 			if(rayHitZ2.collider.gameObject.tag == "Terrain"){
-				allowedToMoveRay = true;
+				four = true;
 			}
 		}
 		else{
-			allowedToMoveRay = false;
+			four = false;
 		}
 
-
+		if(one == false && two == false && three == false && four == false ){
+			allowedToMoveRay = false;
+		}
+		else{
+			allowedToMoveRay = true;
+		}
 		//straightDownCast
-		Ray downRay = new Ray(bottomHalf.transform.position,bottomHalf.transform.up * -1);
+		/*Ray downRay = new Ray(bottomHalf.transform.position,bottomHalf.transform.up * -1f);
 		RaycastHit rayHit;
 
 		if(Physics.Raycast (downRay, out rayHit,4f)){
 			if(rayHit.collider.gameObject.tag == "Terrain"){
-				allowedToMoveRay = true;
+				down = true;
 			}
 		}
 		else{
-			allowedToMoveRay = false;
-		}
+			down = false;
+		}*/
 
 	}
 

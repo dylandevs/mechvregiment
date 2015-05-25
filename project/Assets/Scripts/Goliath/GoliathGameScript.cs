@@ -99,6 +99,10 @@ public class GoliathGameScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if(Input.GetKey(KeyCode.B)){
+			reLoad();
+		}
 		
 		if (Input.GetKey (KeyCode.R)) {
 			tutorialPass = true;

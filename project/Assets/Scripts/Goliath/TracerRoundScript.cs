@@ -6,7 +6,7 @@ public class TracerRoundScript : MonoBehaviour {
 	PoolManager pool;
 	float life = 5f;
 	float speed = 300;
-	float damage = 3;
+	float damage = 4.5f;
 
 	public LayerMask mask;
 
