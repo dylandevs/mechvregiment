@@ -32,10 +32,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 	public GameObject templeShield;
 	public GameObject minionWaypoint;
 	public GameObject crystal;
-	
+
+	[HideInInspector]
 	public bool connectionReceived = false;
 	private bool roomJoined = false;
 	private bool initiatingHandshake = false;
+	private bool forcingReconnect = false;
 
 	// Use this for initialization
 	void Start () {
@@ -61,7 +63,12 @@ public class PlayerNetSend : Photon.MonoBehaviour {
         else if(PhotonNetwork.connectionStateDetailed.ToString() == "Joined"){
 			if (!roomJoined){
 				roomJoined = true;
-				game.ReadyToConnect();
+				if (!forcingReconnect){
+					game.ReadyToConnect();
+				}
+				else{
+					forcingReconnect = false;
+				}
 			}
 
 			sendTimer -= Time.deltaTime;
@@ -131,6 +138,13 @@ public class PlayerNetSend : Photon.MonoBehaviour {
 
 	public void BeginAttemptingHandshake(){
 		initiatingHandshake = true;
+	}
+
+	public void ForceReconnect(){
+		PhotonNetwork.Disconnect ();
+		PhotonNetwork.ConnectUsingSettings("v4.2");
+		roomJoined = false;
+		forcingReconnect = true;
 	}
 
 	// Game RPC

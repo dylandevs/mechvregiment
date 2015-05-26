@@ -36,10 +36,10 @@ public class ScavUI : MonoBehaviour {
 	public UnityEngine.UI.Text magCount;
 	public UnityEngine.UI.Text reserveCount;
 
-	public GameObject crossTop;
-	public GameObject crossRgt;
-	public GameObject crossBot;
-	public GameObject crossLft;
+	public Image crossTop;
+	public Image crossRgt;
+	public Image crossBot;
+	public Image crossLft;
 
 	public float HitMarkerFadeTime = 0.3f;
 	private float hitMarkerFadeRate = 1;
@@ -75,6 +75,12 @@ public class ScavUI : MonoBehaviour {
 	float weaponFlashProgress = 0;
 
 	public RectTransform markerTransform;
+
+	// Crosshair colours
+	public Color defaultCrosshairColour;
+	public Color friendlyCrosshairColour;
+	public Color hostileCrosshairColour;
+
 
 
 	// Use this for initialization
@@ -138,6 +144,7 @@ public class ScavUI : MonoBehaviour {
 
 		UpdateReloadProgress ();
 		UpdateMarkerPositions ();
+		UpdateCrosshairColour ();
 
 		if (weaponFlashProgress > 0){
 			weaponFlashProgress -= Time.deltaTime;
@@ -350,6 +357,36 @@ public class ScavUI : MonoBehaviour {
 		crossRgt.transform.localPosition = new Vector3 (spread, 0, 0);
 		crossBot.transform.localPosition = new Vector3 (0, -spread, 0);
 		crossLft.transform.localPosition = new Vector3 (-spread, 0, 0);
+	}
+
+	private void UpdateCrosshairColour(){
+		RaycastHit rayHit;
+		if (Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out rayHit, 500, player.shootableLayer)){
+			if (rayHit.collider.tag == "Goliath" || rayHit.collider.tag == "Enemy"){
+				crossTop.color = hostileCrosshairColour;
+				crossRgt.color = hostileCrosshairColour;
+				crossBot.color = hostileCrosshairColour;
+				crossLft.color = hostileCrosshairColour;
+			}
+			else if (rayHit.collider.tag == "Player"){
+				crossTop.color = friendlyCrosshairColour;
+				crossRgt.color = friendlyCrosshairColour;
+				crossBot.color = friendlyCrosshairColour;
+				crossLft.color = friendlyCrosshairColour;
+			}
+			else{
+				crossTop.color = defaultCrosshairColour;
+				crossRgt.color = defaultCrosshairColour;
+				crossBot.color = defaultCrosshairColour;
+				crossLft.color = defaultCrosshairColour;
+			}
+		}
+		else{
+			crossTop.color = defaultCrosshairColour;
+			crossRgt.color = defaultCrosshairColour;
+			crossBot.color = defaultCrosshairColour;
+			crossLft.color = defaultCrosshairColour;
+		}
 	}
 
 	public void TriggerHitMarker(){

@@ -102,6 +102,16 @@ public class ScavGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (GameRunning){
+			// Check for reset input
+			if (Input.GetKeyDown(KeyCode.Escape)){
+				// Break to menu
+				LoadMenu();
+			}
+			if (Input.GetKeyDown(KeyCode.F1)){
+				// Force reconnect
+				networkManager.ForceReconnect();
+			}
+
 			remainingTime = Mathf.Max(0, remainingTime - Time.deltaTime);
 			
 			string minutes = Mathf.Floor(remainingTime / 60).ToString();
@@ -154,9 +164,7 @@ public class ScavGame : MonoBehaviour {
 					
 					// Load menu
 					if (singlePlayerConfirmed){
-						PhotonNetwork.Disconnect();
-						Time.timeScale = 1;
-						Application.LoadLevel("ScavengerMenu");
+						LoadMenu();
 					}
 				}
 			}
@@ -199,6 +207,12 @@ public class ScavGame : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	private void LoadMenu(){
+		PhotonNetwork.Disconnect();
+		Time.timeScale = 1;
+		Application.LoadLevel("ScavengerMenu");
 	}
 	
 	public void GoliathOnline(){
